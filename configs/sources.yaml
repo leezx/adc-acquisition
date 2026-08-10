@@ -1,0 +1,235 @@
+# Source registry — one entry per external evidence source.
+#
+# implementation_status: not_started | investigated | implemented | paused
+# acquisition_method: api | bulk_download | scrape | manual
+#
+# This file is the single source of truth for "what sources exist and how
+# far along is each one." Update `implementation_status` as work proceeds.
+# Do not delete entries for sources that turn out to be infeasible — mark
+# them `paused` and record why in `notes`.
+
+pubmed:
+  source_type: literature
+  authority: primary_index
+  official_url: https://pubmed.ncbi.nlm.nih.gov/
+  api_docs_url: https://www.ncbi.nlm.nih.gov/books/NBK25501/
+  acquisition_method: api
+  authentication_required: false
+  auth_notes: Optional NCBI_API_KEY raises rate limit from 3 req/s to 10 req/s.
+  rate_limit: "3 req/s (10 req/s with api_key)"
+  license_or_access_note: Public metadata via NCBI E-utilities; abstracts are metadata, not full text.
+  raw_formats: [xml]
+  update_strategy: incremental_by_esearch_date_range
+  implementation_status: implemented
+  enabled: true
+  notes: Job 01. Implemented first per Prompt.md recommended execution order.
+
+europe_pmc:
+  source_type: literature
+  authority: secondary_index
+  official_url: https://europepmc.org/
+  api_docs_url: https://europepmc.org/RestfulWebService
+  acquisition_method: api
+  authentication_required: false
+  rate_limit: "unspecified, be polite"
+  license_or_access_note: Mixed; only open-access full text may be downloaded.
+  raw_formats: [xml, json]
+  update_strategy: incremental_by_date_range
+  implementation_status: not_started
+  enabled: false
+  notes: Job 02. Not yet implemented.
+
+clinicaltrials_gov:
+  source_type: clinical_registry
+  authority: primary_registry
+  official_url: https://clinicaltrials.gov/
+  api_docs_url: https://clinicaltrials.gov/data-api/api
+  acquisition_method: api
+  authentication_required: false
+  rate_limit: "unspecified, be polite"
+  license_or_access_note: Public domain.
+  raw_formats: [json]
+  update_strategy: incremental_by_last_update_date
+  implementation_status: not_started
+  enabled: false
+  notes: Job 06 in Prompt.md, promoted to #3 in recommended execution order.
+
+crossref:
+  source_type: literature
+  authority: doi_registration_agency
+  official_url: https://www.crossref.org/
+  api_docs_url: https://api.crossref.org/swagger-ui/index.html
+  acquisition_method: api
+  authentication_required: false
+  rate_limit: "polite pool with mailto param"
+  license_or_access_note: Public metadata.
+  raw_formats: [json]
+  update_strategy: incremental_by_date_range
+  implementation_status: not_started
+  enabled: false
+  notes: Job 12 in Prompt.md, promoted to #4 in recommended execution order.
+
+sec:
+  source_type: corporate_regulatory
+  authority: primary
+  official_url: https://www.sec.gov/edgar
+  api_docs_url: https://www.sec.gov/edgar/sec-api-documentation
+  acquisition_method: api
+  authentication_required: false
+  rate_limit: "10 req/s max, requires descriptive User-Agent"
+  license_or_access_note: Public filings.
+  raw_formats: [html, txt, xml, xbrl]
+  update_strategy: incremental_by_filing_date
+  implementation_status: not_started
+  enabled: false
+  notes: Job 09 in Prompt.md, promoted to #5 in recommended execution order.
+
+fda:
+  source_type: regulatory
+  authority: primary
+  official_url: https://www.fda.gov/
+  api_docs_url: https://open.fda.gov/apis/
+  acquisition_method: api
+  authentication_required: false
+  rate_limit: "openFDA: 240 req/min without key, 240 req/min with key (higher burst)"
+  license_or_access_note: Public regulatory documents.
+  raw_formats: [json, pdf, html]
+  update_strategy: incremental_by_approval_date
+  implementation_status: not_started
+  enabled: false
+  notes: Job 10 in Prompt.md, promoted to #6 in recommended execution order.
+
+ema:
+  source_type: regulatory
+  authority: primary
+  official_url: https://www.ema.europa.eu/
+  api_docs_url: null
+  acquisition_method: bulk_download
+  authentication_required: false
+  rate_limit: "unspecified, be polite"
+  license_or_access_note: Public EPAR documents; no stable REST API, uses bulk data exports.
+  raw_formats: [pdf, html, xlsx]
+  update_strategy: incremental_by_publication_date
+  implementation_status: not_started
+  enabled: false
+  notes: Job 11 in Prompt.md, promoted to #7 in recommended execution order.
+
+patents_wipo:
+  source_type: patent
+  authority: international
+  official_url: https://patentscope.wipo.int/
+  api_docs_url: null
+  acquisition_method: unknown
+  authentication_required: unknown
+  rate_limit: unknown
+  license_or_access_note: To be investigated in Job 08 — WIPO access mechanism is not yet confirmed.
+  raw_formats: []
+  update_strategy: null
+  implementation_status: not_started
+  enabled: false
+  notes: Job 03 in Prompt.md, promoted to #8 in recommended execution order.
+
+patents_uspto:
+  source_type: patent
+  authority: national
+  official_url: https://www.uspto.gov/
+  api_docs_url: https://developer.uspto.gov/
+  acquisition_method: api
+  authentication_required: unknown
+  rate_limit: unknown
+  license_or_access_note: To be investigated in Job 09.
+  raw_formats: []
+  update_strategy: null
+  implementation_status: not_started
+  enabled: false
+  notes: Job 04 in Prompt.md, promoted to #9 in recommended execution order.
+
+patents_epo:
+  source_type: patent
+  authority: regional
+  official_url: https://www.epo.org/
+  api_docs_url: https://www.epo.org/en/searching-for-patents/data/web-services/ops
+  acquisition_method: api
+  authentication_required: true
+  rate_limit: unknown
+  license_or_access_note: OPS requires registration; to be investigated in Job 10.
+  raw_formats: []
+  update_strategy: null
+  implementation_status: not_started
+  enabled: false
+  notes: Job 05 in Prompt.md, promoted to #10 in recommended execution order.
+
+company_pipeline:
+  source_type: corporate
+  authority: self_reported
+  official_url: null
+  api_docs_url: null
+  acquisition_method: scrape
+  authentication_required: false
+  rate_limit: per_company
+  license_or_access_note: Public pipeline pages; curated company_registry.yaml required first.
+  raw_formats: [html, pdf, json]
+  update_strategy: snapshot_on_change
+  implementation_status: not_started
+  enabled: false
+  notes: Job 07 in Prompt.md, promoted to #11 in recommended execution order.
+
+company_press_release:
+  source_type: corporate
+  authority: self_reported
+  official_url: null
+  api_docs_url: null
+  acquisition_method: scrape
+  authentication_required: false
+  rate_limit: per_company
+  license_or_access_note: Official company domains only.
+  raw_formats: [html, pdf]
+  update_strategy: incremental_by_release_date
+  implementation_status: not_started
+  enabled: false
+  notes: Job 08 in Prompt.md, promoted to #12 in recommended execution order.
+
+patent_bioactivity_corpus:
+  source_type: derived
+  authority: null
+  official_url: null
+  api_docs_url: null
+  acquisition_method: null
+  authentication_required: false
+  rate_limit: null
+  license_or_access_note: Second-pass job; depends on patents_wipo/uspto/epo identifiers.
+  raw_formats: []
+  update_strategy: null
+  implementation_status: not_started
+  enabled: false
+  notes: Job 13 in Prompt.md, promoted to #13 in recommended execution order.
+
+publication_bioactivity_corpus:
+  source_type: derived
+  authority: null
+  official_url: null
+  api_docs_url: null
+  acquisition_method: null
+  authentication_required: false
+  rate_limit: null
+  license_or_access_note: Second-pass job; depends on pubmed/europe_pmc identifiers.
+  raw_formats: []
+  update_strategy: null
+  implementation_status: not_started
+  enabled: false
+  notes: Job 14 in Prompt.md, promoted to #14 in recommended execution order.
+
+known_adc_asset_expansion:
+  source_type: derived
+  authority: null
+  official_url: null
+  api_docs_url: null
+  acquisition_method: null
+  authentication_required: false
+  rate_limit: null
+  license_or_access_note: Asset-centric expansion pass across all source jobs.
+  raw_formats: []
+  update_strategy: null
+  implementation_status: not_started
+  enabled: false
+  notes: Job 15 in Prompt.md, promoted to #15 in recommended execution order.
