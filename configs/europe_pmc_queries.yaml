@@ -1,0 +1,36 @@
+# Europe PMC query registry (Job 02).
+#
+# Mirrors the PubMed query family in configs/pubmed_queries.yaml (Prompt.md
+# section 6: "Search using the same controlled ADC query family where
+# possible"), translated into Europe PMC's field-query syntax. PubMed's
+# [tiab] tag restricts a term to title-or-abstract; Europe PMC has no single
+# combined field, so we spell it out as (TITLE:"x" OR ABSTRACT:"x").
+#
+# Verified live against https://www.ebi.ac.uk/europepmc/webservices/rest/search
+# on 2026-08-10: hit counts were in the same order of magnitude as the
+# equivalent PubMed query (e.g. EPMC_ADC_003 gave 2070 vs PubMed's 2526).
+
+queries:
+  - query_id: EPMC_ADC_001
+    query_version: 1
+    query_text: '(TITLE:"antibody-drug conjugate" OR ABSTRACT:"antibody-drug conjugate" OR TITLE:"antibody-drug conjugates" OR ABSTRACT:"antibody-drug conjugates")'
+    purpose: Primary hyphenated phrase form, singular and plural.
+    active: true
+
+  - query_id: EPMC_ADC_002
+    query_version: 1
+    query_text: '(TITLE:"antibody drug conjugate" OR ABSTRACT:"antibody drug conjugate" OR TITLE:"antibody drug conjugates" OR ABSTRACT:"antibody drug conjugates")'
+    purpose: Unhyphenated phrase form, singular and plural.
+    active: true
+
+  - query_id: EPMC_ADC_003
+    query_version: 1
+    query_text: '(TITLE:"ADC" OR ABSTRACT:"ADC") AND (TITLE:"antibody" OR ABSTRACT:"antibody") AND (TITLE:"conjugate" OR ABSTRACT:"conjugate")'
+    purpose: Abbreviation form, constrained by co-occurring antibody/conjugate terms to avoid unrelated "ADC" hits.
+    active: true
+
+  - query_id: EPMC_ADC_004
+    query_version: 1
+    query_text: '(TITLE:"immunoconjugate" OR ABSTRACT:"immunoconjugate") AND (TITLE:"cytotoxic" OR ABSTRACT:"cytotoxic")'
+    purpose: Older/alternative terminology for the same asset class.
+    active: true

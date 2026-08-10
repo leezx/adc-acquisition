@@ -6,7 +6,7 @@ Update this table whenever a source's `implementation_status` changes in `config
 | Source | Type | Implemented | API/Bulk | Raw Download | Incremental | Records | Status |
 |---|---|---|---|---|---|---:|---|
 | PubMed | Literature | Yes | Yes (E-utilities) | Yes (per-PMID XML) | Yes (`--resume` + date range) | 20 (test run) | Implemented, phase-1 reviewed |
-| Europe PMC | Literature | No | — | — | — | 0 | Not started |
+| Europe PMC | Literature | Yes | Yes (REST + fullTextXML) | Yes (per-record JSON + OA full text) | Yes (`--resume` + date range) | 20 (test run) | Implemented, phase-2 |
 | ClinicalTrials.gov | Clinical | No | — | — | — | 0 | Not started |
 | Crossref | Literature | No | — | — | — | 0 | Not started |
 | SEC | Regulatory | No | — | — | — | 0 | Not started |

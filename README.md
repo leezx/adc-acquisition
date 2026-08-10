@@ -113,7 +113,31 @@ already holds the content hash and version last seen. A monthly
    hash means changed (new version row, old raw snapshot never deleted).
 
 No separate index needs to be built for this — the checkpoint plus the two
-ledgers above already are that index.
+ledgers above already are that index. The same model (content manifest +
+discovery ledger + attempts ledger + checkpoint) is reused as-is for every
+subsequent job, including Europe PMC below.
+
+## Running the Europe PMC job (Job 02)
+
+```bash
+python -m adc_acquisition europe_pmc --dry-run --limit 20
+python -m adc_acquisition europe_pmc --limit 20
+python -m adc_acquisition europe_pmc --resume
+python -m adc_acquisition europe_pmc --since 2024-01-01 --until 2024-12-31
+```
+
+Same three-table + checkpoint model as PubMed
+(`DATA/manifests/europe_pmc{,_discovery,_attempts}.parquet`,
+`DATA/checkpoints/europe_pmc.json`), no API key required. One addition: for
+records Europe PMC itself marks `isOpenAccess=Y`, this job also fetches the
+JATS full-text XML (`fullTextXML` endpoint) — publisher paywalls are never
+bypassed. Full-text capture is tracked as a derived per-record flag rather
+than its own content version, so a full-text fetch that fails is retried on
+every subsequent run (even if the record's metadata itself is unchanged and
+skipped) instead of being treated as a permanent failure. No deduplication
+against the PubMed manifest happens here — a paper in both sources keeps two
+independent evidence rows by design (Prompt.md section 6); `pmid`/`doi` are
+preserved so a downstream system can join them.
 
 ## Tests
 
@@ -126,6 +150,7 @@ or used by the normal test suite.
 
 ## Status
 
-See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed) is implemented
-so far; every other source in `Prompt.md` is intentionally not started yet —
-sources are implemented and reviewed one at a time.
+See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed) and Job 02
+(Europe PMC) are implemented so far; every other source in `Prompt.md` is
+intentionally not started yet — sources are implemented and reviewed one at
+a time.
