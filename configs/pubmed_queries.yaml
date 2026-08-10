@@ -1,0 +1,35 @@
+# PubMed query registry (Job 01).
+#
+# Every query has a stable query_id so every discovered record can be traced
+# back to exactly the query that discovered it (Prompt.md section 20).
+# Never reuse a query_id for a materially different query_text — bump
+# query_version and mint a new query_id instead, so historical manifests
+# stay interpretable.
+#
+# term is passed to NCBI esearch verbatim (PubMed query syntax). [tiab] limits
+# a phrase to title/abstract; [tw] is text word (title/abstract/other terms).
+
+queries:
+  - query_id: PUBMED_ADC_001
+    query_version: 1
+    query_text: '"antibody-drug conjugate"[tiab] OR "antibody-drug conjugates"[tiab]'
+    purpose: Primary hyphenated phrase form, singular and plural.
+    active: true
+
+  - query_id: PUBMED_ADC_002
+    query_version: 1
+    query_text: '"antibody drug conjugate"[tiab] OR "antibody drug conjugates"[tiab]'
+    purpose: Unhyphenated phrase form, singular and plural.
+    active: true
+
+  - query_id: PUBMED_ADC_003
+    query_version: 1
+    query_text: 'ADC[tiab] AND antibody[tiab] AND conjugate[tiab]'
+    purpose: Abbreviation form, constrained by co-occurring antibody/conjugate terms to avoid unrelated "ADC" hits (e.g. AIDS dementia complex, analog-to-digital converter).
+    active: true
+
+  - query_id: PUBMED_ADC_004
+    query_version: 1
+    query_text: 'immunoconjugate[tiab] AND cytotoxic[tiab]'
+    purpose: Older/alternative terminology for the same asset class.
+    active: true
