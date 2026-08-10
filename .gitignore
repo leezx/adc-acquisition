@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+.DS_Store
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# Secrets — never commit API keys.
+.env
+
+# Raw downloaded evidence stays local/external. Only normalized manifests
+# and reports are small enough, and meant, to live in this repository.
+DATA/raw/
+DATA/logs/
+DATA/checkpoints/
+!DATA/raw/.gitkeep
+!DATA/logs/.gitkeep
+!DATA/checkpoints/.gitkeep
