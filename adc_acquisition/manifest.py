@@ -85,3 +85,30 @@ def write_manifest(rows: list[dict[str, Any]], path: Path, extra_fields: list[st
     path.parent.mkdir(parents=True, exist_ok=True)
     combined.to_parquet(path, index=False)
     return combined
+
+
+def append_only(rows: list[dict[str, Any]], path: Path, columns: list[str]) -> pd.DataFrame:
+    """Append rows to a ledger-style parquet file — no upsert, no dedup.
+
+    Used for provenance/attempt logs (e.g. "which query discovered this
+    record, on which run" or "this run's fetch attempt for this record
+    failed"). Every run's events are new rows, not replacements of prior
+    state — unlike write_manifest, which represents current content-version
+    state and must never let a later row silently erase an earlier one's
+    evidence.
+    """
+    new_df = pd.DataFrame(rows, columns=columns) if rows else pd.DataFrame(columns=columns)
+
+    path = Path(path)
+    if path.exists():
+        existing_df = pd.read_parquet(path)
+        for col in columns:
+            if col not in existing_df.columns:
+                existing_df[col] = None
+        combined = pd.concat([existing_df[columns], new_df[columns]], ignore_index=True)
+    else:
+        combined = new_df
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    combined.to_parquet(path, index=False)
+    return combined

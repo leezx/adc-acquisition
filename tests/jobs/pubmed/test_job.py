@@ -185,7 +185,7 @@ def test_changed_content_bumps_version_without_overwriting_old_snapshot(tmp_path
 
 
 @responses.activate
-def test_missing_pmid_in_efetch_response_is_logged_as_failure(tmp_path, monkeypatch):
+def test_missing_pmid_in_efetch_response_is_logged_as_failure_not_in_content_manifest(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     responses.add_callback(responses.GET, f"{EUTILS_BASE}/esearch.fcgi", callback=_esearch_callback, content_type="application/json")
     responses.add_callback(responses.POST, f"{EUTILS_BASE}/efetch.fcgi", callback=_make_efetch_callback(missing_ids={"101"}))
@@ -194,11 +194,118 @@ def test_missing_pmid_in_efetch_response_is_logged_as_failure(tmp_path, monkeypa
 
     assert result.records_failed == 1
     assert result.records_downloaded == 2
-    df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed.parquet")
-    failed_row = df[df["source_record_id"] == "101"].iloc[0]
-    assert failed_row["download_status"] == "failed"
+
+    content_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed.parquet")
+    # A failed attempt must never occupy a content-version slot.
+    assert "101" not in set(content_df["source_record_id"])
+
+    attempts_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed_attempts.parquet")
+    failed_attempt = attempts_df[attempts_df["source_record_id"] == "101"].iloc[0]
+    assert failed_attempt["status"] == "failed"
+    assert failed_attempt["error"] == "missing_from_batch_response"
+    assert pd.isna(failed_attempt["version"])
+
     failures_log = (tmp_path / "DATA" / "logs" / "pubmed_failures.log").read_text()
     assert "pmid=101" in failures_log
+
+
+@responses.activate
+def test_failure_after_prior_success_does_not_touch_existing_content_snapshot(tmp_path, monkeypatch):
+    """success v1 -> later fetch failure -> success v1 must remain completely
+    unchanged, and the failure must still be independently auditable."""
+    _setup(tmp_path, monkeypatch)
+    responses.add_callback(responses.GET, f"{EUTILS_BASE}/esearch.fcgi", callback=_esearch_callback, content_type="application/json")
+    responses.add_callback(responses.POST, f"{EUTILS_BASE}/efetch.fcgi", callback=_make_efetch_callback())
+    PubMedJob().run(_base_args(tmp_path, limit=1))  # PMID 100 -> success v1
+
+    before_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed.parquet")
+    before_row = before_df[before_df["source_record_id"] == "100"].iloc[0]
+
+    responses.reset()
+    responses.add_callback(responses.GET, f"{EUTILS_BASE}/esearch.fcgi", callback=_esearch_callback, content_type="application/json")
+    responses.add_callback(responses.POST, f"{EUTILS_BASE}/efetch.fcgi", callback=_make_efetch_callback(missing_ids={"100"}))
+    result = PubMedJob().run(_base_args(tmp_path, limit=1))
+
+    assert result.records_failed == 1
+    assert result.records_downloaded == 0
+
+    after_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed.parquet")
+    after_rows = after_df[after_df["source_record_id"] == "100"]
+    assert len(after_rows) == 1  # still exactly one content snapshot, not replaced
+    after_row = after_rows.iloc[0]
+    assert after_row["version"] == before_row["version"] == 1
+    assert after_row["content_hash"] == before_row["content_hash"]
+    assert after_row["download_status"] == "success"
+
+    attempts_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed_attempts.parquet")
+    pmid_100_attempts = attempts_df[attempts_df["source_record_id"] == "100"]
+    assert sorted(pmid_100_attempts["status"].tolist()) == ["failed", "success"]
+
+
+@responses.activate
+def test_success_after_prior_failure_still_starts_at_version_one(tmp_path, monkeypatch):
+    """first attempt failed -> later succeeds -> success is content v1 (not
+    v2), and the earlier failure remains auditable in the attempts ledger."""
+    _setup(tmp_path, monkeypatch)
+    responses.add_callback(responses.GET, f"{EUTILS_BASE}/esearch.fcgi", callback=_esearch_callback, content_type="application/json")
+    responses.add_callback(responses.POST, f"{EUTILS_BASE}/efetch.fcgi", callback=_make_efetch_callback(missing_ids={"100"}))
+    first = PubMedJob().run(_base_args(tmp_path, limit=1))
+    assert first.records_failed == 1
+    assert first.records_downloaded == 0
+
+    content_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed.parquet")
+    assert "100" not in set(content_df["source_record_id"])
+
+    responses.reset()
+    responses.add_callback(responses.GET, f"{EUTILS_BASE}/esearch.fcgi", callback=_esearch_callback, content_type="application/json")
+    responses.add_callback(responses.POST, f"{EUTILS_BASE}/efetch.fcgi", callback=_make_efetch_callback())
+    second = PubMedJob().run(_base_args(tmp_path, limit=1))
+    assert second.records_downloaded == 1
+
+    content_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed.parquet")
+    row100 = content_df[content_df["source_record_id"] == "100"]
+    assert len(row100) == 1
+    assert row100.iloc[0]["version"] == 1
+
+    attempts_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed_attempts.parquet")
+    pmid_100_attempts = attempts_df[attempts_df["source_record_id"] == "100"]
+    assert sorted(pmid_100_attempts["status"].tolist()) == ["failed", "success"]
+
+
+@responses.activate
+def test_discovery_ledger_preserves_every_discovering_query(tmp_path, monkeypatch):
+    """A PMID hit by multiple queries must keep every discovery path, not
+    just the first — the manifest's single query_id field is not enough."""
+    _setup(tmp_path, monkeypatch)
+    responses.add_callback(responses.GET, f"{EUTILS_BASE}/esearch.fcgi", callback=_esearch_callback, content_type="application/json")
+    responses.add_callback(responses.POST, f"{EUTILS_BASE}/efetch.fcgi", callback=_make_efetch_callback())
+
+    PubMedJob().run(_base_args(tmp_path))
+
+    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed_discovery.parquet")
+    pmid_101_hits = discovery_df[discovery_df["source_record_id"] == "101"]
+    assert sorted(pmid_101_hits["query_id"].tolist()) == ["Q_A", "Q_B"]
+    assert set(pmid_101_hits["query_version"]) == {1}
+    assert all(pmid_101_hits["query_text"].isin(["term-a", "term-b"]))
+
+    # PMID 100 was only discovered by Q_A.
+    pmid_100_hits = discovery_df[discovery_df["source_record_id"] == "100"]
+    assert pmid_100_hits["query_id"].tolist() == ["Q_A"]
+
+
+@responses.activate
+def test_discovery_ledger_is_append_only_across_runs(tmp_path, monkeypatch):
+    _setup(tmp_path, monkeypatch)
+    responses.add_callback(responses.GET, f"{EUTILS_BASE}/esearch.fcgi", callback=_esearch_callback, content_type="application/json")
+    responses.add_callback(responses.POST, f"{EUTILS_BASE}/efetch.fcgi", callback=_make_efetch_callback())
+
+    PubMedJob().run(_base_args(tmp_path))
+    PubMedJob().run(_base_args(tmp_path))
+
+    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed_discovery.parquet")
+    # 2 runs x (Q_A: 100,101 + Q_B: 101,102) = 8 discovery events, not deduped.
+    assert len(discovery_df) == 8
+    assert discovery_df["run_id"].nunique() == 2
 
 
 @responses.activate
@@ -211,8 +318,12 @@ def test_malformed_efetch_response_fails_whole_batch_without_crashing(tmp_path, 
 
     assert result.records_failed == 3
     assert result.records_downloaded == 0
-    df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed.parquet")
-    assert (df["download_status"] == "failed").all()
+    content_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed.parquet")
+    assert len(content_df) == 0  # no content was ever materialized
+
+    attempts_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "pubmed_attempts.parquet")
+    assert len(attempts_df) == 3
+    assert (attempts_df["status"] == "failed").all()
 
 
 @responses.activate

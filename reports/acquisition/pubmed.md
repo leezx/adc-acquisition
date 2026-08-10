@@ -29,7 +29,7 @@ since=(no lower bound), until=(no upper bound)
 
 ## Duplicates
 
-201 PMIDs were discovered by more than one query (each is recorded once in the manifest, attributed to the first query that discovered it; all discovering queries are still visible in this report's per-query counts).
+201 PMIDs were discovered by more than one query. The content manifest (`pubmed.parquet`) attributes each record to a single "primary" query per Prompt.md section 3's single-valued contract, but every discovering query is preserved as a separate row in `pubmed_discovery.parquet` (append-only, one row per (PMID, query, run)) — that ledger, not this report, is the authoritative answer to "why is this document in our corpus."
 
 ### Records per query
 
@@ -48,7 +48,7 @@ since=(no lower bound), until=(no upper bound)
 
 ## Failed downloads
 
-0 (none)
+0 (none). Failed attempts never occupy a content-manifest version slot — they live only in the attempts ledger, so they can never overwrite or be overwritten by a real evidence snapshot.
 
 ## Rate/access limitations
 
