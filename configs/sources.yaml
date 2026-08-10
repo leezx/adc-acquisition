@@ -31,13 +31,13 @@ europe_pmc:
   api_docs_url: https://europepmc.org/RestfulWebService
   acquisition_method: api
   authentication_required: false
-  rate_limit: "unspecified, be polite"
-  license_or_access_note: Mixed; only open-access full text may be downloaded.
-  raw_formats: [xml, json]
-  update_strategy: incremental_by_date_range
-  implementation_status: not_started
-  enabled: false
-  notes: Job 02. Not yet implemented.
+  rate_limit: "no official published limit; ~10 req/s commonly cited by users on the EBI developer forum, we use 5 req/s"
+  license_or_access_note: Mixed; only open-access full text (isOpenAccess=Y) may be downloaded, never publisher paywalls.
+  raw_formats: [json, xml]
+  update_strategy: content_hash_diff_no_date_cursor_yet
+  implementation_status: implemented
+  enabled: true
+  notes: Job 02. Metadata via search (cursorMark pagination) + open-access full text via fullTextXML. No PubMed dedup — both sources retain independent evidence per Prompt.md section 6.
 
 clinicaltrials_gov:
   source_type: clinical_registry

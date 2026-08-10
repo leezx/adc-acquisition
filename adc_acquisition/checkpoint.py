@@ -48,8 +48,20 @@ class CheckpointStore:
         version: int,
         last_seen_at: str,
     ) -> None:
+        """Replace the record's core content-version state. Use this when a
+        new/changed evidence snapshot was just materialized — a genuine
+        content change is a reasonable point to also reconsider any
+        derived state (e.g. Europe PMC's fulltext_downloaded flag) that was
+        set via update_record_state."""
         checkpoint.setdefault("records", {})[source_record_id] = {
             "content_hash": content_hash,
             "version": version,
             "last_seen_at": last_seen_at,
         }
+
+    def update_record_state(self, checkpoint: dict[str, Any], source_record_id: str, **fields: Any) -> None:
+        """Merge additional fields into a record's state without touching
+        the rest — for job-specific derived flags (e.g. "did we already
+        fetch full text for this record") that can be resolved on a run
+        where the core content itself was unchanged and skipped."""
+        checkpoint.setdefault("records", {}).setdefault(source_record_id, {}).update(fields)
