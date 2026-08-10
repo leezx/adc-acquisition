@@ -37,7 +37,7 @@ europe_pmc:
   update_strategy: content_hash_diff_no_date_cursor_yet
   implementation_status: implemented
   enabled: true
-  notes: Job 02. Metadata via search (cursorMark pagination) + open-access full text via fullTextXML. No PubMed dedup — both sources retain independent evidence per Prompt.md section 6.
+  notes: Job 02. Metadata via search (cursorMark pagination). Open-access full text (fullTextXML) is a separate, independently versioned artifact (europe_pmc_fulltext.parquet, parent_record_id linking back), not a field on the metadata row. No PubMed dedup — both sources retain independent evidence per Prompt.md section 6.
 
 clinicaltrials_gov:
   source_type: clinical_registry

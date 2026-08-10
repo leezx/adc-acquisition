@@ -47,11 +47,14 @@ since=(no lower bound), until=(no upper bound) (filtered via `FIRST_PDATE:[...]`
 - records with abstract: 19
 - records with DOI: 12
 - open access: 0
-- full text XML downloaded: 0
+
+## Full text (independent artifact, see `europe_pmc_fulltext.parquet`)
+
+0 full-text fetches attempted this run (0 new/changed, 0 unchanged, 0 failed). Full text is tracked as its own content-version manifest, keyed by pmcid with `parent_record_id` pointing back to the metadata record — never as a field on the metadata row itself, so a full-text fetch failure or a later successful retry can never touch the metadata snapshot.
 
 ## Failed downloads
 
-0 (none). As with PubMed, failed attempts never occupy a content-manifest version slot.
+0 (none). As with PubMed, failed attempts never occupy a content-manifest version slot. Full-text failures are tracked separately in `europe_pmc_fulltext_attempts.parquet` and likewise never touch a content-manifest version slot (metadata's or full text's own).
 
 ## Rate/access limitations
 
@@ -60,7 +63,7 @@ No API key or authentication required. No officially published numeric rate limi
 ## Data quality observations
 
 - `abstractText` from the `resultType=core` search response is used directly as the abstract; no re-processing.
-- A full-text fetch that fails (e.g. Europe PMC's own metadata says open access but the fullTextXML endpoint 404s) is retried on every subsequent run until it succeeds — it is not a permanent per-record failure, since it's tracked via a derived checkpoint flag (`fulltext_downloaded`) rather than the content-version hash.
+- A full-text fetch that fails (e.g. Europe PMC's own metadata says open access but the fullTextXML endpoint 404s) is retried on every subsequent run — full text is content-hash-checkpointed exactly like metadata, so it is never a permanent per-record failure.
 - No deduplication against the PubMed manifest is performed; `pmid`/`doi` are preserved so a downstream join is possible, but a paper appearing in both sources intentionally keeps two independent evidence rows (Prompt.md section 6).
 
 ## Known coverage gaps

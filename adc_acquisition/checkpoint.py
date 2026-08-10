@@ -5,6 +5,12 @@ Tracks, per source_record_id, the content hash of the last-downloaded
 version — this is what lets a job skip re-downloading unchanged records
 (Prompt.md section 4) and detect changed records for versioning
 (Prompt.md section 23) instead of overwriting.
+
+A job that acquires more than one kind of content-versioned artifact for the
+same underlying record (e.g. Europe PMC's metadata JSON *and* its open-access
+full-text XML) tracks each artifact type in its own `namespace` — same
+checkpoint file, same (content_hash, version) shape, just keyed separately so
+one artifact's state never collides with or gets overwritten by another's.
 """
 
 from __future__ import annotations
@@ -12,6 +18,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
+
+DEFAULT_NAMESPACE = "records"
 
 
 class CheckpointStore:
@@ -37,8 +45,10 @@ class CheckpointStore:
             json.dump(data, f, indent=2, sort_keys=True)
         tmp_path.replace(self.path)
 
-    def get_record_state(self, checkpoint: dict[str, Any], source_record_id: str) -> dict[str, Any] | None:
-        return checkpoint.get("records", {}).get(source_record_id)
+    def get_record_state(
+        self, checkpoint: dict[str, Any], source_record_id: str, namespace: str = DEFAULT_NAMESPACE
+    ) -> dict[str, Any] | None:
+        return checkpoint.get(namespace, {}).get(source_record_id)
 
     def set_record_state(
         self,
@@ -47,21 +57,10 @@ class CheckpointStore:
         content_hash: str,
         version: int,
         last_seen_at: str,
+        namespace: str = DEFAULT_NAMESPACE,
     ) -> None:
-        """Replace the record's core content-version state. Use this when a
-        new/changed evidence snapshot was just materialized — a genuine
-        content change is a reasonable point to also reconsider any
-        derived state (e.g. Europe PMC's fulltext_downloaded flag) that was
-        set via update_record_state."""
-        checkpoint.setdefault("records", {})[source_record_id] = {
+        checkpoint.setdefault(namespace, {})[source_record_id] = {
             "content_hash": content_hash,
             "version": version,
             "last_seen_at": last_seen_at,
         }
-
-    def update_record_state(self, checkpoint: dict[str, Any], source_record_id: str, **fields: Any) -> None:
-        """Merge additional fields into a record's state without touching
-        the rest — for job-specific derived flags (e.g. "did we already
-        fetch full text for this record") that can be resolved on a run
-        where the core content itself was unchanged and skipped."""
-        checkpoint.setdefault("records", {}).setdefault(source_record_id, {}).update(fields)

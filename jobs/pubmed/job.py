@@ -312,7 +312,10 @@ class PubMedJob(AcquisitionJob):
             since=since,
             until=args.until,
         )
-        report_path = Path("reports/acquisition/pubmed.md")
+        # reports/ is a sibling of DATA/ (Prompt.md section 2), scoped to
+        # wherever --output pointed — otherwise a scratch/test run with a
+        # different --output would silently clobber the real report.
+        report_path = output_dir.parent / "reports" / "acquisition" / "pubmed.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(report_text, encoding="utf-8")
 

@@ -19,13 +19,16 @@ def build_report(
     duplicate_ids: set[str],
     since: str | None = None,
     until: str | None = None,
+    fulltext_attempted: int = 0,
+    fulltext_new_or_changed: int = 0,
+    fulltext_unchanged: int = 0,
+    fulltext_failed: int = 0,
 ) -> str:
     run_df = manifest_df[manifest_df["source_record_id"].isin(unique_ids)] if not manifest_df.empty else manifest_df
 
     records_with_abstract = int(run_df["abstract"].notna().sum()) if not run_df.empty else 0
     records_with_doi = int(run_df["doi"].notna().sum()) if not run_df.empty else 0
     open_access = int(run_df["is_open_access"].fillna(False).sum()) if not run_df.empty else 0
-    fulltext_downloaded = int(run_df["fulltext_downloaded"].fillna(False).sum()) if not run_df.empty else 0
 
     missing_fields = []
     for col in ["title", "abstract", "doi", "journal", "publication_or_release_date"]:
@@ -78,11 +81,14 @@ since={since or "(no lower bound)"}, until={until or "(no upper bound)"} (filter
 - records with abstract: {records_with_abstract}
 - records with DOI: {records_with_doi}
 - open access: {open_access}
-- full text XML downloaded: {fulltext_downloaded}
+
+## Full text (independent artifact, see `europe_pmc_fulltext.parquet`)
+
+{fulltext_attempted} full-text fetches attempted this run ({fulltext_new_or_changed} new/changed, {fulltext_unchanged} unchanged, {fulltext_failed} failed). Full text is tracked as its own content-version manifest, keyed by pmcid with `parent_record_id` pointing back to the metadata record — never as a field on the metadata row itself, so a full-text fetch failure or a later successful retry can never touch the metadata snapshot.
 
 ## Failed downloads
 
-{result.records_failed} ({'see DATA/logs/europe_pmc_failures.log and europe_pmc_attempts.parquet (status=failed)' if result.records_failed else 'none'}). As with PubMed, failed attempts never occupy a content-manifest version slot.
+{result.records_failed} ({'see DATA/logs/europe_pmc_failures.log and europe_pmc_attempts.parquet (status=failed)' if result.records_failed else 'none'}). As with PubMed, failed attempts never occupy a content-manifest version slot. Full-text failures are tracked separately in `europe_pmc_fulltext_attempts.parquet` and likewise never touch a content-manifest version slot (metadata's or full text's own).
 
 ## Rate/access limitations
 
@@ -91,7 +97,7 @@ No API key or authentication required. No officially published numeric rate limi
 ## Data quality observations
 
 - `abstractText` from the `resultType=core` search response is used directly as the abstract; no re-processing.
-- A full-text fetch that fails (e.g. Europe PMC's own metadata says open access but the fullTextXML endpoint 404s) is retried on every subsequent run until it succeeds — it is not a permanent per-record failure, since it's tracked via a derived checkpoint flag (`fulltext_downloaded`) rather than the content-version hash.
+- A full-text fetch that fails (e.g. Europe PMC's own metadata says open access but the fullTextXML endpoint 404s) is retried on every subsequent run — full text is content-hash-checkpointed exactly like metadata, so it is never a permanent per-record failure.
 - No deduplication against the PubMed manifest is performed; `pmid`/`doi` are preserved so a downstream join is possible, but a paper appearing in both sources intentionally keeps two independent evidence rows (Prompt.md section 6).
 
 ## Known coverage gaps

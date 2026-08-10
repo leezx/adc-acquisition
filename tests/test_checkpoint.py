@@ -36,3 +36,16 @@ def test_set_record_state_overwrites_prior_version(tmp_path):
     state = store.get_record_state(checkpoint, "123")
     assert state["version"] == 2
     assert state["content_hash"] == "hash-v2"
+
+
+def test_namespaces_isolate_state_for_the_same_id(tmp_path):
+    """A metadata record and a derived artifact (e.g. its full text) sharing
+    the same underlying id must not collide with each other's state."""
+    store = CheckpointStore("europe_pmc", tmp_path)
+    checkpoint = store.load()
+    store.set_record_state(checkpoint, "same-id", "metadata-hash", 1, "t1", namespace="records")
+    store.set_record_state(checkpoint, "same-id", "fulltext-hash", 1, "t1", namespace="fulltext_records")
+
+    assert store.get_record_state(checkpoint, "same-id", namespace="records")["content_hash"] == "metadata-hash"
+    assert store.get_record_state(checkpoint, "same-id", namespace="fulltext_records")["content_hash"] == "fulltext-hash"
+    assert store.get_record_state(checkpoint, "same-id", namespace="records")["version"] == 1
