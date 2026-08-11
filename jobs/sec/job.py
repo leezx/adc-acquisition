@@ -61,6 +61,19 @@ the --since in effect came from the resume cursor itself, not from an
 explicit --since the caller typed — an explicit date range is trusted
 literally, same as every other job.
 
+Two further protections keep that retry union itself well-behaved:
+(1) the filing-index page fetch has its own success/failure attempt
+identity (f"{accession}{FILING_INDEX_SUFFIX}" in sec_exhibits_attempts),
+so a resolved filing-index failure actually leaves the retry set instead
+of being permanently stuck on its one and only ever-recorded "failed"
+row; (2) a small set of unambiguously PERMANENT source-side conditions
+(TERMINAL_PRIMARY_ERRORS — currently just "no_primary_document") are
+excluded from the retry set for their primary document, and fresh/
+in-range filings always get priority over backlog retries within a
+--limit budget — otherwise a handful of permanently-broken historical
+filings could occupy every --resume run's --limit budget forever and
+starve out genuinely new filings.
+
 SEC's fair access policy is unusually strict and officially documented:
 max 10 req/s, and every request MUST carry an identifying User-Agent
 (name/tool + contact) or SEC returns HTTP 403 and may briefly block the
@@ -113,6 +126,26 @@ EXHIBIT_ATTEMPT_COLUMNS = [
     "status", "http_status", "error", "content_hash", "version",
 ]
 
+# A distinct "artifact identity" for the filing-index page fetch itself
+# (as opposed to any individual exhibit filename) -- gets its OWN success/
+# failure attempt row every run, keyed by f"{accession_number}{FILING_INDEX_SUFFIX}",
+# so a filing-index failure can self-heal out of the unresolved retry set
+# once a later run's filing-index fetch actually succeeds. Without this,
+# nothing ever records a "success" for the filing-index step itself (only
+# individual exhibits get success rows), so its one and only recorded
+# attempt would stay "failed" forever, in a book that only ever records
+# the *most recent* row -- permanently unresolved even after the real
+# problem is long gone.
+FILING_INDEX_SUFFIX = ":__filing_index__"
+
+# SEC's own submissions-API metadata provided no primaryDocument for this
+# filing at all (pre-2002 filings sometimes lack one) -- a permanent,
+# source-side condition, not a fetch failure that might resolve on retry.
+# Excluded from --resume's unresolved retry set for the PRIMARY document
+# specifically; the filing's exhibits (if any) are still tracked
+# independently via _unresolved_exhibit_parent_ids.
+TERMINAL_PRIMARY_ERRORS = {"no_primary_document"}
+
 
 @dataclass(frozen=True)
 class Company:
@@ -136,13 +169,13 @@ def _now_iso() -> str:
 
 
 def _unresolved_exhibit_parent_ids(checkpoint: dict, exhibits_attempts_path: Path) -> set[str]:
-    """Accession numbers with an exhibit (or, when the filing-index page
-    itself failed, the bare accession number) whose MOST RECENT recorded
-    attempt was a failure with no later success — i.e. still genuinely
-    unresolved, not just "failed once, ages ago, then fixed." Used so
-    --resume's date-bounded discovery doesn't let an unresolved exhibit
-    failure permanently drop out of scope once its filing predates the
-    resume cursor."""
+    """Accession numbers with an exhibit, OR the filing-index page fetch
+    itself (identity f"{accession_number}{FILING_INDEX_SUFFIX}"), whose
+    MOST RECENT recorded attempt was a failure with no later success —
+    i.e. still genuinely unresolved, not just "failed once, ages ago,
+    then fixed." Used so --resume's date-bounded discovery doesn't let an
+    unresolved exhibit/filing-index failure permanently drop out of scope
+    once its filing predates the resume cursor."""
     if not exhibits_attempts_path.exists():
         return set()
     df = pd.read_parquet(exhibits_attempts_path)
@@ -151,6 +184,23 @@ def _unresolved_exhibit_parent_ids(checkpoint: dict, exhibits_attempts_path: Pat
     latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
     failed_ids = set(latest.loc[latest["status"] == "failed", "source_record_id"])
     return {exhibit_id.split(":", 1)[0] for exhibit_id in failed_ids}
+
+
+def _terminal_primary_accession_ids(attempts_path: Path) -> set[str]:
+    """Accession numbers whose most recent primary-document attempt is a
+    known-permanent, source-side condition (see TERMINAL_PRIMARY_ERRORS) —
+    excluded from --resume's unresolved retry set for their primary
+    document specifically, so a handful of permanently-broken historical
+    filings can never starve out fresh/in-range filings from a --limit
+    budget by occupying the retry set forever."""
+    if not attempts_path.exists():
+        return set()
+    df = pd.read_parquet(attempts_path)
+    if df.empty:
+        return set()
+    latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
+    terminal = latest[(latest["status"] == "failed") & (latest["error"].isin(TERMINAL_PRIMARY_ERRORS))]
+    return set(terminal["source_record_id"])
 
 
 def _attempt_row(
@@ -229,11 +279,21 @@ class SECJob(AcquisitionJob):
         # prior run must be unioned back in even if it now falls before
         # the cursor, or it would silently and permanently drop out of
         # every future --resume run the moment the cursor passes its date.
+        # A handful of PERMANENT source-side gaps are excluded from this
+        # (TERMINAL_PRIMARY_ERRORS) so they can't occupy the retry set
+        # forever; everything else in the retry set is still tracked
+        # separately from fresh/in-range candidates (fresh_accession_ids
+        # below) so a --limit budget always favors fresh filings first —
+        # a backlog of old, still-unresolved-but-not-terminal failures
+        # (e.g. a run of 404s that might genuinely resolve later) must
+        # never be able to starve new filings out of every run forever.
         unresolved_exhibit_parent_ids: set[str] = set()
+        terminal_primary_ids: set[str] = set()
         if used_resume_cursor:
             unresolved_exhibit_parent_ids = _unresolved_exhibit_parent_ids(
                 checkpoint, output_dir / "manifests" / "sec_exhibits_attempts.parquet"
             )
+            terminal_primary_ids = _terminal_primary_accession_ids(attempts_path=output_dir / "manifests" / "sec_attempts.parquet")
 
         record_first_query: dict[str, tuple[str, str]] = {}
         record_query_hits: dict[str, set[str]] = defaultdict(set)
@@ -241,6 +301,7 @@ class SECJob(AcquisitionJob):
         query_id_counts: Counter = Counter()
         query_text_by_id: dict[str, str] = {}
         companies_used: list[str] = []
+        fresh_accession_ids: set[str] = set()
 
         for company in companies:
             for cik in company.ciks:
@@ -262,22 +323,24 @@ class SECJob(AcquisitionJob):
 
                 relevant_all = filter_relevant_forms(all_filings)
                 if since or until:
-                    relevant = [f for f in relevant_all if within_date_range(f.filing_date, since, until)]
+                    relevant_in_scope = [f for f in relevant_all if within_date_range(f.filing_date, since, until)]
                 else:
-                    relevant = relevant_all
+                    relevant_in_scope = relevant_all
+                fresh_accession_ids.update(f.accession_number for f in relevant_in_scope)
+                relevant = relevant_in_scope
 
                 if used_resume_cursor:
-                    in_scope_ids = {f.accession_number for f in relevant}
+                    in_scope_ids = {f.accession_number for f in relevant_in_scope}
                     resolved_primary_ids = checkpoint.get("records", {})
                     unresolved = [
                         f for f in relevant_all
                         if f.accession_number not in in_scope_ids
                         and (
-                            f.accession_number not in resolved_primary_ids
+                            (f.accession_number not in resolved_primary_ids and f.accession_number not in terminal_primary_ids)
                             or f.accession_number in unresolved_exhibit_parent_ids
                         )
                     ]
-                    relevant = relevant + unresolved
+                    relevant = relevant_in_scope + unresolved
 
                 query_id_counts[query_id] = len(relevant)
                 query_text_by_id[query_id] = query_text
@@ -299,11 +362,25 @@ class SECJob(AcquisitionJob):
                 "regardless of --limit; --limit only caps how many are materialized"
             )
 
-        all_ids.sort()
-        target_ids = all_ids[: args.limit] if args.limit else all_ids
+        # Fresh/in-range candidates always get priority for a --limit
+        # budget over backlog retries carried in by --resume's unresolved
+        # union — otherwise a backlog of old, still-unresolved failures
+        # could occupy every slot every run and starve out new filings
+        # indefinitely (see TERMINAL_PRIMARY_ERRORS above for the other
+        # half of this fix: excluding known-permanent gaps from the
+        # backlog entirely). With no --resume backlog in play, this is
+        # simply every discovered id, sorted, same as before.
+        retry_backlog_ids = sorted(aid for aid in all_ids if aid not in fresh_accession_ids)
+        ordered_ids = sorted(fresh_accession_ids & set(all_ids)) + retry_backlog_ids
+        target_ids = ordered_ids[: args.limit] if args.limit else ordered_ids
 
         if args.dry_run:
             result.notes.append(f"dry-run: would materialize {len(target_ids)} of {len(all_ids)} discovered filings")
+            if retry_backlog_ids:
+                result.notes.append(
+                    f"{len(retry_backlog_ids)} of those are --resume backlog retries (unresolved, predate the cursor) — "
+                    "fresh/in-range filings are prioritized first within --limit"
+                )
             return result
 
         now = _now_iso()
@@ -412,6 +489,7 @@ class SECJob(AcquisitionJob):
             # whether the primary filing document above succeeded, failed,
             # or was unchanged — a primary-document failure must never
             # suppress exhibit acquisition for the same filing. ---
+            filing_index_id = f"{accession_number}{FILING_INDEX_SUFFIX}"
             try:
                 index_html = client.get_filing_index_page(cik, accession_number)
                 document_entries = parse_document_format_table(index_html)
@@ -419,9 +497,18 @@ class SECJob(AcquisitionJob):
             except requests.RequestException as exc:
                 logger.warning("accession=%s filing index page fetch failed: %s", accession_number, exc)
                 exhibit_attempt_rows.append(
-                    _exhibit_attempt_row(accession_number, accession_number, run_id, now, "failed", error=f"filing_index_fetch_failed: {exc}")
+                    _exhibit_attempt_row(filing_index_id, accession_number, run_id, now, "failed", error=f"filing_index_fetch_failed: {exc}")
                 )
                 continue
+            else:
+                # A success row for the filing-index step itself (distinct
+                # from any individual exhibit's row) so a prior failure can
+                # self-heal out of the unresolved retry set — otherwise
+                # this identity's one and only recorded attempt would stay
+                # "failed" forever, since nothing else ever writes to it.
+                exhibit_attempt_rows.append(
+                    _exhibit_attempt_row(filing_index_id, accession_number, run_id, now, "success")
+                )
 
             for entry in exhibit_entries:
                 filename = entry.filename
@@ -488,6 +575,12 @@ class SECJob(AcquisitionJob):
         checkpoint["last_success_max_date"] = until or now[:10]
         checkpoint_store.save(checkpoint)
 
+        # The filing-index step's own success/failure rows (identity
+        # f"{accession}{FILING_INDEX_SUFFIX}") live in the same ledger for
+        # retry-set bookkeeping, but aren't themselves exhibit-content
+        # outcomes — exclude them from the exhibit acquisition stats below.
+        real_exhibit_attempt_rows = [r for r in exhibit_attempt_rows if not r["source_record_id"].endswith(FILING_INDEX_SUFFIX)]
+
         report_text = build_report(
             result=result,
             manifest_df=manifest_df,
@@ -495,10 +588,10 @@ class SECJob(AcquisitionJob):
             query_id_counts=query_id_counts,
             unique_ids=set(all_ids),
             duplicate_ids=duplicate_ids,
-            exhibit_attempted=len(exhibit_attempt_rows),
-            exhibit_new_or_changed=sum(1 for r in exhibit_attempt_rows if r["status"] == "success"),
-            exhibit_unchanged=sum(1 for r in exhibit_attempt_rows if r["status"] == "skipped_unchanged"),
-            exhibit_failed=sum(1 for r in exhibit_attempt_rows if r["status"] == "failed"),
+            exhibit_attempted=len(real_exhibit_attempt_rows),
+            exhibit_new_or_changed=sum(1 for r in real_exhibit_attempt_rows if r["status"] == "success"),
+            exhibit_unchanged=sum(1 for r in real_exhibit_attempt_rows if r["status"] == "skipped_unchanged"),
+            exhibit_failed=sum(1 for r in real_exhibit_attempt_rows if r["status"] == "failed"),
         )
         report_path = output_dir.parent / "reports" / "acquisition" / "sec.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)

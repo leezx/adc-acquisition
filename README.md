@@ -236,7 +236,16 @@ into scope on the next `--resume` run regardless of its `filing_date`, so
 it can never silently age out of every future incremental run just because
 the cursor passed it. This union only kicks in for the *implicit*
 resume cursor — an explicit `--since` you type yourself is trusted
-literally, same as every other job.
+literally, same as every other job. Two more protections keep that retry
+union itself well-behaved: the filing-index page fetch has its own
+success/failure attempt identity (so a resolved filing-index failure
+actually leaves the retry set, instead of being stuck on its one and
+only ever-recorded "failed" row forever), and unambiguously permanent
+conditions (`no_primary_document`) are excluded from the retry set while
+fresh/in-range filings always get priority over backlog retries within a
+`--limit` budget — so a handful of permanently-broken historical filings
+can never occupy every `--resume` run's budget and starve out genuinely
+new ones.
 
 Exhibits are a separate, independently versioned artifact
 (`DATA/manifests/sec_exhibits{,_attempts}.parquet`, keyed by

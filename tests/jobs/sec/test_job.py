@@ -89,11 +89,13 @@ def _register_sec(
     documents=None,
     index_pages=None,
     submission_pages=None,
+    index_page_failures=None,
 ):
     submissions_by_cik = submissions_by_cik or {"0000001000": RECENT_A, "0000002000": RECENT_B}
     documents = documents if documents is not None else {}
     index_pages = index_pages if index_pages is not None else {}
     submission_pages = submission_pages or {}
+    index_page_failures = index_page_failures or set()
 
     def _submissions_callback(request):
         m = re.search(r"CIK(\d{10})\.json", request.url)
@@ -109,6 +111,8 @@ def _register_sec(
     def _index_page_callback(request):
         m = re.search(rf"{re.escape(SEC_ARCHIVES_BASE)}/(\d+)/(\d+)/[\d-]+-index\.htm$", request.url)
         cik_no_zeros, acc_no_dashes = m.group(1), m.group(2)
+        if (cik_no_zeros, acc_no_dashes) in index_page_failures:
+            return (404, {}, "")  # non-retriable, so the test doesn't sleep through real backoff
         entries = index_pages.get((cik_no_zeros, acc_no_dashes), [])
         return (200, {}, _index_page_html(entries))
 
@@ -364,7 +368,8 @@ def test_resume_retries_unresolved_old_exhibit_failure_even_if_primary_resolved(
 
     SECJob().run(_base_args(tmp_path, until="2020-01-01"))
     exhibit_attempts = pd.read_parquet(tmp_path / "DATA" / "manifests" / "sec_exhibits_attempts.parquet")
-    assert exhibit_attempts.iloc[0]["status"] == "failed"
+    old_ex_row = exhibit_attempts[exhibit_attempts["source_record_id"] == f"{OLD}:old-ex.htm"].iloc[0]
+    assert old_ex_row["status"] == "failed"
 
     responses.reset()
     # Second run: the exhibit now resolves.
@@ -381,6 +386,107 @@ def test_resume_retries_unresolved_old_exhibit_failure_even_if_primary_resolved(
     assert exhibits_df.iloc[0]["source_record_id"] == f"{OLD}:old-ex.htm"
     assert result.records_downloaded == 1  # NEW; OLD's primary is unchanged (skipped)
     assert result.records_skipped_unchanged == 1  # OLD's primary, re-attempted but unchanged
+
+
+@responses.activate
+def test_filing_index_failure_self_heals_once_it_succeeds(tmp_path, monkeypatch):
+    """Blocker fix: the filing-index step needs its OWN success attempt
+    row -- otherwise, once it fails once, its one and only ever-recorded
+    attempt stays "failed" forever (nothing else writes a success for that
+    identity), so it would never leave the unresolved retry set even after
+    a later run's filing-index fetch genuinely succeeds."""
+    _setup(tmp_path, monkeypatch)
+    OLD = "0000001000-19-000001"
+    NEW = "0000001000-25-000001"
+    recent_a = _recent([OLD, NEW], ["8-K", "8-K"], ["2019-06-01", "2025-06-01"], ["old.htm", "new.htm"])
+    documents = {
+        ("1000", _acc_no_dashes(OLD), "old.htm"): b"<html>old</html>",
+        ("1000", _acc_no_dashes(NEW), "new.htm"): b"<html>new</html>",
+    }
+    _register_sec(
+        submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}},
+        documents=documents,
+        index_page_failures={("1000", _acc_no_dashes(OLD))},
+    )
+
+    SECJob().run(_base_args(tmp_path, until="2020-01-01"))
+    attempts1 = pd.read_parquet(tmp_path / "DATA" / "manifests" / "sec_exhibits_attempts.parquet")
+    idx_row1 = attempts1[attempts1["source_record_id"] == f"{OLD}:__filing_index__"].iloc[0]
+    assert idx_row1["status"] == "failed"
+
+    responses.reset()
+    # Second run: the filing-index page itself now resolves (no failures
+    # registered at all).
+    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}}, documents=documents)
+    SECJob().run(_base_args(tmp_path, resume=True))
+    attempts2 = pd.read_parquet(tmp_path / "DATA" / "manifests" / "sec_exhibits_attempts.parquet")
+    idx_rows2 = attempts2[attempts2["source_record_id"] == f"{OLD}:__filing_index__"]
+    assert idx_rows2.iloc[-1]["status"] == "success"
+
+    responses.reset()
+    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}}, documents=documents)
+    result3 = SECJob().run(_base_args(tmp_path, dry_run=True, resume=True))
+
+    # OLD is now fully resolved (primary succeeded run 1, filing-index
+    # succeeded run 2) -- self-healed out of the retry set, not unioned
+    # back in a third time.
+    assert result3.records_discovered == 0
+
+
+@responses.activate
+def test_resume_fresh_filings_are_not_starved_by_backlog_retries(tmp_path, monkeypatch):
+    """Blocker fix: a backlog of old, still-failing-but-not-terminal
+    filings must not be able to occupy an entire --resume --limit budget
+    forever -- fresh/in-range filings always get priority."""
+    _setup(tmp_path, monkeypatch)
+    old_ids = [f"0000001000-10-{i:06d}" for i in range(25)]
+    old_docs = [f"old{i}.htm" for i in range(25)]
+    NEW = "0000001000-25-000001"
+    recent_a = _recent(
+        old_ids + [NEW],
+        ["8-K"] * 25 + ["8-K"],
+        ["2010-01-01"] * 25 + ["2025-06-01"],
+        old_docs + ["new.htm"],
+    )
+    # None of the 25 old documents are registered -> always 404 (retryable,
+    # not the terminal no_primary_document condition).
+    documents = {("1000", _acc_no_dashes(NEW), "new.htm"): b"<html>new</html>"}
+    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}}, documents=documents)
+
+    result1 = SECJob().run(_base_args(tmp_path, until="2010-12-31", limit=30))
+    assert result1.records_failed == 25
+
+    responses.reset()
+    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}}, documents=documents)
+    result2 = SECJob().run(_base_args(tmp_path, resume=True, limit=20))
+
+    df = _metadata_df(tmp_path)
+    assert NEW in set(df["source_record_id"])  # must not be starved out by the 25-item backlog
+    assert result2.records_downloaded == 1
+
+
+@responses.activate
+def test_no_primary_document_is_terminal_and_not_retried_forever(tmp_path, monkeypatch):
+    """Blocker fix: unlike a genuine fetch failure, a permanently missing
+    primaryDocument in SEC's own metadata must not occupy the --resume
+    retry set forever."""
+    _setup(tmp_path, monkeypatch)
+    OLD = "0000001000-19-000001"
+    NEW = "0000001000-25-000001"
+    recent_a = _recent([OLD, NEW], ["8-K", "8-K"], ["2019-06-01", "2025-06-01"], ["", "new.htm"])
+    documents = {("1000", _acc_no_dashes(NEW), "new.htm"): b"<html>new</html>"}
+    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}}, documents=documents)
+
+    SECJob().run(_base_args(tmp_path, until="2020-01-01"))
+    attempts_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "sec_attempts.parquet")
+    assert attempts_df[attempts_df["source_record_id"] == OLD].iloc[0]["error"] == "no_primary_document"
+
+    responses.reset()
+    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}}, documents=documents)
+    result2 = SECJob().run(_base_args(tmp_path, dry_run=True, resume=True))
+
+    # OLD's primary is a terminal condition -- must not be unioned back in.
+    assert result2.records_discovered == 1  # only NEW
 
 
 @responses.activate
