@@ -1,0 +1,101 @@
+# Company registry (Job 05 — SEC EDGAR).
+#
+# Prompt.md section 13: "Maintain a company -> CIK registry." Start with a
+# curated list rather than attempting to enumerate every possible filer
+# (Prompt.md section 11 makes the same recommendation for company pipeline
+# pages: "Start with a curated company registry rather than attempting
+# unrestricted web crawling").
+#
+# CIKs verified live against SEC's own lookup services on 2026-08-11:
+# https://www.sec.gov/files/company_tickers.json (currently-listed filers)
+# and https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany (retains
+# delisted/acquired filers' historical CIKs indefinitely).
+#
+# A company can have MORE THAN ONE CIK: a name change alone keeps the same
+# CIK (SEC records it under `formerNames`, e.g. Seagen/"Seattle Genetics"),
+# but a corporate redomicile/reincorporation creates a brand-new SEC filer
+# identity with its own CIK and its own filing history. Confirmed live on
+# 2026-08-11 (checked every company below via its submissions API's
+# `formerNames`) that Zymeworks is the only case in this registry: it
+# redomiciled from British Columbia to Delaware in 2022, so its full
+# pre-2022 history (including any ADC platform/partnership disclosures from
+# that period) lives under a different, predecessor CIK. `ciks` is always a
+# list — single-CIK companies just have a one-item list — so every filing's
+# query_id can carry which specific filer entity it came from.
+#
+# company_id is a short stable slug used to build this company's query_id
+# in the SEC job (e.g. "seagen" CIK 0001060736 -> query_id
+# "SEC_FILINGS_SEAGEN_0001060736"). Do not rename an existing company_id
+# once records reference it.
+
+companies:
+  - company_id: seagen
+    canonical_name: Seagen Inc.
+    ciks: ["0001060736"]
+    aliases: ["Seattle Genetics", "Seattle Genetics Inc"]
+    tickers: []
+    active: true
+    notes: Acquired by Pfizer, December 2023. Delisted; CIK retained for historical filings (name change only, same CIK throughout).
+
+  - company_id: immunogen
+    canonical_name: ImmunoGen, Inc.
+    ciks: ["0000855654"]
+    aliases: []
+    tickers: []
+    active: true
+    notes: Acquired by AbbVie, February 2024. Delisted; CIK retained for historical filings.
+
+  - company_id: mersana
+    canonical_name: Mersana Therapeutics, Inc.
+    ciks: ["0001442836"]
+    aliases: []
+    tickers: []
+    active: true
+    notes: null
+
+  - company_id: zymeworks
+    canonical_name: Zymeworks Inc.
+    ciks: ["0001937653", "0001403752"]
+    aliases: []
+    tickers: ["ZYME"]
+    active: true
+    notes: >
+      Two CIKs, not a name change: 0001937653 is the current Delaware entity
+      (used since the 2022-07 redomicile), which SEC's own submissions API
+      shows was itself briefly named "Zymeworks Delaware Inc." before the
+      2022-10-13 rename to "Zymeworks Inc." 0001403752 is the predecessor —
+      "Zymeworks BC Inc." (British Columbia), named "Zymeworks Inc." until
+      the redomicile — and holds the entire pre-2022-10-13 filing history.
+      Both must be pulled to get Zymeworks' complete filing set.
+
+  - company_id: sutro_biopharma
+    canonical_name: Sutro Biopharma, Inc.
+    ciks: ["0001382101"]
+    aliases: []
+    tickers: ["STRO"]
+    active: true
+    notes: null
+
+  - company_id: adc_therapeutics
+    canonical_name: ADC Therapeutics SA
+    ciks: ["0001771910"]
+    aliases: []
+    tickers: ["ADCT"]
+    active: true
+    notes: Swiss company, files as a foreign private issuer where applicable.
+
+  - company_id: abbvie
+    canonical_name: AbbVie Inc.
+    ciks: ["0001551152"]
+    aliases: []
+    tickers: ["ABBV"]
+    active: true
+    notes: Large diversified filer post-ImmunoGen acquisition; expect substantial non-ADC-relevant filing volume — acquisition layer preserves all relevant-form filings regardless, relevance filtering is downstream.
+
+  - company_id: pfizer
+    canonical_name: Pfizer Inc.
+    ciks: ["0000078003"]
+    aliases: []
+    tickers: ["PFE"]
+    active: true
+    notes: Large diversified filer post-Seagen acquisition; same caveat as AbbVie above.
