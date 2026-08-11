@@ -9,12 +9,14 @@ from __future__ import annotations
 
 import sys
 
+from jobs.clinicaltrials.job import ClinicalTrialsJob
 from jobs.europe_pmc.job import EuropePMCJob
 from jobs.pubmed.job import PubMedJob
 
 JOBS = {
     "pubmed": PubMedJob,
     "europe_pmc": EuropePMCJob,
+    "clinicaltrials": ClinicalTrialsJob,
 }
 
 
