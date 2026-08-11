@@ -50,7 +50,16 @@ occupy a content-version slot.
 submissions API has no server-side date filter, so this is applied
 client-side after the full history is pulled); --resume reuses the prior
 run's --until (or now) as an implicit --since, same convention as
-Jobs 01/03.
+Jobs 01/03. Crucially, the resume cursor advances unconditionally each
+run even when some filings failed (some historical gaps are permanent —
+e.g. the pre-2002 primaryDocument issue below — and must not block all
+future incremental progress), so a not-yet-successful filing or exhibit
+from BEFORE the resume cursor is explicitly unioned back into this run's
+scope rather than silently aging out of every future --resume run once
+its filing_date falls behind the cursor. This union only applies when
+the --since in effect came from the resume cursor itself, not from an
+explicit --since the caller typed — an explicit date range is trusted
+literally, same as every other job.
 
 SEC's fair access policy is unusually strict and officially documented:
 max 10 req/s, and every request MUST carry an identifying User-Agent
@@ -70,6 +79,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
+import pandas as pd
 import requests
 import yaml
 from dotenv import load_dotenv
@@ -123,6 +133,24 @@ def load_companies(path: Path) -> list[Company]:
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _unresolved_exhibit_parent_ids(checkpoint: dict, exhibits_attempts_path: Path) -> set[str]:
+    """Accession numbers with an exhibit (or, when the filing-index page
+    itself failed, the bare accession number) whose MOST RECENT recorded
+    attempt was a failure with no later success — i.e. still genuinely
+    unresolved, not just "failed once, ages ago, then fixed." Used so
+    --resume's date-bounded discovery doesn't let an unresolved exhibit
+    failure permanently drop out of scope once its filing predates the
+    resume cursor."""
+    if not exhibits_attempts_path.exists():
+        return set()
+    df = pd.read_parquet(exhibits_attempts_path)
+    if df.empty:
+        return set()
+    latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
+    failed_ids = set(latest.loc[latest["status"] == "failed", "source_record_id"])
+    return {exhibit_id.split(":", 1)[0] for exhibit_id in failed_ids}
 
 
 def _attempt_row(
@@ -187,11 +215,25 @@ class SECJob(AcquisitionJob):
             raise RuntimeError(f"no matching active companies in {args.registry_file}")
 
         since = args.since
+        used_resume_cursor = False
         if args.resume and not since:
             since = checkpoint.get("last_success_max_date")
+            used_resume_cursor = True
         until = args.until
 
         result = JobRunResult(job_name=self.name, dry_run=bool(args.dry_run))
+
+        # --resume's implicit --since is a discovery-efficiency cursor, not
+        # a scope the caller actually asked for (unlike an explicit
+        # --since) — so any filing/exhibit that's still unresolved from a
+        # prior run must be unioned back in even if it now falls before
+        # the cursor, or it would silently and permanently drop out of
+        # every future --resume run the moment the cursor passes its date.
+        unresolved_exhibit_parent_ids: set[str] = set()
+        if used_resume_cursor:
+            unresolved_exhibit_parent_ids = _unresolved_exhibit_parent_ids(
+                checkpoint, output_dir / "manifests" / "sec_exhibits_attempts.parquet"
+            )
 
         record_first_query: dict[str, tuple[str, str]] = {}
         record_query_hits: dict[str, set[str]] = defaultdict(set)
@@ -218,9 +260,25 @@ class SECJob(AcquisitionJob):
                     failure_logger.info("company=%s cik=%s error=%s", company.company_id, cik, exc)
                     continue
 
-                relevant = filter_relevant_forms(all_filings)
+                relevant_all = filter_relevant_forms(all_filings)
                 if since or until:
-                    relevant = [f for f in relevant if within_date_range(f.filing_date, since, until)]
+                    relevant = [f for f in relevant_all if within_date_range(f.filing_date, since, until)]
+                else:
+                    relevant = relevant_all
+
+                if used_resume_cursor:
+                    in_scope_ids = {f.accession_number for f in relevant}
+                    resolved_primary_ids = checkpoint.get("records", {})
+                    unresolved = [
+                        f for f in relevant_all
+                        if f.accession_number not in in_scope_ids
+                        and (
+                            f.accession_number not in resolved_primary_ids
+                            or f.accession_number in unresolved_exhibit_parent_ids
+                        )
+                    ]
+                    relevant = relevant + unresolved
+
                 query_id_counts[query_id] = len(relevant)
                 query_text_by_id[query_id] = query_text
                 companies_used.append(f"{company.canonical_name} (CIK {cik})")

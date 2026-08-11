@@ -227,7 +227,16 @@ not how many are discovered. `--company "<company_id>"` restricts a run to
 one registry entry (all of that company's CIKs). `--since`/`--until` filter
 by SEC's own `filing_date`, applied client-side (the submissions API has no
 server-side date filter); `--resume` reuses the prior run's `--until` (or
-run time) as an implicit `--since`.
+run time) as an implicit `--since`. That resume cursor always advances,
+even when some filings failed this run — some historical gaps are
+permanent (the pre-2002 `primaryDocument` issue below) and must not block
+all future incremental progress — but any filing or exhibit that's still
+unresolved (never had a successful attempt) is explicitly unioned back
+into scope on the next `--resume` run regardless of its `filing_date`, so
+it can never silently age out of every future incremental run just because
+the cursor passed it. This union only kicks in for the *implicit*
+resume cursor — an explicit `--since` you type yourself is trusted
+literally, same as every other job.
 
 Exhibits are a separate, independently versioned artifact
 (`DATA/manifests/sec_exhibits{,_attempts}.parquet`, keyed by

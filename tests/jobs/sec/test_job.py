@@ -287,26 +287,100 @@ def test_since_until_filter_discovered_filings_by_filing_date(tmp_path, monkeypa
 
 
 @responses.activate
-def test_resume_uses_checkpoint_last_success_max_date_as_since(tmp_path, monkeypatch):
+def test_resume_advances_cursor_but_still_retries_unresolved_old_failures(tmp_path, monkeypatch):
+    """Blocker fix: --resume's implicit --since must not let an unresolved
+    old failure permanently drop out of scope just because the cursor
+    advanced past its filing_date -- while a genuinely resolved old filing
+    must NOT be needlessly re-targeted forever."""
     _setup(tmp_path, monkeypatch)
+    OLD_OK = "0000001000-19-000001"     # succeeds in run 1 -> must not reappear
+    OLD_FAIL = "0000001000-19-000099"   # fails in run 1 -> must still be retried
+    NEW = "0000001000-25-000001"        # beyond the cursor either way
     recent_a = _recent(
-        ["0000001000-19-000001", "0000001000-25-000001"],
-        ["8-K", "8-K"],
-        ["2019-06-01", "2025-06-01"],
-        ["old.htm", "new.htm"],
+        [OLD_OK, OLD_FAIL, NEW],
+        ["8-K", "8-K", "8-K"],
+        ["2019-06-01", "2019-07-01", "2025-06-01"],
+        ["old-ok.htm", "old-fail.htm", "new.htm"],
     )
-    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}})
+    documents = {
+        ("1000", _acc_no_dashes(OLD_OK), "old-ok.htm"): b"<html>old ok</html>",
+        ("1000", _acc_no_dashes(NEW), "new.htm"): b"<html>new</html>",
+    }
+    _register_sec(
+        submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}},
+        documents=documents,
+    )
 
-    # First run establishes a checkpoint cursor via an explicit --until.
-    SECJob().run(_base_args(tmp_path, until="2020-01-01"))
+    # First run: both 2019 filings are in scope (--until bounds them in);
+    # old-fail.htm 404s since it's absent from `documents`.
+    result1 = SECJob().run(_base_args(tmp_path, until="2020-01-01"))
+    assert result1.records_downloaded == 1
+    assert result1.records_failed == 1
     checkpoint = json_module.loads((tmp_path / "DATA" / "checkpoints" / "sec.json").read_text())
-    assert checkpoint["last_success_max_date"] == "2020-01-01"
+    assert checkpoint["last_success_max_date"] == "2020-01-01"  # cursor advances despite the failure
 
     responses.reset()
-    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}})
-    result = SECJob().run(_base_args(tmp_path, dry_run=True, resume=True))
+    _register_sec(
+        submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}},
+        documents=documents,
+    )
+    result2 = SECJob().run(_base_args(tmp_path, resume=True))
 
-    assert result.records_discovered == 1  # only the 2025 filing is >= 2020-01-01
+    # NEW (>= cursor) is discovered normally; OLD_FAIL is unioned back in
+    # despite predating the cursor; OLD_OK (already resolved) is not.
+    assert result2.records_downloaded == 1  # NEW succeeds
+    assert result2.records_failed == 1      # OLD_FAIL fails again (still no document registered)
+    df = _metadata_df(tmp_path)
+    assert set(df["source_record_id"]) == {OLD_OK, NEW}
+    attempts_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "sec_attempts.parquet")
+    run2_attempts = attempts_df[attempts_df["run_id"] == attempts_df["run_id"].iloc[-1]]
+    assert set(run2_attempts["source_record_id"]) == {OLD_FAIL, NEW}
+
+
+@responses.activate
+def test_resume_retries_unresolved_old_exhibit_failure_even_if_primary_resolved(tmp_path, monkeypatch):
+    """Blocker fix: an exhibit-only failure on an old, already-primary-
+    resolved filing must also be unioned back in on --resume -- not just
+    primary-document failures."""
+    _setup(tmp_path, monkeypatch)
+    OLD = "0000001000-19-000001"
+    NEW = "0000001000-25-000001"
+    recent_a = _recent(
+        [OLD, NEW], ["8-K", "8-K"], ["2019-06-01", "2025-06-01"], ["old.htm", "new.htm"],
+    )
+    documents = {
+        ("1000", _acc_no_dashes(OLD), "old.htm"): b"<html>old</html>",
+        ("1000", _acc_no_dashes(NEW), "new.htm"): b"<html>new</html>",
+    }
+    index_pages = {("1000", _acc_no_dashes(OLD)): [
+        ("old.htm", "8-K", "8-K"),
+        ("old-ex.htm", "EX-99.1", "EX-99.1"),  # deliberately absent from `documents` -> 404s
+    ]}
+    _register_sec(
+        submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}},
+        documents=documents,
+        index_pages=index_pages,
+    )
+
+    SECJob().run(_base_args(tmp_path, until="2020-01-01"))
+    exhibit_attempts = pd.read_parquet(tmp_path / "DATA" / "manifests" / "sec_exhibits_attempts.parquet")
+    assert exhibit_attempts.iloc[0]["status"] == "failed"
+
+    responses.reset()
+    # Second run: the exhibit now resolves.
+    documents[("1000", _acc_no_dashes(OLD), "old-ex.htm")] = b"<html>exhibit now available</html>"
+    _register_sec(
+        submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}},
+        documents=documents,
+        index_pages=index_pages,
+    )
+    result = SECJob().run(_base_args(tmp_path, resume=True))
+
+    exhibits_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "sec_exhibits.parquet")
+    assert len(exhibits_df) == 1
+    assert exhibits_df.iloc[0]["source_record_id"] == f"{OLD}:old-ex.htm"
+    assert result.records_downloaded == 1  # NEW; OLD's primary is unchanged (skipped)
+    assert result.records_skipped_unchanged == 1  # OLD's primary, re-attempted but unchanged
 
 
 @responses.activate
