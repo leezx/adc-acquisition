@@ -61,13 +61,20 @@ crossref:
   api_docs_url: https://api.crossref.org/swagger-ui/index.html
   acquisition_method: api
   authentication_required: false
-  rate_limit: "polite pool with mailto param"
+  rate_limit: "dynamic via response headers (observed live: 10 req/s, concurrency 3); we use a conservative static 5 req/s"
   license_or_access_note: Public metadata.
   raw_formats: [json]
-  update_strategy: incremental_by_date_range
-  implementation_status: not_started
-  enabled: false
-  notes: Job 12 in Prompt.md, promoted to #4 in recommended execution order.
+  update_strategy: doi_centric_reconciliation_not_date_range
+  implementation_status: implemented
+  enabled: true
+  notes: >
+    Job 12 in Prompt.md, promoted to #4 in recommended execution order.
+    NOT a broad discovery source: query.bibliographic/query.title are
+    relevance-ranked free text, not phrase/boolean search (verified live —
+    query.title="antibody-drug conjugate" returned 860,937 hits). Instead
+    reconciles DOIs already discovered by PubMed/Europe PMC via the
+    authoritative GET /works/{doi} endpoint (configs/crossref_reconciliation_sources.yaml),
+    plus an ad hoc --doi "<doi>" lookup mode.
 
 sec:
   source_type: corporate_regulatory
