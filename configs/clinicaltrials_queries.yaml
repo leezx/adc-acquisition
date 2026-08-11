@@ -1,0 +1,37 @@
+# ClinicalTrials.gov query registry (Job 03).
+#
+# ClinicalTrials.gov's search engine (Essie) tokenizes on hyphens, so
+# "antibody-drug conjugate" and "antibody drug conjugate" return identical
+# hit counts (938, verified live on 2026-08-10) — unlike PubMed/Europe PMC,
+# we don't need separate hyphenated/unhyphenated query variants here.
+#
+# query.term searches across all indexed fields (title, description,
+# conditions, interventions, etc.) by default — broad discovery, per
+# Prompt.md section 10's "A. broad ADC queries". AREA[InterventionName]
+# restricts to just the intervention name field for a higher-precision
+# supplementary query.
+
+queries:
+  - query_id: CTGOV_ADC_001
+    query_version: 1
+    query_text: '"antibody-drug conjugate"'
+    purpose: Primary phrase form (hyphen-invariant under Essie tokenization; covers the unhyphenated form too).
+    active: true
+
+  - query_id: CTGOV_ADC_002
+    query_version: 1
+    query_text: 'ADC AND antibody AND conjugate'
+    purpose: Abbreviation form, constrained by co-occurring antibody/conjugate terms to avoid unrelated "ADC" hits.
+    active: true
+
+  - query_id: CTGOV_ADC_003
+    query_version: 1
+    query_text: 'immunoconjugate AND cytotoxic'
+    purpose: Older/alternative terminology for the same asset class.
+    active: true
+
+  - query_id: CTGOV_ADC_004
+    query_version: 1
+    query_text: 'AREA[InterventionName]ADC'
+    purpose: Higher-precision supplementary query restricted to the structured intervention-name field.
+    active: true

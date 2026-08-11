@@ -131,13 +131,38 @@ Same three-table + checkpoint model as PubMed
 `DATA/checkpoints/europe_pmc.json`), no API key required. One addition: for
 records Europe PMC itself marks `isOpenAccess=Y`, this job also fetches the
 JATS full-text XML (`fullTextXML` endpoint) — publisher paywalls are never
-bypassed. Full-text capture is tracked as a derived per-record flag rather
-than its own content version, so a full-text fetch that fails is retried on
-every subsequent run (even if the record's metadata itself is unchanged and
-skipped) instead of being treated as a permanent failure. No deduplication
-against the PubMed manifest happens here — a paper in both sources keeps two
-independent evidence rows by design (Prompt.md section 6); `pmid`/`doi` are
-preserved so a downstream system can join them.
+bypassed. Full text is modeled as its own independent content-version
+artifact (`europe_pmc_fulltext.parquet` + `europe_pmc_fulltext_attempts.parquet`,
+keyed by `pmcid` with `parent_record_id` linking back to the metadata
+record, its own checkpoint namespace) rather than a field on the metadata
+row — a full-text fetch failure or a later successful retry never touches
+the metadata record's own content-version snapshot, and the full-text XML
+itself can be re-versioned independently if it ever changes. No
+deduplication against the PubMed manifest happens here — a paper in both
+sources keeps two independent evidence rows by design (Prompt.md section 6);
+`pmid`/`doi` are preserved so a downstream system can join them.
+
+## Running the ClinicalTrials.gov job (Job 03)
+
+```bash
+python -m adc_acquisition clinicaltrials --dry-run --limit 20
+python -m adc_acquisition clinicaltrials --limit 20
+python -m adc_acquisition clinicaltrials --resume
+python -m adc_acquisition clinicaltrials --since 2024-01-01 --until 2024-12-31
+python -m adc_acquisition clinicaltrials --intervention "trastuzumab deruxtecan" --limit 20
+```
+
+Same three-table + checkpoint model
+(`DATA/manifests/clinicaltrials{,_discovery,_attempts}.parquet`,
+`DATA/checkpoints/clinicaltrials.json`), no API key required. Unlike
+PubMed/Europe PMC, the ClinicalTrials.gov API v2 search endpoint returns
+each trial's *complete* record inline — there's no separate "fetch full
+record" step, so the content-version snapshot is exactly that search
+result. `--intervention "<name>"` is the known-asset lookup capability
+Prompt.md section 10.B asks for: it searches `query.intr` instead of the
+broad query family in `configs/clinicaltrials_queries.yaml` — implemented
+as a capability here, not yet wired into a systematic asset-expansion pass
+(that's Job 15).
 
 ## Tests
 
@@ -150,7 +175,7 @@ or used by the normal test suite.
 
 ## Status
 
-See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed) and Job 02
-(Europe PMC) are implemented so far; every other source in `Prompt.md` is
-intentionally not started yet — sources are implemented and reviewed one at
-a time.
+See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
+(Europe PMC), and Job 03 (ClinicalTrials.gov) are implemented so far; every
+other source in `Prompt.md` is intentionally not started yet — sources are
+implemented and reviewed one at a time.
