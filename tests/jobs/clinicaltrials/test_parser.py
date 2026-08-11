@@ -9,6 +9,7 @@ FULL_STUDY = {
         },
         "statusModule": {
             "overallStatus": "ACTIVE_NOT_RECRUITING",
+            "studyFirstPostDateStruct": {"date": "2019-12-15", "type": "ACTUAL"},
             "startDateStruct": {"date": "2023-03-20", "type": "ACTUAL"},
             "primaryCompletionDateStruct": {"date": "2025-04-12", "type": "ACTUAL"},
             "completionDateStruct": {"date": "2028-02-28", "type": "ESTIMATED"},
@@ -61,6 +62,7 @@ def test_parses_full_study():
     assert parsed.collaborators == ["Collab A", "Collab B"]
     assert parsed.enrollment == 125
     assert parsed.enrollment_type == "ACTUAL"
+    assert parsed.study_first_post_date == "2019-12-15"
     assert parsed.start_date == "2023-03-20"
     assert parsed.primary_completion_date == "2025-04-12"
     assert parsed.completion_date == "2028-02-28"
@@ -91,6 +93,25 @@ def test_missing_protocol_section_returns_none():
 
 def test_missing_nct_id_returns_none():
     assert parse_study({"protocolSection": {"identificationModule": {}}}) is None
+
+
+def test_study_first_post_date_and_start_date_are_distinct_fields():
+    """Reviewer acceptance scenario: startDate, studyFirstPostDate, and
+    lastUpdatePostDate must never collapse into the same value."""
+    study = {
+        "protocolSection": {
+            "identificationModule": {"nctId": "NCT1"},
+            "statusModule": {
+                "studyFirstPostDateStruct": {"date": "2019-12-15"},
+                "startDateStruct": {"date": "2020-03-01"},
+                "lastUpdatePostDateStruct": {"date": "2024-06-01"},
+            },
+        }
+    }
+    parsed = parse_study(study)
+    assert parsed.study_first_post_date == "2019-12-15"
+    assert parsed.start_date == "2020-03-01"
+    assert parsed.last_update_date == "2024-06-01"
 
 
 def test_reference_without_citation_falls_back_to_pmid():

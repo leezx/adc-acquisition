@@ -26,6 +26,7 @@ class ParsedStudy:
     collaborators: list[str] = field(default_factory=list)
     enrollment: int | None = None
     enrollment_type: str | None = None
+    study_first_post_date: str | None = None
     start_date: str | None = None
     primary_completion_date: str | None = None
     completion_date: str | None = None
@@ -99,6 +100,7 @@ def parse_study(raw_result: dict[str, Any]) -> ParsedStudy | None:
         collaborators=[c["name"] for c in (sponsor_collab.get("collaborators") or []) if c.get("name")],
         enrollment=enrollment_info.get("count"),
         enrollment_type=enrollment_info.get("type"),
+        study_first_post_date=(status.get("studyFirstPostDateStruct") or {}).get("date"),
         start_date=(status.get("startDateStruct") or {}).get("date"),
         primary_completion_date=(status.get("primaryCompletionDateStruct") or {}).get("date"),
         completion_date=(status.get("completionDateStruct") or {}).get("date"),

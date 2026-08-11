@@ -80,6 +80,33 @@ def _metadata_df(tmp_path):
 
 
 @responses.activate
+def test_publication_or_release_date_uses_study_first_post_date_not_start_date(tmp_path, monkeypatch):
+    """Reviewer acceptance scenario: publication_or_release_date must be the
+    date this evidence record was first published (studyFirstPostDate), not
+    when the trial itself started (startDate)."""
+    _setup(tmp_path, monkeypatch)
+    study = {
+        "protocolSection": {
+            "identificationModule": {"nctId": "NCT100", "briefTitle": "Title"},
+            "statusModule": {
+                "studyFirstPostDateStruct": {"date": "2019-12-15"},
+                "startDateStruct": {"date": "2020-03-01"},
+                "lastUpdatePostDateStruct": {"date": "2024-06-01"},
+            },
+        }
+    }
+    _register({"term-a": [study], "term-b": []})
+
+    ClinicalTrialsJob().run(_base_args(tmp_path, limit=1))
+
+    row = _metadata_df(tmp_path).iloc[0]
+    assert row["publication_or_release_date"] == "2019-12-15"
+    assert row["study_first_post_date"] == "2019-12-15"
+    assert row["start_date"] == "2020-03-01"
+    assert row["last_update_date"] == "2024-06-01"
+
+
+@responses.activate
 def test_dry_run_discovers_but_does_not_download(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     _register()
@@ -257,6 +284,34 @@ def test_intervention_lookup_uses_query_intr_and_ignores_query_registry(tmp_path
 
     assert result.queries_run == 1
     assert result.records_downloaded == 1
+
+
+@responses.activate
+def test_intervention_lookup_query_id_is_deterministic_and_asset_specific(tmp_path, monkeypatch):
+    """Reviewer acceptance scenario: distinct interventions must never share
+    a query_id (violates the query provenance contract), and re-running the
+    same intervention must reproduce the same query_id."""
+    _setup(tmp_path, monkeypatch)
+    _register()  # unused by intervention lookups, but keeps responses happy if hit
+
+    def _callback(request):
+        return (200, {}, json_module.dumps({"studies": [STUDY_100]}))
+
+    def _run_and_get_query_id(intervention):
+        responses.reset()
+        responses.add_callback(responses.GET, f"{CTGOV_BASE}/studies", callback=_callback)
+        ClinicalTrialsJob().run(_base_args(tmp_path, intervention=intervention))
+        discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "clinicaltrials_discovery.parquet")
+        return discovery_df.iloc[-1]["query_id"], discovery_df.iloc[-1]["query_text"]
+
+    query_id_1, query_text_1 = _run_and_get_query_id("trastuzumab deruxtecan")
+    query_id_2, query_text_2 = _run_and_get_query_id("sacituzumab govitecan")
+    query_id_3, query_text_3 = _run_and_get_query_id("trastuzumab deruxtecan")
+
+    assert query_id_1 != query_id_2
+    assert query_text_1 != query_text_2
+    assert query_id_3 == query_id_1
+    assert query_text_3 == query_text_1
 
 
 @responses.activate

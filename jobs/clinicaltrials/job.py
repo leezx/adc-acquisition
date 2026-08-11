@@ -40,7 +40,7 @@ QUERIES_PATH = Path("configs/clinicaltrials_queries.yaml")
 EXTRA_FIELDS = [
     "nct_id", "brief_title", "official_title", "study_type", "phases", "overall_status",
     "conditions", "intervention_names", "lead_sponsor", "collaborators", "enrollment",
-    "enrollment_type", "start_date", "primary_completion_date", "completion_date",
+    "enrollment_type", "study_first_post_date", "start_date", "primary_completion_date", "completion_date",
     "primary_outcomes", "secondary_outcomes", "locations", "references", "last_update_date",
 ]
 DEFAULT_PAGE_SIZE = 100
@@ -107,7 +107,10 @@ def _process_record(
         source_record_type="clinical_trial",
         title=parsed.brief_title,
         url=f"https://clinicaltrials.gov/study/{nct_id}",
-        publication_or_release_date=parsed.start_date,
+        # publication_or_release_date is when this evidence record was
+        # first published, not when the trial itself started — those are
+        # different dates (studyFirstPostDate vs startDate).
+        publication_or_release_date=parsed.study_first_post_date,
         retrieved_at=now,
         query_id=query_id,
         query_text=query_text,
@@ -132,6 +135,7 @@ def _process_record(
         collaborators=parsed.collaborators,
         enrollment=parsed.enrollment,
         enrollment_type=parsed.enrollment_type,
+        study_first_post_date=parsed.study_first_post_date,
         start_date=parsed.start_date,
         primary_completion_date=parsed.primary_completion_date,
         completion_date=parsed.completion_date,
@@ -171,9 +175,18 @@ class ClinicalTrialsJob(AcquisitionJob):
             since = checkpoint.get("last_success_max_date")
 
         if args.intervention:
+            # Every distinct intervention name must get its own query_id —
+            # reusing one fixed id (e.g. "CTGOV_LOOKUP_INTR") for every
+            # lookup would violate the query provenance contract (Prompt.md
+            # section 20: never reuse a query_id for a materially different
+            # query_text). The id is a deterministic hash of the canonical
+            # query text, so re-running the same intervention lookup later
+            # (e.g. in Job 15's asset expansion) reproduces the same id.
+            lookup_query_text = f"query.intr={args.intervention}"
+            lookup_query_id = f"CTGOV_LOOKUP_INTR_{sha256_bytes(lookup_query_text.encode('utf-8'))[:12]}"
             queries = [QuerySpec(
-                query_id="CTGOV_LOOKUP_INTR", query_version=1,
-                query_text=f"query.intr={args.intervention}",
+                query_id=lookup_query_id, query_version=1,
+                query_text=lookup_query_text,
                 purpose=f"known-asset lookup for intervention {args.intervention!r}", active=True,
             )]
 
