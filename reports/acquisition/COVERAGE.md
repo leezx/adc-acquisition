@@ -10,7 +10,7 @@ Update this table whenever a source's `implementation_status` changes in `config
 | ClinicalTrials.gov | Clinical | Yes | Yes (API v2) | Yes (per-NCT-ID JSON) | Yes (`--resume` + date range) | 20 (test run) | Implemented, phase-3 |
 | Crossref | Literature | Yes | Yes (`/works/{doi}`) | Yes (per-DOI JSON) | N/A — DOI-centric reconciliation, not date range | 24 (test run) | Implemented, phase-4 |
 | SEC | Regulatory | Yes | Yes (submissions API) | Yes (per-filing + exhibits) | Yes (`--resume` + `filing_date` range, client-side) | 12 (test run) | Implemented, phase-5 |
-| FDA | Regulatory | No | — | — | — | 0 | Not started |
+| FDA | Regulatory | Yes | Yes (label full-text search + drugsfda API) | Yes (per-submission JSON + documents) | Yes (`--resume` + `submission_status_date` range, client-side) | 20 (test run) | Implemented, phase-6 |
 | EMA | Regulatory | No | — | — | — | 0 | Not started |
 | WIPO | Patent | No | Unknown | — | — | 0 | Not started — access mechanism not yet investigated |
 | USPTO | Patent | No | Unknown | — | — | 0 | Not started — access mechanism not yet investigated |
