@@ -71,7 +71,8 @@ enough for GitHub regardless of how much evidence has been acquired.
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-cp .env.example .env   # fill in NCBI_API_KEY (optional) and NCBI_CONTACT_EMAIL
+cp .env.example .env   # fill in NCBI_API_KEY (optional), NCBI_CONTACT_EMAIL,
+                        # CROSSREF_CONTACT_EMAIL (optional), and SEC_CONTACT_EMAIL (required for the SEC job)
 ```
 
 ## Running the PubMed job (Job 01)
@@ -197,6 +198,36 @@ the network call itself. Reconciliation only ever reads each upstream
 record's *latest* content version — an upstream DOI correction in a newer
 version supersedes the old one rather than both being reconciled forever.
 
+## Running the SEC EDGAR job (Job 05)
+
+```bash
+python -m adc_acquisition sec --dry-run --limit 20
+python -m adc_acquisition sec --limit 20
+python -m adc_acquisition sec --company seagen --limit 20
+```
+
+**Requires `SEC_CONTACT_EMAIL`** to be set (`.env` or environment) — SEC's
+fair access policy requires every request to carry a real identifying
+`User-Agent` (name/tool + contact) or it's rejected with HTTP 403 and the
+source IP may be briefly blocked; this job refuses to run without one
+rather than sending a placeholder that would violate that policy. Company-
+centric, not query-based: `configs/company_registry.yaml` is a curated list
+of ADC-relevant filers with CIKs verified live against SEC's own lookup
+services. For each active company this job pulls its *entire* relevant-form
+filing history (10-K/10-Q/8-K/S-1/20-F/6-K + amendments —
+`jobs/sec/parser.py:RELEVANT_FORMS`) via the submissions API — `--limit`
+only caps how many filings get materialized, not how many are discovered.
+`--company "<company_id>"` restricts a run to one registry entry.
+
+Exhibits are a separate, independently versioned artifact
+(`DATA/manifests/sec_exhibits{,_attempts}.parquet`, keyed by
+`{accession_number}:{filename}` with `parent_record_id` pointing back to
+the filing) — same pattern as Europe PMC's full text, so an exhibit fetch
+failure or later retry never touches the filing's own content-version
+snapshot. Some pre-2002 filings have missing/incorrect primary-document
+metadata on SEC's own side; that surfaces as an expected, logged failed
+attempt, not a crash.
+
 ## Tests
 
 ```bash
@@ -209,6 +240,7 @@ or used by the normal test suite.
 ## Status
 
 See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
-(Europe PMC), Job 03 (ClinicalTrials.gov), and Job 04 (Crossref) are
-implemented so far; every other source in `Prompt.md` is intentionally not
-started yet — sources are implemented and reviewed one at a time.
+(Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), and Job 05
+(SEC EDGAR) are implemented so far; every other source in `Prompt.md` is
+intentionally not started yet — sources are implemented and reviewed one at
+a time.

@@ -9,7 +9,7 @@ Update this table whenever a source's `implementation_status` changes in `config
 | Europe PMC | Literature | Yes | Yes (REST + fullTextXML) | Yes (per-record JSON + OA full text) | Yes (`--resume` + date range) | 20 (test run) | Implemented, phase-2 |
 | ClinicalTrials.gov | Clinical | Yes | Yes (API v2) | Yes (per-NCT-ID JSON) | Yes (`--resume` + date range) | 20 (test run) | Implemented, phase-3 |
 | Crossref | Literature | Yes | Yes (`/works/{doi}`) | Yes (per-DOI JSON) | N/A — DOI-centric reconciliation, not date range | 24 (test run) | Implemented, phase-4 |
-| SEC | Regulatory | No | — | — | — | 0 | Not started |
+| SEC | Regulatory | Yes | Yes (submissions API) | Yes (per-filing + exhibits) | Company-centric (full history per run, not date range) | 12 (test run) | Implemented, phase-5 |
 | FDA | Regulatory | No | — | — | — | 0 | Not started |
 | EMA | Regulatory | No | — | — | — | 0 | Not started |
 | WIPO | Patent | No | Unknown | — | — | 0 | Not started — access mechanism not yet investigated |

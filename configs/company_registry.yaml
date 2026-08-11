@@ -1,0 +1,81 @@
+# Company registry (Job 05 — SEC EDGAR).
+#
+# Prompt.md section 13: "Maintain a company -> CIK registry." Start with a
+# curated list rather than attempting to enumerate every possible filer
+# (Prompt.md section 11 makes the same recommendation for company pipeline
+# pages: "Start with a curated company registry rather than attempting
+# unrestricted web crawling").
+#
+# CIKs verified live against SEC's own lookup services on 2026-08-11:
+# https://www.sec.gov/files/company_tickers.json (currently-listed filers)
+# and https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany (retains
+# delisted/acquired filers' historical CIKs indefinitely).
+#
+# company_id is a short stable slug used to build this company's query_id
+# in the SEC job (e.g. "seagen" -> query_id "SEC_FILINGS_SEAGEN"). Do not
+# rename an existing company_id once records reference it.
+
+companies:
+  - company_id: seagen
+    canonical_name: Seagen Inc.
+    cik: "0001060736"
+    aliases: ["Seattle Genetics", "Seattle Genetics Inc"]
+    tickers: []
+    active: true
+    notes: Acquired by Pfizer, December 2023. Delisted; CIK retained for historical filings.
+
+  - company_id: immunogen
+    canonical_name: ImmunoGen, Inc.
+    cik: "0000855654"
+    aliases: []
+    tickers: []
+    active: true
+    notes: Acquired by AbbVie, February 2024. Delisted; CIK retained for historical filings.
+
+  - company_id: mersana
+    canonical_name: Mersana Therapeutics, Inc.
+    cik: "0001442836"
+    aliases: []
+    tickers: ["MRSN"]
+    active: true
+    notes: null
+
+  - company_id: zymeworks
+    canonical_name: Zymeworks Inc.
+    cik: "0001937653"
+    aliases: []
+    tickers: ["ZYME"]
+    active: true
+    notes: null
+
+  - company_id: sutro_biopharma
+    canonical_name: Sutro Biopharma, Inc.
+    cik: "0001382101"
+    aliases: []
+    tickers: ["STRO"]
+    active: true
+    notes: null
+
+  - company_id: adc_therapeutics
+    canonical_name: ADC Therapeutics SA
+    cik: "0001771910"
+    aliases: []
+    tickers: ["ADCT"]
+    active: true
+    notes: Swiss company, files as a foreign private issuer where applicable.
+
+  - company_id: abbvie
+    canonical_name: AbbVie Inc.
+    cik: "0001551152"
+    aliases: []
+    tickers: ["ABBV"]
+    active: true
+    notes: Large diversified filer post-ImmunoGen acquisition; expect substantial non-ADC-relevant filing volume — acquisition layer preserves all relevant-form filings regardless, relevance filtering is downstream.
+
+  - company_id: pfizer
+    canonical_name: Pfizer Inc.
+    cik: "0000078003"
+    aliases: []
+    tickers: ["PFE"]
+    active: true
+    notes: Large diversified filer post-Seagen acquisition; same caveat as AbbVie above.

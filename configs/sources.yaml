@@ -83,12 +83,22 @@ sec:
   api_docs_url: https://www.sec.gov/edgar/sec-api-documentation
   acquisition_method: api
   authentication_required: false
-  rate_limit: "10 req/s max, requires descriptive User-Agent"
+  rate_limit: "10 req/s max (officially documented), mandatory identifying User-Agent or HTTP 403 + brief IP block; we use 8 req/s"
   license_or_access_note: Public filings.
   raw_formats: [html, txt, xml, xbrl]
-  update_strategy: incremental_by_filing_date
-  implementation_status: not_started
-  enabled: false
+  update_strategy: company_centric_full_filing_history_per_run
+  implementation_status: implemented
+  enabled: true
+  notes: >
+    Job 09 in Prompt.md, promoted to #5 in recommended execution order.
+    Company-centric (configs/company_registry.yaml, CIKs verified live),
+    not query-based — pulls each active company's full relevant-form
+    filing history (10-K/10-Q/8-K/S-1/20-F/6-K + amendments) via the
+    submissions API. Exhibits are a separate, independently versioned
+    artifact (sec_exhibits.parquet, parent_record_id linking back), same
+    pattern as Europe PMC's full text. Requires SEC_CONTACT_EMAIL to be
+    configured — refuses to run without a real contact per SEC's fair
+    access policy.
   notes: Job 09 in Prompt.md, promoted to #5 in recommended execution order.
 
 fda:
