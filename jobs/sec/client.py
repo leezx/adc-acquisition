@@ -18,10 +18,6 @@ SEC_ARCHIVES_BASE = "https://www.sec.gov/Archives/edgar/data"
 
 RATE_LIMIT = 8.0  # req/s; SEC's documented limit is 10 req/s.
 
-# Index/full-submission artifacts that accompany every filing directory but
-# are not themselves filing content (the primary document or an exhibit).
-NON_EXHIBIT_SUFFIXES = ("-index.htm", "-index.html", "-index-headers.html")
-
 
 class SECClient:
     def __init__(self, http_client: RetryingClient, user_agent: str):
@@ -44,29 +40,19 @@ class SECClient:
         response.raise_for_status()
         return response.json()
 
-    def get_filing_index(self, cik: str, accession_number: str) -> dict:
-        url = f"{SEC_ARCHIVES_BASE}/{int(cik)}/{accession_number.replace('-', '')}/index.json"
+    def get_filing_index_page(self, cik: str, accession_number: str) -> str:
+        """The human-readable `{accession-number}-index.htm` page — unlike
+        `index.json`'s bare directory listing, this page's "Document Format
+        Files" table carries SEC's own per-document type (form type,
+        "EX-10.3", "GRAPHIC", ...), which is what distinguishes a real
+        exhibit from an embedded image or XBRL data file."""
+        url = f"{SEC_ARCHIVES_BASE}/{int(cik)}/{accession_number.replace('-', '')}/{accession_number}-index.htm"
         response = self.http_client.get(url, headers=self._headers())
         response.raise_for_status()
-        return response.json()
+        return response.text
 
     def fetch_document(self, cik: str, accession_number: str, filename: str) -> bytes:
         url = f"{SEC_ARCHIVES_BASE}/{int(cik)}/{accession_number.replace('-', '')}/{filename}"
         response = self.http_client.get(url, headers=self._headers())
         response.raise_for_status()
         return response.content
-
-
-def list_exhibit_filenames(filing_index: dict, primary_document: str, accession_number: str) -> list[str]:
-    """Every file in the filing directory except the primary document and
-    the auto-generated index/full-submission artifacts."""
-    accession_no_dashes = accession_number.replace("-", "")
-    items = (filing_index.get("directory") or {}).get("item") or []
-    names = [item["name"] for item in items if item.get("name")]
-    return [
-        name for name in names
-        if name != primary_document
-        and name != f"{accession_number}.txt"
-        and name != f"{accession_no_dashes}.txt"
-        and not name.endswith(NON_EXHIBIT_SUFFIXES)
-    ]

@@ -12,24 +12,35 @@ REGISTRY_YAML = """
 companies:
   - company_id: company_a
     canonical_name: Company A Inc.
-    cik: "0000001000"
+    ciks: ["0000001000"]
     aliases: []
     tickers: []
     active: true
     notes: null
   - company_id: company_b
     canonical_name: Company B Inc.
-    cik: "0000002000"
+    ciks: ["0000002000"]
     aliases: []
     tickers: []
     active: true
     notes: null
   - company_id: company_c_inactive
     canonical_name: Company C Inc.
-    cik: "0000003000"
+    ciks: ["0000003000"]
     aliases: []
     tickers: []
     active: false
+    notes: null
+"""
+
+REGISTRY_YAML_MULTI_CIK = """
+companies:
+  - company_id: company_a
+    canonical_name: Company A Inc.
+    ciks: ["0000001000", "0000004000"]
+    aliases: []
+    tickers: []
+    active: true
     notes: null
 """
 
@@ -60,15 +71,28 @@ def _acc_no_dashes(accession_number):
     return accession_number.replace("-", "")
 
 
+def _index_page_html(entries):
+    """entries: list of (filename, doc_type, description) -- mirrors the
+    real `{accession}-index.htm` "Document Format Files" table (see
+    tests/jobs/sec/test_parser.py for a live-fetched sample)."""
+    rows = "\n".join(
+        f'<tr><td scope="row">{i + 1}</td><td scope="row">{description}</td>'
+        f'<td scope="row"><a href="/Archives/edgar/data/x/y/{filename}">{filename}</a></td>'
+        f'<td scope="row">{doc_type}</td><td scope="row">100</td></tr>'
+        for i, (filename, doc_type, description) in enumerate(entries)
+    )
+    return f'<div><p>Document Format Files</p><table class="tableFile">{rows}</table></div>'
+
+
 def _register_sec(
     submissions_by_cik=None,
     documents=None,
-    filing_indexes=None,
+    index_pages=None,
     submission_pages=None,
 ):
     submissions_by_cik = submissions_by_cik or {"0000001000": RECENT_A, "0000002000": RECENT_B}
     documents = documents if documents is not None else {}
-    filing_indexes = filing_indexes if filing_indexes is not None else {}
+    index_pages = index_pages if index_pages is not None else {}
     submission_pages = submission_pages or {}
 
     def _submissions_callback(request):
@@ -82,11 +106,11 @@ def _register_sec(
         recent = submission_pages.get(file_name, {"accessionNumber": []})
         return (200, {}, json_module.dumps(recent))
 
-    def _index_callback(request):
-        m = re.search(rf"{re.escape(SEC_ARCHIVES_BASE)}/(\d+)/(\d+)/index\.json", request.url)
+    def _index_page_callback(request):
+        m = re.search(rf"{re.escape(SEC_ARCHIVES_BASE)}/(\d+)/(\d+)/[\d-]+-index\.htm$", request.url)
         cik_no_zeros, acc_no_dashes = m.group(1), m.group(2)
-        names = filing_indexes.get((cik_no_zeros, acc_no_dashes), [])
-        return (200, {}, json_module.dumps({"directory": {"item": [{"name": n} for n in names]}}))
+        entries = index_pages.get((cik_no_zeros, acc_no_dashes), [])
+        return (200, {}, _index_page_html(entries))
 
     def _document_callback(request):
         m = re.search(rf"{re.escape(SEC_ARCHIVES_BASE)}/(\d+)/(\d+)/(.+)$", request.url)
@@ -98,8 +122,8 @@ def _register_sec(
 
     responses.add_callback(responses.GET, re.compile(rf"{re.escape(SEC_DATA_BASE)}/submissions/CIK\d{{10}}\.json"), callback=_submissions_callback)
     responses.add_callback(responses.GET, re.compile(rf"{re.escape(SEC_DATA_BASE)}/submissions/(?!CIK\d{{10}}\.json).+"), callback=_page_callback)
-    responses.add_callback(responses.GET, re.compile(rf"{re.escape(SEC_ARCHIVES_BASE)}/\d+/\d+/index\.json"), callback=_index_callback)
-    responses.add_callback(responses.GET, re.compile(rf"{re.escape(SEC_ARCHIVES_BASE)}/\d+/\d+/(?!index\.json).+"), callback=_document_callback)
+    responses.add_callback(responses.GET, re.compile(rf"{re.escape(SEC_ARCHIVES_BASE)}/\d+/\d+/[\d-]+-index\.htm$"), callback=_index_page_callback)
+    responses.add_callback(responses.GET, re.compile(rf"{re.escape(SEC_ARCHIVES_BASE)}/\d+/\d+/(?!.*-index\.htm$).+"), callback=_document_callback)
 
 
 def _base_args(tmp_path, **overrides):
@@ -111,8 +135,8 @@ def _base_args(tmp_path, **overrides):
     return argparse.Namespace(**defaults)
 
 
-def _setup(tmp_path, monkeypatch):
-    (tmp_path / "registry.yaml").write_text(REGISTRY_YAML)
+def _setup(tmp_path, monkeypatch, registry_yaml=REGISTRY_YAML):
+    (tmp_path / "registry.yaml").write_text(registry_yaml)
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("SEC_CONTACT_EMAIL", "test@example.com")
     # Rate limit is a real time.sleep() against mocked HTTP otherwise.
@@ -178,7 +202,10 @@ def test_full_run_writes_filings_and_exhibits(tmp_path, monkeypatch):
     documents[("1000", _acc_no_dashes(ACC_A1), "a1-ex.htm")] = b"<html>exhibit</html>"
     _register_sec(
         documents=documents,
-        filing_indexes={("1000", _acc_no_dashes(ACC_A1)): ["a1.htm", "a1-ex.htm", "0000001000-20-000001-index.htm"]},
+        index_pages={("1000", _acc_no_dashes(ACC_A1)): [
+            ("a1.htm", "8-K", "8-K"),
+            ("a1-ex.htm", "EX-99.1", "EX-99.1"),
+        ]},
     )
 
     result = SECJob().run(_base_args(tmp_path))
@@ -194,9 +221,92 @@ def test_full_run_writes_filings_and_exhibits(tmp_path, monkeypatch):
     assert len(exhibits_df) == 1
     assert exhibits_df.iloc[0]["source_record_id"] == "0000001000-20-000001:a1-ex.htm"
     assert exhibits_df.iloc[0]["parent_record_id"] == "0000001000-20-000001"
+    assert exhibits_df.iloc[0]["exhibit_type"] == "EX-99.1"
 
     report_text = (tmp_path / "reports" / "acquisition" / "sec.md").read_text()
     assert "SEC EDGAR (Job 05)" in report_text
+
+
+@responses.activate
+def test_graphic_and_primary_document_are_not_treated_as_exhibits(tmp_path, monkeypatch):
+    """Blocker fix: only SEC's own EX-* typed documents count as exhibits --
+    not every non-primary file in the filing directory (which would sweep
+    in embedded images, XBRL data files, etc.)."""
+    _setup(tmp_path, monkeypatch)
+    documents = _default_documents()
+    _register_sec(
+        documents=documents,
+        index_pages={("1000", _acc_no_dashes(ACC_A1)): [
+            ("a1.htm", "8-K", "8-K"),
+            ("a1_g1.jpg", "GRAPHIC", ""),
+        ]},
+    )
+
+    SECJob().run(_base_args(tmp_path))
+
+    exhibits_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "sec_exhibits.parquet")
+    assert len(exhibits_df) == 0
+
+
+@responses.activate
+def test_primary_document_failure_does_not_block_exhibit_acquisition(tmp_path, monkeypatch):
+    """Blocker fix: exhibits/filing-index must be attempted even when the
+    primary document itself has no primaryDocument or 404s."""
+    _setup(tmp_path, monkeypatch)
+    recent_a = _recent([ACC_A1], ["8-K"], ["2020-01-01"], [""])  # empty primaryDocument
+    documents = {("1000", _acc_no_dashes(ACC_A1), "a1-ex.htm"): b"<html>exhibit</html>"}
+    _register_sec(
+        submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}},
+        documents=documents,
+        index_pages={("1000", _acc_no_dashes(ACC_A1)): [("a1-ex.htm", "EX-99.1", "EX-99.1")]},
+    )
+
+    result = SECJob().run(_base_args(tmp_path))
+
+    assert result.records_failed == 1
+    assert result.records_downloaded == 0
+    exhibits_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "sec_exhibits.parquet")
+    assert len(exhibits_df) == 1
+    assert exhibits_df.iloc[0]["parent_record_id"] == ACC_A1
+
+
+@responses.activate
+def test_since_until_filter_discovered_filings_by_filing_date(tmp_path, monkeypatch):
+    _setup(tmp_path, monkeypatch)
+    recent_a = _recent(
+        ["0000001000-19-000001", "0000001000-22-000001", "0000001000-25-000001"],
+        ["8-K", "10-Q", "8-K"],
+        ["2019-06-01", "2022-06-01", "2025-06-01"],
+        ["old.htm", "mid.htm", "new.htm"],
+    )
+    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}})
+
+    result = SECJob().run(_base_args(tmp_path, dry_run=True, since="2022-01-01", until="2024-12-31"))
+
+    assert result.records_discovered == 1
+
+
+@responses.activate
+def test_resume_uses_checkpoint_last_success_max_date_as_since(tmp_path, monkeypatch):
+    _setup(tmp_path, monkeypatch)
+    recent_a = _recent(
+        ["0000001000-19-000001", "0000001000-25-000001"],
+        ["8-K", "8-K"],
+        ["2019-06-01", "2025-06-01"],
+        ["old.htm", "new.htm"],
+    )
+    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}})
+
+    # First run establishes a checkpoint cursor via an explicit --until.
+    SECJob().run(_base_args(tmp_path, until="2020-01-01"))
+    checkpoint = json_module.loads((tmp_path / "DATA" / "checkpoints" / "sec.json").read_text())
+    assert checkpoint["last_success_max_date"] == "2020-01-01"
+
+    responses.reset()
+    _register_sec(submissions_by_cik={"0000001000": recent_a, "0000002000": {"accessionNumber": []}})
+    result = SECJob().run(_base_args(tmp_path, dry_run=True, resume=True))
+
+    assert result.records_discovered == 1  # only the 2025 filing is >= 2020-01-01
 
 
 @responses.activate
@@ -210,7 +320,21 @@ def test_discovery_ledger_records_company_provenance(tmp_path, monkeypatch):
     assert set(discovery_df["source_record_id"]) == {
         "0000001000-20-000001", "0000001000-20-000002", "0000002000-20-000001",
     }
-    assert discovery_df[discovery_df["source_record_id"] == "0000002000-20-000001"]["query_id"].iloc[0] == "SEC_FILINGS_COMPANY_B"
+    assert discovery_df[discovery_df["source_record_id"] == "0000002000-20-000001"]["query_id"].iloc[0] == "SEC_FILINGS_COMPANY_B_0000002000"
+
+
+@responses.activate
+def test_multi_cik_company_pulls_filings_from_both_filers(tmp_path, monkeypatch):
+    """Blocker fix: a company can have more than one CIK (e.g. Zymeworks'
+    2022 redomicile) -- every CIK's filing history must be pulled."""
+    _setup(tmp_path, monkeypatch, registry_yaml=REGISTRY_YAML_MULTI_CIK)
+    recent_predecessor = _recent(["0000004000-15-000001"], ["10-K"], ["2015-01-01"], ["pre.htm"])
+    _register_sec(submissions_by_cik={"0000001000": RECENT_A, "0000004000": recent_predecessor})
+
+    result = SECJob().run(_base_args(tmp_path, dry_run=True))
+
+    assert result.queries_run == 2  # one per CIK
+    assert result.records_discovered == 3  # 2 from CIK 1000 + 1 from CIK 4000
 
 
 @responses.activate
@@ -262,7 +386,10 @@ def test_exhibit_fetch_failure_never_touches_filing_snapshot(tmp_path, monkeypat
     documents = _default_documents()  # exhibit "a1-ex.htm" deliberately absent -> 404s
     _register_sec(
         documents=documents,
-        filing_indexes={("1000", _acc_no_dashes(ACC_A1)): ["a1.htm", "a1-ex.htm"]},
+        index_pages={("1000", _acc_no_dashes(ACC_A1)): [
+            ("a1.htm", "8-K", "8-K"),
+            ("a1-ex.htm", "EX-99.1", "EX-99.1"),
+        ]},
     )
 
     result = SECJob().run(_base_args(tmp_path))
@@ -283,7 +410,11 @@ def test_exhibit_content_change_creates_v2_without_touching_v1(tmp_path, monkeyp
     _setup(tmp_path, monkeypatch)
     documents = _default_documents()
     documents[("1000", _acc_no_dashes(ACC_A1), "a1-ex.htm")] = b"original exhibit"
-    _register_sec(documents=documents, filing_indexes={("1000", _acc_no_dashes(ACC_A1)): ["a1.htm", "a1-ex.htm"]})
+    index_pages = {("1000", _acc_no_dashes(ACC_A1)): [
+        ("a1.htm", "8-K", "8-K"),
+        ("a1-ex.htm", "EX-99.1", "EX-99.1"),
+    ]}
+    _register_sec(documents=documents, index_pages=index_pages)
 
     SECJob().run(_base_args(tmp_path))
     v1_path = next((tmp_path / "DATA" / "raw" / "sec" / "0000001000-20-000001" / "exhibits").glob("v1_*"))
@@ -291,7 +422,7 @@ def test_exhibit_content_change_creates_v2_without_touching_v1(tmp_path, monkeyp
 
     responses.reset()
     documents[("1000", _acc_no_dashes(ACC_A1), "a1-ex.htm")] = b"revised exhibit"
-    _register_sec(documents=documents, filing_indexes={("1000", _acc_no_dashes(ACC_A1)): ["a1.htm", "a1-ex.htm"]})
+    _register_sec(documents=documents, index_pages=index_pages)
     SECJob().run(_base_args(tmp_path))
 
     assert v1_path.read_bytes() == b"original exhibit"
@@ -342,7 +473,11 @@ def test_pagination_follows_files_list_for_older_filings(tmp_path, monkeypatch):
         re.compile(rf"{re.escape(SEC_DATA_BASE)}/submissions/CIK0000002000\.json"),
         callback=lambda r: (200, {}, json_module.dumps({"filings": {"recent": RECENT_B, "files": []}})),
     )
-    responses.add_callback(responses.GET, re.compile(rf"{re.escape(SEC_ARCHIVES_BASE)}/\d+/\d+/index\.json"), callback=lambda r: (200, {}, json_module.dumps({"directory": {"item": []}})))
+    responses.add_callback(
+        responses.GET,
+        re.compile(rf"{re.escape(SEC_ARCHIVES_BASE)}/\d+/\d+/[\d-]+-index\.htm$"),
+        callback=lambda r: (200, {}, _index_page_html([])),
+    )
 
     result = SECJob().run(_base_args(tmp_path, dry_run=True, company="company_a"))
 

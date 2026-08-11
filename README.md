@@ -204,6 +204,7 @@ version supersedes the old one rather than both being reconciled forever.
 python -m adc_acquisition sec --dry-run --limit 20
 python -m adc_acquisition sec --limit 20
 python -m adc_acquisition sec --company seagen --limit 20
+python -m adc_acquisition sec --since 2022-01-01 --until 2024-12-31
 ```
 
 **Requires `SEC_CONTACT_EMAIL`** to be set (`.env` or environment) — SEC's
@@ -213,20 +214,35 @@ source IP may be briefly blocked; this job refuses to run without one
 rather than sending a placeholder that would violate that policy. Company-
 centric, not query-based: `configs/company_registry.yaml` is a curated list
 of ADC-relevant filers with CIKs verified live against SEC's own lookup
-services. For each active company this job pulls its *entire* relevant-form
-filing history (10-K/10-Q/8-K/S-1/20-F/6-K + amendments —
-`jobs/sec/parser.py:RELEVANT_FORMS`) via the submissions API — `--limit`
-only caps how many filings get materialized, not how many are discovered.
-`--company "<company_id>"` restricts a run to one registry entry.
+services. Each registry entry's `ciks` is a list, not a single value — a
+corporate redomicile/reincorporation creates a brand-new SEC filer identity
+with its own CIK and filing history (confirmed live for Zymeworks, which
+redomiciled from British Columbia to Delaware in 2022; its pre-2022 history
+is under a different CIK), so a company can have more than one. Every CIK
+gets its own `query_id` (`SEC_FILINGS_{company_id}_{cik}`). For each active
+CIK this job pulls its *entire* relevant-form filing history (10-K/10-Q/8-K/
+S-1/20-F/6-K + amendments — `jobs/sec/parser.py:RELEVANT_FORMS`) via the
+submissions API — `--limit` only caps how many filings get materialized,
+not how many are discovered. `--company "<company_id>"` restricts a run to
+one registry entry (all of that company's CIKs). `--since`/`--until` filter
+by SEC's own `filing_date`, applied client-side (the submissions API has no
+server-side date filter); `--resume` reuses the prior run's `--until` (or
+run time) as an implicit `--since`.
 
 Exhibits are a separate, independently versioned artifact
 (`DATA/manifests/sec_exhibits{,_attempts}.parquet`, keyed by
 `{accession_number}:{filename}` with `parent_record_id` pointing back to
 the filing) — same pattern as Europe PMC's full text, so an exhibit fetch
 failure or later retry never touches the filing's own content-version
-snapshot. Some pre-2002 filings have missing/incorrect primary-document
-metadata on SEC's own side; that surfaces as an expected, logged failed
-attempt, not a crash.
+snapshot. A document only counts as an exhibit if SEC's own filing index
+page (`{accession-number}-index.htm`'s "Document Format Files" table)
+types it `EX-*`, not merely "any non-primary file in the filing
+directory" — that would also sweep in GRAPHIC/embedded-image and XBRL
+support files, which are not exhibits. Exhibit acquisition is attempted for
+every target filing regardless of whether that filing's own primary
+document succeeded, failed, or was unchanged. Some pre-2002 filings have
+missing/incorrect primary-document metadata on SEC's own side; that
+surfaces as an expected, logged failed attempt, not a crash.
 
 ## Tests
 

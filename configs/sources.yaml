@@ -94,12 +94,19 @@ sec:
     Company-centric (configs/company_registry.yaml, CIKs verified live),
     not query-based — pulls each active company's full relevant-form
     filing history (10-K/10-Q/8-K/S-1/20-F/6-K + amendments) via the
-    submissions API. Exhibits are a separate, independently versioned
-    artifact (sec_exhibits.parquet, parent_record_id linking back), same
-    pattern as Europe PMC's full text. Requires SEC_CONTACT_EMAIL to be
-    configured — refuses to run without a real contact per SEC's fair
-    access policy.
-  notes: Job 09 in Prompt.md, promoted to #5 in recommended execution order.
+    submissions API. A company can have more than one CIK (a redomicile
+    creates a new filer identity — Zymeworks' 2022 BC-to-Delaware move is
+    the confirmed live case in this registry); `ciks` is a list and each
+    gets its own query_id. --since/--until filter by filing_date
+    client-side; --resume reuses the prior run's --until as an implicit
+    --since. Exhibits are a separate, independently versioned artifact
+    (sec_exhibits.parquet, parent_record_id linking back), same pattern as
+    Europe PMC's full text — only documents SEC's own filing index types
+    EX-* count as exhibits, not every non-primary file in the directory
+    (GRAPHIC/XBRL support files are excluded); exhibit acquisition runs
+    regardless of whether the primary filing document itself succeeded.
+    Requires SEC_CONTACT_EMAIL to be configured — refuses to run without a
+    real contact per SEC's fair access policy.
 
 fda:
   source_type: regulatory

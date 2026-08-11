@@ -2,7 +2,7 @@ import pytest
 import responses
 
 from adc_acquisition.http_utils import RateLimiter, RetryingClient
-from jobs.sec.client import SEC_ARCHIVES_BASE, SEC_DATA_BASE, SECClient, list_exhibit_filenames
+from jobs.sec.client import SEC_ARCHIVES_BASE, SEC_DATA_BASE, SECClient
 
 
 @pytest.fixture
@@ -27,14 +27,17 @@ def test_get_submissions_page(client):
 
 
 @responses.activate
-def test_get_filing_index_builds_correct_url(client):
+def test_get_filing_index_page_builds_correct_url_and_returns_html(client):
     responses.add(
         responses.GET,
-        f"{SEC_ARCHIVES_BASE}/78003/000007800300000007/index.json",
-        json={"directory": {"item": []}},
+        f"{SEC_ARCHIVES_BASE}/78003/000007800300000007/0000078003-00-000007-index.htm",
+        body="<html>Document Format Files</html>",
     )
-    client.get_filing_index("0000078003", "0000078003-00-000007")
-    assert responses.calls[0].request.url.endswith("/78003/000007800300000007/index.json")
+    html = client.get_filing_index_page("0000078003", "0000078003-00-000007")
+    assert html == "<html>Document Format Files</html>"
+    assert responses.calls[0].request.url.endswith(
+        "/78003/000007800300000007/0000078003-00-000007-index.htm"
+    )
 
 
 @responses.activate
@@ -47,24 +50,3 @@ def test_fetch_document_builds_correct_url_and_returns_bytes(client):
     content = client.fetch_document("0000078003", "0000078003-00-000007", "doc.htm")
     assert content == b"<html>filing</html>"
     assert responses.calls[0].request.url.endswith("/78003/000007800300000007/doc.htm")
-
-
-def test_list_exhibit_filenames_excludes_primary_and_index_artifacts():
-    filing_index = {
-        "directory": {
-            "item": [
-                {"name": "0000078003-00-000007-index.htm"},
-                {"name": "0000078003-00-000007-index-headers.html"},
-                {"name": "0000078003-00-000007.txt"},
-                {"name": "0000078003-00-000007-d1.html"},  # primary document
-                {"name": "0000078003-00-000007-d2.html"},  # exhibit
-                {"name": "ex99.pdf"},  # exhibit
-            ]
-        }
-    }
-    exhibits = list_exhibit_filenames(filing_index, "0000078003-00-000007-d1.html", "0000078003-00-000007")
-    assert exhibits == ["0000078003-00-000007-d2.html", "ex99.pdf"]
-
-
-def test_list_exhibit_filenames_handles_missing_directory():
-    assert list_exhibit_filenames({}, "primary.htm", "0000000000-00-000001") == []

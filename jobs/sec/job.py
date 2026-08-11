@@ -1,10 +1,16 @@
 """Job 05: SEC EDGAR acquisition (Prompt.md section 13).
 
-Company-centric, not query-based: for each active company in
-configs/company_registry.yaml, pull its full filing history from the
+Company-centric, not query-based: for each active company's CIK(s) in
+configs/company_registry.yaml, pull the full filing history from the
 submissions API, filter to relevant-form filings (jobs/sec/parser.py:
 10-K, 10-Q, 8-K, S-1, 20-F, 6-K + amendments), and materialize each
 filing's primary document as an immutable content-version snapshot.
+A company can have more than one CIK (a corporate redomicile/reincorporation
+creates a new SEC filer identity — e.g. Zymeworks Inc. redomiciled from BC to
+Delaware in 2022, leaving its full pre-2022 filing history under the
+predecessor's CIK) — `Company.ciks` is a list, and each CIK gets its own
+query_id (`SEC_FILINGS_{company_id}_{cik}`) so provenance always identifies
+which filer entity a filing actually came from.
 
 Exhibits are a SEPARATE, independently versioned artifact — same fix as
 Europe PMC's full text (Prompt.md still asks to "preserve raw filing,
@@ -18,6 +24,16 @@ primary record's own content-version row):
                                parent_record_id pointing back to the filing.
 - sec_exhibits_attempts.parquet — its own append-only attempts ledger.
 
+A real exhibit is a document SEC's own filing index typed as "EX-*" (parsed
+from the `{accession-number}-index.htm` page's "Document Format Files"
+table via jobs/sec/parser.py:parse_document_format_table) — not "every file
+in the filing directory besides the primary document", which would also
+sweep in GRAPHIC/embedded-image and XBRL data files that are not exhibits.
+Exhibit acquisition is attempted for every target filing regardless of
+whether that filing's own primary-document fetch succeeded, failed, or was
+skipped as unchanged — a primary-document failure must never suppress
+exhibit acquisition for the same filing.
+
 An exhibit is only fetched once per accession/filename (SEC filings are
 immutable once filed — there's no "not available yet, retry" dynamic like
 Europe PMC's open-access flag), but the same hash-compare-then-version
@@ -29,6 +45,12 @@ Same three-table model as Jobs 01-04 for filings themselves:
 sec_discovery.parquet is an append-only every-company-every-run ledger,
 sec_attempts.parquet is an append-only every-attempt ledger. Failures never
 occupy a content-version slot.
+
+--since/--until filter discovered filings by SEC's own filing_date (the
+submissions API has no server-side date filter, so this is applied
+client-side after the full history is pulled); --resume reuses the prior
+run's --until (or now) as an implicit --since, same convention as
+Jobs 01/03.
 
 SEC's fair access policy is unusually strict and officially documented:
 max 10 req/s, and every request MUST carry an identifying User-Agent
@@ -58,8 +80,8 @@ from adc_acquisition.http_utils import RateLimiter, RetryingClient
 from adc_acquisition.job_base import AcquisitionJob, JobRunResult
 from adc_acquisition.logging_utils import setup_job_logging
 from adc_acquisition.manifest import append_only, new_manifest_row, write_manifest
-from jobs.sec.client import RATE_LIMIT, SEC_ARCHIVES_BASE, SECClient, list_exhibit_filenames
-from jobs.sec.parser import filings_from_recent_block, filter_relevant_forms
+from jobs.sec.client import RATE_LIMIT, SEC_ARCHIVES_BASE, SECClient
+from jobs.sec.parser import filings_from_recent_block, filter_relevant_forms, list_exhibit_entries, parse_document_format_table, within_date_range
 from jobs.sec.report import build_report
 
 REGISTRY_PATH = Path("configs/company_registry.yaml")
@@ -67,6 +89,7 @@ EXTRA_FIELDS = [
     "cik", "company", "accession_number", "filing_type", "filing_date", "report_date",
     "primary_document", "item_codes", "file_number", "film_number",
 ]
+EXHIBIT_EXTRA_FIELDS = ["exhibit_type", "exhibit_description"]
 LICENSE_NOTE = "SEC EDGAR filing, public disclosure."
 EXHIBIT_NAMESPACE = "exhibit_records"
 
@@ -85,7 +108,7 @@ EXHIBIT_ATTEMPT_COLUMNS = [
 class Company:
     company_id: str
     canonical_name: str
-    cik: str
+    ciks: list
     aliases: list
     tickers: list
     active: bool
@@ -163,41 +186,49 @@ class SECJob(AcquisitionJob):
         if not companies:
             raise RuntimeError(f"no matching active companies in {args.registry_file}")
 
+        since = args.since
+        if args.resume and not since:
+            since = checkpoint.get("last_success_max_date")
+        until = args.until
+
         result = JobRunResult(job_name=self.name, dry_run=bool(args.dry_run))
 
         record_first_query: dict[str, tuple[str, str]] = {}
         record_query_hits: dict[str, set[str]] = defaultdict(set)
-        record_filings: dict[str, tuple] = {}  # accession_number -> (ParsedFiling, Company)
+        record_filings: dict[str, tuple] = {}  # accession_number -> (ParsedFiling, Company, cik)
         query_id_counts: Counter = Counter()
         query_text_by_id: dict[str, str] = {}
         companies_used: list[str] = []
 
         for company in companies:
-            query_id = f"SEC_FILINGS_{company.company_id.upper()}"
-            query_text = (
-                f"all relevant-form filings (10-K/10-Q/8-K/S-1/20-F/6-K + amendments) "
-                f"for CIK {company.cik} ({company.canonical_name})"
-            )
-            try:
-                submissions = client.get_submissions(company.cik)
-                all_filings = filings_from_recent_block(submissions["filings"]["recent"])
-                for page_ref in submissions["filings"].get("files", []):
-                    page = client.get_submissions_page(page_ref["name"])
-                    all_filings.extend(filings_from_recent_block(page))
-            except requests.RequestException as exc:
-                logger.error("company=%s submissions fetch failed: %s", company.company_id, exc)
-                failure_logger.info("company=%s error=%s", company.company_id, exc)
-                continue
+            for cik in company.ciks:
+                query_id = f"SEC_FILINGS_{company.company_id.upper()}_{cik}"
+                query_text = (
+                    f"all relevant-form filings (10-K/10-Q/8-K/S-1/20-F/6-K + amendments) "
+                    f"for CIK {cik} ({company.canonical_name})"
+                )
+                try:
+                    submissions = client.get_submissions(cik)
+                    all_filings = filings_from_recent_block(submissions["filings"]["recent"])
+                    for page_ref in submissions["filings"].get("files", []):
+                        page = client.get_submissions_page(page_ref["name"])
+                        all_filings.extend(filings_from_recent_block(page))
+                except requests.RequestException as exc:
+                    logger.error("company=%s cik=%s submissions fetch failed: %s", company.company_id, cik, exc)
+                    failure_logger.info("company=%s cik=%s error=%s", company.company_id, cik, exc)
+                    continue
 
-            relevant = filter_relevant_forms(all_filings)
-            query_id_counts[query_id] = len(relevant)
-            query_text_by_id[query_id] = query_text
-            companies_used.append(f"{company.canonical_name} (CIK {company.cik})")
-            for pf in relevant:
-                record_query_hits[pf.accession_number].add(query_id)
-                if pf.accession_number not in record_first_query:
-                    record_first_query[pf.accession_number] = (query_id, query_text)
-                record_filings[pf.accession_number] = (pf, company)
+                relevant = filter_relevant_forms(all_filings)
+                if since or until:
+                    relevant = [f for f in relevant if within_date_range(f.filing_date, since, until)]
+                query_id_counts[query_id] = len(relevant)
+                query_text_by_id[query_id] = query_text
+                companies_used.append(f"{company.canonical_name} (CIK {cik})")
+                for pf in relevant:
+                    record_query_hits[pf.accession_number].add(query_id)
+                    if pf.accession_number not in record_first_query:
+                        record_first_query[pf.accession_number] = (query_id, query_text)
+                    record_filings[pf.accession_number] = (pf, company, cik)
 
         all_ids = list(record_first_query.keys())
         duplicate_ids = {aid for aid, qids in record_query_hits.items() if len(qids) > 1}
@@ -247,95 +278,98 @@ class SECJob(AcquisitionJob):
         exhibit_attempt_rows = []
 
         for accession_number in target_ids:
-            pf, company = record_filings[accession_number]
+            pf, company, cik = record_filings[accession_number]
             query_id, query_text = record_first_query[accession_number]
+            raw_dir = output_dir / "raw" / "sec" / accession_number
 
+            # --- Primary filing document: its own independent attempt. ---
             if not pf.primary_document:
                 logger.warning("accession=%s has no primaryDocument", accession_number)
                 failure_logger.info("accession=%s error=no_primary_document", accession_number)
                 result.records_failed += 1
                 attempt_rows.append(_attempt_row(accession_number, run_id, now, "failed", query_id, query_text, error="no_primary_document"))
-                continue
-
-            try:
-                raw_bytes = client.fetch_document(company.cik, accession_number, pf.primary_document)
-            except requests.RequestException as exc:
-                logger.error("accession=%s primary document fetch failed: %s", accession_number, exc)
-                failure_logger.info("accession=%s error=%s", accession_number, exc)
-                result.records_failed += 1
-                attempt_rows.append(_attempt_row(accession_number, run_id, now, "failed", query_id, query_text, error=str(exc)))
-                continue
-
-            content_hash = sha256_bytes(raw_bytes)
-            prior_state = checkpoint_store.get_record_state(checkpoint, accession_number)
-            raw_dir = output_dir / "raw" / "sec" / accession_number
-
-            if prior_state and prior_state.get("content_hash") == content_hash:
-                result.records_skipped_unchanged += 1
-                version = prior_state["version"]
-                status = "skipped_unchanged"
             else:
-                version = (prior_state["version"] + 1) if prior_state else 1
-                raw_dir.mkdir(parents=True, exist_ok=True)
-                raw_path = raw_dir / f"v{version}_{pf.primary_document}"
-                raw_path.write_bytes(raw_bytes)
-                checkpoint_store.set_record_state(checkpoint, accession_number, content_hash, version, now)
-                result.records_downloaded += 1
-                status = "success"
-                content_rows.append(
-                    new_manifest_row(
-                        extra_fields=EXTRA_FIELDS,
-                        source="sec",
-                        source_record_id=accession_number,
-                        source_record_type="sec_filing",
-                        title=f"{pf.form} — {company.canonical_name}",
-                        url=f"{SEC_ARCHIVES_BASE}/{int(company.cik)}/{accession_number.replace('-', '')}/{pf.primary_document}",
-                        publication_or_release_date=pf.filing_date,
-                        retrieved_at=now,
-                        query_id=query_id,
-                        query_text=query_text,
-                        raw_file_path=str(raw_path),
-                        raw_format=Path(pf.primary_document).suffix.lstrip(".") or "html",
-                        content_hash=content_hash,
-                        download_status="success",
-                        http_status=200,
-                        license_or_access_note=LICENSE_NOTE,
-                        parent_record_id=None,
-                        version=version,
-                        notes=None,
-                        cik=company.cik,
-                        company=company.canonical_name,
-                        accession_number=pf.accession_number,
-                        filing_type=pf.form,
-                        filing_date=pf.filing_date,
-                        report_date=pf.report_date,
-                        primary_document=pf.primary_document,
-                        item_codes=pf.item_codes,
-                        file_number=pf.file_number,
-                        film_number=pf.film_number,
+                try:
+                    raw_bytes = client.fetch_document(cik, accession_number, pf.primary_document)
+                except requests.RequestException as exc:
+                    logger.error("accession=%s primary document fetch failed: %s", accession_number, exc)
+                    failure_logger.info("accession=%s error=%s", accession_number, exc)
+                    result.records_failed += 1
+                    attempt_rows.append(_attempt_row(accession_number, run_id, now, "failed", query_id, query_text, error=str(exc)))
+                else:
+                    content_hash = sha256_bytes(raw_bytes)
+                    prior_state = checkpoint_store.get_record_state(checkpoint, accession_number)
+
+                    if prior_state and prior_state.get("content_hash") == content_hash:
+                        result.records_skipped_unchanged += 1
+                        version = prior_state["version"]
+                        status = "skipped_unchanged"
+                    else:
+                        version = (prior_state["version"] + 1) if prior_state else 1
+                        raw_dir.mkdir(parents=True, exist_ok=True)
+                        raw_path = raw_dir / f"v{version}_{pf.primary_document}"
+                        raw_path.write_bytes(raw_bytes)
+                        checkpoint_store.set_record_state(checkpoint, accession_number, content_hash, version, now)
+                        result.records_downloaded += 1
+                        status = "success"
+                        content_rows.append(
+                            new_manifest_row(
+                                extra_fields=EXTRA_FIELDS,
+                                source="sec",
+                                source_record_id=accession_number,
+                                source_record_type="sec_filing",
+                                title=f"{pf.form} — {company.canonical_name}",
+                                url=f"{SEC_ARCHIVES_BASE}/{int(cik)}/{accession_number.replace('-', '')}/{pf.primary_document}",
+                                publication_or_release_date=pf.filing_date,
+                                retrieved_at=now,
+                                query_id=query_id,
+                                query_text=query_text,
+                                raw_file_path=str(raw_path),
+                                raw_format=Path(pf.primary_document).suffix.lstrip(".") or "html",
+                                content_hash=content_hash,
+                                download_status="success",
+                                http_status=200,
+                                license_or_access_note=LICENSE_NOTE,
+                                parent_record_id=None,
+                                version=version,
+                                notes=None,
+                                cik=cik,
+                                company=company.canonical_name,
+                                accession_number=pf.accession_number,
+                                filing_type=pf.form,
+                                filing_date=pf.filing_date,
+                                report_date=pf.report_date,
+                                primary_document=pf.primary_document,
+                                item_codes=pf.item_codes,
+                                file_number=pf.file_number,
+                                film_number=pf.film_number,
+                            )
+                        )
+
+                    attempt_rows.append(
+                        _attempt_row(accession_number, run_id, now, status, query_id, query_text, http_status=200, content_hash=content_hash, version=version)
                     )
-                )
 
-            attempt_rows.append(
-                _attempt_row(accession_number, run_id, now, status, query_id, query_text, http_status=200, content_hash=content_hash, version=version)
-            )
-
-            # Exhibits: independent lifecycle, attempted regardless of
-            # whether the primary filing itself was new or unchanged.
+            # --- Exhibits: independent lifecycle, attempted regardless of
+            # whether the primary filing document above succeeded, failed,
+            # or was unchanged — a primary-document failure must never
+            # suppress exhibit acquisition for the same filing. ---
             try:
-                filing_index = client.get_filing_index(company.cik, accession_number)
-                exhibit_names = list_exhibit_filenames(filing_index, pf.primary_document, accession_number)
+                index_html = client.get_filing_index_page(cik, accession_number)
+                document_entries = parse_document_format_table(index_html)
+                exhibit_entries = list_exhibit_entries(document_entries, pf.primary_document)
             except requests.RequestException as exc:
-                logger.warning("accession=%s filing index fetch failed: %s", accession_number, exc)
+                logger.warning("accession=%s filing index page fetch failed: %s", accession_number, exc)
                 exhibit_attempt_rows.append(
                     _exhibit_attempt_row(accession_number, accession_number, run_id, now, "failed", error=f"filing_index_fetch_failed: {exc}")
                 )
                 continue
 
-            for filename in exhibit_names:
+            for entry in exhibit_entries:
+                filename = entry.filename
                 exhibit_id = f"{accession_number}:{filename}"
                 try:
-                    exhibit_bytes = client.fetch_document(company.cik, accession_number, filename)
+                    exhibit_bytes = client.fetch_document(cik, accession_number, filename)
                 except requests.RequestException as exc:
                     logger.warning("exhibit=%s fetch failed: %s", exhibit_id, exc)
                     failure_logger.info("exhibit=%s error=%s", exhibit_id, exc)
@@ -360,11 +394,12 @@ class SECJob(AcquisitionJob):
 
                 exhibit_content_rows.append(
                     new_manifest_row(
+                        extra_fields=EXHIBIT_EXTRA_FIELDS,
                         source="sec",
                         source_record_id=exhibit_id,
                         source_record_type="sec_exhibit",
                         title=filename,
-                        url=f"{SEC_ARCHIVES_BASE}/{int(company.cik)}/{accession_number.replace('-', '')}/{filename}",
+                        url=f"{SEC_ARCHIVES_BASE}/{int(cik)}/{accession_number.replace('-', '')}/{filename}",
                         publication_or_release_date=pf.filing_date,
                         retrieved_at=now,
                         query_id=query_id,
@@ -378,6 +413,8 @@ class SECJob(AcquisitionJob):
                         parent_record_id=accession_number,
                         version=exhibit_version,
                         notes=None,
+                        exhibit_type=entry.doc_type,
+                        exhibit_description=entry.description,
                     )
                 )
                 exhibit_attempt_rows.append(
@@ -386,10 +423,11 @@ class SECJob(AcquisitionJob):
 
         manifest_df = write_manifest(content_rows, manifest_path, extra_fields=EXTRA_FIELDS)
         append_only(attempt_rows, attempts_path, ATTEMPT_COLUMNS)
-        write_manifest(exhibit_content_rows, exhibits_manifest_path)
+        write_manifest(exhibit_content_rows, exhibits_manifest_path, extra_fields=EXHIBIT_EXTRA_FIELDS)
         append_only(exhibit_attempt_rows, exhibits_attempts_path, EXHIBIT_ATTEMPT_COLUMNS)
         result.manifest_path = str(manifest_path)
         checkpoint["last_run_at"] = now
+        checkpoint["last_success_max_date"] = until or now[:10]
         checkpoint_store.save(checkpoint)
 
         report_text = build_report(

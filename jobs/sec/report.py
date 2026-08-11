@@ -75,7 +75,7 @@ https://data.sec.gov/submissions/ — https://www.sec.gov/Archives/edgar/data/ �
 
 ## Exhibits (independent artifact, see `sec_exhibits.parquet`)
 
-{exhibit_attempted} exhibit fetches attempted this run ({exhibit_new_or_changed} new/changed, {exhibit_unchanged} unchanged, {exhibit_failed} failed). Exhibits are tracked as their own content-version manifest, keyed by `{{accession_number}}:{{filename}}` with `parent_record_id` pointing back to the filing — never as a field on the filing row itself, so an exhibit fetch failure or a later successful retry never touches the filing's own content-version snapshot.
+{exhibit_attempted} exhibit fetches attempted this run ({exhibit_new_or_changed} new/changed, {exhibit_unchanged} unchanged, {exhibit_failed} failed). Exhibits are tracked as their own content-version manifest, keyed by `{{accession_number}}:{{filename}}` with `parent_record_id` pointing back to the filing — never as a field on the filing row itself, so an exhibit fetch failure or a later successful retry never touches the filing's own content-version snapshot. A document only counts as an exhibit if SEC's own filing index page types it `EX-*` (parsed from the `{{accession-number}}-index.htm` "Document Format Files" table, `exhibit_type`/`exhibit_description` columns) — GRAPHIC/embedded-image and XBRL support files in the same directory are not exhibits and are not captured here. Exhibit acquisition is attempted for every target filing regardless of whether that filing's own primary document succeeded, failed, or was unchanged.
 
 ## Failed downloads
 
@@ -90,6 +90,8 @@ Officially documented: max 10 req/s, mandatory identifying `User-Agent` header (
 - `item_codes` (8-K only) are the numbered disclosure items SEC assigns (e.g. "2.01,5.02") — useful downstream for filtering to acquisition/licensing/executive-change items without parsing filing text.
 - An amendment (e.g. `10-K/A`) is its own filing with its own accession number, not a patch applied to the original — both remain independent evidence rows by design.
 - Only the current 1000 most recent filings plus any additional pages (`filings.files[]`) from the submissions API are covered — a company's full historical filing set is retrieved, not just the most recent page.
+- A company can have more than one SEC filer CIK (a redomicile/reincorporation creates a new filer identity — confirmed live for Zymeworks, which redomiciled from British Columbia to Delaware in 2022 and has its pre-2022 filing history under a different CIK). `configs/company_registry.yaml`'s `ciks` field is a list for this reason; every filer CIK's filings are discovered under its own `query_id` (`SEC_FILINGS_{{company_id}}_{{cik}}`).
+- `--since`/`--until` filter discovered filings by SEC's own `filing_date` (client-side, since the submissions API has no server-side date filter); `--resume` reuses the prior run's `--until` (or run time) as an implicit `--since`, same convention as Jobs 01/03.
 
 ## Known coverage gaps
 
