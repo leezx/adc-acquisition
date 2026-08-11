@@ -164,6 +164,39 @@ broad query family in `configs/clinicaltrials_queries.yaml` — implemented
 as a capability here, not yet wired into a systematic asset-expansion pass
 (that's Job 15).
 
+## Running the Crossref job (Job 04)
+
+```bash
+python -m adc_acquisition crossref --dry-run --limit 20
+python -m adc_acquisition crossref --limit 20
+python -m adc_acquisition crossref --doi "10.1001/example.doi" --limit 1
+```
+
+This job is **DOI-centric reconciliation, not broad discovery** — verified
+live that Crossref's `query.bibliographic`/`query.title` params are
+relevance-ranked free text, not phrase/boolean search (`query.title="antibody-drug
+conjugate"` returned 860,937 hits), so there is no query-family config file
+here. Instead it reads non-null `doi` values out of other jobs' manifests
+(`configs/crossref_reconciliation_sources.yaml` — currently PubMed and
+Europe PMC) and looks each one up via Crossref's authoritative `GET
+/works/{doi}`, which returns richer bibliographic metadata (publisher,
+license, references, container-title) than either of those capture on
+their own. `--doi "<doi>"` is an ad hoc single-DOI lookup mode, independent
+of the reconciliation-sources registry — passing `--doi` skips reading the
+registry entirely, it never also pulls in every upstream DOI; each distinct
+DOI gets its own deterministic query_id (a hash of the DOI), same pattern
+as ClinicalTrials.gov's `--intervention`. `--since`/`--until`/`--resume`
+are accepted but explicitly not applicable (noted in the result/report,
+not silently ignored): this job does exact per-DOI lookups, not a `/works?`
+collection query, so there's no date-filterable request to apply them to
+(Crossref's collection endpoint does support date filters — this job just
+never calls it). The checkpoint's content-hash comparison runs on every DOI
+every run regardless of `--resume`; what it avoids is redundant
+materialization (rewriting a snapshot or creating a spurious version), not
+the network call itself. Reconciliation only ever reads each upstream
+record's *latest* content version — an upstream DOI correction in a newer
+version supersedes the old one rather than both being reconciled forever.
+
 ## Tests
 
 ```bash
@@ -176,6 +209,6 @@ or used by the normal test suite.
 ## Status
 
 See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
-(Europe PMC), and Job 03 (ClinicalTrials.gov) are implemented so far; every
-other source in `Prompt.md` is intentionally not started yet — sources are
-implemented and reviewed one at a time.
+(Europe PMC), Job 03 (ClinicalTrials.gov), and Job 04 (Crossref) are
+implemented so far; every other source in `Prompt.md` is intentionally not
+started yet — sources are implemented and reviewed one at a time.

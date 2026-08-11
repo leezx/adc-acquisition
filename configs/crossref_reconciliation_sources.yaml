@@ -1,0 +1,38 @@
+# Crossref reconciliation sources (Job 04).
+#
+# Crossref's free-text search (query.bibliographic / query.title) is NOT a
+# boolean/phrase search like PubMed/Europe PMC/ClinicalTrials.gov — it's a
+# relevance-ranked full-text search with no phrase restriction. Verified
+# live on 2026-08-11: query.title="antibody-drug conjugate" returned
+# 860,937 hits (any work whose title contains "antibody" OR "drug" OR
+# "conjugate" anywhere). That's unusable for precise discovery, so this job
+# does NOT implement a broad discovery pass.
+#
+# Instead it reconciles DOIs already discovered by other jobs (Prompt.md
+# section 16: "DOI-centric literature discovery and metadata
+# reconciliation... complementary to PubMed") via Crossref's authoritative
+# GET /works/{doi} lookup, which returns richer bibliographic metadata
+# (publisher, license, references, container-title) than PubMed/Europe PMC
+# capture. Each entry below is a manifest this job reads non-null `doi`
+# values from; a missing manifest (upstream job never run) is skipped, not
+# an error — that's not this job's failure.
+#
+# query_id here identifies "why do we have this DOI" (which upstream source
+# contributed it), not a search query text — every DOI pulled from the same
+# manifest in the same run shares this query_id, since the reconciliation
+# rationale doesn't vary per DOI within a source.
+
+reconciliation_sources:
+  - source_id: pubmed
+    manifest_path: DATA/manifests/pubmed.parquet
+    query_id: CROSSREF_RECONCILE_PUBMED
+    query_version: 1
+    purpose: Reconcile DOIs already discovered by the PubMed job (Job 01).
+    active: true
+
+  - source_id: europe_pmc
+    manifest_path: DATA/manifests/europe_pmc.parquet
+    query_id: CROSSREF_RECONCILE_EUROPE_PMC
+    query_version: 1
+    purpose: Reconcile DOIs already discovered by the Europe PMC job (Job 02).
+    active: true
