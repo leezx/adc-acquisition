@@ -184,6 +184,62 @@ def test_doi_not_found_in_crossref_is_a_distinct_failed_attempt_not_in_content_m
 
 
 @responses.activate
+def test_doi_flag_is_exclusive_and_ignores_reconciliation_sources(tmp_path, monkeypatch):
+    """Reviewer acceptance scenario: --doi must be a single-DOI lookup mode,
+    never additionally pulling in every DOI from the upstream manifests."""
+    _setup(tmp_path, monkeypatch, pubmed_dois=("10.1/aaa", "10.1/bbb"), epmc_dois=("10.1/ccc",))
+    _register_crossref({"10.1/aaa": "A", "10.1/bbb": "B", "10.1/ccc": "C", "10.1/adhoc": "Adhoc"})
+
+    result = CrossrefJob().run(_base_args(tmp_path, doi="10.1/adhoc"))
+
+    assert result.records_discovered == 1
+    assert result.records_downloaded == 1
+
+    content_df = _metadata_df(tmp_path)
+    assert set(content_df["source_record_id"]) == {"10.1/adhoc"}
+
+    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "crossref_discovery.parquet")
+    assert set(discovery_df["source_record_id"]) == {"10.1/adhoc"}
+
+    attempts_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "crossref_attempts.parquet")
+    assert set(attempts_df["source_record_id"]) == {"10.1/adhoc"}
+
+
+@responses.activate
+def test_reconciliation_only_uses_latest_content_version_doi(tmp_path, monkeypatch):
+    """Reviewer acceptance scenario: an upstream record whose DOI was
+    corrected in a newer version must only contribute the latest DOI —
+    the superseded one must not keep getting reconciled forever."""
+    monkeypatch.chdir(tmp_path)
+    pubmed_path = tmp_path / "DATA" / "manifests" / "pubmed.parquet"
+    rows = [
+        {**_base_manifest_row("PMID1", "10.1/old"), "version": 1},
+        {**_base_manifest_row("PMID1", "10.1/new"), "version": 2},
+    ]
+    _write_manifest(pubmed_path, rows)
+    (tmp_path / "sources.yaml").write_text(
+        f"""
+reconciliation_sources:
+  - source_id: pubmed
+    manifest_path: {pubmed_path}
+    query_id: CROSSREF_RECONCILE_PUBMED
+    query_version: 1
+    purpose: test
+    active: true
+"""
+    )
+    _register_crossref({"10.1/old": "Old", "10.1/new": "New"})
+
+    result = CrossrefJob().run(_base_args(tmp_path))
+
+    assert result.records_discovered == 1
+    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "crossref_discovery.parquet")
+    assert set(discovery_df["source_record_id"]) == {"10.1/new"}
+    content_df = _metadata_df(tmp_path)
+    assert set(content_df["source_record_id"]) == {"10.1/new"}
+
+
+@responses.activate
 def test_doi_ad_hoc_lookup_gets_deterministic_asset_specific_query_id(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch, pubmed_dois=(), epmc_dois=())
     _register_crossref({"10.1/adhoc-a": "A", "10.1/adhoc-b": "B"})

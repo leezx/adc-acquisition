@@ -17,10 +17,14 @@ occupies a content-version slot).
 
 --since/--until/--resume are accepted (per the common CLI surface) but are
 explicitly not applicable here and are ignored with a loud note in the
-result/report — Crossref reconciliation is driven by which DOIs upstream
-jobs have discovered, not by a queryable date range on Crossref's side, and
-the checkpoint's content-hash skip already avoids redundant re-fetching on
-every run regardless of --resume.
+result/report. This is DOI-exact reconciliation (GET /works/{doi} per DOI),
+not a /works? collection query — Crossref's collection endpoint does support
+date filters (from-created-date etc.), but this job never calls it, so
+there's no date-filterable request for --since/--until to apply to. The
+checkpoint's content-hash comparison still runs on every DOI every run (it
+does not skip the network call) — what it avoids is redundant
+materialization: re-writing a raw snapshot or creating a spurious new
+content version when the fetched content is unchanged from last time.
 
 Each distinct --doi lookup gets its own deterministic query_id (a hash of
 the DOI), not one shared template id — same fix Job 03's --intervention
@@ -125,8 +129,10 @@ class CrossrefJob(AcquisitionJob):
         result = JobRunResult(job_name=self.name, dry_run=bool(args.dry_run))
         if args.since or args.until:
             result.notes.append(
-                "--since/--until are not applicable to Crossref reconciliation (driven by which DOIs "
-                "upstream jobs have discovered, not a queryable date range on Crossref's side) and were ignored"
+                "--since/--until are not applicable: this job does DOI-exact reconciliation, not a "
+                "/works? collection query, so there's no date-filterable request to apply them to "
+                "(Crossref's collection endpoint does support date filters — see Prompt.md's design note "
+                "in the Crossref report for why this job doesn't use that endpoint at all)"
             )
         if args.resume:
             result.notes.append(
@@ -134,7 +140,10 @@ class CrossrefJob(AcquisitionJob):
                 "against the checkpoint regardless, so there's no separate incremental-window narrowing to do"
             )
 
-        sources = [s for s in load_reconciliation_sources(Path(args.sources_file)) if s.active]
+        # --doi is an exclusive single-DOI lookup mode, not an addition to
+        # the reconciliation-sources registry — it must never also pull in
+        # every DOI from every active upstream manifest.
+        sources = [] if args.doi else [s for s in load_reconciliation_sources(Path(args.sources_file)) if s.active]
         if not sources and not args.doi:
             raise RuntimeError(f"no active reconciliation sources in {args.sources_file} and no --doi given")
 
@@ -151,7 +160,16 @@ class CrossrefJob(AcquisitionJob):
                 skipped_missing_manifests.append(source.source_id)
                 continue
             df = pd.read_parquet(manifest_path)
-            dois = sorted(set(df["doi"].dropna().unique().tolist())) if "doi" in df.columns else []
+            if "doi" in df.columns:
+                # Upstream content manifests are immutable version history
+                # (Prompt.md section 23) — a record can have superseded a
+                # wrong DOI in an earlier version. Reconciliation must only
+                # consume each record's latest version, or a since-corrected
+                # identifier would keep getting re-reconciled forever.
+                latest_rows = df.sort_values("version").groupby("source_record_id", as_index=False).tail(1)
+                dois = sorted(set(latest_rows["doi"].dropna().unique().tolist()))
+            else:
+                dois = []
             query_text = f"non-null doi values from {source.source_id}'s manifest ({source.manifest_path})"
             query_by_id[source.query_id] = (source.query_version, query_text)
             query_id_counts[source.query_id] = len(dois)

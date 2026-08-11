@@ -182,12 +182,20 @@ Europe PMC) and looks each one up via Crossref's authoritative `GET
 /works/{doi}`, which returns richer bibliographic metadata (publisher,
 license, references, container-title) than either of those capture on
 their own. `--doi "<doi>"` is an ad hoc single-DOI lookup mode, independent
-of the reconciliation-sources registry; each distinct DOI gets its own
-deterministic query_id (a hash of the DOI), same pattern as ClinicalTrials.gov's
-`--intervention`. `--since`/`--until`/`--resume` are accepted but explicitly
-not applicable (noted in the result/report, not silently ignored) — there's
-no queryable date range on Crossref's side, and the checkpoint's
-content-hash skip already avoids redundant re-fetching regardless.
+of the reconciliation-sources registry — passing `--doi` skips reading the
+registry entirely, it never also pulls in every upstream DOI; each distinct
+DOI gets its own deterministic query_id (a hash of the DOI), same pattern
+as ClinicalTrials.gov's `--intervention`. `--since`/`--until`/`--resume`
+are accepted but explicitly not applicable (noted in the result/report,
+not silently ignored): this job does exact per-DOI lookups, not a `/works?`
+collection query, so there's no date-filterable request to apply them to
+(Crossref's collection endpoint does support date filters — this job just
+never calls it). The checkpoint's content-hash comparison runs on every DOI
+every run regardless of `--resume`; what it avoids is redundant
+materialization (rewriting a snapshot or creating a spurious version), not
+the network call itself. Reconciliation only ever reads each upstream
+record's *latest* content version — an upstream DOI correction in a newer
+version supersedes the old one rather than both being reconciled forever.
 
 ## Tests
 
