@@ -1,78 +1,54 @@
 import argparse
-import io
-import re
+import json
 
-import openpyxl
 import pandas as pd
 import responses
 
-from jobs.ema.client import EMA_MEDICINES_XLSX_URL
+from jobs.ema.client import EMA_EPAR_DOCUMENTS_JSON_URL, EMA_MEDICINES_JSON_URL
 from jobs.ema.job import EMAJob
 
 PATTERNS_YAML = """
+query_id: EMA_ADC_SUBSTANCE_PATTERN
+query_version: 1
 substance_patterns:
   - vedotin
   - emtansine
 """
 
 
-def _build_xlsx(rows):
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    for _ in range(8):
-        ws.append([None] * 39)
-    header = [f"col_{i}" for i in range(39)]
-    header[1], header[2], header[3], header[7] = (
-        "Name of medicine", "EMA product number", "Medicine status", "Active substance",
-    )
-    header[8], header[25] = "Therapeutic area (MeSH)", "Marketing authorisation developer / applicant / holder"
-    header[26] = "European Commission decision date"
-    header[31] = "Marketing authorisation date"
-    header[33] = "Withdrawal / expiry / revocation / lapse of marketing authorisation date"
-    header[37], header[38] = "Last updated date", "Medicine URL"
-    ws.append(header)
-    for row in rows:
-        ws.append(row)
-    buf = io.BytesIO()
-    wb.save(buf)
-    return buf.getvalue()
+def _medicine_row(name, product_number, active_substance, last_updated="12/08/2026"):
+    return {
+        "name_of_medicine": name,
+        "ema_product_number": product_number,
+        "medicine_status": "Authorised",
+        "active_substance": active_substance,
+        "therapeutic_area_mesh": "Oncology",
+        "marketing_authorisation_developer_applicant_holder": "TEST HOLDER",
+        "european_commission_decision_date": "01/01/2020",
+        "marketing_authorisation_date": "01/02/2020",
+        "withdrawal_expiry_revocation_lapse_of_marketing_authorisation_date": "",
+        "last_updated_date": last_updated,
+        "medicine_url": f"https://www.ema.europa.eu/en/medicines/human/EPAR/{name.lower()}",
+    }
 
 
-def _medicine_row(name, product_number, active_substance, last_updated="01/01/2020", url=None):
-    row = [None] * 39
-    row[1], row[2], row[3], row[7], row[8] = name, product_number, "Authorised", active_substance, "Oncology"
-    row[25] = "TEST HOLDER"
-    row[26] = "01/01/2020"
-    row[31] = "01/02/2020"
-    row[37] = last_updated
-    row[38] = url or f"https://www.ema.europa.eu/en/medicines/human/EPAR/{name.lower()}"
-    return row
+def _document_row(doc_id, product_number, doc_type, last_updated="2020-01-01T00:00:00Z", url=None):
+    return {
+        "id": doc_id,
+        "ema_product_number": product_number,
+        "type": doc_type,
+        "first_published_date": last_updated,
+        "last_updated_date": last_updated,
+        "document_url": url or f"https://www.ema.europa.eu/en/documents/{doc_type}/{doc_id}_en.pdf",
+    }
 
 
-def _epar_html(docs):
-    """docs: list of (doc_type, filename, last_updated_iso)"""
-    cards = []
-    for doc_type, filename, last_updated in docs:
-        cards.append(
-            f'<div class="file-language-links"><p class="language-meta" translate="no">English (EN)</p>'
-            f'<time datetime="{last_updated}">x</time>'
-            f'<a href="/en/documents/{doc_type}/{filename}">View</a></div>'
-        )
-    return "<html>" + "".join(cards) + "</html>"
-
-
-def _register_ema(xlsx_bytes, epar_pages=None, documents=None, epar_failures=None):
-    epar_pages = epar_pages if epar_pages is not None else {}
+def _register_ema(medicine_rows, document_rows=None, documents=None):
+    document_rows = document_rows if document_rows is not None else []
     documents = documents if documents is not None else {}
-    epar_failures = epar_failures or set()
 
-    responses.add(responses.GET, EMA_MEDICINES_XLSX_URL, body=xlsx_bytes)
-
-    def _epar_callback(request):
-        if request.url in epar_failures:
-            return (404, {}, "")
-        html = epar_pages.get(request.url, "<html>no docs</html>")
-        return (200, {}, html)
+    responses.add(responses.GET, EMA_MEDICINES_JSON_URL, json={"meta": {"timestamp": "2026-08-12T00:00:00Z"}, "data": medicine_rows})
+    responses.add(responses.GET, EMA_EPAR_DOCUMENTS_JSON_URL, json={"meta": {"timestamp": "2026-08-12T00:00:00Z"}, "data": document_rows})
 
     def _document_callback(request):
         content = documents.get(request.url)
@@ -80,12 +56,9 @@ def _register_ema(xlsx_bytes, epar_pages=None, documents=None, epar_failures=Non
             return (404, {}, "")
         return (200, {}, content)
 
-    responses.add_callback(
-        responses.GET, re.compile(r"https://www\.ema\.europa\.eu/en/medicines/human/EPAR/.*"), callback=_epar_callback
-    )
-    responses.add_callback(
-        responses.GET, re.compile(r"https://www\.ema\.europa\.eu/en/documents/(?!report/).*"), callback=_document_callback
-    )
+    responses.add_callback(responses.GET, "https://www.ema.europa.eu/en/documents/product-information/1_en.pdf", callback=_document_callback)
+    for url in documents:
+        responses.add_callback(responses.GET, url, callback=_document_callback)
 
 
 def _base_args(tmp_path, **overrides):
@@ -111,11 +84,10 @@ def _metadata_df(tmp_path):
 @responses.activate
 def test_dry_run_discovers_but_does_not_download(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
-    xlsx = _build_xlsx([
+    _register_ema([
         _medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin"),
         _medicine_row("Zebinix", "EMEA/H/C/000988", "eslicarbazepine acetate"),  # not an ADC
     ])
-    _register_ema(xlsx)
 
     result = EMAJob().run(_base_args(tmp_path, dry_run=True))
 
@@ -126,14 +98,12 @@ def test_dry_run_discovers_but_does_not_download(tmp_path, monkeypatch):
 
 
 @responses.activate
-def test_full_run_writes_medicine_and_documents(tmp_path, monkeypatch):
+def test_full_run_writes_medicine_document_and_bulk_snapshots(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
-    xlsx = _build_xlsx([_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")])
-    epar_url = "https://www.ema.europa.eu/en/medicines/human/EPAR/adcetris"
-    doc_url = "https://www.ema.europa.eu/en/documents/product-information/adcetris-epar-product-information_en.pdf"
+    doc_url = "https://www.ema.europa.eu/en/documents/product-information/1_en.pdf"
     _register_ema(
-        xlsx,
-        epar_pages={epar_url: _epar_html([("product-information", "adcetris-epar-product-information_en.pdf", "2020-01-01T00:00:00Z")])},
+        [_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")],
+        document_rows=[_document_row("1", "EMEA/H/C/002455", "product-information")],
         documents={doc_url: b"%PDF product info"},
     )
 
@@ -147,22 +117,73 @@ def test_full_run_writes_medicine_and_documents(tmp_path, monkeypatch):
 
     docs_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_documents.parquet")
     assert len(docs_df) == 1
-    assert docs_df.iloc[0]["source_record_id"] == "EMEA/H/C/002455:adcetris-epar-product-information_en.pdf"
+    assert docs_df.iloc[0]["source_record_id"] == "EMEA/H/C/002455:1"
     assert docs_df.iloc[0]["parent_record_id"] == "EMEA/H/C/002455"
     assert docs_df.iloc[0]["doc_type"] == "product-information"
+
+    bulk_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_bulk.parquet")
+    assert set(bulk_df["source_record_id"]) == {"medicines_bulk", "documents_bulk"}
 
     report_text = (tmp_path / "reports" / "acquisition" / "ema.md").read_text()
     assert "EMA (Job 07)" in report_text
 
 
 @responses.activate
+def test_document_discovery_is_independent_of_medicine_limit_scope(tmp_path, monkeypatch):
+    """Blocker fix: a document must be discovered/downloaded for a
+    medicine even if that medicine itself was excluded from this run's
+    materialization scope by --limit."""
+    _setup(tmp_path, monkeypatch)
+    doc_url = "https://www.ema.europa.eu/en/documents/product-information/1_en.pdf"
+    _register_ema(
+        [
+            _medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin"),
+            _medicine_row("Kadcyla", "EMEA/H/C/002389", "trastuzumab emtansine"),
+        ],
+        document_rows=[_document_row("1", "EMEA/H/C/002389", "product-information")],
+        documents={doc_url: b"%PDF product info"},
+    )
+
+    result = EMAJob().run(_base_args(tmp_path, limit=1))  # only 1 of 2 medicines gets materialized
+
+    assert result.records_downloaded == 1
+    docs_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_documents.parquet")
+    assert len(docs_df) == 1  # still discovered even though its medicine was limited out
+    assert docs_df.iloc[0]["parent_record_id"] == "EMEA/H/C/002389"
+
+
+@responses.activate
+def test_new_document_discovered_on_resume_even_when_medicine_is_unchanged(tmp_path, monkeypatch):
+    """Blocker fix: document discovery must not be gated by the medicine's
+    own --resume fresh/backlog scope."""
+    _setup(tmp_path, monkeypatch)
+    med_row = _medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin", last_updated="01/01/2019")
+    _register_ema([med_row], document_rows=[])
+    EMAJob().run(_base_args(tmp_path, until="2020-01-01"))
+    assert len(pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_documents.parquet")) == 0
+
+    responses.reset()
+    doc_url = "https://www.ema.europa.eu/en/documents/product-information/1_en.pdf"
+    # Medicine itself is unchanged (same last_updated, before the cursor) and
+    # would NOT be in fresh/backlog scope on --resume; a new document appears.
+    _register_ema(
+        [med_row],
+        document_rows=[_document_row("1", "EMEA/H/C/002455", "product-information")],
+        documents={doc_url: b"%PDF new doc"},
+    )
+    result = EMAJob().run(_base_args(tmp_path, resume=True))
+
+    assert result.records_discovered == 0  # medicine correctly outside this run's scope
+    docs_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_documents.parquet")
+    assert len(docs_df) == 1  # document still discovered and downloaded
+
+
+@responses.activate
 def test_document_404_is_a_failed_attempt_not_a_crash(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
-    xlsx = _build_xlsx([_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")])
-    epar_url = "https://www.ema.europa.eu/en/medicines/human/EPAR/adcetris"
     _register_ema(
-        xlsx,
-        epar_pages={epar_url: _epar_html([("product-information", "missing_en.pdf", "2020-01-01T00:00:00Z")])},
+        [_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")],
+        document_rows=[_document_row("1", "EMEA/H/C/002455", "product-information")],
         documents={},  # doc always 404s
     )
 
@@ -172,49 +193,38 @@ def test_document_404_is_a_failed_attempt_not_a_crash(tmp_path, monkeypatch):
     docs_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_documents.parquet")
     assert len(docs_df) == 0
     doc_attempts = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_documents_attempts.parquet")
-    real = doc_attempts[~doc_attempts["source_record_id"].str.endswith("__epar_page__")]
-    assert real.iloc[0]["status"] == "failed"
+    assert doc_attempts.iloc[0]["status"] == "failed"
 
 
 @responses.activate
-def test_epar_page_failure_self_heals_once_it_succeeds(tmp_path, monkeypatch):
-    _setup(tmp_path, monkeypatch)
-    xlsx = _build_xlsx([_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin", last_updated="01/01/2019")])
-    epar_url = "https://www.ema.europa.eu/en/medicines/human/EPAR/adcetris"
-    _register_ema(xlsx, epar_failures={epar_url})
+def test_query_version_from_registry_propagates_not_hardcoded(tmp_path, monkeypatch):
+    (tmp_path / "patterns.yaml").write_text(
+        "query_id: EMA_ADC_SUBSTANCE_PATTERN\nquery_version: 7\nsubstance_patterns:\n  - vedotin\n"
+    )
+    monkeypatch.chdir(tmp_path)
+    import jobs.ema.job as job_module
+    monkeypatch.setattr(job_module, "RATE_LIMIT", 1000)
+    _register_ema([_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")])
 
-    EMAJob().run(_base_args(tmp_path, until="2020-01-01"))
-    attempts1 = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_documents_attempts.parquet")
-    epar_row1 = attempts1[attempts1["source_record_id"] == "EMEA/H/C/002455:__epar_page__"].iloc[0]
-    assert epar_row1["status"] == "failed"
+    EMAJob().run(_base_args(tmp_path))
 
-    responses.reset()
-    _register_ema(xlsx, epar_pages={epar_url: _epar_html([])})  # now resolves, no failures
-    EMAJob().run(_base_args(tmp_path, resume=True))
-
-    attempts2 = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_documents_attempts.parquet")
-    epar_rows2 = attempts2[attempts2["source_record_id"] == "EMEA/H/C/002455:__epar_page__"]
-    assert epar_rows2.iloc[-1]["status"] == "success"
+    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_discovery.parquet")
+    assert discovery_df.iloc[0]["query_version"] == 7
 
 
 @responses.activate
 def test_resume_fresh_medicines_not_starved_by_backlog_retries(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
-    old_rows = [
-        _medicine_row(f"Old{i}", f"EMEA/H/C/{i:06d}", "brentuximab vedotin", last_updated="01/01/2010")
-        for i in range(25)
-    ]
+    old_rows = [_medicine_row(f"Old{i}", f"EMEA/H/C/{i:06d}", "brentuximab vedotin", last_updated="01/01/2010") for i in range(25)]
     new_row = _medicine_row("New1", "EMEA/H/C/999999", "brentuximab vedotin", last_updated="01/06/2025")
-    xlsx = _build_xlsx(old_rows)
-    _register_ema(xlsx, epar_failures=set())  # EPAR pages 200 with no docs by default
+    _register_ema(old_rows)
 
     result1 = EMAJob().run(_base_args(tmp_path, until="2010-12-31", limit=30))
     assert result1.records_downloaded == 25
 
     responses.reset()
-    xlsx2 = _build_xlsx(old_rows + [new_row])
-    _register_ema(xlsx2)
-    result2 = EMAJob().run(_base_args(tmp_path, resume=True, limit=20))
+    _register_ema(old_rows + [new_row])
+    EMAJob().run(_base_args(tmp_path, resume=True, limit=20))
 
     df = _metadata_df(tmp_path)
     assert "EMEA/H/C/999999" in set(df["source_record_id"])  # must not be starved out
@@ -223,12 +233,11 @@ def test_resume_fresh_medicines_not_starved_by_backlog_retries(tmp_path, monkeyp
 @responses.activate
 def test_since_until_filters_by_last_updated_date(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
-    xlsx = _build_xlsx([
+    _register_ema([
         _medicine_row("A", "EMEA/H/C/1", "vedotin", last_updated="01/06/2019"),
         _medicine_row("B", "EMEA/H/C/2", "vedotin", last_updated="01/06/2022"),
         _medicine_row("C", "EMEA/H/C/3", "vedotin", last_updated="01/06/2025"),
     ])
-    _register_ema(xlsx)
 
     result = EMAJob().run(_base_args(tmp_path, dry_run=True, since="2022-01-01", until="2024-12-31"))
 
@@ -238,8 +247,7 @@ def test_since_until_filters_by_last_updated_date(tmp_path, monkeypatch):
 @responses.activate
 def test_rerun_with_unchanged_content_skips_rewrite(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
-    xlsx = _build_xlsx([_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")])
-    _register_ema(xlsx)
+    _register_ema([_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")])
 
     EMAJob().run(_base_args(tmp_path))
     second = EMAJob().run(_base_args(tmp_path))
@@ -252,13 +260,27 @@ def test_rerun_with_unchanged_content_skips_rewrite(tmp_path, monkeypatch):
 
 
 @responses.activate
+def test_bulk_snapshot_versions_only_when_content_changes(tmp_path, monkeypatch):
+    _setup(tmp_path, monkeypatch)
+    rows = [_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")]
+    _register_ema(rows)
+    EMAJob().run(_base_args(tmp_path))
+
+    responses.reset()
+    _register_ema(rows)  # identical content
+    EMAJob().run(_base_args(tmp_path))
+
+    bulk_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_bulk.parquet")
+    assert (bulk_df["version"] == 1).all()  # unchanged content never got a v2
+
+
+@responses.activate
 def test_limit_caps_records_processed(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
-    xlsx = _build_xlsx([
+    _register_ema([
         _medicine_row("A", "EMEA/H/C/1", "vedotin"),
         _medicine_row("B", "EMEA/H/C/2", "emtansine"),
     ])
-    _register_ema(xlsx)
 
     result = EMAJob().run(_base_args(tmp_path, limit=1))
 
@@ -269,8 +291,7 @@ def test_limit_caps_records_processed(tmp_path, monkeypatch):
 @responses.activate
 def test_empty_result_set_produces_empty_manifest_without_error(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
-    xlsx = _build_xlsx([_medicine_row("Zebinix", "EMEA/H/C/000988", "eslicarbazepine acetate")])
-    _register_ema(xlsx)
+    _register_ema([_medicine_row("Zebinix", "EMEA/H/C/000988", "eslicarbazepine acetate")])
 
     result = EMAJob().run(_base_args(tmp_path))
 

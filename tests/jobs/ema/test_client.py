@@ -1,7 +1,7 @@
 import responses
 
 from adc_acquisition.http_utils import RateLimiter, RetryingClient
-from jobs.ema.client import EMA_MEDICINES_XLSX_URL, EMAClient
+from jobs.ema.client import EMA_EPAR_DOCUMENTS_JSON_URL, EMA_MEDICINES_JSON_URL, EMAClient
 
 
 def _client():
@@ -9,18 +9,18 @@ def _client():
 
 
 @responses.activate
-def test_fetch_medicines_xlsx_returns_bytes():
-    responses.add(responses.GET, EMA_MEDICINES_XLSX_URL, body=b"fake-xlsx-bytes")
-    content = _client().fetch_medicines_xlsx()
-    assert content == b"fake-xlsx-bytes"
+def test_fetch_medicines_json_returns_bytes():
+    responses.add(responses.GET, EMA_MEDICINES_JSON_URL, body=b'{"data": []}')
+    content = _client().fetch_medicines_json()
+    assert content == b'{"data": []}'
     assert "User-Agent" in responses.calls[0].request.headers
 
 
 @responses.activate
-def test_fetch_epar_page_returns_text():
-    responses.add(responses.GET, "https://www.ema.europa.eu/en/medicines/human/EPAR/adcetris", body="<html>epar</html>")
-    text = _client().fetch_epar_page("https://www.ema.europa.eu/en/medicines/human/EPAR/adcetris")
-    assert text == "<html>epar</html>"
+def test_fetch_epar_documents_json_returns_bytes():
+    responses.add(responses.GET, EMA_EPAR_DOCUMENTS_JSON_URL, body=b'{"data": []}')
+    content = _client().fetch_epar_documents_json()
+    assert content == b'{"data": []}'
 
 
 @responses.activate

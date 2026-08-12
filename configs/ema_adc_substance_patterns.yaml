@@ -8,12 +8,21 @@
 # Job 06 (FDA)'s full-text "antibody-drug conjugate" label search doesn't
 # need per-drug maintenance.
 #
-# Verified live on 2026-08-12 against EMA's bulk medicines export
-# (https://www.ema.europa.eu/en/medicines/download-medicine-data):
-# matching these 8 stems against the "Name of medicine"/"Active
-# substance" columns found all 14 known EMA-authorised ADCs (16 rows,
-# since Blenrep and Mylotarg each have 2 EMA product numbers from
-# separate application histories).
+# Verified live on 2026-08-12 against EMA's bulk medicines JSON export
+# (https://www.ema.europa.eu/en/about-us/about-website/download-website-data-json-data-format):
+# matching these 8 stems against the "name_of_medicine"/"active_substance"
+# fields found all 14 known EMA-authorised ADCs (16 rows, since Blenrep
+# and Mylotarg each have 2 EMA product numbers from separate application
+# histories).
+#
+# query_id/query_version follow the same provenance contract as every
+# other job's query registry (Prompt.md section 20): a materially
+# different query_text (i.e. a changed pattern list below) must bump
+# query_version, so ema_discovery.parquet never silently attributes two
+# different discovery semantics to the same (query_id, query_version).
+
+query_id: EMA_ADC_SUBSTANCE_PATTERN
+query_version: 1
 
 substance_patterns:
   - vedotin

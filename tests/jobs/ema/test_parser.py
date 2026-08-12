@@ -1,96 +1,74 @@
-import io
-
-import openpyxl
+import json
 
 from jobs.ema.parser import (
     ParsedMedicine,
     is_adc_candidate,
     normalize_ema_date,
-    parse_epar_documents,
-    parse_medicines_xlsx,
+    parse_epar_documents_json,
+    parse_medicines_json,
     within_date_range,
 )
 
-# Trimmed from a real EPAR page (adcetris), fetched live on 2026-08-12.
-EPAR_HTML_FRAGMENT = """
-<div class="file-language-links">
-<div><p class="language-meta" translate="no">English (EN)<span> (1.56 MB - PDF)</span></p>
-<div class="dates-metadata"><small class="metadata-row first-published"><strong class="label">First published: </strong><span class="value"><time datetime="2012-11-22T10:00:00Z">22/11/2012</time></span></small>
-<small class="metadata-row last-updated"><strong class="label">Last updated: </strong><span class="value"><time datetime="2012-11-22T11:00:00Z">22/11/2012</time></span></small></div></div>
-<a href="/en/documents/assessment-report/adcetris-epar-public-assessment-report_en.pdf">View</a>
-</div>
-<div class="file-language-links">
-<div><p class="language-meta" translate="no">German (DE)<span> (1.2 MB - PDF)</span></p>
-<a href="/de/documents/assessment-report/adcetris-epar-public-assessment-report_de.pdf">View</a>
-</div>
-"""
+
+def _medicines_json(rows):
+    return json.dumps({"meta": {"total_records": len(rows)}, "data": rows}).encode("utf-8")
 
 
-def _build_xlsx(rows):
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    for _ in range(8):
-        ws.append([None] * 39)
-    header = [f"col_{i}" for i in range(39)]
-    header[1] = "Name of medicine"
-    header[2] = "EMA product number"
-    header[3] = "Medicine status"
-    header[7] = "Active substance"
-    header[8] = "Therapeutic area (MeSH)"
-    header[25] = "Marketing authorisation developer / applicant / holder"
-    header[26] = "European Commission decision date"
-    header[31] = "Marketing authorisation date"
-    header[33] = "Withdrawal / expiry / revocation / lapse of marketing authorisation date"
-    header[37] = "Last updated date"
-    header[38] = "Medicine URL"
-    ws.append(header)
-    for row in rows:
-        ws.append(row)
-    buf = io.BytesIO()
-    wb.save(buf)
-    return buf.getvalue()
+def _documents_json(rows):
+    return json.dumps({"meta": {"total_records": len(rows)}, "data": rows}).encode("utf-8")
 
 
-def _medicine_row(name, product_number, active_substance, last_updated="01/01/2020", url=None):
-    row = [None] * 39
-    row[1] = name
-    row[2] = product_number
-    row[3] = "Authorised"
-    row[7] = active_substance
-    row[8] = "Oncology"
-    row[25] = "TEST HOLDER"
-    row[26] = "01/01/2020"
-    row[31] = "01/02/2020"
-    row[37] = last_updated
-    row[38] = url or f"https://www.ema.europa.eu/en/medicines/human/EPAR/{name.lower()}"
-    return row
+def _medicine_row(name, product_number, active_substance, last_updated="12/08/2026"):
+    return {
+        "name_of_medicine": name,
+        "ema_product_number": product_number,
+        "medicine_status": "Authorised",
+        "active_substance": active_substance,
+        "therapeutic_area_mesh": "Oncology",
+        "marketing_authorisation_developer_applicant_holder": "TEST HOLDER",
+        "european_commission_decision_date": "01/01/2020",
+        "marketing_authorisation_date": "01/02/2020",
+        "withdrawal_expiry_revocation_lapse_of_marketing_authorisation_date": "",
+        "last_updated_date": last_updated,
+        "medicine_url": f"https://www.ema.europa.eu/en/medicines/human/EPAR/{name.lower()}",
+    }
 
 
-def test_parse_medicines_xlsx_extracts_medicines():
-    xlsx = _build_xlsx([_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")])
-    medicines = parse_medicines_xlsx(xlsx)
+def _document_row(doc_id, product_number, doc_type, last_updated="2020-01-01T00:00:00Z", url=None):
+    return {
+        "id": doc_id,
+        "ema_product_number": product_number,
+        "type": doc_type,
+        "first_published_date": last_updated,
+        "last_updated_date": last_updated,
+        "document_url": url or f"https://www.ema.europa.eu/en/documents/{doc_type}/{doc_id}_en.pdf",
+    }
+
+
+def test_parse_medicines_json_extracts_medicines():
+    xs = _medicines_json([_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")])
+    medicines = parse_medicines_json(xs)
     assert len(medicines) == 1
     m = medicines[0]
     assert m.product_number == "EMEA/H/C/002455"
     assert m.name == "Adcetris"
     assert m.active_substance == "brentuximab vedotin"
     assert m.authorisation_date == "2020-02-01"
-    assert m.last_updated_date == "2020-01-01"
-    assert m.epar_url == "https://www.ema.europa.eu/en/medicines/human/EPAR/adcetris"
-    assert m.raw_row["Name of medicine"] == "Adcetris"
+    assert m.last_updated_date == "2026-08-12"
+    assert m.raw_row["name_of_medicine"] == "Adcetris"
 
 
-def test_parse_medicines_xlsx_skips_rows_with_no_product_number():
+def test_parse_medicines_json_skips_rows_with_no_product_number():
     row = _medicine_row("X", "", "vedotin")
-    row[2] = None
-    xlsx = _build_xlsx([row])
-    assert parse_medicines_xlsx(xlsx) == []
+    row["ema_product_number"] = None
+    xs = _medicines_json([row])
+    assert parse_medicines_json(xs) == []
 
 
-def test_normalize_ema_date():
+def test_normalize_ema_date_handles_both_formats():
     assert normalize_ema_date("22/11/2012") == "2012-11-22"
+    assert normalize_ema_date("2012-11-22T10:00:00Z") == "2012-11-22"
     assert normalize_ema_date(None) is None
-    assert normalize_ema_date("") is None
     assert normalize_ema_date("not-a-date") is None
 
 
@@ -104,18 +82,25 @@ def test_is_adc_candidate_matches_active_substance():
     assert is_adc_candidate(m, ["emtansine"]) is False
 
 
-def test_parse_epar_documents_only_english():
-    docs = parse_epar_documents(EPAR_HTML_FRAGMENT)
+def test_parse_epar_documents_json_extracts_documents():
+    xs = _documents_json([_document_row("123", "EMEA/H/C/002455", "product-information")])
+    docs = parse_epar_documents_json(xs)
     assert len(docs) == 1
     d = docs[0]
-    assert d.filename == "adcetris-epar-public-assessment-report_en.pdf"
-    assert d.doc_type == "assessment-report"
-    assert d.last_updated == "2012-11-22"
-    assert d.url == "https://www.ema.europa.eu/en/documents/assessment-report/adcetris-epar-public-assessment-report_en.pdf"
+    assert d.doc_id == "123"
+    assert d.product_number == "EMEA/H/C/002455"
+    assert d.doc_type == "product-information"
+    assert d.last_updated == "2020-01-01"
 
 
-def test_parse_epar_documents_no_matches_returns_empty():
-    assert parse_epar_documents("<html>no documents here</html>") == []
+def test_parse_epar_documents_json_skips_incomplete_rows():
+    rows = [
+        _document_row("1", "EMEA/H/C/1", "label"),
+        {**_document_row("2", "EMEA/H/C/1", "label"), "document_url": None},
+        {**_document_row("3", "EMEA/H/C/1", "label"), "ema_product_number": None},
+    ]
+    docs = parse_epar_documents_json(_documents_json(rows))
+    assert [d.doc_id for d in docs] == ["1"]
 
 
 def test_within_date_range_no_bounds_keeps_everything():

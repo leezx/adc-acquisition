@@ -342,27 +342,46 @@ python -m adc_acquisition ema --dry-run --limit 20
 python -m adc_acquisition ema --limit 20
 ```
 
-EMA has no public REST API for this — discovery works from a single bulk
-XLSX export ("Download medicine data") covering every EMA-authorised
-medicine, filtered by systematic INN-suffix matching
+EMA has no public REST API for this, but explicitly publishes bulk JSON
+exports intended for automated systems — one covering every
+EMA-authorised medicine, one covering every EPAR document across every
+medicine (20,099 records live) with its own stable numeric id/type/dates
+independent of any single medicine's page. Discovery filters the
+medicines feed by systematic INN-suffix matching
 (`configs/ema_adc_substance_patterns.yaml`: vedotin, emtansine,
 deruxtecan, ozogamicin, govitecan, soravtansine, mafodotin, tesirine —
 standardized WHO stems for ADC linker/payload chemistry, not a manual
-drug list, same spirit as Job 06's label search). Two levels: `ema.parquet`
-(medicine identity, keyed by EMA product number, storing the medicine's
-complete raw XLSX row) and `ema_documents.parquet` (EPAR documents —
-product information, assessment reports, safety updates — as an
-independent artifact, `parent_record_id` back to the medicine, same
-pattern as SEC's exhibits/FDA's documents). `--since`/`--until` filter by
-each medicine's own `last_updated_date`; `--resume` uses the same
-failure-safe design established by Jobs 05/06 (unconditionally-advancing
-cursor, unresolved backlog unioned back regardless of date, fresh/in-range
-medicines always prioritized within a `--limit` budget), built in from
-the start. ema.europa.eu has no documented rate limit but enforces some
-kind of cumulative session throttle (verified live: even 0.5 req/s
-eventually triggers HTTP 429s on a run of a few hundred document
-fetches) — these are genuinely retryable and self-heal on the next
-`--resume` run via the same failure-safe design.
+drug list, same spirit as Job 06's label search).
+
+Three levels: `ema_bulk.parquet` (the raw bulk feeds themselves,
+preserved exactly as downloaded, content-versioned, so a future EMA
+schema/data change never leaves us without the exact input that produced
+a given run's discovery decisions), `ema.parquet` (medicine identity,
+keyed by EMA product number, storing the medicine's own record verbatim
+from the medicines feed), and `ema_documents.parquet` (EPAR documents —
+product information, assessment reports, ... — as an independent
+artifact keyed by `{product_number}:{doc_id}`, EMA's own stable numeric
+id, `parent_record_id` back to the medicine). **Documents are discovered
+from the bulk documents feed for every ADC-candidate medicine on every
+run, entirely independent of which medicines `--limit`/`--since`/
+`--until`/`--resume` selected for materialization** — a medicine outside
+this run's own scope can still have a new or updated document discovered
+and downloaded, since document discovery was never gated by the
+medicine's scope to begin with (an earlier version of this job scraped
+each medicine's rendered EPAR HTML page instead, which coupled document
+discovery to per-medicine page availability and to the medicine's own
+`--resume` window — fixed after review).
+
+`--since`/`--until` filter medicines by `last_updated_date`; `--resume`
+for medicines uses the same failure-safe design established by Jobs
+05/06 (unconditionally-advancing cursor, unresolved backlog unioned back
+regardless of date, fresh/in-range medicines always prioritized within a
+`--limit` budget). ema.europa.eu has no documented rate limit but
+enforces some kind of cumulative session throttle regardless of
+per-request pacing (verified live: even after eliminating per-medicine
+page scraping, the remaining ~150 individual document PDF fetches alone
+still triggered HTTP 429s) — these are genuinely retryable and self-heal
+on the next run via each document's own checkpoint.
 
 ## Tests
 

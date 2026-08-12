@@ -1,73 +1,79 @@
 """Job 07: EMA acquisition (Prompt.md section 15).
 
-EMA has no public REST API for this (unlike FDA's openFDA) — it publishes
-a single bulk XLSX covering every EMA-authorised medicine
-(https://www.ema.europa.eu/en/medicines/download-medicine-data, verified
-live 2026-08-12), refreshed periodically, plus a static per-medicine EPAR
-HTML page listing its actual documents (product information, assessment
-reports, ...) as plain PDF links.
+EMA has no public REST API for this, but explicitly publishes bulk JSON
+exports intended for automated systems (see jobs/ema/client.py) — one
+covering every EMA-authorised medicine, one covering every EPAR document
+across every medicine, each with stable per-record identifiers and
+first_published/last_updated dates independent of any single medicine's
+own page. This supersedes an earlier version of this job that scraped
+each medicine's rendered EPAR HTML page to enumerate its documents (a
+review round on PR #7 caught that this coupled document discovery to
+per-medicine page availability, coupled document retry-scope to the
+medicine's own --resume window, and triggered EMA's session-level rate
+throttle far more than the bulk feeds do).
 
 Discovery is systematic INN-suffix matching (configs/ema_adc_substance_patterns.yaml:
-vedotin, emtansine, deruxtecan, ...) against the bulk file's Name/Active
-substance columns — standardized WHO stems for ADC linker/payload
-chemistry, not a manually maintained list of specific approved drugs (see
-that config file for the live-verification details), same spirit as
-Job 06 (FDA)'s full-text label search.
+vedotin, emtansine, deruxtecan, ...) against the medicines feed's
+name/active-substance fields — standardized WHO stems for ADC
+linker/payload chemistry, not a manually maintained list (see that config
+file for the live-verification details), same spirit as Job 06 (FDA)'s
+full-text label search.
 
-Two levels (EMA's own data model, unlike FDA/SEC, doesn't expose a
-separate "submissions" list — a medicine's own record IS the top-level
-entity, and EPAR documents are its direct children):
+Three independent levels:
 
+- ema_bulk.parquet        — the raw bulk JSON feeds themselves (source
+                             records: "medicines_bulk", "documents_bulk"),
+                             content-versioned exactly as downloaded, so
+                             a future schema/data change on EMA's side
+                             never leaves us without the exact input that
+                             produced a given run's discovery decisions.
 - ema.parquet             — medicine content-version manifest, keyed by
-                            EMA product number (e.g. "EMEA/H/C/002455").
-                            Content is the medicine's COMPLETE raw XLSX
-                            row (every column), not a reconstructed
-                            subset — same fix Job 06 (FDA) needed a
-                            review round to arrive at, applied
-                            proactively here. Authorisation history and
-                            withdrawal information (Prompt.md's explicit
-                            list) live here as structured date fields.
+                             EMA product number. Content is the medicine's
+                             own record dict from the medicines feed
+                             verbatim (already the source's raw
+                             per-record representation, not a
+                             reconstruction). Authorisation history and
+                             withdrawal information (Prompt.md's explicit
+                             list) live here as structured date fields.
 - ema_documents.parquet   — the actual EPAR documents (product
-                            information, assessment reports, safety
-                            updates, ... — Prompt.md's explicit list) as
-                            a SEPARATE, independently versioned artifact,
-                            keyed by "{product_number}:{filename}",
-                            parent_record_id = product_number — same
-                            pattern as SEC's exhibits / FDA's documents.
+                             information, assessment reports, ... —
+                             Prompt.md's explicit list, EXCEPT the
+                             safety-specific PSUSA/DHPC feeds, which are
+                             separate EMA datasets not yet acquired here)
+                             as a SEPARATE, independently versioned
+                             artifact, keyed by "{product_number}:{doc_id}"
+                             (doc_id is EMA's own stable numeric id, not a
+                             derived filename), parent_record_id =
+                             product_number.
 
-The EPAR-page fetch itself (which enumerates a medicine's documents) has
-its own self-healing attempt identity ("{product_number}:__epar_page__"),
-same fix Job 06 needed a review round to arrive at for its filing-index
-equivalent — applied proactively here too.
+Documents are discovered from the SAME bulk documents feed for every
+ADC-candidate medicine on every run, entirely independent of which
+medicines --limit/--since/--until/--resume selected for materialization
+this run — a medicine whose own record hasn't changed (so it's outside
+this run's medicine scope) can still have a newly-added or updated
+document discovered and downloaded, because document discovery was never
+gated by the medicine's own scope to begin with. Each document's own
+checkpoint (hash-compare-then-version) already provides the incremental
+efficiency of skipping unchanged downloads, so no separate resume-backlog
+logic is needed at the document level.
 
-There is no per-medicine "reconciliation" fetch the way FDA needs one
-(the medicine's full row is already in hand from the one bulk download),
-so there is no separate discovery/reconciliation durability split the
-way FDA needed — discovery and content materialization happen from the
-same already-fetched data. ema_discovery.parquet records which
-substance-pattern(s) matched each medicine.
-
---since/--until filter by each medicine's own last_updated_date
-(client-side — the bulk file has no server-side filtering at all).
---resume uses the SAME failure-safe design as SEC/FDA (applied
-proactively, not waiting to be caught on it again): the cursor advances
+--since/--until filter medicines by last_updated_date (client-side — the
+bulk feed has no server-side filtering at all). --resume for medicines
+uses the same failure-safe design as SEC/FDA: the cursor advances
 unconditionally every run; any medicine not yet successfully
-materialized, or with an unresolved document/EPAR-page failure, is
-unioned back into scope regardless of date; fresh/in-range medicines
-always get priority over that backlog within a --limit budget.
+materialized is unioned back into scope regardless of date; fresh/
+in-range medicines always get priority over that backlog within a
+--limit budget.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import os
-from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-import pandas as pd
 import requests
 import yaml
 from dotenv import load_dotenv
@@ -78,8 +84,8 @@ from adc_acquisition.http_utils import RateLimiter, RetryingClient
 from adc_acquisition.job_base import AcquisitionJob, JobRunResult
 from adc_acquisition.logging_utils import setup_job_logging
 from adc_acquisition.manifest import append_only, new_manifest_row, write_manifest
-from jobs.ema.client import RATE_LIMIT, EMAClient
-from jobs.ema.parser import is_adc_candidate, parse_epar_documents, parse_medicines_xlsx, within_date_range
+from jobs.ema.client import EMA_EPAR_DOCUMENTS_JSON_URL, EMA_MEDICINES_JSON_URL, RATE_LIMIT, EMAClient
+from jobs.ema.parser import is_adc_candidate, parse_epar_documents_json, parse_medicines_json, within_date_range
 from jobs.ema.report import build_report
 
 PATTERNS_PATH = Path("configs/ema_adc_substance_patterns.yaml")
@@ -92,6 +98,7 @@ LICENSE_NOTE = "EMA regulatory record, public disclosure."
 
 MEDICINE_NAMESPACE = "medicine_records"
 DOCUMENT_NAMESPACE = "document_records"
+BULK_NAMESPACE = "bulk_records"
 
 DISCOVERY_COLUMNS = ["source", "source_record_id", "query_id", "query_version", "query_text", "discovered_at", "run_id"]
 ATTEMPT_COLUMNS = [
@@ -103,23 +110,28 @@ DOCUMENT_ATTEMPT_COLUMNS = [
     "status", "http_status", "error", "content_hash", "version",
 ]
 
-EPAR_PAGE_SUFFIX = ":__epar_page__"
-QUERY_ID = "EMA_ADC_SUBSTANCE_PATTERN"
-QUERY_VERSION = 1
-
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _load_patterns(path: Path) -> list[str]:
+def _load_patterns_config(path: Path) -> tuple[str, int, list[str]]:
     with Path(path).open("r", encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
-    return list(data.get("substance_patterns") or [])
+    return data["query_id"], data["query_version"], list(data.get("substance_patterns") or [])
 
 
 def _medicine_content_bytes(medicine) -> bytes:
     return json.dumps(medicine.raw_row, sort_keys=True, default=str).encode("utf-8")
+
+
+def _feed_timestamp_date(json_bytes: bytes) -> str | None:
+    try:
+        meta = json.loads(json_bytes).get("meta") or {}
+    except (ValueError, TypeError):
+        return None
+    ts = meta.get("timestamp")
+    return ts[:10] if ts else None
 
 
 def _record_row(
@@ -146,22 +158,6 @@ def _document_attempt_row(
     )
 
 
-def _unresolved_document_parent_keys(documents_attempts_path: Path) -> set[str]:
-    """product_numbers with a document (or the EPAR-page fetch itself,
-    identity f"{product_number}{EPAR_PAGE_SUFFIX}") whose MOST RECENT
-    recorded attempt was a failure with no later success — same rationale
-    as jobs/sec/job.py's _unresolved_exhibit_parent_ids / jobs/fda/job.py's
-    _unresolved_document_parent_keys."""
-    if not documents_attempts_path.exists():
-        return set()
-    df = pd.read_parquet(documents_attempts_path)
-    if df.empty:
-        return set()
-    latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
-    failed_ids = set(latest.loc[latest["status"] == "failed", "source_record_id"])
-    return {doc_key.split(":", 1)[0] for doc_key in failed_ids}
-
-
 class EMAJob(AcquisitionJob):
     name = "ema"
 
@@ -180,7 +176,7 @@ class EMAJob(AcquisitionJob):
         checkpoint = checkpoint_store.load()
 
         client = EMAClient(RetryingClient(RateLimiter(RATE_LIMIT)))
-        patterns = _load_patterns(Path(args.patterns_file))
+        query_id, query_version, patterns = _load_patterns_config(Path(args.patterns_file))
         if not patterns:
             raise RuntimeError(f"no substance patterns found in {args.patterns_file}")
         query_text = f"active_substance/name matches one of: {', '.join(patterns)}"
@@ -188,11 +184,14 @@ class EMAJob(AcquisitionJob):
         result = JobRunResult(job_name=self.name, dry_run=bool(args.dry_run))
 
         try:
-            xlsx_bytes = client.fetch_medicines_xlsx()
+            medicines_bytes = client.fetch_medicines_json()
+            documents_bytes = client.fetch_epar_documents_json()
         except requests.RequestException as exc:
-            raise RuntimeError(f"could not fetch EMA bulk medicines file: {exc}") from exc
-        all_medicines = parse_medicines_xlsx(xlsx_bytes)
+            raise RuntimeError(f"could not fetch EMA bulk JSON feed: {exc}") from exc
+        all_medicines = parse_medicines_json(medicines_bytes)
+        all_documents = parse_epar_documents_json(documents_bytes)
         candidates = {m.product_number: m for m in all_medicines if is_adc_candidate(m, patterns)}
+        candidate_documents = [d for d in all_documents if d.product_number in candidates]
 
         since = args.since
         used_resume_cursor = False
@@ -200,12 +199,6 @@ class EMAJob(AcquisitionJob):
             since = checkpoint.get("last_success_max_date")
             used_resume_cursor = True
         until = args.until
-
-        unresolved_document_parent_keys: set[str] = set()
-        if used_resume_cursor:
-            unresolved_document_parent_keys = _unresolved_document_parent_keys(
-                output_dir / "manifests" / "ema_documents_attempts.parquet"
-            )
 
         if since or until:
             in_range = {pn: m for pn, m in candidates.items() if within_date_range(m.last_updated_date, since, until)}
@@ -217,10 +210,9 @@ class EMAJob(AcquisitionJob):
         if used_resume_cursor:
             resolved_pns = checkpoint.get(MEDICINE_NAMESPACE, {})
             for pn, m in candidates.items():
-                if pn in fresh_product_numbers:
+                if pn in fresh_product_numbers or pn in resolved_pns:
                     continue
-                if pn not in resolved_pns or pn in unresolved_document_parent_keys:
-                    chosen[pn] = m
+                chosen[pn] = m
 
         all_ids = list(chosen.keys())
         result.queries_run = 1
@@ -237,7 +229,7 @@ class EMAJob(AcquisitionJob):
         if not args.dry_run:
             discovery_rows = [
                 dict(
-                    source="ema", source_record_id=pn, query_id=QUERY_ID, query_version=QUERY_VERSION,
+                    source="ema", source_record_id=pn, query_id=query_id, query_version=query_version,
                     query_text=query_text, discovered_at=now, run_id=run_id,
                 )
                 for pn in all_ids
@@ -246,6 +238,7 @@ class EMAJob(AcquisitionJob):
 
         if args.dry_run:
             result.notes.append(f"dry-run: would materialize {len(target_ids)} of {len(all_ids)} discovered medicines")
+            result.notes.append(f"{len(candidate_documents)} documents across all {len(candidates)} ADC-candidate medicines would be checked, independent of --limit")
             if retry_backlog_ids:
                 result.notes.append(
                     f"{len(retry_backlog_ids)} of those are --resume backlog retries (unresolved, predate the cursor) — "
@@ -253,21 +246,59 @@ class EMAJob(AcquisitionJob):
                 )
             return result
 
+        bulk_manifest_path = output_dir / "manifests" / "ema_bulk.parquet"
         manifest_path = output_dir / "manifests" / "ema.parquet"
         attempts_path = output_dir / "manifests" / "ema_attempts.parquet"
         documents_manifest_path = output_dir / "manifests" / "ema_documents.parquet"
         documents_attempts_path = output_dir / "manifests" / "ema_documents_attempts.parquet"
 
+        # --- Raw bulk source snapshots: preserved exactly as downloaded,
+        # so a future EMA schema/data change never leaves us without the
+        # actual input that produced this run's discovery decisions. ---
+        bulk_content_rows = []
+        for bulk_id, bulk_bytes, bulk_url in [
+            ("medicines_bulk", medicines_bytes, EMA_MEDICINES_JSON_URL),
+            ("documents_bulk", documents_bytes, EMA_EPAR_DOCUMENTS_JSON_URL),
+        ]:
+            bulk_hash = sha256_bytes(bulk_bytes)
+            prior_bulk_state = checkpoint_store.get_record_state(checkpoint, bulk_id, namespace=BULK_NAMESPACE)
+            bulk_raw_dir = output_dir / "raw" / "ema" / "bulk" / bulk_id
+            if prior_bulk_state and prior_bulk_state.get("content_hash") == bulk_hash:
+                continue
+            bulk_version = (prior_bulk_state["version"] + 1) if prior_bulk_state else 1
+            bulk_raw_dir.mkdir(parents=True, exist_ok=True)
+            bulk_raw_path = bulk_raw_dir / f"v{bulk_version}.json"
+            bulk_raw_path.write_bytes(bulk_bytes)
+            checkpoint_store.set_record_state(checkpoint, bulk_id, bulk_hash, bulk_version, now, namespace=BULK_NAMESPACE)
+            bulk_content_rows.append(
+                new_manifest_row(
+                    source="ema",
+                    source_record_id=bulk_id,
+                    source_record_type="ema_bulk_source",
+                    title=bulk_id,
+                    url=bulk_url,
+                    publication_or_release_date=_feed_timestamp_date(bulk_bytes),
+                    retrieved_at=now,
+                    query_id=query_id,
+                    query_text=query_text,
+                    raw_file_path=str(bulk_raw_path),
+                    raw_format="json",
+                    content_hash=bulk_hash,
+                    download_status="success",
+                    http_status=200,
+                    license_or_access_note=LICENSE_NOTE,
+                    parent_record_id=None,
+                    version=bulk_version,
+                    notes=None,
+                )
+            )
+        write_manifest(bulk_content_rows, bulk_manifest_path)
+
         content_rows = []
         attempt_rows = []
-        document_content_rows = []
-        document_attempt_rows = []
 
         for pn in target_ids:
             medicine = chosen[pn]
-            safe_id = pn.replace("/", "_")
-            raw_dir = output_dir / "raw" / "ema" / safe_id
-
             content_bytes = _medicine_content_bytes(medicine)
             content_hash = sha256_bytes(content_bytes)
             prior_state = checkpoint_store.get_record_state(checkpoint, pn, namespace=MEDICINE_NAMESPACE)
@@ -278,6 +309,7 @@ class EMAJob(AcquisitionJob):
                 status = "skipped_unchanged"
             else:
                 version = (prior_state["version"] + 1) if prior_state else 1
+                raw_dir = output_dir / "raw" / "ema" / pn.replace("/", "_")
                 raw_dir.mkdir(parents=True, exist_ok=True)
                 raw_path = raw_dir / f"v{version}.json"
                 raw_path.write_bytes(content_bytes)
@@ -294,7 +326,7 @@ class EMAJob(AcquisitionJob):
                         url=medicine.epar_url,
                         publication_or_release_date=medicine.last_updated_date,
                         retrieved_at=now,
-                        query_id=QUERY_ID,
+                        query_id=query_id,
                         query_text=query_text,
                         raw_file_path=str(raw_path),
                         raw_format="json",
@@ -316,81 +348,75 @@ class EMAJob(AcquisitionJob):
                 )
 
             attempt_rows.append(
-                _record_row(pn, run_id, now, status, QUERY_ID, query_text, http_status=200, content_hash=content_hash, version=version)
+                _record_row(pn, run_id, now, status, query_id, query_text, http_status=200, content_hash=content_hash, version=version)
             )
-
-            # EPAR documents: independent lifecycle, attempted regardless
-            # of whether the medicine's own content changed this run.
-            epar_page_id = f"{pn}{EPAR_PAGE_SUFFIX}"
-            if not medicine.epar_url:
-                document_attempt_rows.append(_document_attempt_row(epar_page_id, pn, run_id, now, "failed", error="no_epar_url"))
-                continue
-            try:
-                html = client.fetch_epar_page(medicine.epar_url)
-            except requests.RequestException as exc:
-                logger.warning("medicine=%s EPAR page fetch failed: %s", pn, exc)
-                document_attempt_rows.append(_document_attempt_row(epar_page_id, pn, run_id, now, "failed", error=str(exc)))
-                continue
-            else:
-                document_attempt_rows.append(_document_attempt_row(epar_page_id, pn, run_id, now, "success"))
-
-            for doc in parse_epar_documents(html):
-                doc_key = f"{pn}:{doc.filename}"
-                try:
-                    doc_bytes = client.fetch_document(doc.url)
-                except requests.RequestException as exc:
-                    logger.warning("document=%s fetch failed: %s", doc_key, exc)
-                    failure_logger.info("document=%s error=%s", doc_key, exc)
-                    document_attempt_rows.append(_document_attempt_row(doc_key, pn, run_id, now, "failed", error=str(exc)))
-                    continue
-
-                doc_hash = sha256_bytes(doc_bytes)
-                prior_doc_state = checkpoint_store.get_record_state(checkpoint, doc_key, namespace=DOCUMENT_NAMESPACE)
-
-                if prior_doc_state and prior_doc_state.get("content_hash") == doc_hash:
-                    document_attempt_rows.append(
-                        _document_attempt_row(doc_key, pn, run_id, now, "skipped_unchanged", content_hash=doc_hash, version=prior_doc_state["version"])
-                    )
-                    continue
-
-                doc_version = (prior_doc_state["version"] + 1) if prior_doc_state else 1
-                doc_dir = raw_dir / "documents"
-                doc_dir.mkdir(parents=True, exist_ok=True)
-                suffix = Path(urlparse(doc.url).path).suffix.lstrip(".") or "pdf"
-                doc_path = doc_dir / f"v{doc_version}_{doc.filename}"
-                doc_path.write_bytes(doc_bytes)
-                checkpoint_store.set_record_state(checkpoint, doc_key, doc_hash, doc_version, now, namespace=DOCUMENT_NAMESPACE)
-
-                document_content_rows.append(
-                    new_manifest_row(
-                        extra_fields=DOCUMENT_EXTRA_FIELDS,
-                        source="ema",
-                        source_record_id=doc_key,
-                        source_record_type="ema_document",
-                        title=f"{doc.doc_type or 'document'} — {medicine.name}",
-                        url=doc.url,
-                        publication_or_release_date=doc.last_updated,
-                        retrieved_at=now,
-                        query_id=QUERY_ID,
-                        query_text=query_text,
-                        raw_file_path=str(doc_path),
-                        raw_format=suffix,
-                        content_hash=doc_hash,
-                        download_status="success",
-                        http_status=200,
-                        license_or_access_note=LICENSE_NOTE,
-                        parent_record_id=pn,
-                        version=doc_version,
-                        notes=None,
-                        doc_type=doc.doc_type,
-                    )
-                )
-                document_attempt_rows.append(
-                    _document_attempt_row(doc_key, pn, run_id, now, "success", content_hash=doc_hash, version=doc_version)
-                )
 
         manifest_df = write_manifest(content_rows, manifest_path, extra_fields=MEDICINE_EXTRA_FIELDS)
         append_only(attempt_rows, attempts_path, ATTEMPT_COLUMNS)
+
+        # --- Documents: independent lifecycle, processed for EVERY
+        # ADC-candidate medicine on every run, regardless of --limit or
+        # which medicines' own records changed this run — a medicine
+        # outside this run's scope can still have new/updated documents
+        # discovered, because document discovery was never gated by the
+        # medicine's own scope. ---
+        document_content_rows = []
+        document_attempt_rows = []
+        for doc in candidate_documents:
+            doc_key = f"{doc.product_number}:{doc.doc_id}"
+            try:
+                doc_bytes = client.fetch_document(doc.url)
+            except requests.RequestException as exc:
+                logger.warning("document=%s fetch failed: %s", doc_key, exc)
+                failure_logger.info("document=%s error=%s", doc_key, exc)
+                document_attempt_rows.append(_document_attempt_row(doc_key, doc.product_number, run_id, now, "failed", error=str(exc)))
+                continue
+
+            doc_hash = sha256_bytes(doc_bytes)
+            prior_doc_state = checkpoint_store.get_record_state(checkpoint, doc_key, namespace=DOCUMENT_NAMESPACE)
+
+            if prior_doc_state and prior_doc_state.get("content_hash") == doc_hash:
+                document_attempt_rows.append(
+                    _document_attempt_row(doc_key, doc.product_number, run_id, now, "skipped_unchanged", content_hash=doc_hash, version=prior_doc_state["version"])
+                )
+                continue
+
+            doc_version = (prior_doc_state["version"] + 1) if prior_doc_state else 1
+            doc_dir = output_dir / "raw" / "ema" / doc.product_number.replace("/", "_") / "documents"
+            doc_dir.mkdir(parents=True, exist_ok=True)
+            suffix = Path(urlparse(doc.url).path).suffix.lstrip(".") or "pdf"
+            doc_path = doc_dir / f"v{doc_version}_{doc.doc_id}.{suffix}"
+            doc_path.write_bytes(doc_bytes)
+            checkpoint_store.set_record_state(checkpoint, doc_key, doc_hash, doc_version, now, namespace=DOCUMENT_NAMESPACE)
+
+            document_content_rows.append(
+                new_manifest_row(
+                    extra_fields=DOCUMENT_EXTRA_FIELDS,
+                    source="ema",
+                    source_record_id=doc_key,
+                    source_record_type="ema_document",
+                    title=f"{doc.doc_type or 'document'} — {doc.product_number}",
+                    url=doc.url,
+                    publication_or_release_date=doc.last_updated or doc.first_published,
+                    retrieved_at=now,
+                    query_id=query_id,
+                    query_text=query_text,
+                    raw_file_path=str(doc_path),
+                    raw_format=suffix,
+                    content_hash=doc_hash,
+                    download_status="success",
+                    http_status=200,
+                    license_or_access_note=LICENSE_NOTE,
+                    parent_record_id=doc.product_number,
+                    version=doc_version,
+                    notes=None,
+                    doc_type=doc.doc_type,
+                )
+            )
+            document_attempt_rows.append(
+                _document_attempt_row(doc_key, doc.product_number, run_id, now, "success", content_hash=doc_hash, version=doc_version)
+            )
+
         write_manifest(document_content_rows, documents_manifest_path, extra_fields=DOCUMENT_EXTRA_FIELDS)
         append_only(document_attempt_rows, documents_attempts_path, DOCUMENT_ATTEMPT_COLUMNS)
         result.manifest_path = str(manifest_path)
@@ -398,15 +424,14 @@ class EMAJob(AcquisitionJob):
         checkpoint["last_success_max_date"] = until or now[:10]
         checkpoint_store.save(checkpoint)
 
-        real_document_attempt_rows = [r for r in document_attempt_rows if not r["source_record_id"].endswith(EPAR_PAGE_SUFFIX)]
         report_text = build_report(
             result=result,
             manifest_df=manifest_df,
             unique_ids=set(all_ids),
-            document_attempted=len(real_document_attempt_rows),
-            document_new_or_changed=sum(1 for r in real_document_attempt_rows if r["status"] == "success"),
-            document_unchanged=sum(1 for r in real_document_attempt_rows if r["status"] == "skipped_unchanged"),
-            document_failed=sum(1 for r in real_document_attempt_rows if r["status"] == "failed"),
+            document_attempted=len(document_attempt_rows),
+            document_new_or_changed=sum(1 for r in document_attempt_rows if r["status"] == "success"),
+            document_unchanged=sum(1 for r in document_attempt_rows if r["status"] == "skipped_unchanged"),
+            document_failed=sum(1 for r in document_attempt_rows if r["status"] == "failed"),
         )
         report_path = output_dir.parent / "reports" / "acquisition" / "ema.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)
