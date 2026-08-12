@@ -162,13 +162,28 @@ ema:
   api_docs_url: null
   acquisition_method: bulk_download
   authentication_required: false
-  rate_limit: "unspecified, be polite"
-  license_or_access_note: Public EPAR documents; no stable REST API, uses bulk data exports.
-  raw_formats: [pdf, html, xlsx]
-  update_strategy: incremental_by_publication_date
-  implementation_status: not_started
-  enabled: false
-  notes: Job 11 in Prompt.md, promoted to #7 in recommended execution order.
+  rate_limit: "unspecified; enforces a cumulative session-level throttle regardless of pacing (1 req/s used)"
+  license_or_access_note: Public EPAR documents; no stable REST API, uses bulk JSON data exports intended for automated systems.
+  raw_formats: [pdf, json]
+  update_strategy: incremental_by_last_updated_date
+  implementation_status: implemented
+  enabled: true
+  notes: >
+    Job 11 in Prompt.md, promoted to #7 in recommended execution order.
+    Discovery via systematic INN-suffix matching (vedotin, emtansine,
+    deruxtecan, ...) against EMA's bulk medicines JSON feed
+    (configs/ema_adc_substance_patterns.yaml) — not a manual drug list,
+    same spirit as Job 06 (FDA). Three levels: ema_bulk.parquet (the raw
+    bulk feeds themselves, preserved exactly as downloaded, for full
+    reproducibility of discovery decisions), ema.parquet (medicine
+    identity, the medicine's own record verbatim, authorisation/
+    withdrawal dates), and ema_documents.parquet (EPAR documents as an
+    independent artifact, same pattern as SEC's exhibits/FDA's
+    documents) discovered from EMA's bulk EPAR-documents JSON feed for
+    every ADC-candidate medicine every run, independent of medicine-level
+    --limit/--resume scope. --resume for medicines built failure-safe
+    from the start using the design established by Jobs 05/06. Safety-
+    specific PSUSA/DHPC feeds are a known coverage gap, not yet acquired.
 
 patents_wipo:
   source_type: patent

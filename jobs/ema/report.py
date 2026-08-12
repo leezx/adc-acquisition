@@ -1,0 +1,86 @@
+"""Per-source execution report (Prompt.md sections 15 and 26)."""
+
+from __future__ import annotations
+
+import pandas as pd
+
+
+def build_report(
+    result,
+    manifest_df: pd.DataFrame,
+    unique_ids: set[str],
+    document_attempted: int,
+    document_new_or_changed: int,
+    document_unchanged: int,
+    document_failed: int,
+) -> str:
+    run_df = manifest_df[manifest_df["source_record_id"].isin(unique_ids)] if not manifest_df.empty else manifest_df
+
+    medicines_summary = "n/a"
+    if not run_df.empty:
+        rows = [
+            f"- {row['product_number']}: {row['title']}, status: {row.get('status') or 'n/a'}"
+            for _, row in run_df.iterrows()
+        ]
+        medicines_summary = "\n".join(rows)
+
+    status_counts = run_df["status"].value_counts().to_dict() if not run_df.empty else {}
+    status_summary = ", ".join(f"{s}: {c}" for s, c in sorted(status_counts.items())) or "n/a"
+
+    return f"""# EMA (Job 07)
+
+## Acquisition mechanism
+
+EMA has no public REST API for this, but explicitly publishes bulk JSON exports intended for automated systems — one covering every EMA-authorised medicine, one covering every EPAR document across every medicine (20,099 records live) with its own stable id/type/dates independent of any single medicine's page. Both verified live as documented, machine-oriented data exports (not scraped from rendered HTML).
+
+## Official endpoint / dataset
+
+https://www.ema.europa.eu/en/about-us/about-website/download-website-data-json-data-format — medicines feed + EPAR documents feed
+
+## Discovery strategy — systematic INN-suffix matching, not a manual list
+
+configs/ema_adc_substance_patterns.yaml matches standardized WHO INN stems for ADC linker/payload chemistry (vedotin, emtansine, deruxtecan, ozogamicin, govitecan, soravtansine, mafodotin, tesirine) against the medicines feed's name/active-substance fields — verified live to catch all 14 known EMA-authorised ADCs (16 rows, since some have more than one EMA product number from separate application histories, e.g. Blenrep/Mylotarg).
+
+## Medicines discovered
+
+{result.records_discovered} ADC-candidate medicines matched this run.
+
+## Medicines downloaded
+
+{result.records_downloaded} new/changed medicine snapshots, {result.records_skipped_unchanged} skipped as unchanged (matched checkpoint content hash). Status distribution: {status_summary}.
+
+{medicines_summary}
+
+## Documents (independent artifact, see `ema_documents.parquet`)
+
+{document_attempted} documents considered this run ({document_new_or_changed} newly fetched/changed, {document_unchanged} unchanged, {document_failed} failed). EPAR documents (product information, assessment reports, public assessment reports, procedural steps, ...) are tracked as their own content-version manifest, keyed by `{{product_number}}:{{doc_id}}` (EMA's own stable numeric document id) with `parent_record_id` pointing back to the medicine. Documents are discovered from the bulk documents feed for every ADC-candidate medicine on every run, independent of which medicines `--limit`/`--since`/`--until`/`--resume` selected for materialization — a medicine outside this run's scope can still have a new or updated document discovered. Fetching itself is metadata-driven: a document is only re-downloaded when it's new, its last attempt failed, or the bulk feed's own `last_updated`/`url` changed since the last success — an unchanged, previously-successful document makes NO HTTP request at all this run.
+
+## Raw bulk snapshots (see `ema_bulk.parquet`)
+
+The exact bytes of both bulk JSON feeds are persisted (hash-compare-then-version) IMMEDIATELY after each feed is fetched, before either is handed to a parser — so a parser crash from a future EMA schema/data change can never erase the exact input that caused it.
+
+## Failed downloads
+
+{result.records_failed} (see DATA/logs/ema_failures.log and ema_attempts.parquet (status=failed)). Failed attempts never occupy a content-manifest version slot. A medicine's own row can never itself fail to materialize from a network error (its content is already in hand from the bulk feed) — only individual document PDF fetches can fail.
+
+## Rate/access limitations
+
+No officially documented rate limit found for ema.europa.eu. Verified live on 2026-08-12: sustained per-medicine-page + per-document request volume (the earlier HTML-scraping design) triggered a cumulative session-level HTTP 429 throttle; switching document discovery to the bulk documents feed eliminates the per-medicine-page requests entirely, leaving only the individual document PDF fetches as per-record traffic.
+
+## Data quality observations
+
+- Authorisation history and withdrawal information (Prompt.md's explicit ask) live as structured date fields on the medicine row itself (authorisation_date, withdrawal_date, decision_date), not as separate documents.
+- `--since`/`--until` filter medicines by `last_updated_date`, applied entirely client-side (the bulk feed has no server-side filtering at all). `--resume`'s cursor advances unconditionally every run for medicines — any medicine not yet successfully materialized is unioned back into scope regardless of date, with fresh/in-range medicines always prioritized over that backlog within a `--limit` budget (same failure-safe design as Jobs 05/06).
+
+## Known coverage gaps
+
+- Discovery only covers currently-listed medicines in EMA's bulk export (authorised, refused, and withdrawn applications), not investigational products with no EMA procedure at all.
+- Safety-update-specific feeds (PSUSA periodic safety update assessments, DHPC direct healthcare professional communications) are separate EMA datasets and are **not yet acquired here** — only the EPAR documents feed's per-medicine documents are covered, which includes general safety-related EPAR documents but not the dedicated safety feeds.
+- No terminal-failure category is classified yet (unlike SEC's confirmed-permanent `no_primary_document`) — none has been observed live for EMA.
+
+## Reproduction command
+
+```bash
+python -m adc_acquisition ema --limit {result.records_discovered or 20} --output DATA
+```
+"""

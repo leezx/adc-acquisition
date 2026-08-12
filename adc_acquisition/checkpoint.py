@@ -58,9 +58,13 @@ class CheckpointStore:
         version: int,
         last_seen_at: str,
         namespace: str = DEFAULT_NAMESPACE,
+        extra: dict[str, Any] | None = None,
     ) -> None:
-        checkpoint.setdefault(namespace, {})[source_record_id] = {
+        state = {
             "content_hash": content_hash,
             "version": version,
             "last_seen_at": last_seen_at,
         }
+        if extra:
+            state.update(extra)
+        checkpoint.setdefault(namespace, {})[source_record_id] = state
