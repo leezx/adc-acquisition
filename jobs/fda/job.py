@@ -292,6 +292,26 @@ class FDAJob(AcquisitionJob):
         all_applications = list(application_first_query.keys())
         duplicate_applications = {app for app, qids in application_query_hits.items() if len(qids) > 1}
 
+        # --- Application-level discovery ledger: written UNCONDITIONALLY
+        # right after label search, BEFORE the Drugs@FDA reconciliation
+        # loop below is even entered — discovery durability must not
+        # depend on reconciliation succeeding, or even running to
+        # completion. (Not written on --dry-run, same as every other
+        # job's discovery ledger, since dry-run persists nothing.) ---
+        now = _now_iso()
+        run_id = now
+        applications_discovery_path = output_dir / "manifests" / "fda_applications_discovery.parquet"
+        if not args.dry_run:
+            applications_discovery_rows = [
+                dict(
+                    source="fda", source_record_id=app, query_id=qid, query_version=query_version_by_id[qid],
+                    query_text=query_text_by_id[qid], discovered_at=now, run_id=run_id,
+                )
+                for app, qids in application_query_hits.items()
+                for qid in sorted(qids)
+            ]
+            append_only(applications_discovery_rows, applications_discovery_path, DISCOVERY_COLUMNS)
+
         since = args.since
         used_resume_cursor = False
         if args.resume and not since:
@@ -394,31 +414,13 @@ class FDAJob(AcquisitionJob):
                 )
             return result
 
-        now = _now_iso()
-        run_id = now
-
         applications_manifest_path = output_dir / "manifests" / "fda_applications.parquet"
-        applications_discovery_path = output_dir / "manifests" / "fda_applications_discovery.parquet"
         applications_attempts_path = output_dir / "manifests" / "fda_applications_attempts.parquet"
         submissions_manifest_path = output_dir / "manifests" / "fda_submissions.parquet"
         submissions_discovery_path = output_dir / "manifests" / "fda_submissions_discovery.parquet"
         submissions_attempts_path = output_dir / "manifests" / "fda_submissions_attempts.parquet"
         documents_manifest_path = output_dir / "manifests" / "fda_documents.parquet"
         documents_attempts_path = output_dir / "manifests" / "fda_documents_attempts.parquet"
-
-        # --- Application-level discovery ledger: written UNCONDITIONALLY
-        # for every label-search hit, before reconciliation is attempted,
-        # so a label match that fails to reconcile still has durable
-        # discovery provenance. ---
-        applications_discovery_rows = [
-            dict(
-                source="fda", source_record_id=app, query_id=qid, query_version=query_version_by_id[qid],
-                query_text=query_text_by_id[qid], discovered_at=now, run_id=run_id,
-            )
-            for app, qids in application_query_hits.items()
-            for qid in sorted(qids)
-        ]
-        append_only(applications_discovery_rows, applications_discovery_path, DISCOVERY_COLUMNS)
 
         # --- Application-level content + attempts: success / not_found / failed. ---
         application_content_rows = []

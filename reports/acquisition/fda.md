@@ -58,7 +58,7 @@ Prompt.md section 14 explicitly prohibits relying on a manually maintained ADC d
 
 ## Documents (independent artifact, see `fda_documents.parquet`)
 
-42 document fetches attempted this run (2 new/changed, 38 unchanged, 2 failed). Documents (labels, approval letters, review documents, medication guides, ...) are tracked as their own content-version manifest, keyed by `{submission_key}:{doc_id}` with `parent_record_id` pointing back to the submission — never as a field on the submission row itself, so a document fetch failure or a later successful retry never touches the submission's own content-version snapshot.
+42 document fetches attempted this run (0 new/changed, 40 unchanged, 2 failed). Documents (labels, approval letters, review documents, medication guides, ...) are tracked as their own content-version manifest, keyed by `{submission_key}:{doc_id}` with `parent_record_id` pointing back to the submission — never as a field on the submission row itself, so a document fetch failure or a later successful retry never touches the submission's own content-version snapshot.
 
 ## Failed downloads
 

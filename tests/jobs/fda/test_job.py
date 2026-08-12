@@ -250,6 +250,38 @@ def test_application_reconciliation_network_failure_is_a_failed_attempt(tmp_path
 
 
 @responses.activate
+def test_discovery_ledger_survives_a_totally_uncaught_reconciliation_crash(tmp_path, monkeypatch):
+    """Blocker fix: discovery durability must not depend on
+    reconciliation succeeding OR EVEN RUNNING TO COMPLETION -- an
+    uncaught exception (not just an expected RequestException) during
+    the Drugs@FDA reconciliation loop must not erase discovery
+    provenance for an application the label search already found,
+    because the discovery ledger is now written before that loop starts."""
+    _setup(tmp_path, monkeypatch)
+    _register_fda(
+        label_results={MOA_QUERY: [_label_hit("BLA1")], DESC_QUERY: []},
+        drugsfda_records={"BLA1": _drugsfda_record("BLA1", [_submission("ORIG", "1", "20200101")])},
+    )
+
+    import jobs.fda.job as job_module
+
+    def _boom(self, application_number):
+        raise RuntimeError("totally unexpected parser bug, not a RequestException")
+
+    monkeypatch.setattr("jobs.fda.client.FDAClient.get_drugsfda_by_application", _boom)
+
+    try:
+        FDAJob().run(_base_args(tmp_path))
+        assert False, "expected the uncaught RuntimeError to propagate"
+    except RuntimeError:
+        pass
+
+    app_discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_applications_discovery.parquet")
+    assert "BLA1" in set(app_discovery_df["source_record_id"])
+    assert set(app_discovery_df[app_discovery_df["source_record_id"] == "BLA1"]["query_id"]) == {"FDA_LABEL_MOA_001"}
+
+
+@responses.activate
 def test_application_manifest_preserves_raw_record_and_product_identity(tmp_path, monkeypatch):
     """Blocker fix: the application/product layer (brand name, active
     ingredient, sponsor) must not be dropped -- and the raw stored
