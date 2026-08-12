@@ -38,6 +38,16 @@ def test_set_record_state_overwrites_prior_version(tmp_path):
     assert state["content_hash"] == "hash-v2"
 
 
+def test_set_record_state_stores_extra_metadata(tmp_path):
+    store = CheckpointStore("ema", tmp_path)
+    checkpoint = store.load()
+    store.set_record_state(checkpoint, "doc-1", "hash-1", 1, "t1", extra={"last_updated_seen": "2020-01-01", "url_seen": "http://x"})
+    state = store.get_record_state(checkpoint, "doc-1")
+    assert state["last_updated_seen"] == "2020-01-01"
+    assert state["url_seen"] == "http://x"
+    assert state["content_hash"] == "hash-1"
+
+
 def test_namespaces_isolate_state_for_the_same_id(tmp_path):
     """A metadata record and a derived artifact (e.g. its full text) sharing
     the same underlying id must not collide with each other's state."""

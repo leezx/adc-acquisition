@@ -52,10 +52,15 @@ medicines --limit/--since/--until/--resume selected for materialization
 this run — a medicine whose own record hasn't changed (so it's outside
 this run's medicine scope) can still have a newly-added or updated
 document discovered and downloaded, because document discovery was never
-gated by the medicine's own scope to begin with. Each document's own
-checkpoint (hash-compare-then-version) already provides the incremental
-efficiency of skipping unchanged downloads, so no separate resume-backlog
-logic is needed at the document level.
+gated by the medicine's own scope to begin with.
+
+Document PDFs are only re-fetched when the bulk feed's own metadata says
+there's a reason to: the document is new, its last-known fetch attempt
+failed, or its last_updated/url changed since the last successful fetch.
+A document whose metadata is unchanged and whose last fetch succeeded is
+skipped with NO HTTP request at all — hashing after an unconditional
+re-download would still pay for the request on every run, which is the
+actual traffic that drives EMA's session-level 429 throttle.
 
 --since/--until filter medicines by last_updated_date (client-side — the
 bulk feed has no server-side filtering at all). --resume for medicines
@@ -74,6 +79,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
+import pandas as pd
 import requests
 import yaml
 from dotenv import load_dotenv
@@ -134,6 +140,47 @@ def _feed_timestamp_date(json_bytes: bytes) -> str | None:
     return ts[:10] if ts else None
 
 
+def _persist_bulk_snapshot(
+    checkpoint_store: CheckpointStore, checkpoint: dict, bulk_id: str, bulk_bytes: bytes, bulk_url: str,
+    query_id: str, query_text: str, now: str, output_dir: Path,
+) -> dict | None:
+    """Content-hash-and-version a bulk feed's exact bytes IMMEDIATELY after
+    fetch, before that feed is ever handed to a parser — so a parser crash
+    (e.g. EMA changes the feed's schema) can never erase the raw evidence
+    that produced this run's decisions. Returns the new manifest row, or
+    None if this exact content was already snapshotted (no-op)."""
+    bulk_hash = sha256_bytes(bulk_bytes)
+    prior_bulk_state = checkpoint_store.get_record_state(checkpoint, bulk_id, namespace=BULK_NAMESPACE)
+    if prior_bulk_state and prior_bulk_state.get("content_hash") == bulk_hash:
+        return None
+    bulk_version = (prior_bulk_state["version"] + 1) if prior_bulk_state else 1
+    bulk_raw_dir = output_dir / "raw" / "ema" / "bulk" / bulk_id
+    bulk_raw_dir.mkdir(parents=True, exist_ok=True)
+    bulk_raw_path = bulk_raw_dir / f"v{bulk_version}.json"
+    bulk_raw_path.write_bytes(bulk_bytes)
+    checkpoint_store.set_record_state(checkpoint, bulk_id, bulk_hash, bulk_version, now, namespace=BULK_NAMESPACE)
+    return new_manifest_row(
+        source="ema",
+        source_record_id=bulk_id,
+        source_record_type="ema_bulk_source",
+        title=bulk_id,
+        url=bulk_url,
+        publication_or_release_date=_feed_timestamp_date(bulk_bytes),
+        retrieved_at=now,
+        query_id=query_id,
+        query_text=query_text,
+        raw_file_path=str(bulk_raw_path),
+        raw_format="json",
+        content_hash=bulk_hash,
+        download_status="success",
+        http_status=200,
+        license_or_access_note=LICENSE_NOTE,
+        parent_record_id=None,
+        version=bulk_version,
+        notes=None,
+    )
+
+
 def _record_row(
     source_record_id: str, run_id: str, attempted_at: str, status: str, query_id: str, query_text: str,
     http_status: int | None = None, error: str | None = None, content_hash: str | None = None,
@@ -144,6 +191,19 @@ def _record_row(
         status=status, http_status=http_status, error=error, query_id=query_id, query_text=query_text,
         content_hash=content_hash, version=version,
     )
+
+
+def _failed_document_keys(documents_attempts_path: Path) -> set[str]:
+    """Document keys whose MOST RECENT recorded fetch attempt was a failure
+    — genuinely unresolved, so they're retried even when their metadata
+    hasn't changed since that failed attempt."""
+    if not documents_attempts_path.exists():
+        return set()
+    df = pd.read_parquet(documents_attempts_path)
+    if df.empty:
+        return set()
+    latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
+    return set(latest.loc[latest["status"] == "failed", "source_record_id"])
 
 
 def _document_attempt_row(
@@ -182,12 +242,41 @@ class EMAJob(AcquisitionJob):
         query_text = f"active_substance/name matches one of: {', '.join(patterns)}"
 
         result = JobRunResult(job_name=self.name, dry_run=bool(args.dry_run))
+        now = _now_iso()
+        run_id = now
+        bulk_manifest_path = output_dir / "manifests" / "ema_bulk.parquet"
 
+        # --- Raw bulk source snapshots: persisted IMMEDIATELY after each
+        # feed is fetched, BEFORE it is ever handed to a parser. If EMA
+        # changes a feed's schema and the parser crashes on it, the exact
+        # bytes that caused the crash are already durable on disk and in
+        # ema_bulk.parquet — never lost to a mid-run failure. ---
         try:
             medicines_bytes = client.fetch_medicines_json()
+        except requests.RequestException as exc:
+            raise RuntimeError(f"could not fetch EMA medicines bulk JSON feed: {exc}") from exc
+        if not args.dry_run:
+            medicines_bulk_row = _persist_bulk_snapshot(
+                checkpoint_store, checkpoint, "medicines_bulk", medicines_bytes, EMA_MEDICINES_JSON_URL,
+                query_id, query_text, now, output_dir,
+            )
+            if medicines_bulk_row:
+                write_manifest([medicines_bulk_row], bulk_manifest_path)
+            checkpoint_store.save(checkpoint)
+
+        try:
             documents_bytes = client.fetch_epar_documents_json()
         except requests.RequestException as exc:
-            raise RuntimeError(f"could not fetch EMA bulk JSON feed: {exc}") from exc
+            raise RuntimeError(f"could not fetch EMA EPAR-documents bulk JSON feed: {exc}") from exc
+        if not args.dry_run:
+            documents_bulk_row = _persist_bulk_snapshot(
+                checkpoint_store, checkpoint, "documents_bulk", documents_bytes, EMA_EPAR_DOCUMENTS_JSON_URL,
+                query_id, query_text, now, output_dir,
+            )
+            if documents_bulk_row:
+                write_manifest([documents_bulk_row], bulk_manifest_path)
+            checkpoint_store.save(checkpoint)
+
         all_medicines = parse_medicines_json(medicines_bytes)
         all_documents = parse_epar_documents_json(documents_bytes)
         candidates = {m.product_number: m for m in all_medicines if is_adc_candidate(m, patterns)}
@@ -222,8 +311,6 @@ class EMAJob(AcquisitionJob):
         ordered_ids = sorted(fresh_product_numbers & set(all_ids)) + retry_backlog_ids
         target_ids = ordered_ids[: args.limit] if args.limit else ordered_ids
 
-        now = _now_iso()
-        run_id = now
         discovery_path = output_dir / "manifests" / "ema_discovery.parquet"
 
         if not args.dry_run:
@@ -246,53 +333,10 @@ class EMAJob(AcquisitionJob):
                 )
             return result
 
-        bulk_manifest_path = output_dir / "manifests" / "ema_bulk.parquet"
         manifest_path = output_dir / "manifests" / "ema.parquet"
         attempts_path = output_dir / "manifests" / "ema_attempts.parquet"
         documents_manifest_path = output_dir / "manifests" / "ema_documents.parquet"
         documents_attempts_path = output_dir / "manifests" / "ema_documents_attempts.parquet"
-
-        # --- Raw bulk source snapshots: preserved exactly as downloaded,
-        # so a future EMA schema/data change never leaves us without the
-        # actual input that produced this run's discovery decisions. ---
-        bulk_content_rows = []
-        for bulk_id, bulk_bytes, bulk_url in [
-            ("medicines_bulk", medicines_bytes, EMA_MEDICINES_JSON_URL),
-            ("documents_bulk", documents_bytes, EMA_EPAR_DOCUMENTS_JSON_URL),
-        ]:
-            bulk_hash = sha256_bytes(bulk_bytes)
-            prior_bulk_state = checkpoint_store.get_record_state(checkpoint, bulk_id, namespace=BULK_NAMESPACE)
-            bulk_raw_dir = output_dir / "raw" / "ema" / "bulk" / bulk_id
-            if prior_bulk_state and prior_bulk_state.get("content_hash") == bulk_hash:
-                continue
-            bulk_version = (prior_bulk_state["version"] + 1) if prior_bulk_state else 1
-            bulk_raw_dir.mkdir(parents=True, exist_ok=True)
-            bulk_raw_path = bulk_raw_dir / f"v{bulk_version}.json"
-            bulk_raw_path.write_bytes(bulk_bytes)
-            checkpoint_store.set_record_state(checkpoint, bulk_id, bulk_hash, bulk_version, now, namespace=BULK_NAMESPACE)
-            bulk_content_rows.append(
-                new_manifest_row(
-                    source="ema",
-                    source_record_id=bulk_id,
-                    source_record_type="ema_bulk_source",
-                    title=bulk_id,
-                    url=bulk_url,
-                    publication_or_release_date=_feed_timestamp_date(bulk_bytes),
-                    retrieved_at=now,
-                    query_id=query_id,
-                    query_text=query_text,
-                    raw_file_path=str(bulk_raw_path),
-                    raw_format="json",
-                    content_hash=bulk_hash,
-                    download_status="success",
-                    http_status=200,
-                    license_or_access_note=LICENSE_NOTE,
-                    parent_record_id=None,
-                    version=bulk_version,
-                    notes=None,
-                )
-            )
-        write_manifest(bulk_content_rows, bulk_manifest_path)
 
         content_rows = []
         attempt_rows = []
@@ -360,10 +404,39 @@ class EMAJob(AcquisitionJob):
         # outside this run's scope can still have new/updated documents
         # discovered, because document discovery was never gated by the
         # medicine's own scope. ---
+        # Documents whose most recent fetch attempt failed are always
+        # retried below regardless of metadata, even if the feed's own
+        # last_updated/url happen not to have changed since that failure.
+        failed_doc_keys = _failed_document_keys(documents_attempts_path)
+
         document_content_rows = []
         document_attempt_rows = []
         for doc in candidate_documents:
             doc_key = f"{doc.product_number}:{doc.doc_id}"
+            doc_metadata_signature = doc.last_updated or doc.first_published
+            prior_doc_state = checkpoint_store.get_record_state(checkpoint, doc_key, namespace=DOCUMENT_NAMESPACE)
+
+            # Feed-metadata-driven incremental fetch: a document is only
+            # re-downloaded when it's new, its last-known fetch failed, or
+            # the feed's own last_updated/url changed since the last
+            # successful fetch. This is what actually avoids re-requesting
+            # unchanged PDFs (a hash-after-download check alone still pays
+            # for the HTTP request on every run, which is the exact traffic
+            # driving EMA's session-level 429 throttle).
+            metadata_unchanged = (
+                prior_doc_state is not None
+                and prior_doc_state.get("last_updated_seen") == doc_metadata_signature
+                and prior_doc_state.get("url_seen") == doc.url
+            )
+            if metadata_unchanged and doc_key not in failed_doc_keys:
+                document_attempt_rows.append(
+                    _document_attempt_row(
+                        doc_key, doc.product_number, run_id, now, "skipped_unchanged",
+                        content_hash=prior_doc_state["content_hash"], version=prior_doc_state["version"],
+                    )
+                )
+                continue
+
             try:
                 doc_bytes = client.fetch_document(doc.url)
             except requests.RequestException as exc:
@@ -373,9 +446,13 @@ class EMAJob(AcquisitionJob):
                 continue
 
             doc_hash = sha256_bytes(doc_bytes)
-            prior_doc_state = checkpoint_store.get_record_state(checkpoint, doc_key, namespace=DOCUMENT_NAMESPACE)
+            doc_extra = {"last_updated_seen": doc_metadata_signature, "url_seen": doc.url}
 
             if prior_doc_state and prior_doc_state.get("content_hash") == doc_hash:
+                checkpoint_store.set_record_state(
+                    checkpoint, doc_key, doc_hash, prior_doc_state["version"], now,
+                    namespace=DOCUMENT_NAMESPACE, extra=doc_extra,
+                )
                 document_attempt_rows.append(
                     _document_attempt_row(doc_key, doc.product_number, run_id, now, "skipped_unchanged", content_hash=doc_hash, version=prior_doc_state["version"])
                 )
@@ -387,7 +464,9 @@ class EMAJob(AcquisitionJob):
             suffix = Path(urlparse(doc.url).path).suffix.lstrip(".") or "pdf"
             doc_path = doc_dir / f"v{doc_version}_{doc.doc_id}.{suffix}"
             doc_path.write_bytes(doc_bytes)
-            checkpoint_store.set_record_state(checkpoint, doc_key, doc_hash, doc_version, now, namespace=DOCUMENT_NAMESPACE)
+            checkpoint_store.set_record_state(
+                checkpoint, doc_key, doc_hash, doc_version, now, namespace=DOCUMENT_NAMESPACE, extra=doc_extra,
+            )
 
             document_content_rows.append(
                 new_manifest_row(

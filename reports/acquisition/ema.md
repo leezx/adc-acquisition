@@ -18,7 +18,7 @@ configs/ema_adc_substance_patterns.yaml matches standardized WHO INN stems for A
 
 ## Medicines downloaded
 
-0 new/changed medicine snapshots, 16 skipped as unchanged (matched checkpoint content hash). Status distribution: Application withdrawn: 1, Authorised: 13, Expired: 1, Refused: 1.
+0 new/changed medicine snapshots, 3 skipped as unchanged (matched checkpoint content hash). Status distribution: Application withdrawn: 1, Authorised: 13, Expired: 1, Refused: 1.
 
 - EMEA/H/C/000705: Mylotarg (gemtuzumab ozogamicin), status: Refused
 - EMEA/H/C/002389: Kadcyla (trastuzumab emtansine), status: Authorised
@@ -39,11 +39,11 @@ configs/ema_adc_substance_patterns.yaml matches standardized WHO INN stems for A
 
 ## Documents (independent artifact, see `ema_documents.parquet`)
 
-147 document fetches attempted this run (2 new/changed, 99 unchanged, 46 failed). EPAR documents (product information, assessment reports, public assessment reports, procedural steps, ...) are tracked as their own content-version manifest, keyed by `{product_number}:{doc_id}` (EMA's own stable numeric document id) with `parent_record_id` pointing back to the medicine. Documents are discovered from the bulk documents feed for every ADC-candidate medicine on every run, independent of which medicines `--limit`/`--since`/`--until`/`--resume` selected for materialization — a medicine outside this run's scope can still have a new or updated document discovered.
+147 documents considered this run (0 newly fetched/changed, 147 unchanged, 0 failed). EPAR documents (product information, assessment reports, public assessment reports, procedural steps, ...) are tracked as their own content-version manifest, keyed by `{product_number}:{doc_id}` (EMA's own stable numeric document id) with `parent_record_id` pointing back to the medicine. Documents are discovered from the bulk documents feed for every ADC-candidate medicine on every run, independent of which medicines `--limit`/`--since`/`--until`/`--resume` selected for materialization — a medicine outside this run's scope can still have a new or updated document discovered. Fetching itself is metadata-driven: a document is only re-downloaded when it's new, its last attempt failed, or the bulk feed's own `last_updated`/`url` changed since the last success — an unchanged, previously-successful document makes NO HTTP request at all this run.
 
 ## Raw bulk snapshots (see `ema_bulk.parquet`)
 
-The exact bytes of both bulk JSON feeds are preserved, content-versioned, every run — so a future EMA schema/data change never leaves us without the actual input that produced a given run's discovery decisions.
+The exact bytes of both bulk JSON feeds are persisted (hash-compare-then-version) IMMEDIATELY after each feed is fetched, before either is handed to a parser — so a parser crash from a future EMA schema/data change can never erase the exact input that caused it.
 
 ## Failed downloads
 

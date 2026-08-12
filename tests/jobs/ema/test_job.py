@@ -275,6 +275,92 @@ def test_bulk_snapshot_versions_only_when_content_changes(tmp_path, monkeypatch)
 
 
 @responses.activate
+def test_unchanged_document_metadata_skips_refetch_without_http_request(tmp_path, monkeypatch):
+    """Blocker fix: incremental document fetch must be feed-metadata-driven,
+    not hash-after-download — an unchanged, previously-successful document
+    must not trigger an HTTP request at all, while a previously-failed one
+    must still be retried even though its metadata also didn't change."""
+    _setup(tmp_path, monkeypatch)
+    ok_url = "https://www.ema.europa.eu/en/documents/product-information/1_en.pdf"
+    fail_url = "https://www.ema.europa.eu/en/documents/product-information/2_en.pdf"
+    doc_rows = [
+        _document_row("1", "EMEA/H/C/002455", "product-information", url=ok_url),
+        _document_row("2", "EMEA/H/C/002455", "product-information", url=fail_url),
+    ]
+    _register_ema(
+        [_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")],
+        document_rows=doc_rows,
+        documents={ok_url: b"%PDF ok"},  # fail_url has no registered content -> 404
+    )
+
+    EMAJob().run(_base_args(tmp_path))
+    doc_attempts = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_documents_attempts.parquet")
+    assert set(doc_attempts["status"]) == {"success", "failed"}
+
+    responses.calls.reset()
+    EMAJob().run(_base_args(tmp_path))  # identical bulk feed, identical metadata
+
+    doc_urls_hit = {c.request.url for c in responses.calls if c.request.url in (ok_url, fail_url)}
+    assert doc_urls_hit == {fail_url}  # only the unresolved failure is re-requested
+
+
+@responses.activate
+def test_document_last_updated_change_triggers_refetch_and_new_version(tmp_path, monkeypatch):
+    """Blocker fix: a change in the feed's own last_updated for a document
+    must still trigger a refetch even though the document was previously
+    successful, and a genuinely changed body must create a new version."""
+    _setup(tmp_path, monkeypatch)
+    doc_url = "https://www.ema.europa.eu/en/documents/product-information/1_en.pdf"
+    _register_ema(
+        [_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")],
+        document_rows=[_document_row("1", "EMEA/H/C/002455", "product-information", last_updated="2020-01-01T00:00:00Z", url=doc_url)],
+        documents={doc_url: b"%PDF v1"},
+    )
+    EMAJob().run(_base_args(tmp_path))
+
+    responses.reset()
+    _register_ema(
+        [_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")],
+        document_rows=[_document_row("1", "EMEA/H/C/002455", "product-information", last_updated="2021-06-01T00:00:00Z", url=doc_url)],
+        documents={doc_url: b"%PDF v2 changed"},
+    )
+    EMAJob().run(_base_args(tmp_path))
+
+    docs_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_documents.parquet")
+    versions = sorted(docs_df.loc[docs_df["source_record_id"] == "EMEA/H/C/002455:1", "version"])
+    assert versions == [1, 2]
+
+
+@responses.activate
+def test_bulk_snapshot_persisted_before_parser_runs(tmp_path, monkeypatch):
+    """Blocker fix: raw bulk bytes must be durable (raw file + ema_bulk.parquet)
+    BEFORE they're handed to a parser, so a parser crash (e.g. EMA changes a
+    feed's schema) never erases the evidence that caused the crash."""
+    _setup(tmp_path, monkeypatch)
+    _register_ema([_medicine_row("Adcetris", "EMEA/H/C/002455", "brentuximab vedotin")])
+
+    import jobs.ema.job as job_module
+
+    def _boom(_bytes):
+        raise RuntimeError("EMA changed the medicines feed schema")
+
+    monkeypatch.setattr(job_module, "parse_medicines_json", _boom)
+
+    try:
+        EMAJob().run(_base_args(tmp_path))
+        raised = False
+    except RuntimeError:
+        raised = True
+    assert raised
+
+    bulk_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "ema_bulk.parquet")
+    assert set(bulk_df["source_record_id"]) == {"medicines_bulk", "documents_bulk"}
+    raw_dir = tmp_path / "DATA" / "raw" / "ema" / "bulk"
+    assert (raw_dir / "medicines_bulk" / "v1.json").exists()
+    assert (raw_dir / "documents_bulk" / "v1.json").exists()
+
+
+@responses.activate
 def test_limit_caps_records_processed(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     _register_ema([
