@@ -1,0 +1,44 @@
+# Job 06 (FDA) discovery queries — Prompt.md section 14 explicitly warns:
+# "Do not rely on manually maintained ADC lists as the primary evidence
+# source." FDA's own structured pharmacologic-class tags
+# (openfda.pharm_class_epc/pharm_class_cs) turned out NOT to be reliably
+# populated for ADCs when checked live on 2026-08-11 (only Adcetris and
+# Besponsa carry "Immunoconjugates [CS]"; Enhertu, Padcev, Trodelvy,
+# Kadcyla, Polivy, Elahere, Tivdak, Zynlonta and others carry no
+# pharm_class tag at all in openFDA's cross-reference).
+#
+# What DOES work, verified live: full-text search of the openFDA
+# structured product LABEL's own "mechanism_of_action" and "description"
+# sections for the phrase "antibody-drug conjugate" (openFDA tokenizes the
+# hyphenated and unhyphenated forms identically, so one phrase covers
+# both). Together these two fields' full-text search caught all 15
+# major FDA-approved ADCs checked live (Adcetris, Mylotarg, Kadcyla,
+# Besponsa, Polivy, Padcev, Enhertu, Trodelvy, Blenrep, Zynlonta, Tivdak,
+# Elahere, Datroway, Emrelis, Decnupaz) — this is discovery via the
+# source's own official regulatory text, not a hand-typed drug-name list.
+#
+# This label-search result yields application_numbers, which
+# jobs/fda/job.py then reconciles against the authoritative
+# /drug/drugsfda.json endpoint (submissions + application_docs) for the
+# actual regulatory history and documents — same two-step
+# discover-then-reconcile shape as Crossref's DOI reconciliation.
+
+queries:
+  - query_id: FDA_LABEL_MOA_001
+    query_version: 1
+    query_text: 'mechanism_of_action:"antibody-drug conjugate"'
+    purpose: >
+      Full-text search of the FDA-approved label's Mechanism of Action
+      section for ADC products. Verified live on 2026-08-11: 15 unique
+      application_numbers.
+    active: true
+
+  - query_id: FDA_LABEL_DESC_001
+    query_version: 1
+    query_text: 'description:"antibody-drug conjugate"'
+    purpose: >
+      Full-text search of the FDA-approved label's Description section —
+      complementary to FDA_LABEL_MOA_001 (verified live: catches
+      enfortumab vedotin/Padcev, which the mechanism_of_action query
+      alone missed). Combined coverage: 16 unique application_numbers.
+    active: true

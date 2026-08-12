@@ -72,7 +72,8 @@ enough for GitHub regardless of how much evidence has been acquired.
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 cp .env.example .env   # fill in NCBI_API_KEY (optional), NCBI_CONTACT_EMAIL,
-                        # CROSSREF_CONTACT_EMAIL (optional), and SEC_CONTACT_EMAIL (required for the SEC job)
+                        # CROSSREF_CONTACT_EMAIL (optional), SEC_CONTACT_EMAIL
+                        # (required for the SEC job), and FDA_API_KEY (optional)
 ```
 
 ## Running the PubMed job (Job 01)
@@ -262,6 +263,78 @@ document succeeded, failed, or was unchanged. Some pre-2002 filings have
 missing/incorrect primary-document metadata on SEC's own side; that
 surfaces as an expected, logged failed attempt, not a crash.
 
+## Running the FDA job (Job 06)
+
+```bash
+python -m adc_acquisition fda --dry-run --limit 20
+python -m adc_acquisition fda --limit 20
+python -m adc_acquisition fda --since 2022-01-01 --until 2024-12-31
+```
+
+Discovery is **not** a manually maintained ADC drug-name list — Prompt.md
+section 14 explicitly prohibits that. Instead, `configs/fda_queries.yaml`
+defines full-text search queries against openFDA's own structured product
+label text (`GET /drug/label.json`, searching the `mechanism_of_action`
+and `description` sections for "antibody-drug conjugate"), verified live
+to catch all 15 major FDA-approved ADCs — FDA's own structured
+pharmacologic-class tags (`openfda.pharm_class_epc`/`pharm_class_cs`) are
+**not** reliably populated for ADCs (only 2 of 15 known ADCs carry one).
+Each discovered `application_number` is then reconciled against the
+authoritative `/drug/drugsfda.json` endpoint for its full submission
+history — same two-step discover-then-reconcile shape as Crossref's DOI
+reconciliation.
+
+Three independent levels, each with its own content-version manifest and
+checkpoint namespace, mirroring SEC EDGAR's company -> filing -> exhibit
+model one level deeper (Drugs@FDA's own data model genuinely has three
+parts — application identity, submissions, application_docs — not two):
+
+- `DATA/manifests/fda_applications{,_discovery,_attempts}.parquet` —
+  application/product identity, keyed by `application_number`. Content
+  is the **complete raw Drugs@FDA record** as returned (sponsor, every
+  product's brand name and active ingredients, the full submissions
+  list) — Prompt.md section 14's product-name/active-ingredient key
+  identifiers live here, not on the submission row. Unlike SEC's CIK,
+  `application_number` is itself a discovery outcome (from the label
+  search), not a manually curated identifier — so a label match that
+  fails to reconcile against Drugs@FDA still gets a durable
+  `fda_applications_discovery.parquet` row; the reconciliation outcome
+  (`success`/`not_found`/`failed`) is recorded separately in
+  `fda_applications_attempts.parquet` and never erases the discovery fact.
+- `DATA/manifests/fda_submissions{,_discovery,_attempts}.parquet` — one
+  regulatory milestone (e.g. `ORIG-1`, `SUPPL-81`) ~ a SEC filing, keyed
+  by `submission_key`, `parent_record_id` = `application_number`. A
+  submission's own row can never itself fail to materialize (its
+  "content" is metadata already in hand once the parent application's
+  Drugs@FDA record was fetched).
+- `DATA/manifests/fda_documents{,_attempts}.parquet` — the actual
+  downloadable documents (label, approval letter, review document,
+  medication guide, ...) ~ a SEC exhibit, as a separate, independently
+  versioned artifact keyed by `{submission_key}:{doc_id}`,
+  `parent_record_id` = `submission_key` — same pattern as SEC's exhibits
+  / Europe PMC's full text. Only document-level fetches (and
+  whole-application-record fetches, tracked separately above) can fail.
+
+`--since`/`--until` filter by each submission's own
+`submission_status_date`, applied client-side (openFDA's date-range
+search only determines whether an *application* matches at all, not
+which of its submissions to return — verified live). `--resume`'s
+failure-safe design (unconditionally-advancing cursor, unresolved
+documents unioned back into scope regardless of date, fresh/in-range
+submissions always prioritized over that backlog within a `--limit`
+budget) was built in from the start, applying the design SEC EDGAR's
+Job 05 needed 3 review rounds to arrive at, rather than waiting to be
+caught on it again.
+
+`FDA_API_KEY` is optional (unlike SEC's mandatory contact requirement) —
+raises the daily quota from 1,000 to 120,000 requests, never required to
+run. Some older `application_docs` URLs redirect to fda.gov's modern
+site and 404 there (real historical link rot, not a bug) — and fda.gov's
+web front end runs bot detection that silently blocks Python `requests`'
+default User-Agent (redirecting to an apology page instead of the real
+target), which is why `jobs/fda/client.py` sends a descriptive one on
+every request.
+
 ## Tests
 
 ```bash
@@ -274,7 +347,7 @@ or used by the normal test suite.
 ## Status
 
 See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
-(Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), and Job 05
-(SEC EDGAR) are implemented so far; every other source in `Prompt.md` is
-intentionally not started yet — sources are implemented and reviewed one at
-a time.
+(Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), Job 05
+(SEC EDGAR), and Job 06 (FDA) are implemented so far; every other source
+in `Prompt.md` is intentionally not started yet — sources are implemented
+and reviewed one at a time.

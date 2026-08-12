@@ -12,6 +12,7 @@ import sys
 from jobs.clinicaltrials.job import ClinicalTrialsJob
 from jobs.crossref.job import CrossrefJob
 from jobs.europe_pmc.job import EuropePMCJob
+from jobs.fda.job import FDAJob
 from jobs.pubmed.job import PubMedJob
 from jobs.sec.job import SECJob
 
@@ -21,6 +22,7 @@ JOBS = {
     "clinicaltrials": ClinicalTrialsJob,
     "crossref": CrossrefJob,
     "sec": SECJob,
+    "fda": FDAJob,
 }
 
 

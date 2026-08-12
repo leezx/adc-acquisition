@@ -115,13 +115,45 @@ fda:
   api_docs_url: https://open.fda.gov/apis/
   acquisition_method: api
   authentication_required: false
-  rate_limit: "openFDA: 240 req/min without key, 240 req/min with key (higher burst)"
+  rate_limit: "openFDA: 240 req/min either way; 1,000 req/day without a key, 120,000 req/day with one (FDA_API_KEY, optional)"
   license_or_access_note: Public regulatory documents.
   raw_formats: [json, pdf, html]
-  update_strategy: incremental_by_approval_date
-  implementation_status: not_started
-  enabled: false
-  notes: Job 10 in Prompt.md, promoted to #6 in recommended execution order.
+  update_strategy: incremental_by_submission_status_date
+  implementation_status: implemented
+  enabled: true
+  notes: >
+    Job 10 in Prompt.md, promoted to #6 in recommended execution order.
+    Covers currently FDA-*approved* ADC products via Drugs@FDA: product
+    identity (brand name, active ingredient, sponsor), full regulatory
+    submission history, and the actual documents (labels, approval
+    letters, review documents). Does NOT yet cover Drug Safety
+    Communications or products submitted/reviewed but never approved
+    (no structured label exists for those, so this discovery mechanism
+    can't find them) — Prompt.md's "reviewed"/"safety communications"
+    scope for non-approved products is a separate future extension, not
+    yet built. Discovery is NOT a manually maintained ADC drug list
+    (explicitly prohibited by Prompt.md section 14) — it's full-text
+    search over openFDA's own structured label text
+    (configs/fda_queries.yaml) for "antibody-drug conjugate", verified
+    live to catch all 15 major FDA-approved ADCs (FDA's structured
+    pharm_class tags are NOT reliably populated for ADCs). Each
+    discovered application_number is reconciled against
+    /drug/drugsfda.json; three independent levels each get their own
+    content-version manifest (fda_applications.parquet — the complete
+    raw record including product/sponsor identity;
+    fda_submissions.parquet; fda_documents.parquet), mirroring SEC's
+    company -> filing -> exhibit model one level deeper since
+    Drugs@FDA's data model genuinely has three parts. Unlike SEC's CIK,
+    application_number is itself a discovery outcome (from the label
+    search) rather than a curated identifier, so a label match that
+    fails to reconcile still leaves durable discovery provenance
+    (fda_applications_discovery.parquet) — the reconciliation outcome
+    (success/not_found/failed) is tracked separately and never erases
+    the discovery fact. --resume was built failure-safe from the start
+    (unconditionally-advancing cursor + unresolved-backlog union +
+    fresh-priority under --limit), applying the design Job 05 (SEC)
+    needed 3 review rounds to arrive at, proactively rather than waiting
+    to be caught on it again.
 
 ema:
   source_type: regulatory
