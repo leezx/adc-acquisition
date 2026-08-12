@@ -335,6 +335,35 @@ default User-Agent (redirecting to an apology page instead of the real
 target), which is why `jobs/fda/client.py` sends a descriptive one on
 every request.
 
+## Running the EMA job (Job 07)
+
+```bash
+python -m adc_acquisition ema --dry-run --limit 20
+python -m adc_acquisition ema --limit 20
+```
+
+EMA has no public REST API for this — discovery works from a single bulk
+XLSX export ("Download medicine data") covering every EMA-authorised
+medicine, filtered by systematic INN-suffix matching
+(`configs/ema_adc_substance_patterns.yaml`: vedotin, emtansine,
+deruxtecan, ozogamicin, govitecan, soravtansine, mafodotin, tesirine —
+standardized WHO stems for ADC linker/payload chemistry, not a manual
+drug list, same spirit as Job 06's label search). Two levels: `ema.parquet`
+(medicine identity, keyed by EMA product number, storing the medicine's
+complete raw XLSX row) and `ema_documents.parquet` (EPAR documents —
+product information, assessment reports, safety updates — as an
+independent artifact, `parent_record_id` back to the medicine, same
+pattern as SEC's exhibits/FDA's documents). `--since`/`--until` filter by
+each medicine's own `last_updated_date`; `--resume` uses the same
+failure-safe design established by Jobs 05/06 (unconditionally-advancing
+cursor, unresolved backlog unioned back regardless of date, fresh/in-range
+medicines always prioritized within a `--limit` budget), built in from
+the start. ema.europa.eu has no documented rate limit but enforces some
+kind of cumulative session throttle (verified live: even 0.5 req/s
+eventually triggers HTTP 429s on a run of a few hundred document
+fetches) — these are genuinely retryable and self-heal on the next
+`--resume` run via the same failure-safe design.
+
 ## Tests
 
 ```bash
@@ -348,6 +377,6 @@ or used by the normal test suite.
 
 See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
 (Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), Job 05
-(SEC EDGAR), and Job 06 (FDA) are implemented so far; every other source
-in `Prompt.md` is intentionally not started yet — sources are implemented
+(SEC EDGAR), Job 06 (FDA), and Job 07 (EMA) are implemented so far; every
+other source in `Prompt.md` is intentionally not started yet — sources are implemented
 and reviewed one at a time.

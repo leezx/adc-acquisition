@@ -11,7 +11,7 @@ Update this table whenever a source's `implementation_status` changes in `config
 | Crossref | Literature | Yes | Yes (`/works/{doi}`) | Yes (per-DOI JSON) | N/A — DOI-centric reconciliation, not date range | 24 (test run) | Implemented, phase-4 |
 | SEC | Regulatory | Yes | Yes (submissions API) | Yes (per-filing + exhibits) | Yes (`--resume` + `filing_date` range, client-side) | 12 (test run) | Implemented, phase-5 |
 | FDA | Regulatory | Yes | Yes (label full-text search + drugsfda API) | Yes (per-application raw record + per-submission JSON + documents) | Yes (`--resume` + `submission_status_date` range, client-side) | 20 (test run) | Implemented (approved products only), phase-6 |
-| EMA | Regulatory | No | — | — | — | 0 | Not started |
+| EMA | Regulatory | Yes | Yes (bulk XLSX + EPAR HTML pages) | Yes (per-medicine raw row + documents) | Yes (`--resume` + `last_updated_date` range, client-side) | 16 (test run) | Implemented, phase-7 |
 | WIPO | Patent | No | Unknown | — | — | 0 | Not started — access mechanism not yet investigated |
 | USPTO | Patent | No | Unknown | — | — | 0 | Not started — access mechanism not yet investigated |
 | EPO | Patent | No | Unknown | — | — | 0 | Not started — access mechanism not yet investigated |

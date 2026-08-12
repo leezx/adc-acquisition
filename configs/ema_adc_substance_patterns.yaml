@@ -1,0 +1,26 @@
+# Job 07 (EMA) discovery — Prompt.md places no explicit prohibition on a
+# manual list for EMA (unlike section 14's explicit rule for FDA), but the
+# same discipline applies for the same reason: these are standardized WHO
+# INN stems for ADC linker/payload chemistry (e.g. every "-vedotin" drug
+# is an MMAE-conjugated ADC by construction), not a hand-picked list of
+# specific approved brand names — a future ADC using one of these stems
+# is caught automatically without updating this file, the same way
+# Job 06 (FDA)'s full-text "antibody-drug conjugate" label search doesn't
+# need per-drug maintenance.
+#
+# Verified live on 2026-08-12 against EMA's bulk medicines export
+# (https://www.ema.europa.eu/en/medicines/download-medicine-data):
+# matching these 8 stems against the "Name of medicine"/"Active
+# substance" columns found all 14 known EMA-authorised ADCs (16 rows,
+# since Blenrep and Mylotarg each have 2 EMA product numbers from
+# separate application histories).
+
+substance_patterns:
+  - vedotin
+  - emtansine
+  - deruxtecan
+  - ozogamicin
+  - govitecan
+  - soravtansine
+  - mafodotin
+  - tesirine
