@@ -9,21 +9,35 @@ import pandas as pd
 
 def build_report(
     result,
-    manifest_df: pd.DataFrame,
+    applications_manifest_df: pd.DataFrame,
+    submissions_manifest_df: pd.DataFrame,
     query_id_counts: Counter,
     unique_ids: set[str],
     duplicate_ids: set[str],
+    application_attempted: int,
+    application_success: int,
+    application_not_found: int,
+    application_failed: int,
     document_attempted: int,
     document_new_or_changed: int,
     document_unchanged: int,
     document_failed: int,
 ) -> str:
-    run_df = manifest_df[manifest_df["source_record_id"].isin(unique_ids)] if not manifest_df.empty else manifest_df
+    run_df = submissions_manifest_df[submissions_manifest_df["source_record_id"].isin(unique_ids)] if not submissions_manifest_df.empty else submissions_manifest_df
 
     app_counts = run_df["application_number"].value_counts().to_dict() if not run_df.empty else {}
     app_summary = ", ".join(f"{app}: {count}" for app, count in sorted(app_counts.items())) or "n/a"
     class_counts = run_df["submission_class_code_description"].value_counts().to_dict() if not run_df.empty else {}
     class_summary = ", ".join(f"{cls}: {count}" for cls, count in sorted(class_counts.items()) if cls) or "n/a"
+
+    products_summary = "n/a"
+    if not applications_manifest_df.empty:
+        rows = []
+        for _, row in applications_manifest_df.iterrows():
+            brands = ", ".join(row.get("brand_names") or []) or "n/a"
+            ingredients = ", ".join(row.get("active_ingredients") or []) or "n/a"
+            rows.append(f"- {row['source_record_id']}: {brands} ({ingredients}), sponsor: {row.get('sponsor_name') or 'n/a'}")
+        products_summary = "\n".join(rows)
 
     missing_fields = []
     for col in ["submission_status_date", "submission_type"]:
@@ -48,11 +62,17 @@ https://api.fda.gov/drug/label.json — https://api.fda.gov/drug/drugsfda.json �
 
 Prompt.md section 14 explicitly prohibits relying on a manually maintained ADC drug list as the primary evidence source. FDA's own structured pharmacologic-class tags (`openfda.pharm_class_epc`/`pharm_class_cs`) turned out NOT to be reliably populated for ADCs when checked live (only 2 of 15 known ADCs carry a class tag at all). Instead, discovery is full-text search of the FDA-approved label's own `mechanism_of_action` and `description` sections for "antibody-drug conjugate" (configs/fda_queries.yaml) — verified live to catch all 15 major approved ADCs. See configs/fda_queries.yaml for the full verification notes.
 
-## Records discovered
+## Applications (product/sponsor identity, see `fda_applications.parquet`)
+
+{application_attempted} application(s) reconciled this run: {application_success} succeeded (or unchanged), {application_not_found} not found in Drugs@FDA despite a label match, {application_failed} failed on a network error. A label match that fails to reconcile still leaves a durable discovery-ledger row (`fda_applications_discovery.parquet`) — the identifier is never lost, only its content-materialization outcome is recorded separately (`fda_applications_attempts.parquet`).
+
+{products_summary}
+
+## Submissions discovered
 
 {sum(query_id_counts.values())} label-search hits across {len(query_id_counts)} discovery queries; {len(unique_ids)} unique submissions after reconciling each discovered application_number's full Drugs@FDA submission history.
 
-## Records downloaded
+## Submissions downloaded
 
 {result.records_downloaded} new/changed submission snapshots, {result.records_skipped_unchanged} skipped as unchanged (matched checkpoint content hash).
 
@@ -77,11 +97,11 @@ Prompt.md section 14 explicitly prohibits relying on a manually maintained ADC d
 
 ## Failed downloads
 
-{result.records_failed} (see DATA/logs/fda_failures.log and fda_attempts.parquet (status=failed)). Failed attempts never occupy a content-manifest version slot. Note: a submission's own row can never itself fail to materialize (its "content" is metadata already in hand once the parent application's Drugs@FDA record was fetched) — only document-level fetches (and whole-application-record fetches, which drop that application's submissions from this run entirely rather than partially materializing) can fail.
+{result.records_failed} (see DATA/logs/fda_failures.log and fda_submissions_attempts.parquet (status=failed)). Failed attempts never occupy a content-manifest version slot. Note: a submission's own row can never itself fail to materialize (its "content" is metadata already in hand once the parent application's Drugs@FDA record was fetched) — only document-level fetches, and whole-application-record fetches (tracked separately above), can fail.
 
 ## Rate/access limitations
 
-openFDA: 240 requests/min either way; 1,000 requests/day without an API key, 120,000/day with one (verified live). `FDA_API_KEY` is optional, read from the environment if present.
+openFDA: 240 requests/min either way; 1,000 requests/day without an API key, 120,000/day with one (verified live). `FDA_API_KEY` is optional, read from the environment if present. fda.gov's web front end (not api.fda.gov) runs bot detection that blocks the default `requests` User-Agent — `jobs/fda/client.py` sends a descriptive one on every request.
 
 ## Data quality observations
 
@@ -91,7 +111,7 @@ openFDA: 240 requests/min either way; 1,000 requests/day without an API key, 120
 
 ## Known coverage gaps
 
-- Discovery only covers currently FDA-*approved* products with a structured product label — an ADC that was submitted/reviewed but never approved (no label exists) would not be discovered this way; Prompt.md's "review documents" for non-approved products would need a different discovery path if that scope is ever needed.
+- Discovery only covers currently FDA-*approved* products with a structured product label — an ADC that was submitted/reviewed but never approved (no label exists) would not be discovered this way. FDA Drug Safety Communications and Complete Response Letters (openFDA's separate CRL dataset) are not yet acquired here; Prompt.md's "reviewed" and "safety communications" scope would need a separate discovery path for non-approved products.
 - No terminal-failure category is classified yet for FDA (unlike SEC's confirmed-permanent `no_primary_document`) — none has been observed live; the --resume backlog protections (fresh-priority ordering) still prevent starvation even without one.
 
 ## Reproduction command

@@ -1,12 +1,16 @@
 """Normalize openFDA /drug/drugsfda.json records.
 
-One Drugs@FDA record (keyed by application_number) has a `submissions`
-array — each entry is a distinct regulatory milestone (original approval,
-a labeling supplement, an efficacy supplement, ...) identified by
-(submission_type, submission_number), with its own status/date and,
-optionally, an `application_docs` array of actual downloadable documents
-(labels, approval letters, review documents, ...). Defensive throughout:
-a submission or doc missing an optional field must never crash the batch.
+One Drugs@FDA record (keyed by application_number) has three parts
+(https://open.fda.gov/apis/drug/drugsfda/understanding-the-api-results/):
+application-level identity (sponsor), a `products` array (brand name,
+active ingredients, dosage form per marketed product number), and a
+`submissions` array — each entry a distinct regulatory milestone
+(original approval, a labeling supplement, an efficacy supplement, ...)
+identified by (submission_type, submission_number), with its own
+status/date and, optionally, an `application_docs` array of actual
+downloadable documents (labels, approval letters, review documents, ...).
+Defensive throughout: a submission, product, or doc missing an optional
+field must never crash the batch.
 """
 
 from __future__ import annotations
@@ -43,6 +47,22 @@ class ParsedSubmission:
         return f"{self.application_number}_{self.submission_type or 'UNKNOWN'}{self.submission_number or ''}"
 
 
+@dataclass
+class ParsedApplication:
+    """The application/product-level identity Prompt.md section 14
+    explicitly lists as key identifiers (product name, active
+    ingredient) — separate from any one submission, since these describe
+    the marketed product(s) under this application as a whole, not a
+    single regulatory milestone."""
+
+    application_number: str
+    sponsor_name: str | None
+    brand_names: list[str]
+    active_ingredients: list[str]
+    product_numbers: list[str]
+    earliest_submission_date: str | None  # normalized YYYY-MM-DD, min across all submissions
+
+
 _DATE_RE = re.compile(r"^(\d{4})(\d{2})(\d{2})$")
 
 
@@ -57,10 +77,47 @@ def normalize_fda_date(raw: str | None) -> str | None:
     return f"{m.group(1)}-{m.group(2)}-{m.group(3)}"
 
 
-def parse_drugsfda_record(record: dict[str, Any]) -> list[ParsedSubmission]:
+def parse_application(record: dict[str, Any]) -> ParsedApplication | None:
+    """The application/product-level view of one drugsfda `results[]`
+    entry — deduplicated brand names / active ingredients across every
+    product_number under this application, since Prompt.md's key
+    identifiers are about the product(s), not a specific submission."""
+    application_number = record.get("application_number")
+    if not application_number:
+        return None
+    brand_names: list[str] = []
+    active_ingredients: list[str] = []
+    product_numbers: list[str] = []
+    for product in record.get("products") or []:
+        product_number = product.get("product_number")
+        if product_number and product_number not in product_numbers:
+            product_numbers.append(product_number)
+        brand_name = product.get("brand_name")
+        if brand_name and brand_name not in brand_names:
+            brand_names.append(brand_name)
+        for ingredient in product.get("active_ingredients") or []:
+            name = ingredient.get("name")
+            if name and name not in active_ingredients:
+                active_ingredients.append(name)
+
+    submission_dates = [
+        normalize_fda_date(sub.get("submission_status_date")) for sub in record.get("submissions") or []
+    ]
+    submission_dates = [d for d in submission_dates if d]
+
+    return ParsedApplication(
+        application_number=application_number,
+        sponsor_name=record.get("sponsor_name"),
+        brand_names=brand_names,
+        active_ingredients=active_ingredients,
+        product_numbers=product_numbers,
+        earliest_submission_date=min(submission_dates) if submission_dates else None,
+    )
+
+
+def parse_submissions(record: dict[str, Any]) -> list[ParsedSubmission]:
     """One drugsfda `results[]` entry -> one ParsedSubmission per
-    submissions[] entry (application-level fields like sponsor_name are
-    not currently modeled per-submission; add if a future job needs them)."""
+    submissions[] entry."""
     application_number = record.get("application_number")
     if not application_number:
         return []

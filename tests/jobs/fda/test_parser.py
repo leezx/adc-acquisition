@@ -1,10 +1,18 @@
-from jobs.fda.parser import normalize_fda_date, parse_drugsfda_record, within_date_range
+from jobs.fda.parser import normalize_fda_date, parse_application, parse_submissions, within_date_range
 
 # Trimmed from a real drugsfda.json record (BLA125388 / Adcetris),
 # fetched live on 2026-08-11.
 DRUGSFDA_RECORD = {
     "application_number": "BLA125388",
     "sponsor_name": "SEATTLE GENETICS",
+    "products": [
+        {
+            "product_number": "001",
+            "brand_name": "ADCETRIS",
+            "active_ingredients": [{"name": "BRENTUXIMAB VEDOTIN", "strength": "50MG/VIAL"}],
+            "dosage_form": "INJECTABLE",
+        }
+    ],
     "submissions": [
         {
             "submission_type": "ORIG",
@@ -30,8 +38,8 @@ DRUGSFDA_RECORD = {
 }
 
 
-def test_parse_drugsfda_record_extracts_all_submissions():
-    submissions = parse_drugsfda_record(DRUGSFDA_RECORD)
+def test_parse_submissions_extracts_all_submissions():
+    submissions = parse_submissions(DRUGSFDA_RECORD)
     assert len(submissions) == 2
     s0 = submissions[0]
     assert s0.application_number == "BLA125388"
@@ -45,7 +53,7 @@ def test_parse_drugsfda_record_extracts_all_submissions():
 
 
 def test_submission_key_distinguishes_orig_from_suppl_with_same_number():
-    submissions = parse_drugsfda_record(
+    submissions = parse_submissions(
         {
             "application_number": "BLA1",
             "submissions": [
@@ -59,16 +67,16 @@ def test_submission_key_distinguishes_orig_from_suppl_with_same_number():
 
 
 def test_submission_with_no_application_docs_has_empty_docs_list():
-    submissions = parse_drugsfda_record(DRUGSFDA_RECORD)
+    submissions = parse_submissions(DRUGSFDA_RECORD)
     assert submissions[1].docs == []
 
 
 def test_missing_application_number_returns_empty_list():
-    assert parse_drugsfda_record({"submissions": [{"submission_type": "ORIG"}]}) == []
+    assert parse_submissions({"submissions": [{"submission_type": "ORIG"}]}) == []
 
 
 def test_doc_missing_id_or_url_is_skipped():
-    submissions = parse_drugsfda_record(
+    submissions = parse_submissions(
         {
             "application_number": "BLA1",
             "submissions": [
@@ -107,3 +115,40 @@ def test_within_date_range_since_and_until():
 
 def test_within_date_range_missing_date_excluded_once_a_range_is_requested():
     assert within_date_range(None, "2022-01-01", None) is False
+
+
+def test_parse_application_extracts_product_identity():
+    app = parse_application(DRUGSFDA_RECORD)
+    assert app.application_number == "BLA125388"
+    assert app.sponsor_name == "SEATTLE GENETICS"
+    assert app.brand_names == ["ADCETRIS"]
+    assert app.active_ingredients == ["BRENTUXIMAB VEDOTIN"]
+    assert app.product_numbers == ["001"]
+    assert app.earliest_submission_date == "2011-08-19"
+
+
+def test_parse_application_dedupes_across_multiple_products():
+    record = {
+        "application_number": "BLA1",
+        "sponsor_name": "X",
+        "products": [
+            {"product_number": "001", "brand_name": "DRUG-A", "active_ingredients": [{"name": "INGR-1"}]},
+            {"product_number": "002", "brand_name": "DRUG-A", "active_ingredients": [{"name": "INGR-1"}]},
+        ],
+        "submissions": [],
+    }
+    app = parse_application(record)
+    assert app.brand_names == ["DRUG-A"]
+    assert app.active_ingredients == ["INGR-1"]
+    assert app.product_numbers == ["001", "002"]
+
+
+def test_parse_application_missing_application_number_returns_none():
+    assert parse_application({"submissions": []}) is None
+
+
+def test_parse_application_handles_no_products_or_submissions():
+    app = parse_application({"application_number": "BLA1"})
+    assert app.brand_names == []
+    assert app.active_ingredients == []
+    assert app.earliest_submission_date is None

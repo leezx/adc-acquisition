@@ -123,20 +123,37 @@ fda:
   enabled: true
   notes: >
     Job 10 in Prompt.md, promoted to #6 in recommended execution order.
-    Discovery is NOT a manually maintained ADC drug list (explicitly
-    prohibited by Prompt.md section 14) — it's full-text search over
-    openFDA's own structured label text (configs/fda_queries.yaml) for
-    "antibody-drug conjugate", verified live to catch all 15 major
-    FDA-approved ADCs (FDA's structured pharm_class tags are NOT reliably
-    populated for ADCs). Each discovered application_number is then
-    reconciled against /drug/drugsfda.json for its full submission
-    history. application_number ~ SEC's CIK, submission ~ SEC's filing,
-    application_doc ~ SEC's exhibit — same three-table + independent
-    secondary-artifact model (fda_documents.parquet). --resume was built
-    failure-safe from the start (unconditionally-advancing cursor +
-    unresolved-backlog union + fresh-priority under --limit), applying
-    the design Job 05 (SEC) needed 3 review rounds to arrive at,
-    proactively rather than waiting to be caught on it again.
+    Covers currently FDA-*approved* ADC products via Drugs@FDA: product
+    identity (brand name, active ingredient, sponsor), full regulatory
+    submission history, and the actual documents (labels, approval
+    letters, review documents). Does NOT yet cover Drug Safety
+    Communications or products submitted/reviewed but never approved
+    (no structured label exists for those, so this discovery mechanism
+    can't find them) — Prompt.md's "reviewed"/"safety communications"
+    scope for non-approved products is a separate future extension, not
+    yet built. Discovery is NOT a manually maintained ADC drug list
+    (explicitly prohibited by Prompt.md section 14) — it's full-text
+    search over openFDA's own structured label text
+    (configs/fda_queries.yaml) for "antibody-drug conjugate", verified
+    live to catch all 15 major FDA-approved ADCs (FDA's structured
+    pharm_class tags are NOT reliably populated for ADCs). Each
+    discovered application_number is reconciled against
+    /drug/drugsfda.json; three independent levels each get their own
+    content-version manifest (fda_applications.parquet — the complete
+    raw record including product/sponsor identity;
+    fda_submissions.parquet; fda_documents.parquet), mirroring SEC's
+    company -> filing -> exhibit model one level deeper since
+    Drugs@FDA's data model genuinely has three parts. Unlike SEC's CIK,
+    application_number is itself a discovery outcome (from the label
+    search) rather than a curated identifier, so a label match that
+    fails to reconcile still leaves durable discovery provenance
+    (fda_applications_discovery.parquet) — the reconciliation outcome
+    (success/not_found/failed) is tracked separately and never erases
+    the discovery fact. --resume was built failure-safe from the start
+    (unconditionally-advancing cursor + unresolved-backlog union +
+    fresh-priority under --limit), applying the design Job 05 (SEC)
+    needed 3 review rounds to arrive at, proactively rather than waiting
+    to be caught on it again.
 
 ema:
   source_type: regulatory

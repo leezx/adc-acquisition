@@ -284,18 +284,36 @@ authoritative `/drug/drugsfda.json` endpoint for its full submission
 history — same two-step discover-then-reconcile shape as Crossref's DOI
 reconciliation.
 
-Structurally identical to SEC EDGAR's model: `application_number` ~ a
-CIK, a `submission` (one regulatory milestone, e.g. `ORIG-1` or
-`SUPPL-81`) ~ a filing, and an `application_doc` (label, approval letter,
-review document, medication guide, ...) ~ an exhibit. Documents are a
-separate, independently versioned artifact
-(`DATA/manifests/fda_documents{,_attempts}.parquet`, keyed by
-`{submission_key}:{doc_id}` with `parent_record_id` pointing back to the
-submission) — same pattern as SEC's exhibits / Europe PMC's full text.
-Unlike a SEC filing, a submission's own row can never itself fail to
-materialize (its "content" is metadata already in hand once the parent
-application's Drugs@FDA record was fetched); only document-level fetches
-can fail.
+Three independent levels, each with its own content-version manifest and
+checkpoint namespace, mirroring SEC EDGAR's company -> filing -> exhibit
+model one level deeper (Drugs@FDA's own data model genuinely has three
+parts — application identity, submissions, application_docs — not two):
+
+- `DATA/manifests/fda_applications{,_discovery,_attempts}.parquet` —
+  application/product identity, keyed by `application_number`. Content
+  is the **complete raw Drugs@FDA record** as returned (sponsor, every
+  product's brand name and active ingredients, the full submissions
+  list) — Prompt.md section 14's product-name/active-ingredient key
+  identifiers live here, not on the submission row. Unlike SEC's CIK,
+  `application_number` is itself a discovery outcome (from the label
+  search), not a manually curated identifier — so a label match that
+  fails to reconcile against Drugs@FDA still gets a durable
+  `fda_applications_discovery.parquet` row; the reconciliation outcome
+  (`success`/`not_found`/`failed`) is recorded separately in
+  `fda_applications_attempts.parquet` and never erases the discovery fact.
+- `DATA/manifests/fda_submissions{,_discovery,_attempts}.parquet` — one
+  regulatory milestone (e.g. `ORIG-1`, `SUPPL-81`) ~ a SEC filing, keyed
+  by `submission_key`, `parent_record_id` = `application_number`. A
+  submission's own row can never itself fail to materialize (its
+  "content" is metadata already in hand once the parent application's
+  Drugs@FDA record was fetched).
+- `DATA/manifests/fda_documents{,_attempts}.parquet` — the actual
+  downloadable documents (label, approval letter, review document,
+  medication guide, ...) ~ a SEC exhibit, as a separate, independently
+  versioned artifact keyed by `{submission_key}:{doc_id}`,
+  `parent_record_id` = `submission_key` — same pattern as SEC's exhibits
+  / Europe PMC's full text. Only document-level fetches (and
+  whole-application-record fetches, tracked separately above) can fail.
 
 `--since`/`--until` filter by each submission's own
 `submission_status_date`, applied client-side (openFDA's date-range

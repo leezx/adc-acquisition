@@ -1,9 +1,11 @@
 import argparse
 import json as json_module
 import re
+from pathlib import Path
 from urllib.parse import parse_qsl, urlparse
 
 import pandas as pd
+import requests
 import responses
 
 from jobs.fda.client import DRUG_LABEL_URL, DRUGSFDA_URL
@@ -48,14 +50,19 @@ def _submission(sub_type, number, status_date, docs=None):
     return entry
 
 
-def _drugsfda_record(application_number, submissions):
-    return {"application_number": application_number, "sponsor_name": "TEST SPONSOR", "submissions": submissions}
+def _drugsfda_record(application_number, submissions, products=None, sponsor_name="TEST SPONSOR"):
+    record = {"application_number": application_number, "sponsor_name": sponsor_name, "submissions": submissions}
+    record["products"] = products if products is not None else [
+        {"product_number": "001", "brand_name": "TESTDRUG", "active_ingredients": [{"name": "TEST INGREDIENT"}]}
+    ]
+    return record
 
 
-def _register_fda(label_results=None, drugsfda_records=None, documents=None):
+def _register_fda(label_results=None, drugsfda_records=None, documents=None, drugsfda_failures=None):
     label_results = label_results if label_results is not None else {}
     drugsfda_records = drugsfda_records if drugsfda_records is not None else {}
     documents = documents if documents is not None else {}
+    drugsfda_failures = drugsfda_failures or set()
 
     def _label_callback(request):
         params = dict(parse_qsl(urlparse(request.url).query))
@@ -68,6 +75,8 @@ def _register_fda(label_results=None, drugsfda_records=None, documents=None):
         params = dict(parse_qsl(urlparse(request.url).query))
         m = re.search(r'application_number:"([^"]+)"', params.get("search", ""))
         app = m.group(1) if m else None
+        if app in drugsfda_failures:
+            raise requests.ConnectionError("connection reset")
         record = drugsfda_records.get(app)
         if record is None:
             return (404, {}, json_module.dumps({"error": {"code": "NOT_FOUND"}}))
@@ -102,7 +111,11 @@ def _setup(tmp_path, monkeypatch):
 
 
 def _metadata_df(tmp_path):
-    return pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda.parquet")
+    return pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_submissions.parquet")
+
+
+def _applications_df(tmp_path):
+    return pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_applications.parquet")
 
 
 @responses.activate
@@ -121,7 +134,7 @@ def test_dry_run_discovers_but_does_not_download(tmp_path, monkeypatch):
     assert result.dry_run is True
     assert result.records_discovered == 2
     assert result.records_downloaded == 0
-    assert not (tmp_path / "DATA" / "manifests" / "fda.parquet").exists()
+    assert not (tmp_path / "DATA" / "manifests" / "fda_submissions.parquet").exists()
 
 
 @responses.activate
@@ -191,15 +204,82 @@ def test_document_404_is_a_failed_attempt_not_a_crash(tmp_path, monkeypatch):
 
 
 @responses.activate
-def test_application_discovered_but_drugsfda_lookup_404_is_not_a_crash(tmp_path, monkeypatch):
+def test_application_discovered_but_drugsfda_lookup_404_still_leaves_discovery_provenance(tmp_path, monkeypatch):
+    """Blocker fix: a label match that fails to reconcile against
+    Drugs@FDA must NOT make the identifier disappear from the system --
+    the application discovery ledger must still record it, and its
+    reconciliation outcome (not_found) must be recorded separately."""
     _setup(tmp_path, monkeypatch)
     _register_fda(label_results={MOA_QUERY: [_label_hit("BLA-GHOST")], DESC_QUERY: []}, drugsfda_records={})
 
     result = FDAJob().run(_base_args(tmp_path))
 
-    assert result.records_discovered == 0
+    assert result.records_discovered == 0  # no submissions -- correctly empty
     assert result.records_downloaded == 0
     assert len(_metadata_df(tmp_path)) == 0
+
+    app_discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_applications_discovery.parquet")
+    assert "BLA-GHOST" in set(app_discovery_df["source_record_id"])  # discovery fact preserved
+
+    app_attempts_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_applications_attempts.parquet")
+    ghost_row = app_attempts_df[app_attempts_df["source_record_id"] == "BLA-GHOST"].iloc[0]
+    assert ghost_row["status"] == "not_found"
+
+    assert len(_applications_df(tmp_path)) == 0  # nothing to materialize -- correctly empty
+
+
+@responses.activate
+def test_application_reconciliation_network_failure_is_a_failed_attempt(tmp_path, monkeypatch):
+    _setup(tmp_path, monkeypatch)
+    # A raised RequestException goes through RetryingClient's real
+    # exponential backoff (up to 5 attempts) before finally propagating.
+    from adc_acquisition import http_utils
+    monkeypatch.setattr(http_utils.time, "sleep", lambda seconds: None)
+    _register_fda(
+        label_results={MOA_QUERY: [_label_hit("BLA1")], DESC_QUERY: []},
+        drugsfda_records={},
+        drugsfda_failures={"BLA1"},
+    )
+
+    FDAJob().run(_base_args(tmp_path))
+
+    app_discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_applications_discovery.parquet")
+    assert "BLA1" in set(app_discovery_df["source_record_id"])
+    app_attempts_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_applications_attempts.parquet")
+    assert app_attempts_df[app_attempts_df["source_record_id"] == "BLA1"].iloc[0]["status"] == "failed"
+
+
+@responses.activate
+def test_application_manifest_preserves_raw_record_and_product_identity(tmp_path, monkeypatch):
+    """Blocker fix: the application/product layer (brand name, active
+    ingredient, sponsor) must not be dropped -- and the raw stored
+    snapshot must be the complete Drugs@FDA record, not a
+    submission-only reconstruction."""
+    _setup(tmp_path, monkeypatch)
+    products = [
+        {"product_number": "001", "brand_name": "ADCETRIS", "active_ingredients": [{"name": "BRENTUXIMAB VEDOTIN"}]}
+    ]
+    _register_fda(
+        label_results={MOA_QUERY: [_label_hit("BLA1")], DESC_QUERY: []},
+        drugsfda_records={"BLA1": _drugsfda_record("BLA1", [_submission("ORIG", "1", "20110819")], products=products, sponsor_name="SEATTLE GENETICS")},
+    )
+
+    FDAJob().run(_base_args(tmp_path))
+
+    apps_df = _applications_df(tmp_path)
+    assert len(apps_df) == 1
+    row = apps_df.iloc[0]
+    assert row["source_record_id"] == "BLA1"
+    assert row["sponsor_name"] == "SEATTLE GENETICS"
+    assert list(row["brand_names"]) == ["ADCETRIS"]
+    assert list(row["active_ingredients"]) == ["BRENTUXIMAB VEDOTIN"]
+    assert row["publication_or_release_date"] == "2011-08-19"  # earliest submission date
+
+    raw_path = Path(row["raw_file_path"])
+    raw_record = json_module.loads(raw_path.read_text())
+    assert raw_record["application_number"] == "BLA1"
+    assert raw_record["products"][0]["brand_name"] == "ADCETRIS"
+    assert len(raw_record["submissions"]) == 1  # the complete record, not a reconstructed subset
 
 
 @responses.activate
@@ -212,10 +292,50 @@ def test_discovery_ledger_records_query_provenance(tmp_path, monkeypatch):
 
     result = FDAJob().run(_base_args(tmp_path))
 
-    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_discovery.parquet")
+    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_submissions_discovery.parquet")
     assert set(discovery_df["query_id"]) == {"FDA_LABEL_MOA_001", "FDA_LABEL_DESC_001"}
     assert len(discovery_df) == 2  # one submission, discovered by both queries
     assert result.notes and "matched more than one discovery query" in result.notes[-1]
+
+    app_discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_applications_discovery.parquet")
+    assert set(app_discovery_df["query_id"]) == {"FDA_LABEL_MOA_001", "FDA_LABEL_DESC_001"}
+
+
+@responses.activate
+def test_query_version_from_registry_propagates_not_hardcoded(tmp_path, monkeypatch):
+    """Blocker fix: discovery ledgers must carry each query's REAL
+    query_version from the registry, not a hardcoded 1."""
+    (tmp_path / "queries.yaml").write_text(
+        """
+queries:
+  - query_id: FDA_LABEL_MOA_001
+    query_version: 7
+    query_text: 'mechanism_of_action:"antibody-drug conjugate"'
+    purpose: test
+    active: true
+  - query_id: FDA_LABEL_DESC_001
+    query_version: 3
+    query_text: 'description:"antibody-drug conjugate"'
+    purpose: test
+    active: true
+"""
+    )
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("FDA_API_KEY", raising=False)
+    import jobs.fda.job as job_module
+    monkeypatch.setattr(job_module, "RATE_LIMIT", 1000)
+    _register_fda(
+        label_results={MOA_QUERY: [_label_hit("BLA1")], DESC_QUERY: []},
+        drugsfda_records={"BLA1": _drugsfda_record("BLA1", [_submission("ORIG", "1", "20200101")])},
+    )
+
+    FDAJob().run(_base_args(tmp_path))
+
+    app_discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_applications_discovery.parquet")
+    assert app_discovery_df[app_discovery_df["query_id"] == "FDA_LABEL_MOA_001"].iloc[0]["query_version"] == 7
+
+    sub_discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "fda_submissions_discovery.parquet")
+    assert sub_discovery_df[sub_discovery_df["query_id"] == "FDA_LABEL_MOA_001"].iloc[0]["query_version"] == 7
 
 
 @responses.activate
@@ -307,7 +427,7 @@ def test_document_content_change_creates_v2_without_touching_v1(tmp_path, monkey
         documents={DOC_URL_A1: b"original label"},
     )
     FDAJob().run(_base_args(tmp_path))
-    v1_path = next((tmp_path / "DATA" / "raw" / "fda" / "BLA1_ORIG1" / "documents").glob("v1_*"))
+    v1_path = next((tmp_path / "DATA" / "raw" / "fda" / "BLA1" / "submissions" / "BLA1_ORIG1" / "documents").glob("v1_*"))
     assert v1_path.read_bytes() == b"original label"
 
     responses.reset()
@@ -319,7 +439,7 @@ def test_document_content_change_creates_v2_without_touching_v1(tmp_path, monkey
     FDAJob().run(_base_args(tmp_path))
 
     assert v1_path.read_bytes() == b"original label"
-    v2_path = next((tmp_path / "DATA" / "raw" / "fda" / "BLA1_ORIG1" / "documents").glob("v2_*"))
+    v2_path = next((tmp_path / "DATA" / "raw" / "fda" / "BLA1" / "submissions" / "BLA1_ORIG1" / "documents").glob("v2_*"))
     assert v2_path.read_bytes() == b"revised label"
 
 

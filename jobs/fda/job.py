@@ -8,57 +8,107 @@ structured pharmacologic-class tags are not reliably populated for ADCs
 (see configs/fda_queries.yaml for the live-verification details). Each
 label hit's `openfda.application_number` is the actual discovery unit;
 jobs/fda/job.py then reconciles each discovered application_number
-against the authoritative /drug/drugsfda.json endpoint (submissions +
-application_docs) — same two-step discover-then-reconcile shape as
-Crossref's DOI reconciliation, and structurally identical to SEC's
-company -> filing -> exhibit model:
+against the authoritative /drug/drugsfda.json endpoint (application +
+product identity, submissions, application_docs) — same two-step
+discover-then-reconcile shape as Crossref's DOI reconciliation.
 
-    application_number  ~ SEC's CIK
-    submission           ~ SEC's filing
-    application_doc       ~ SEC's exhibit
+Three independent levels, each with its own content-version manifest,
+discovery/attempts ledger(s), and checkpoint namespace — mirroring SEC
+EDGAR's company -> filing -> exhibit model one level deeper, since
+Drugs@FDA's own data model
+(https://open.fda.gov/apis/drug/drugsfda/understanding-the-api-results/)
+genuinely has three parts (application identity, submissions,
+application_docs), not two:
 
-- fda.parquet            — submission content-version manifest, keyed by
-                            submission_key ("{application_number}_{TYPE}{NUMBER}",
-                            e.g. "BLA125388_ORIG1"). A submission's "content"
-                            is its own metadata (status/date/docs list) —
-                            there is no separate network fetch for the
-                            submission row itself (unlike SEC's filing
-                            primary document), so this can never itself
-                            fail; it only versions when the submission's
-                            metadata (including which docs are attached)
-                            changes.
-- fda_documents.parquet  — the actual downloadable documents (labels,
-                            approval letters, review documents, ... —
-                            Prompt.md's explicit list) as a SEPARATE,
-                            independently versioned artifact, keyed by
-                            "{submission_key}:{doc_id}", parent_record_id
-                            linking back to the submission — same fix as
-                            Europe PMC's full text / SEC's exhibits.
-- fda_documents_attempts.parquet — its own append-only attempts ledger.
+    application_number  ~ SEC's CIK, but UNLIKE a CIK it is itself a
+                           discovery outcome (from the label search), not
+                           a manually curated identifier — so it needs
+                           its own discovery+attempts ledger, which SEC's
+                           company registry never needed.
+    submission            ~ SEC's filing
+    application_doc        ~ SEC's exhibit
 
-Same three-table model as prior jobs for submissions themselves:
-fda_discovery.parquet is an append-only every-application-every-run
-ledger (every submission inherits its parent application's discovering
-query_id(s)); fda_attempts.parquet is an append-only every-attempt
-ledger.
+- fda_applications.parquet            — application/product identity
+                                         content-version manifest, keyed
+                                         by application_number. Content
+                                         is the COMPLETE raw Drugs@FDA
+                                         record as returned (not a
+                                         reconstructed subset) — Prompt.md
+                                         section 14's product
+                                         name/active-ingredient key
+                                         identifiers live here, not on
+                                         the submission row.
+- fda_applications_discovery.parquet  — append-only: every
+                                         (application_number, query_id)
+                                         hit from label search, written
+                                         UNCONDITIONALLY, before the
+                                         Drugs@FDA reconciliation fetch
+                                         is even attempted. A label match
+                                         that fails to reconcile must
+                                         still leave durable discovery
+                                         provenance — it must never look
+                                         like the identifier was never
+                                         found at all.
+- fda_applications_attempts.parquet   — append-only: success / not_found
+                                         (openFDA's 404-no-match
+                                         convention) / failed (network
+                                         error), one row per application
+                                         per run.
+- fda_submissions.parquet             — submission content-version
+                                         manifest, keyed by submission_key
+                                         ("{application_number}_{TYPE}{NUMBER}",
+                                         e.g. "BLA125388_ORIG1"),
+                                         parent_record_id = application_number.
+                                         A submission's "content" is its
+                                         own metadata (status/date/docs
+                                         list) — there is no separate
+                                         network fetch for the submission
+                                         row itself, so it can never
+                                         itself fail; it only versions
+                                         when that metadata changes.
+- fda_submissions_discovery.parquet   — append-only: every submission
+                                         inherits its parent application's
+                                         discovering query_id(s) — same
+                                         pattern as SEC filings inheriting
+                                         their company's query.
+- fda_submissions_attempts.parquet    — append-only: success /
+                                         skipped_unchanged (never
+                                         "failed" — see above).
+- fda_documents.parquet                — the actual downloadable documents
+                                         (labels, approval letters, review
+                                         documents, ... — Prompt.md's
+                                         explicit list) as a SEPARATE,
+                                         independently versioned artifact,
+                                         keyed by "{submission_key}:{doc_id}",
+                                         parent_record_id = submission_key —
+                                         same fix as Europe PMC's full text
+                                         / SEC's exhibits.
+- fda_documents_attempts.parquet       — its own append-only attempts
+                                         ledger.
 
 --since/--until filter by each submission's own submission_status_date,
 applied client-side (openFDA's date-range search only determines whether
 an APPLICATION matches at all, not which of its submissions to return —
 verified live: a date-bounded search still returns every submission for
-a matching application). --resume reuses the prior run's --until (or
-now) as an implicit --since, with the SAME failure-safe design SEC
-EDGAR's Job 05 needed three review rounds to arrive at (applied
-proactively here from the start rather than being caught on it again):
-the cursor advances unconditionally every run, but any submission not
-yet in the success checkpoint, or with an unresolved (most-recent-status
-still "failed") document, is unioned back into scope regardless of its
-own date; and when --limit is set, fresh/in-range submissions always get
-priority over that backlog so a persistently-failing old document can
-never starve out new submissions. No terminal-failure category is
-classified yet (unlike SEC's confirmed-permanent no_primary_document) —
-none has been observed live for FDA; add one if a genuinely permanent
-FDA-side gap is ever confirmed, per the same reasoning.
+a matching application). Applications themselves are NOT date-filtered —
+every discovered application's Drugs@FDA record is always fetched and
+materialized in full every run (cheap; there are ~15 of them), the same
+way SEC always pulls each company's complete filing list every run
+regardless of date.
+
+--resume reuses the prior run's --until (or now) as an implicit --since
+for SUBMISSIONS, with the SAME failure-safe design SEC EDGAR's Job 05
+needed three review rounds to arrive at (applied proactively here from
+the start rather than being caught on it again): the cursor advances
+unconditionally every run, but any submission not yet in the success
+checkpoint, or with an unresolved (most-recent-status still "failed")
+document, is unioned back into scope regardless of its own date; and when
+--limit is set, fresh/in-range submissions always get priority over that
+backlog so a persistently-failing old document can never starve out new
+submissions. No terminal-failure category is classified yet (unlike SEC's
+confirmed-permanent no_primary_document) — none has been observed live
+for FDA; add one if a genuinely permanent FDA-side gap is ever confirmed,
+per the same reasoning.
 
 openFDA's authentication is optional (unlike SEC's mandatory contact
 requirement): 240 req/min either way; 1,000 req/day without a key vs.
@@ -89,16 +139,20 @@ from adc_acquisition.logging_utils import setup_job_logging
 from adc_acquisition.manifest import append_only, new_manifest_row, write_manifest
 from adc_acquisition.query_registry import active_queries, load_queries
 from jobs.fda.client import MAX_PAGE_SIZE, RATE_LIMIT, FDAClient
-from jobs.fda.parser import parse_drugsfda_record, within_date_range
+from jobs.fda.parser import parse_application, parse_submissions, within_date_range
 from jobs.fda.report import build_report
 
 QUERIES_PATH = Path("configs/fda_queries.yaml")
-EXTRA_FIELDS = [
+APPLICATION_EXTRA_FIELDS = ["application_number", "sponsor_name", "brand_names", "active_ingredients", "product_numbers"]
+SUBMISSION_EXTRA_FIELDS = [
     "application_number", "submission_type", "submission_number", "submission_status",
     "submission_class_code", "submission_class_code_description",
 ]
 DOCUMENT_EXTRA_FIELDS = ["doc_type", "doc_date"]
 LICENSE_NOTE = "FDA regulatory record (openFDA / Drugs@FDA), public disclosure."
+
+APPLICATION_NAMESPACE = "application_records"
+SUBMISSION_NAMESPACE = "submission_records"
 DOCUMENT_NAMESPACE = "document_records"
 
 DISCOVERY_COLUMNS = ["source", "source_record_id", "query_id", "query_version", "query_text", "discovered_at", "run_id"]
@@ -140,13 +194,13 @@ def _submission_content_bytes(ps) -> bytes:
     return json.dumps(payload, sort_keys=True).encode("utf-8")
 
 
-def _attempt_row(
-    submission_key: str, run_id: str, attempted_at: str, status: str, query_id: str, query_text: str,
+def _record_row(
+    source_record_id: str, run_id: str, attempted_at: str, status: str, query_id: str, query_text: str,
     http_status: int | None = None, error: str | None = None, content_hash: str | None = None,
     version: int | None = None,
 ) -> dict:
     return dict(
-        source="fda", source_record_id=submission_key, run_id=run_id, attempted_at=attempted_at,
+        source="fda", source_record_id=source_record_id, run_id=run_id, attempted_at=attempted_at,
         status=status, http_status=http_status, error=error, query_id=query_id, query_text=query_text,
         content_hash=content_hash, version=version,
     )
@@ -203,6 +257,7 @@ class FDAJob(AcquisitionJob):
         if not queries:
             raise RuntimeError(f"no active queries found in {args.queries_file}")
         query_text_by_id = {q.query_id: q.query_text for q in queries}
+        query_version_by_id = {q.query_id: q.query_version for q in queries}
 
         result = JobRunResult(job_name=self.name, dry_run=bool(args.dry_run))
         result.notes.append("used FDA_API_KEY (120,000 req/day)" if api_key else "no FDA_API_KEY configured (1,000 req/day)")
@@ -255,7 +310,11 @@ class FDAJob(AcquisitionJob):
             )
 
         # --- Reconciliation: pull each discovered application's full
-        # submission history from the authoritative endpoint. ---
+        # Drugs@FDA record (application/product identity + submissions).
+        # An application's outcome is tracked regardless of whether it
+        # resolves, so label-search discovery provenance is never lost
+        # just because reconciliation later fails or comes up empty. ---
+        application_outcomes: dict[str, dict] = {}  # app -> {status, record, error}
         submission_first_query: dict[str, tuple[str, str]] = {}
         submission_query_hits: dict[str, set[str]] = defaultdict(set)
         record_submissions: dict[str, object] = {}  # submission_key -> ParsedSubmission
@@ -267,12 +326,15 @@ class FDAJob(AcquisitionJob):
             except requests.RequestException as exc:
                 logger.error("application=%s drugsfda fetch failed: %s", application_number, exc)
                 failure_logger.info("application=%s error=%s", application_number, exc)
+                application_outcomes[application_number] = {"status": "failed", "record": None, "error": str(exc)}
                 continue
             if drugsfda_record is None:
                 logger.warning("application=%s label-discovered but no drugsfda record found", application_number)
+                application_outcomes[application_number] = {"status": "not_found", "record": None, "error": None}
                 continue
+            application_outcomes[application_number] = {"status": "success", "record": drugsfda_record, "error": None}
 
-            parsed_submissions = parse_drugsfda_record(drugsfda_record)
+            parsed_submissions = parse_submissions(drugsfda_record)
             q_ids = application_query_hits[application_number]
             q_id_primary, q_text_primary = application_first_query[application_number]
 
@@ -285,7 +347,7 @@ class FDAJob(AcquisitionJob):
 
             if used_resume_cursor:
                 in_scope_keys = {ps.submission_key for ps in in_range}
-                resolved_keys = checkpoint.get("records", {})
+                resolved_keys = checkpoint.get(SUBMISSION_NAMESPACE, {})
                 unresolved = [
                     ps for ps in parsed_submissions
                     if ps.submission_key not in in_scope_keys
@@ -335,35 +397,121 @@ class FDAJob(AcquisitionJob):
         now = _now_iso()
         run_id = now
 
-        manifest_path = output_dir / "manifests" / "fda.parquet"
-        discovery_path = output_dir / "manifests" / "fda_discovery.parquet"
-        attempts_path = output_dir / "manifests" / "fda_attempts.parquet"
+        applications_manifest_path = output_dir / "manifests" / "fda_applications.parquet"
+        applications_discovery_path = output_dir / "manifests" / "fda_applications_discovery.parquet"
+        applications_attempts_path = output_dir / "manifests" / "fda_applications_attempts.parquet"
+        submissions_manifest_path = output_dir / "manifests" / "fda_submissions.parquet"
+        submissions_discovery_path = output_dir / "manifests" / "fda_submissions_discovery.parquet"
+        submissions_attempts_path = output_dir / "manifests" / "fda_submissions_attempts.parquet"
         documents_manifest_path = output_dir / "manifests" / "fda_documents.parquet"
         documents_attempts_path = output_dir / "manifests" / "fda_documents_attempts.parquet"
 
-        discovery_rows = [
+        # --- Application-level discovery ledger: written UNCONDITIONALLY
+        # for every label-search hit, before reconciliation is attempted,
+        # so a label match that fails to reconcile still has durable
+        # discovery provenance. ---
+        applications_discovery_rows = [
             dict(
-                source="fda", source_record_id=sid, query_id=qid, query_version=1,
+                source="fda", source_record_id=app, query_id=qid, query_version=query_version_by_id[qid],
+                query_text=query_text_by_id[qid], discovered_at=now, run_id=run_id,
+            )
+            for app, qids in application_query_hits.items()
+            for qid in sorted(qids)
+        ]
+        append_only(applications_discovery_rows, applications_discovery_path, DISCOVERY_COLUMNS)
+
+        # --- Application-level content + attempts: success / not_found / failed. ---
+        application_content_rows = []
+        application_attempt_rows = []
+        for application_number in sorted(all_applications):
+            outcome = application_outcomes[application_number]
+            query_id, query_text = application_first_query[application_number]
+
+            if outcome["status"] != "success":
+                application_attempt_rows.append(
+                    _record_row(application_number, run_id, now, outcome["status"], query_id, query_text, error=outcome["error"])
+                )
+                continue
+
+            record = outcome["record"]
+            parsed_app = parse_application(record)
+            raw_bytes = json.dumps(record, sort_keys=True).encode("utf-8")
+            content_hash = sha256_bytes(raw_bytes)
+            prior_state = checkpoint_store.get_record_state(checkpoint, application_number, namespace=APPLICATION_NAMESPACE)
+            app_raw_dir = output_dir / "raw" / "fda" / application_number
+
+            if prior_state and prior_state.get("content_hash") == content_hash:
+                version = prior_state["version"]
+                status = "skipped_unchanged"
+            else:
+                version = (prior_state["version"] + 1) if prior_state else 1
+                app_raw_dir.mkdir(parents=True, exist_ok=True)
+                raw_path = app_raw_dir / f"v{version}.json"
+                raw_path.write_bytes(raw_bytes)
+                checkpoint_store.set_record_state(checkpoint, application_number, content_hash, version, now, namespace=APPLICATION_NAMESPACE)
+                status = "success"
+                application_content_rows.append(
+                    new_manifest_row(
+                        extra_fields=APPLICATION_EXTRA_FIELDS,
+                        source="fda",
+                        source_record_id=application_number,
+                        source_record_type="fda_application",
+                        title=f"{', '.join(parsed_app.brand_names) or application_number} ({application_number})",
+                        url=_application_overview_url(application_number),
+                        publication_or_release_date=parsed_app.earliest_submission_date,
+                        retrieved_at=now,
+                        query_id=query_id,
+                        query_text=query_text,
+                        raw_file_path=str(raw_path),
+                        raw_format="json",
+                        content_hash=content_hash,
+                        download_status="success",
+                        http_status=200,
+                        license_or_access_note=LICENSE_NOTE,
+                        parent_record_id=None,
+                        version=version,
+                        notes=None,
+                        application_number=application_number,
+                        sponsor_name=parsed_app.sponsor_name,
+                        brand_names=parsed_app.brand_names,
+                        active_ingredients=parsed_app.active_ingredients,
+                        product_numbers=parsed_app.product_numbers,
+                    )
+                )
+
+            application_attempt_rows.append(
+                _record_row(application_number, run_id, now, status, query_id, query_text, http_status=200, content_hash=content_hash, version=version)
+            )
+
+        applications_manifest_df = write_manifest(application_content_rows, applications_manifest_path, extra_fields=APPLICATION_EXTRA_FIELDS)
+        append_only(application_attempt_rows, applications_attempts_path, ATTEMPT_COLUMNS)
+
+        # --- Submission-level discovery ledger (inherits parent
+        # application's discovering query(ies), same pattern SEC uses for
+        # filings inheriting their company's query). ---
+        submissions_discovery_rows = [
+            dict(
+                source="fda", source_record_id=sid, query_id=qid, query_version=query_version_by_id[qid],
                 query_text=query_text_by_id[qid], discovered_at=now, run_id=run_id,
             )
             for sid, qids in submission_query_hits.items()
             for qid in sorted(qids)
         ]
-        append_only(discovery_rows, discovery_path, DISCOVERY_COLUMNS)
+        append_only(submissions_discovery_rows, submissions_discovery_path, DISCOVERY_COLUMNS)
 
-        content_rows = []
-        attempt_rows = []
+        submission_content_rows = []
+        submission_attempt_rows = []
         document_content_rows = []
         document_attempt_rows = []
 
         for key in target_ids:
             ps = record_submissions[key]
             query_id, query_text = submission_first_query[key]
-            raw_dir = output_dir / "raw" / "fda" / key
+            raw_dir = output_dir / "raw" / "fda" / ps.application_number / "submissions" / key
 
             content_bytes = _submission_content_bytes(ps)
             content_hash = sha256_bytes(content_bytes)
-            prior_state = checkpoint_store.get_record_state(checkpoint, key)
+            prior_state = checkpoint_store.get_record_state(checkpoint, key, namespace=SUBMISSION_NAMESPACE)
 
             if prior_state and prior_state.get("content_hash") == content_hash:
                 result.records_skipped_unchanged += 1
@@ -374,12 +522,12 @@ class FDAJob(AcquisitionJob):
                 raw_dir.mkdir(parents=True, exist_ok=True)
                 raw_path = raw_dir / f"v{version}.json"
                 raw_path.write_bytes(content_bytes)
-                checkpoint_store.set_record_state(checkpoint, key, content_hash, version, now)
+                checkpoint_store.set_record_state(checkpoint, key, content_hash, version, now, namespace=SUBMISSION_NAMESPACE)
                 result.records_downloaded += 1
                 status = "success"
-                content_rows.append(
+                submission_content_rows.append(
                     new_manifest_row(
-                        extra_fields=EXTRA_FIELDS,
+                        extra_fields=SUBMISSION_EXTRA_FIELDS,
                         source="fda",
                         source_record_id=key,
                         source_record_type="fda_submission",
@@ -396,7 +544,7 @@ class FDAJob(AcquisitionJob):
                         download_status="success",
                         http_status=200,
                         license_or_access_note=LICENSE_NOTE,
-                        parent_record_id=None,
+                        parent_record_id=ps.application_number,
                         version=version,
                         notes=None,
                         application_number=ps.application_number,
@@ -408,8 +556,8 @@ class FDAJob(AcquisitionJob):
                     )
                 )
 
-            attempt_rows.append(
-                _attempt_row(key, run_id, now, status, query_id, query_text, http_status=200, content_hash=content_hash, version=version)
+            submission_attempt_rows.append(
+                _record_row(key, run_id, now, status, query_id, query_text, http_status=200, content_hash=content_hash, version=version)
             )
 
             # Documents: independent lifecycle, attempted regardless of
@@ -470,21 +618,26 @@ class FDAJob(AcquisitionJob):
                     _document_attempt_row(doc_key, key, run_id, now, "success", content_hash=doc_hash, version=doc_version)
                 )
 
-        manifest_df = write_manifest(content_rows, manifest_path, extra_fields=EXTRA_FIELDS)
-        append_only(attempt_rows, attempts_path, ATTEMPT_COLUMNS)
+        submissions_manifest_df = write_manifest(submission_content_rows, submissions_manifest_path, extra_fields=SUBMISSION_EXTRA_FIELDS)
+        append_only(submission_attempt_rows, submissions_attempts_path, ATTEMPT_COLUMNS)
         write_manifest(document_content_rows, documents_manifest_path, extra_fields=DOCUMENT_EXTRA_FIELDS)
         append_only(document_attempt_rows, documents_attempts_path, DOCUMENT_ATTEMPT_COLUMNS)
-        result.manifest_path = str(manifest_path)
+        result.manifest_path = str(submissions_manifest_path)
         checkpoint["last_run_at"] = now
         checkpoint["last_success_max_date"] = until or now[:10]
         checkpoint_store.save(checkpoint)
 
         report_text = build_report(
             result=result,
-            manifest_df=manifest_df,
+            applications_manifest_df=applications_manifest_df,
+            submissions_manifest_df=submissions_manifest_df,
             query_id_counts=query_id_counts,
             unique_ids=set(all_ids),
             duplicate_ids=duplicate_ids,
+            application_attempted=len(application_attempt_rows),
+            application_success=sum(1 for r in application_attempt_rows if r["status"] in ("success", "skipped_unchanged")),
+            application_not_found=sum(1 for r in application_attempt_rows if r["status"] == "not_found"),
+            application_failed=sum(1 for r in application_attempt_rows if r["status"] == "failed"),
             document_attempted=len(document_attempt_rows),
             document_new_or_changed=sum(1 for r in document_attempt_rows if r["status"] == "success"),
             document_unchanged=sum(1 for r in document_attempt_rows if r["status"] == "skipped_unchanged"),
