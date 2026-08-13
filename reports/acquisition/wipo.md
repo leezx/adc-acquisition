@@ -26,10 +26,15 @@ configs/wipo_queries.yaml (5 queries, each verified live to stay under OPS's 200
 - WO0222629A1: ANTI-STILBENE ANTIBODIES (family 24652773)
 - WO2004006847A2: SELECTED ANTIBODIES AND DURAMYCIN PEPTIDES BINDING TO ANIONIC PHOSPHOLIPIDS AND AMINOPHOSPHOLIPIDS AND THEIR USE IN TREATING VIRAL INFECTIONS AND CANCER (family 30115998)
 - WO2004006962A2: A TISSUE FACTOR BINDING IMMUNOCONJUGATE COMPRISING FACTOR VIIA (family 30011019)
+- WO2004032828A2: ANTI-CD20 ANTIBODY-DRUG CONJUGATES FOR THE TREATMENT OF CANCER AND IMMUNE DISORDERS (family 32093746)
+- WO2004054622A1: IMMUNOCONJUGATES WITH AN INTRACELLULARLY-CLEAVABLE LINKAGE (family 32595104)
+- WO2004073656A2: ANTI-CD70 ANTIBODY-DRUG CONJUGATES AND THEIR USE FOR THE TREATMENT OF CANCER AND IMMUNE DISORDERS (family 32908685)
+- WO2004099375A2: INDIRECTLY LINKED PHOTOSENSITIZER IMMUNOCONJUGATES, PROCESSES FOR THE PRODUCTION THEREOF AND METHODS OF USE THEROF (family 33434956)
+- WO2004110390A2: ANTI-CD74 IMMUNOCONJUGATES AND METHODS (family 33555511)
 
 ## Materialization this run
 
-2501 never-attempted (fresh), 0 unresolved-retry (backlog), 0 already successful and skipped with NO OPS request (WIPO biblio data is treated as immutable once a publication_number exists — see jobs/wipo/job.py docstring for why this deliberately differs from SEC/FDA/EMA's refetch-and-hash-compare pattern). 10 newly downloaded, 0 failed.
+2491 never-attempted (fresh), 0 unresolved-retry (backlog), 10 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/wipo/job.py docstring). 10 newly downloaded, 0 failed.
 
 ## Failed downloads
 
@@ -44,6 +49,7 @@ OPS enforces hourly and weekly quota tiers (verified live via `X-Throttling-Cont
 - Full document text (description/claims beyond the biblio front page) is not yet acquired — Prompt.md section 7 says to preserve full documents "if legally downloadable," and OPS's fulltext-access terms/entitlement for that were not verified in this round.
 - Patent family normalization/deduplication is deliberately NOT performed here (Prompt.md section 7: "Do NOT deduplicate patent families during acquisition — family normalization belongs downstream"); `family_id` is preserved as a raw field per publication instead.
 - Job 10 (EPO) will separately query OPS for EP-prefixed publications — the two jobs are architecturally independent (own query_id/provenance namespaces) despite sharing the same underlying API.
+- If a registered query's total_result_count approaches OPS's 2000-result access cap, this job currently only logs a warning and silently accesses the first 2000 (not a hard failure) — fine while every registered query stays well under that cap (current max: 1208), but a future query nearing 2000 should be hard-failed or partitioned (e.g. by publication date) rather than allowed to silently truncate discovery long-term.
 
 ## Reproduction command
 

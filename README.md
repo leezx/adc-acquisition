@@ -388,6 +388,7 @@ on the next run via each document's own checkpoint.
 ```bash
 python -m adc_acquisition wipo --dry-run --limit 20
 python -m adc_acquisition wipo --limit 20
+python -m adc_acquisition wipo --refresh   # periodically (e.g. monthly): re-verify already-successful publications for OPS-side corrections
 ```
 
 **Requires `OPS_CONSUMER_KEY`/`OPS_CONSUMER_SECRET`** (`.env`) — free
@@ -414,19 +415,24 @@ keyed by publication_number e.g. `WO2026163182A1`); `wipo_discovery.parquet`
 records every (publication, query, run) triple; `wipo_attempts.parquet`
 records every fetch attempt.
 
-**Deliberate deviation from Jobs 05/06/07's `--resume` design:** once a
-specific publication_number is successfully materialized, its OPS record
-is treated as immutable (a correction/national-phase entry is a different
-publication_number, not a change to the old one) — so it is skipped with
-**no OPS request at all** on every future run, rather than being
-refetched-then-hash-compared. `--since`/`--until` apply as a genuine
-server-side CQL filter (`pd within "YYYYMMDD,YYYYMMDD"`, verified live);
-`--resume` does not date-restrict the search itself (that would make an
-unresolved backlog item whose publication predates the cursor
-undiscoverable), so it and the plain default both run a full undated
-sweep, relying entirely on the attempts ledger's most-recent-status for
-retry safety. See `jobs/wipo/job.py`'s module docstring for the full
-rationale.
+**Deviation from Jobs 05/06/07's `--resume` design:** once a specific
+publication_number is successfully materialized, its OPS record is
+skipped with **no OPS request at all** on subsequent default runs, rather
+than being refetched-then-hash-compared every run like SEC/FDA/EMA —
+refetching ~2500 discovered publications on every incremental run would
+be wasted OPS quota in the common case. This is an efficiency default,
+**not** an immutability assumption: OPS's own terms note corrections do
+get incorporated into DOCDB data over time, so use `--refresh` to opt an
+entire run into re-fetching and hash-comparing every discovered
+publication (including already-successful ones), creating a new version
+if content genuinely changed — run it periodically (e.g. monthly), not on
+every incremental run. `--since`/`--until` apply as a genuine server-side
+CQL filter (`pd within "YYYYMMDD,YYYYMMDD"`, verified live); `--resume`
+does not date-restrict the search itself (that would make an unresolved
+backlog item whose publication predates the cursor undiscoverable), so it
+and the plain default both run a full undated sweep, relying entirely on
+the attempts ledger's most-recent-status for retry safety. See
+`jobs/wipo/job.py`'s module docstring for the full rationale.
 
 OPS meters `search` and `retrieval` (biblio fetch) as separate quota
 buckets (verified live via the `X-Throttling-Control` response header) —

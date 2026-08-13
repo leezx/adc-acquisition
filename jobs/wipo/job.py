@@ -24,26 +24,31 @@ biblio XML preserved verbatim, keyed by publication_number e.g.
 triple, written unconditionally right after all queries' search sweeps
 complete and BEFORE any biblio fetch is attempted — same "discovery must
 survive a later step's crash" principle as FDA/EMA), wipo_attempts.parquet
-(every fetch attempt, success/skipped_unchanged/failed).
+(every fetch attempt: success/skipped_unchanged/failed/parse_failed — the
+last recording that OPS bytes were fetched fine but parsing crashed, with
+the raw file already durable so the record can be reprocessed later
+without a re-fetch).
 
-DELIBERATE DEVIATION from the SEC/FDA/EMA --resume design, flagged here
-prominently (same "flag a source-shape deviation, don't bury it" practice
-as Job 04/Crossref): once a specific publication_number (a fixed
-country+number+kind triple) is successfully materialized, its OPS
-bibliographic record is treated as immutable — a real correction or later
-procedural step (e.g. an A2 correction, national-phase entry) is a
-DIFFERENT publication_number, which shows up as its own new SearchHit, not
-a change to the old record. So there is no "re-verify an already-
-successful record because it might have changed" case here the way
-there is for SEC filings/FDA applications/EMA medicines, and refetching
-one to hash-compare would be pure wasted OPS quota (the exact anti-pattern
-just caught and fixed in EMA's PR #7 round 2). Materialization scope is
-therefore: every publication discovered this run whose most recent
-attempt (if any) is NOT "success" — never-attempted (fresh) or
-previously-failed (backlog) — gets fetched; already-successful ones are
-skipped with NO OPS request at all, and still get a "skipped_unchanged"
-attempt row for ledger completeness. `--limit` prioritizes fresh over
-backlog, same fairness rule as SEC/FDA/EMA.
+DEVIATION from the SEC/FDA/EMA --resume design, flagged here prominently
+(same "flag a source-shape deviation, don't bury it" practice as Job 04/
+Crossref): once a specific publication_number (a fixed country+number+kind
+triple) is successfully materialized, its OPS bibliographic record is
+NOT re-verified on every run the way SEC filings/FDA applications/EMA
+medicines are — refetching all ~2500 discovered publications every run to
+hash-compare would be pure wasted OPS quota in the common case. BUT this
+is NOT permanent immutability: EPO OPS's own terms note corrections do get
+incorporated into DOCDB data over time (a review round on this PR caught
+an earlier version of this docstring wrongly claiming the record never
+changes) — so a publication's bibliographic data CAN legitimately change
+after its first successful fetch. Default runs skip an already-successful
+publication with NO OPS request at all (using its last-known
+content_hash/version); the `--refresh` flag opts an entire run into
+re-fetching and hash-comparing every discovered publication (including
+already-successful ones), creating a new version if OPS's content
+actually changed. Run `--refresh` periodically (e.g. monthly) rather than
+on every incremental run. `--limit` prioritizes never-attempted (fresh)
+over previously-failed (backlog) over already-successful-under-refresh,
+same fairness rule as SEC/FDA/EMA.
 
 --since/--until: applied SERVER-SIDE via OPS's own `pd within
 "YYYYMMDD,YYYYMMDD"` CQL filter (verified live) whenever the caller
@@ -116,31 +121,39 @@ def _record_row(
     )
 
 
-def _failed_publication_ids(attempts_path: Path) -> set[str]:
-    """Publication ids whose MOST RECENT recorded attempt was a failure —
-    unresolved, so they're retried on every run regardless of --resume's
-    cursor (which never narrows WIPO's search itself, see module
-    docstring)."""
+UNRESOLVED_STATUSES = {"failed", "parse_failed"}
+RESOLVED_STATUSES = {"success", "skipped_unchanged"}
+
+
+def _unresolved_publication_ids(attempts_path: Path) -> set[str]:
+    """Publication ids whose MOST RECENT recorded attempt is unresolved
+    (a fetch failure or a parse failure) — retried on every run regardless
+    of --resume's cursor (which never narrows WIPO's search itself, see
+    module docstring)."""
     if not attempts_path.exists():
         return set()
     df = pd.read_parquet(attempts_path)
     if df.empty:
         return set()
     latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
-    return set(latest.loc[latest["status"] == "failed", "source_record_id"])
+    return set(latest.loc[latest["status"].isin(UNRESOLVED_STATUSES), "source_record_id"])
 
 
-def _succeeded_publication_states(attempts_path: Path) -> set[str]:
-    """Publication ids whose most recent attempt already succeeded — these
-    are skipped without a re-fetch (see module docstring: WIPO biblio data
-    is treated as immutable once a specific publication_number exists)."""
+def _resolved_publication_ids(attempts_path: Path) -> set[str]:
+    """Publication ids whose most recent attempt is already resolved
+    (success, OR skipped_unchanged from a prior successful fetch) — the
+    prior fetch's most recent attempt might itself have been
+    skipped_unchanged rather than success (e.g. after 2+ unchanged runs),
+    so both statuses must count as "already resolved" or this set would
+    stop recognizing a record after its second consecutive unchanged run
+    and it would incorrectly re-enter scope as if brand new."""
     if not attempts_path.exists():
         return set()
     df = pd.read_parquet(attempts_path)
     if df.empty:
         return set()
     latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
-    return set(latest.loc[latest["status"] == "success", "source_record_id"])
+    return set(latest.loc[latest["status"].isin(RESOLVED_STATUSES), "source_record_id"])
 
 
 class WIPOJob(AcquisitionJob):
@@ -151,6 +164,14 @@ class WIPOJob(AcquisitionJob):
         parser.add_argument(
             "--queries-file", type=str, default=str(QUERIES_PATH),
             help="Path to the WIPO/OPS discovery query registry YAML.",
+        )
+        parser.add_argument(
+            "--refresh", action="store_true",
+            help=(
+                "Re-fetch and hash-compare EVERY discovered publication, including ones already "
+                "successfully materialized, to pick up OPS-side corrections (run periodically, e.g. "
+                "monthly, not on every incremental run)."
+            ),
         )
 
     def run(self, args: argparse.Namespace) -> JobRunResult:
@@ -247,22 +268,29 @@ class WIPOJob(AcquisitionJob):
             raise RuntimeError(f"WIPO discovery incomplete (partial results already persisted): {discovery_error}")
 
         attempts_path = output_dir / "manifests" / "wipo_attempts.parquet"
-        already_succeeded = _succeeded_publication_states(attempts_path)
-        failed_ids = _failed_publication_ids(attempts_path)
+        resolved_ids = _resolved_publication_ids(attempts_path)
+        unresolved_ids = _unresolved_publication_ids(attempts_path)
 
         all_ids = list(hits_by_id.keys())
-        fresh_ids = sorted(pid for pid in all_ids if pid not in already_succeeded and pid not in failed_ids)
-        backlog_ids = sorted(pid for pid in all_ids if pid in failed_ids)
-        already_skipped_ids = sorted(pid for pid in all_ids if pid in already_succeeded)
+        fresh_ids = sorted(pid for pid in all_ids if pid not in resolved_ids and pid not in unresolved_ids)
+        backlog_ids = sorted(pid for pid in all_ids if pid in unresolved_ids)
+        already_skipped_ids = sorted(pid for pid in all_ids if pid in resolved_ids)
 
-        ordered_new_work = fresh_ids + backlog_ids
+        if args.refresh:
+            ordered_new_work = fresh_ids + backlog_ids + already_skipped_ids
+            fast_skip_ids: list[str] = []
+        else:
+            ordered_new_work = fresh_ids + backlog_ids
+            fast_skip_ids = already_skipped_ids
         target_ids = ordered_new_work[: args.limit] if args.limit else ordered_new_work
 
         if args.dry_run:
             result.notes.append(
                 f"dry-run: would materialize {len(target_ids)} of {len(all_ids)} discovered publications "
                 f"({len(fresh_ids)} never attempted, {len(backlog_ids)} unresolved retries, "
-                f"{len(already_skipped_ids)} already successful and skipped with no OPS request)"
+                f"{len(fast_skip_ids)} already successful and skipped with no OPS request"
+                + (", 0 refresh re-checks (--refresh not set)" if not args.refresh else "")
+                + ")"
             )
             return result
 
@@ -270,11 +298,19 @@ class WIPOJob(AcquisitionJob):
 
         content_rows = []
         attempt_rows = []
+        parse_error: str | None = None
 
-        for pub_id in already_skipped_ids:
+        for pub_id in fast_skip_ids:
             result.records_skipped_unchanged += 1
             query_id, query_text = first_query_by_id[pub_id]
-            attempt_rows.append(_record_row(pub_id, run_id, now, "skipped_unchanged", query_id, query_text))
+            prior_state = checkpoint_store.get_record_state(checkpoint, pub_id)
+            attempt_rows.append(
+                _record_row(
+                    pub_id, run_id, now, "skipped_unchanged", query_id, query_text,
+                    content_hash=prior_state["content_hash"] if prior_state else None,
+                    version=prior_state["version"] if prior_state else None,
+                )
+            )
 
         for pub_id in target_ids:
             hit = hits_by_id[pub_id]
@@ -296,12 +332,45 @@ class WIPOJob(AcquisitionJob):
                 continue
 
             content_hash = sha256_bytes(raw_bytes)
-            parsed = parse_biblio_response(raw_bytes)
-            version = 1
+            prior_state = checkpoint_store.get_record_state(checkpoint, pub_id)
+
+            if prior_state and prior_state.get("content_hash") == content_hash:
+                # Refetched under --refresh (or a retry) and OPS content is
+                # unchanged -- no new version, no re-parse needed (the
+                # manifest row for this version already exists).
+                result.records_skipped_unchanged += 1
+                attempt_rows.append(
+                    _record_row(
+                        pub_id, run_id, now, "skipped_unchanged", query_id, query_text,
+                        content_hash=content_hash, version=prior_state["version"],
+                    )
+                )
+                continue
+
+            # New or CHANGED content: persist the raw bytes IMMEDIATELY,
+            # before parsing them -- a parser crash must never erase the
+            # exact OPS response that caused it (same invariant as EMA's
+            # bulk-snapshot fix: RAW FETCH -> DURABLE SNAPSHOT -> PARSE).
+            version = (prior_state["version"] + 1) if prior_state else 1
             raw_dir = output_dir / "raw" / "wipo" / pub_id
             raw_dir.mkdir(parents=True, exist_ok=True)
             raw_path = raw_dir / f"v{version}.xml"
             raw_path.write_bytes(raw_bytes)
+
+            try:
+                parsed = parse_biblio_response(raw_bytes)
+            except Exception as exc:  # noqa: BLE001 - any parser bug must not silently lose this record
+                logger.error("publication=%s biblio parse failed: %s", pub_id, exc)
+                failure_logger.info("publication=%s error=parse_failed: %s", pub_id, exc)
+                attempt_rows.append(
+                    _record_row(
+                        pub_id, run_id, now, "parse_failed", query_id, query_text,
+                        error=str(exc), content_hash=content_hash, version=version,
+                    )
+                )
+                parse_error = f"publication={pub_id}: {exc}"
+                break  # a parser bug is likely systematic -- stop rather than push through the whole batch
+
             checkpoint_store.set_record_state(checkpoint, pub_id, content_hash, version, now)
             result.records_downloaded += 1
             attempt_rows.append(
@@ -351,8 +420,13 @@ class WIPOJob(AcquisitionJob):
         report_path = output_dir.parent / "reports" / "acquisition" / "wipo.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(
-            build_report(result, manifest_df, all_ids, fresh_ids, backlog_ids, already_skipped_ids),
+            build_report(result, manifest_df, all_ids, fresh_ids, backlog_ids, fast_skip_ids),
             encoding="utf-8",
         )
+
+        if parse_error is not None:
+            raise RuntimeError(
+                f"WIPO biblio parsing failed (raw bytes and prior progress already persisted): {parse_error}"
+            )
 
         return result

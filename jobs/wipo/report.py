@@ -44,7 +44,7 @@ configs/wipo_queries.yaml (5 queries, each verified live to stay under OPS's 200
 
 ## Materialization this run
 
-{len(fresh_ids)} never-attempted (fresh), {len(backlog_ids)} unresolved-retry (backlog), {len(already_skipped_ids)} already successful and skipped with NO OPS request (WIPO biblio data is treated as immutable once a publication_number exists — see jobs/wipo/job.py docstring for why this deliberately differs from SEC/FDA/EMA's refetch-and-hash-compare pattern). {result.records_downloaded} newly downloaded, {result.records_failed} failed.
+{len(fresh_ids)} never-attempted (fresh), {len(backlog_ids)} unresolved-retry (backlog), {len(already_skipped_ids)} already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/wipo/job.py docstring). {result.records_downloaded} newly downloaded, {result.records_failed} failed.
 
 ## Failed downloads
 
@@ -59,6 +59,7 @@ OPS enforces hourly and weekly quota tiers (verified live via `X-Throttling-Cont
 - Full document text (description/claims beyond the biblio front page) is not yet acquired — Prompt.md section 7 says to preserve full documents "if legally downloadable," and OPS's fulltext-access terms/entitlement for that were not verified in this round.
 - Patent family normalization/deduplication is deliberately NOT performed here (Prompt.md section 7: "Do NOT deduplicate patent families during acquisition — family normalization belongs downstream"); `family_id` is preserved as a raw field per publication instead.
 - Job 10 (EPO) will separately query OPS for EP-prefixed publications — the two jobs are architecturally independent (own query_id/provenance namespaces) despite sharing the same underlying API.
+- If a registered query's total_result_count approaches OPS's 2000-result access cap, this job currently only logs a warning and silently accesses the first 2000 (not a hard failure) — fine while every registered query stays well under that cap (current max: 1208), but a future query nearing 2000 should be hard-failed or partitioned (e.g. by publication date) rather than allowed to silently truncate discovery long-term.
 
 ## Reproduction command
 

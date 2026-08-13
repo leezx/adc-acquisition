@@ -113,7 +113,7 @@ def _register_ops(query_to_hits: dict, biblio_by_docdb: dict | None = None):
 
 def _base_args(tmp_path, **overrides):
     defaults = dict(
-        dry_run=False, limit=None, resume=False, since=None, until=None,
+        dry_run=False, limit=None, resume=False, since=None, until=None, refresh=False,
         output=str(tmp_path / "DATA"), queries_file=str(tmp_path / "queries.yaml"),
     )
     defaults.update(overrides)
@@ -178,8 +178,8 @@ def test_full_run_writes_manifest_discovery_and_attempts(tmp_path, monkeypatch):
 
 @responses.activate
 def test_already_successful_publication_skipped_without_ops_request(tmp_path, monkeypatch):
-    """WIPO's core deliberate deviation: once a publication_number succeeds,
-    it must never be re-fetched (biblio data is treated as immutable)."""
+    """Default-run efficiency behavior: once a publication_number succeeds,
+    it is not refetched on a plain subsequent run (--refresh opts back in)."""
     _setup(tmp_path, monkeypatch)
     h = _hit()
     _register_ops(
@@ -195,6 +195,112 @@ def test_already_successful_publication_skipped_without_ops_request(tmp_path, mo
     assert result2.records_skipped_unchanged == 1
     biblio_calls = [c for c in responses.calls if "/publication/docdb/" in c.request.url]
     assert biblio_calls == []  # no OPS request at all for the already-successful publication
+
+
+@responses.activate
+def test_third_consecutive_run_still_skips_without_fetch(tmp_path, monkeypatch):
+    """Regression test for the round-1 bug: _resolved_publication_ids() must
+    treat a "skipped_unchanged" most-recent-attempt as resolved too, or a
+    publication falls back to "fresh" and gets needlessly refetched on the
+    THIRD run (the second run's attempt row is skipped_unchanged, not
+    success)."""
+    _setup(tmp_path, monkeypatch)
+    h = _hit()
+    _register_ops(
+        {'pn=WO and ab="antibody-drug conjugate"': [h]},
+        {_docdb(h): _biblio_xml(h)},
+    )
+    WIPOJob().run(_base_args(tmp_path))  # run 1: success
+    WIPOJob().run(_base_args(tmp_path))  # run 2: skipped_unchanged (fast path)
+
+    responses.calls.reset()
+    result3 = WIPOJob().run(_base_args(tmp_path))  # run 3: must still skip, not re-fetch
+
+    assert result3.records_downloaded == 0
+    assert result3.records_skipped_unchanged == 1
+    biblio_calls = [c for c in responses.calls if "/publication/docdb/" in c.request.url]
+    assert biblio_calls == []
+
+
+@responses.activate
+def test_refresh_flag_detects_changed_content_and_creates_new_version(tmp_path, monkeypatch):
+    """OPS bibliographic data CAN change (corrections) -- --refresh must
+    re-fetch an already-successful publication and version-bump on a
+    genuine content change."""
+    _setup(tmp_path, monkeypatch)
+    h = _hit()
+    _register_ops(
+        {'pn=WO and ab="antibody-drug conjugate"': [h]},
+        {_docdb(h): _biblio_xml(h, title="Original Title")},
+    )
+    WIPOJob().run(_base_args(tmp_path))
+
+    responses.calls.reset()
+    _register_ops(
+        {'pn=WO and ab="antibody-drug conjugate"': [h]},
+        {_docdb(h): _biblio_xml(h, title="Corrected Title")},
+    )
+    result = WIPOJob().run(_base_args(tmp_path, refresh=True))
+
+    assert result.records_downloaded == 1
+    biblio_calls = [c for c in responses.calls if "/publication/docdb/" in c.request.url]
+    assert len(biblio_calls) == 1  # DID re-fetch under --refresh
+
+    df = _manifest_df(tmp_path)
+    matching = df[df["source_record_id"] == _pub_id(h)].sort_values("version")
+    assert list(matching["version"]) == [1, 2]
+    assert list(matching["title"]) == ["Original Title", "Corrected Title"]
+
+
+@responses.activate
+def test_refresh_flag_unchanged_content_stays_at_same_version(tmp_path, monkeypatch):
+    _setup(tmp_path, monkeypatch)
+    h = _hit()
+    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): _biblio_xml(h)})
+    WIPOJob().run(_base_args(tmp_path))
+
+    responses.calls.reset()
+    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): _biblio_xml(h)})
+    result = WIPOJob().run(_base_args(tmp_path, refresh=True))
+
+    assert result.records_downloaded == 0
+    assert result.records_skipped_unchanged == 1
+    biblio_calls = [c for c in responses.calls if "/publication/docdb/" in c.request.url]
+    assert len(biblio_calls) == 1  # refresh DID check, just found no change
+    df = _manifest_df(tmp_path)
+    assert list(df[df["source_record_id"] == _pub_id(h)]["version"]) == [1]
+
+
+@responses.activate
+def test_raw_xml_persisted_before_parser_crash(tmp_path, monkeypatch):
+    """Raw OPS bytes must be durable BEFORE parsing is attempted -- a
+    parser crash must not erase the evidence that caused it."""
+    _setup(tmp_path, monkeypatch)
+    h = _hit()
+    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): _biblio_xml(h)})
+
+    import jobs.wipo.job as job_module
+
+    def _boom(_bytes):
+        raise RuntimeError("simulated parser bug")
+
+    monkeypatch.setattr(job_module, "parse_biblio_response", _boom)
+
+    try:
+        WIPOJob().run(_base_args(tmp_path))
+        raised = False
+    except RuntimeError:
+        raised = True
+    assert raised
+
+    raw_path = tmp_path / "DATA" / "raw" / "wipo" / _pub_id(h) / "v1.xml"
+    assert raw_path.exists()
+    assert raw_path.read_bytes() == _biblio_xml(h)
+
+    attempts = _attempts_df(tmp_path)
+    row = attempts[attempts["source_record_id"] == _pub_id(h)].iloc[0]
+    assert row["status"] == "parse_failed"
+    assert row["version"] == 1
 
 
 @responses.activate
