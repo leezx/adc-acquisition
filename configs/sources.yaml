@@ -203,16 +203,16 @@ patents_wipo:
 patents_uspto:
   source_type: patent
   authority: national
-  official_url: https://www.uspto.gov/
-  api_docs_url: https://developer.uspto.gov/
+  official_url: https://data.uspto.gov/ (Open Data Portal, Patent File Wrapper API — PatentsView shut down 2026-03-20, developer.uspto.gov decommissioned)
+  api_docs_url: https://data.uspto.gov/apis
   acquisition_method: api
-  authentication_required: unknown
-  rate_limit: unknown
-  license_or_access_note: To be investigated in Job 09.
-  raw_formats: []
-  update_strategy: null
-  implementation_status: not_started
-  enabled: false
+  authentication_required: "yes — X-API-KEY header (USPTO_API_KEY), free USPTO.gov account registration"
+  rate_limit: "weekly quotas verified live: 5,000,000 metadata retrievals, 1,200,000 document retrievals; a short-window HTTP 429 was observed during rapid successive calls despite the generous weekly ceiling"
+  license_or_access_note: USPTO Open Data Portal (Patent File Wrapper), public disclosure.
+  raw_formats: [json, pdf]
+  update_strategy: "full undated discovery sweep every run (5 free-text queries); every discovered application is refetched and hash-compared every run (application content is mutable — prosecution status/assignments/continuity data genuinely change over time, unlike Job 08/WIPO); SPEC documents are skipped once successfully fetched (identity-based, not hash-based — USPTO's document endpoints dynamically re-render bytes on every request, verified live)."
+  implementation_status: implemented
+  enabled: true
   notes: Job 04 in Prompt.md, promoted to #9 in recommended execution order.
 
 patents_epo:

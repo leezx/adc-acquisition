@@ -441,6 +441,51 @@ buckets (verified live via the `X-Throttling-Control` response header) —
 endpoints use separate, independently-paced rate limiters as a result
 (`jobs/wipo/client.py`).
 
+## Running the USPTO job (Job 09)
+
+```bash
+python -m adc_acquisition uspto --dry-run --limit 20
+python -m adc_acquisition uspto --limit 20
+```
+
+**Requires `USPTO_API_KEY`** (`.env`) — free registration at
+https://data.uspto.gov/. PatentsView (api.patentsview.org) was shut down
+2026-03-20 and now redirects to USPTO's own migration guide; the old
+developer.uspto.gov portal is also decommissioned. USPTO's Open Data
+Portal (Patent File Wrapper API) is the current official mechanism —
+unlike WIPO PATENTSCOPE there is no automation ban, just registration.
+
+Discovery uses the same 5 free-text search concepts as Job 08 (WIPO),
+translated to USPTO's query syntax — confirmed live to search across full
+specification content, not just titles. `uspto.parquet` is the
+application content-version manifest (raw JSON preserved verbatim, keyed
+by application_number); `uspto_documents.parquet` holds Specification
+(`documentCode == "SPEC"`) documents as an independent artifact.
+
+**Unlike Job 08 (WIPO):** every discovered application is refetched and
+hash-compared every run — USPTO application content is mutable
+(prosecution status/assignments/continuity data genuinely change over
+time), so there's no skip-by-default/`--refresh` design here; USPTO's
+generous weekly quota (5,000,000 metadata / 1,200,000 document
+retrievals) removes the efficiency pressure that motivated WIPO's design
+in the first place.
+
+**A different live finding, though:** USPTO's document `/download`
+endpoints dynamically RE-RENDER the PDF/XML on every single request —
+confirmed live that two immediately-successive fetches of the exact same
+`documentIdentifier` return different bytes (the PDF embeds a fresh
+`/CreationDate`). Hash-compare-then-version — the pattern every other
+document artifact in this repo uses — would treat every re-fetch as
+"changed" and create an unbounded stream of spurious versions forever.
+Documents are instead skipped once their `documentIdentifier` has one
+successful attempt (identity-based, not hash-based), mirroring Job 08's
+skip-by-default design but for a different underlying reason.
+
+`--since`/`--until` apply as a genuine server-side bracket-range filter
+(`applicationMetaData.filingDate:[YYYY-MM-DD TO YYYY-MM-DD]`, verified
+live) whenever supplied explicitly; `--resume` does not date-restrict the
+search itself, same reasoning as Job 08.
+
 ## Tests
 
 ```bash
@@ -454,6 +499,7 @@ or used by the normal test suite.
 
 See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
 (Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), Job 05
-(SEC EDGAR), Job 06 (FDA), Job 07 (EMA), and Job 08 (WIPO) are implemented
-so far; every other source in `Prompt.md` is intentionally not started
-yet — sources are implemented and reviewed one at a time.
+(SEC EDGAR), Job 06 (FDA), Job 07 (EMA), Job 08 (WIPO), and Job 09
+(USPTO) are implemented so far; every other source in `Prompt.md` is
+intentionally not started yet — sources are implemented and reviewed one
+at a time.
