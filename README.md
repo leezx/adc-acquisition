@@ -383,6 +383,64 @@ page scraping, the remaining ~150 individual document PDF fetches alone
 still triggered HTTP 429s) — these are genuinely retryable and self-heal
 on the next run via each document's own checkpoint.
 
+## Running the WIPO job (Job 08)
+
+```bash
+python -m adc_acquisition wipo --dry-run --limit 20
+python -m adc_acquisition wipo --limit 20
+python -m adc_acquisition wipo --refresh   # periodically (e.g. monthly): re-verify already-successful publications for OPS-side corrections
+```
+
+**Requires `OPS_CONSUMER_KEY`/`OPS_CONSUMER_SECRET`** (`.env`) — free
+registration at https://developers.epo.org/.
+
+WIPO PATENTSCOPE itself has no public API, and its Terms of Use Section
+2.1 explicitly prohibit automated queries, bulk downloading, and scraping
+(verified live: "more than 10 search-related actions per minute from a
+single IP can be considered excessive") — a legal constraint, not a
+technical one. WO-prefixed (PCT) publication data is instead acquired via
+EPO's Open Patent Services (OPS), a free OAuth2-authenticated REST API
+whose INPADOC/DOCDB data covers WO publications' full bibliographic data.
+Job 10 (EPO) will separately query the same OPS API for EP-prefixed
+publications — the two stay architecturally independent jobs with their
+own query_id/provenance namespaces.
+
+Discovery uses 5 CQL queries (`configs/wipo_queries.yaml`) matching
+Prompt.md's listed search concepts (singular/plural "antibody-drug
+conjugate(s)" phrase, "immunoconjugate", "antibody AND linker AND
+cytotoxin", "antibody AND payload AND conjugate"), each verified live to
+stay under OPS's 2000-total-result access cap. `wipo.parquet` is the
+publication content-version manifest (raw biblio XML preserved verbatim,
+keyed by publication_number e.g. `WO2026163182A1`); `wipo_discovery.parquet`
+records every (publication, query, run) triple; `wipo_attempts.parquet`
+records every fetch attempt.
+
+**Deviation from Jobs 05/06/07's `--resume` design:** once a specific
+publication_number is successfully materialized, its OPS record is
+skipped with **no OPS request at all** on subsequent default runs, rather
+than being refetched-then-hash-compared every run like SEC/FDA/EMA —
+refetching ~2500 discovered publications on every incremental run would
+be wasted OPS quota in the common case. This is an efficiency default,
+**not** an immutability assumption: OPS's own terms note corrections do
+get incorporated into DOCDB data over time, so use `--refresh` to opt an
+entire run into re-fetching and hash-comparing every discovered
+publication (including already-successful ones), creating a new version
+if content genuinely changed — run it periodically (e.g. monthly), not on
+every incremental run. `--since`/`--until` apply as a genuine server-side
+CQL filter (`pd within "YYYYMMDD,YYYYMMDD"`, verified live); `--resume`
+does not date-restrict the search itself (that would make an unresolved
+backlog item whose publication predates the cursor undiscoverable), so it
+and the plain default both run a full undated sweep, relying entirely on
+the attempts ledger's most-recent-status for retry safety. See
+`jobs/wipo/job.py`'s module docstring for the full rationale.
+
+OPS meters `search` and `retrieval` (biblio fetch) as separate quota
+buckets (verified live via the `X-Throttling-Control` response header) —
+`search` has a much tighter short-window budget (observed exhausted after
+~15-20 calls, recovering within ~1-2 minutes) than `retrieval`. The two
+endpoints use separate, independently-paced rate limiters as a result
+(`jobs/wipo/client.py`).
+
 ## Tests
 
 ```bash
@@ -396,6 +454,6 @@ or used by the normal test suite.
 
 See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
 (Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), Job 05
-(SEC EDGAR), Job 06 (FDA), and Job 07 (EMA) are implemented so far; every
-other source in `Prompt.md` is intentionally not started yet — sources are implemented
-and reviewed one at a time.
+(SEC EDGAR), Job 06 (FDA), Job 07 (EMA), and Job 08 (WIPO) are implemented
+so far; every other source in `Prompt.md` is intentionally not started
+yet — sources are implemented and reviewed one at a time.

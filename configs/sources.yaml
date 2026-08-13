@@ -188,17 +188,17 @@ ema:
 patents_wipo:
   source_type: patent
   authority: international
-  official_url: https://patentscope.wipo.int/
-  api_docs_url: null
-  acquisition_method: unknown
-  authentication_required: unknown
-  rate_limit: unknown
-  license_or_access_note: To be investigated in Job 08 — WIPO access mechanism is not yet confirmed.
-  raw_formats: []
-  update_strategy: null
-  implementation_status: not_started
-  enabled: false
-  notes: Job 03 in Prompt.md, promoted to #8 in recommended execution order.
+  official_url: https://ops.epo.org/ (EPO Open Patent Services — WIPO PATENTSCOPE itself has no public API and its Terms of Use forbid automated/bulk access, verified live)
+  api_docs_url: https://developers.epo.org/ops-v3-2/documentation
+  acquisition_method: api
+  authentication_required: "yes — OAuth2 client-credentials (OPS_CONSUMER_KEY/OPS_CONSUMER_SECRET), free registration"
+  rate_limit: "search endpoint has a tight short-window quota bucket (verified live: exhausted after ~15-20 calls, recovers in ~1-2 min); biblio fetch (retrieval bucket) has ample separate headroom. Also capped at 100 results/request, 2000 total-results/query."
+  license_or_access_note: EPO OPS bibliographic data (INPADOC/DOCDB), covers WO-prefixed PCT publications.
+  raw_formats: [xml]
+  update_strategy: "full undated discovery sweep every run (5 CQL queries); materialization skips already-successful publications by default (no OPS request) as an efficiency default — OPS data can be corrected over time, so `--refresh` opts a run into re-verifying already-successful publications periodically. See jobs/wipo/job.py docstring."
+  implementation_status: implemented
+  enabled: true
+  notes: Job 03 in Prompt.md, promoted to #8 in recommended execution order. Job 10 (EPO) will also use OPS, filtered to EP-prefixed publications, as an architecturally independent job.
 
 patents_uspto:
   source_type: patent
