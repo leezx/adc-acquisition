@@ -347,6 +347,51 @@ def test_raw_snapshot_version_survives_repeated_parse_failures_with_changing_con
 
 
 @responses.activate
+def test_raw_checkpoint_state_is_disk_durable_before_downstream_crash(tmp_path, monkeypatch):
+    """Round-3 regression: RAW_NAMESPACE's checkpoint state must be saved
+    to DISK immediately after each raw write, not just updated in the
+    in-memory checkpoint dict -- otherwise an uncaught exception ANYWHERE
+    downstream of the raw write (not just a caught parser error) leaves
+    the on-disk checkpoint believing an older, smaller version number is
+    current, and a later run recomputes the same version and overwrites
+    a raw file that a crashed run already wrote."""
+    _setup(tmp_path, monkeypatch)
+    h = _hit()
+
+    xml_a = _biblio_xml(h, title="Content A")
+    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_a})
+    WIPOJob().run(_base_args(tmp_path))  # run 1: succeeds normally -> v1 = A
+
+    import jobs.wipo.job as job_module
+    original_new_manifest_row = job_module.new_manifest_row
+
+    def _boom(**_kwargs):
+        raise RuntimeError("simulated uncaught downstream bug (not a parse failure)")
+
+    responses.reset()
+    xml_b = _biblio_xml(h, title="Content B")
+    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})
+    monkeypatch.setattr(job_module, "new_manifest_row", _boom)
+    try:
+        WIPOJob().run(_base_args(tmp_path, refresh=True))  # run 2: raw v2 written, THEN an uncaught crash
+        raised = False
+    except RuntimeError:
+        raised = True
+    assert raised
+    monkeypatch.setattr(job_module, "new_manifest_row", original_new_manifest_row)
+
+    responses.reset()
+    xml_c = _biblio_xml(h, title="Content C")
+    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_c})
+    WIPOJob().run(_base_args(tmp_path, refresh=True))  # run 3: must create v3, not overwrite v2
+
+    raw_dir = tmp_path / "DATA" / "raw" / "wipo" / _pub_id(h)
+    assert (raw_dir / "v1.xml").read_bytes() == xml_a
+    assert (raw_dir / "v2.xml").read_bytes() == xml_b  # must survive run 2's crash untouched
+    assert (raw_dir / "v3.xml").read_bytes() == xml_c
+
+
+@responses.activate
 def test_failed_publication_retried_on_next_run(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     h = _hit()

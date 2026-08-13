@@ -93,13 +93,20 @@ PUBLICATION_EXTRA_FIELDS = [
 LICENSE_NOTE = "EPO OPS bibliographic data (INPADOC/DOCDB), covers WO-prefixed PCT publications."
 
 # Raw-fetch content/version tracking lives in its OWN checkpoint namespace,
-# updated unconditionally right after every raw write — independent of
-# whether parsing that content later succeeds. This is what lets version
-# numbering survive repeated parse failures: if it were driven by a
-# checkpoint that only updates on parse success, two different raw
-# contents fetched across two parse-failing runs would both compute
-# version=1 and the second write would silently overwrite the first's
-# raw evidence (caught in review round 2 on this PR).
+# updated unconditionally right after every raw write AND SAVED TO DISK
+# IMMEDIATELY (checkpoint_store.save right after set_record_state, before
+# parsing) — independent of whether parsing that content later succeeds.
+# Two review rounds established why both halves matter: (round 2) if
+# version numbering were driven by a checkpoint that only updates on parse
+# success, two different raw contents fetched across two parse-failing
+# runs would both compute version=1 and the second write would silently
+# overwrite the first's raw evidence. (round 3) updating the in-memory
+# checkpoint dict is not enough on its own — an uncaught exception
+# ANYWHERE downstream of the raw write (not just a caught parser error)
+# would leave the on-disk checkpoint still believing an older, smaller
+# version is current, so a later run recomputes the same version number
+# and overwrites a raw file a crashed run already wrote. Saving to disk
+# immediately after every raw write closes that gap.
 RAW_NAMESPACE = "raw_records"
 
 DISCOVERY_COLUMNS = ["source", "source_record_id", "query_id", "query_version", "query_text", "discovered_at", "run_id"]
@@ -374,16 +381,21 @@ class WIPOJob(AcquisitionJob):
                 # failure) -- fall through and retry parsing below,
                 # reusing the existing raw file rather than rewriting it.
             else:
-                # New or CHANGED raw content: persist it IMMEDIATELY,
-                # before parsing -- a parser crash must never erase the
-                # exact OPS response that caused it (same invariant as
-                # EMA's bulk-snapshot fix: RAW FETCH -> DURABLE SNAPSHOT ->
-                # PARSE).
+                # New or CHANGED raw content: persist it IMMEDIATELY, and
+                # save the checkpoint's RAW_NAMESPACE state to disk RIGHT
+                # THEN -- before parsing -- so that even an uncaught
+                # downstream exception (not just a caught parser error)
+                # can never leave a later run's version numbering
+                # confused about what raw content already exists on disk
+                # (same invariant as EMA's bulk-snapshot fix: RAW FETCH ->
+                # DURABLE SNAPSHOT -> PARSE, with "durable" meaning
+                # on-disk, not just in the in-memory checkpoint dict).
                 version = (raw_prior_state["version"] + 1) if raw_prior_state else 1
                 raw_dir.mkdir(parents=True, exist_ok=True)
                 raw_path = raw_dir / f"v{version}.xml"
                 raw_path.write_bytes(raw_bytes)
                 checkpoint_store.set_record_state(checkpoint, pub_id, content_hash, version, now, namespace=RAW_NAMESPACE)
+                checkpoint_store.save(checkpoint)
 
             try:
                 parsed = parse_biblio_response(raw_bytes)
