@@ -1,0 +1,63 @@
+# Job 08 (WIPO) discovery queries — Prompt.md section 7's listed search
+# concepts, each translated into EPO OPS CQL (see jobs/wipo/client.py for
+# why OPS, not WIPO PATENTSCOPE directly) and restricted to WO-prefixed
+# (PCT) publications via `pn=WO`.
+#
+# Each query is kept SEPARATE (rather than one big OR) because OPS caps a
+# single query's accessible result set at 2000 (verified live on
+# 2026-08-13: a combined singular+plural phrase query alone already hit
+# 2180 and returned CLIENT.InvalidQuery past result 2000). Splitting by
+# search concept, matching Prompt.md's own list, keeps every query safely
+# under that cap while preserving full per-query discovery provenance.
+#
+# Verified live result counts (2026-08-13, no date restriction):
+# singular phrase 1208, plural phrase 1189, immunoconjugate 311,
+# linker/cytotoxin 12, payload/conjugate 72. OPS normalizes hyphenated and
+# unhyphenated forms of the same phrase identically (confirmed: "antibody
+# drug conjugate" and "antibody-drug conjugate" return the same count), so
+# only one of each is registered.
+
+queries:
+  - query_id: WIPO_ADC_PHRASE_SINGULAR_001
+    query_version: 1
+    query_text: 'pn=WO and (ti="antibody-drug conjugate" or ab="antibody-drug conjugate")'
+    purpose: >
+      WO publications with the singular phrase "antibody-drug conjugate"
+      (hyphenated/unhyphenated normalize identically in OPS) in title or
+      abstract. Verified live: 1208 total results.
+    active: true
+
+  - query_id: WIPO_ADC_PHRASE_PLURAL_001
+    query_version: 1
+    query_text: 'pn=WO and (ti="antibody-drug conjugates" or ab="antibody-drug conjugates")'
+    purpose: >
+      Plural form — a genuinely different OPS phrase match, not fully
+      overlapping with the singular query (confirmed live: combining both
+      into one OR query hits 2180 results, over OPS's 2000-result access
+      cap, so they must stay separate). Verified live: 1189 total results.
+    active: true
+
+  - query_id: WIPO_ADC_IMMUNOCONJUGATE_001
+    query_version: 1
+    query_text: 'pn=WO and (ti=immunoconjugate or ab=immunoconjugate)'
+    purpose: >
+      "immunoconjugate" in title or abstract. Verified live: 311 total
+      results.
+    active: true
+
+  - query_id: WIPO_ADC_LINKER_CYTOTOXIN_001
+    query_version: 1
+    query_text: 'pn=WO and ab=antibody and ab=linker and ab=cytotoxin'
+    purpose: >
+      Concept query for "antibody AND linker AND cytotoxin" (Prompt.md's
+      listed concept, not a phrase match). Verified live: 12 total
+      results.
+    active: true
+
+  - query_id: WIPO_ADC_PAYLOAD_CONJUGATE_001
+    query_version: 1
+    query_text: 'pn=WO and ab=antibody and ab=payload and ab=conjugate'
+    purpose: >
+      Concept query for "antibody AND payload AND conjugate" (Prompt.md's
+      listed concept). Verified live: 72 total results.
+    active: true

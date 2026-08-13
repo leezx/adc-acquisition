@@ -12,7 +12,7 @@ Update this table whenever a source's `implementation_status` changes in `config
 | SEC | Regulatory | Yes | Yes (submissions API) | Yes (per-filing + exhibits) | Yes (`--resume` + `filing_date` range, client-side) | 12 (test run) | Implemented, phase-5 |
 | FDA | Regulatory | Yes | Yes (label full-text search + drugsfda API) | Yes (per-application raw record + per-submission JSON + documents) | Yes (`--resume` + `submission_status_date` range, client-side) | 20 (test run) | Implemented (approved products only), phase-6 |
 | EMA | Regulatory | Yes | Yes (bulk medicines + EPAR-documents JSON feeds) | Yes (per-medicine raw record + documents + raw bulk snapshots) | Yes (`--resume` + `last_updated_date` range, client-side) | 16 (test run) | Implemented (PSUSA/DHPC safety feeds not covered), phase-7 |
-| WIPO | Patent | No | Unknown | — | — | 0 | Not started — access mechanism not yet investigated |
+| WIPO | Patent | Yes | Yes (EPO OPS, not WIPO PATENTSCOPE — see notes) | Yes (per-publication biblio XML) | Full undated discovery sweep every run; `--since`/`--until` server-side CQL; already-successful publications skipped (biblio treated as immutable) | 12 (test run) | Implemented, phase-8. WIPO PATENTSCOPE itself has no public API and its Terms of Use forbid automated access — acquired via EPO OPS instead, filtered to WO-prefixed publications |
 | USPTO | Patent | No | Unknown | — | — | 0 | Not started — access mechanism not yet investigated |
 | EPO | Patent | No | Unknown | — | — | 0 | Not started — access mechanism not yet investigated |
 | Company pipelines | Corporate | No | — | — | — | 0 | Not started — needs `configs/company_registry.yaml` first |
