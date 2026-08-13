@@ -92,6 +92,16 @@ PUBLICATION_EXTRA_FIELDS = [
 ]
 LICENSE_NOTE = "EPO OPS bibliographic data (INPADOC/DOCDB), covers WO-prefixed PCT publications."
 
+# Raw-fetch content/version tracking lives in its OWN checkpoint namespace,
+# updated unconditionally right after every raw write — independent of
+# whether parsing that content later succeeds. This is what lets version
+# numbering survive repeated parse failures: if it were driven by a
+# checkpoint that only updates on parse success, two different raw
+# contents fetched across two parse-failing runs would both compute
+# version=1 and the second write would silently overwrite the first's
+# raw evidence (caught in review round 2 on this PR).
+RAW_NAMESPACE = "raw_records"
+
 DISCOVERY_COLUMNS = ["source", "source_record_id", "query_id", "query_version", "query_text", "discovered_at", "run_id"]
 ATTEMPT_COLUMNS = [
     "source", "source_record_id", "run_id", "attempted_at", "status",
@@ -300,15 +310,17 @@ class WIPOJob(AcquisitionJob):
         attempt_rows = []
         parse_error: str | None = None
 
+        already_skipped_id_set = set(already_skipped_ids)
+
         for pub_id in fast_skip_ids:
             result.records_skipped_unchanged += 1
             query_id, query_text = first_query_by_id[pub_id]
-            prior_state = checkpoint_store.get_record_state(checkpoint, pub_id)
+            raw_prior_state = checkpoint_store.get_record_state(checkpoint, pub_id, namespace=RAW_NAMESPACE)
             attempt_rows.append(
                 _record_row(
                     pub_id, run_id, now, "skipped_unchanged", query_id, query_text,
-                    content_hash=prior_state["content_hash"] if prior_state else None,
-                    version=prior_state["version"] if prior_state else None,
+                    content_hash=raw_prior_state["content_hash"] if raw_prior_state else None,
+                    version=raw_prior_state["version"] if raw_prior_state else None,
                 )
             )
 
@@ -332,30 +344,46 @@ class WIPOJob(AcquisitionJob):
                 continue
 
             content_hash = sha256_bytes(raw_bytes)
-            prior_state = checkpoint_store.get_record_state(checkpoint, pub_id)
-
-            if prior_state and prior_state.get("content_hash") == content_hash:
-                # Refetched under --refresh (or a retry) and OPS content is
-                # unchanged -- no new version, no re-parse needed (the
-                # manifest row for this version already exists).
-                result.records_skipped_unchanged += 1
-                attempt_rows.append(
-                    _record_row(
-                        pub_id, run_id, now, "skipped_unchanged", query_id, query_text,
-                        content_hash=content_hash, version=prior_state["version"],
-                    )
-                )
-                continue
-
-            # New or CHANGED content: persist the raw bytes IMMEDIATELY,
-            # before parsing them -- a parser crash must never erase the
-            # exact OPS response that caused it (same invariant as EMA's
-            # bulk-snapshot fix: RAW FETCH -> DURABLE SNAPSHOT -> PARSE).
-            version = (prior_state["version"] + 1) if prior_state else 1
+            # Raw version numbering is driven ENTIRELY by RAW_NAMESPACE,
+            # updated unconditionally right after every raw write --
+            # independent of whether parsing succeeds. This is what makes
+            # the raw snapshot immutable/append-only even across repeated
+            # parse failures with genuinely different OPS content each time.
+            raw_prior_state = checkpoint_store.get_record_state(checkpoint, pub_id, namespace=RAW_NAMESPACE)
             raw_dir = output_dir / "raw" / "wipo" / pub_id
-            raw_dir.mkdir(parents=True, exist_ok=True)
-            raw_path = raw_dir / f"v{version}.xml"
-            raw_path.write_bytes(raw_bytes)
+
+            if raw_prior_state and raw_prior_state.get("content_hash") == content_hash:
+                version = raw_prior_state["version"]
+                raw_path = raw_dir / f"v{version}.xml"
+                if pub_id in already_skipped_id_set:
+                    # Already fully resolved before this run (a --refresh
+                    # re-check); content is unchanged, so this is a genuine
+                    # no-op -- the manifest row for this version already
+                    # exists, no need to re-parse it.
+                    result.records_skipped_unchanged += 1
+                    attempt_rows.append(
+                        _record_row(
+                            pub_id, run_id, now, "skipped_unchanged", query_id, query_text,
+                            content_hash=content_hash, version=version,
+                        )
+                    )
+                    continue
+                # Else: this is a fresh/backlog id whose raw content
+                # happens to match a PRIOR raw fetch that was never
+                # successfully parsed (e.g. a still-unresolved parse
+                # failure) -- fall through and retry parsing below,
+                # reusing the existing raw file rather than rewriting it.
+            else:
+                # New or CHANGED raw content: persist it IMMEDIATELY,
+                # before parsing -- a parser crash must never erase the
+                # exact OPS response that caused it (same invariant as
+                # EMA's bulk-snapshot fix: RAW FETCH -> DURABLE SNAPSHOT ->
+                # PARSE).
+                version = (raw_prior_state["version"] + 1) if raw_prior_state else 1
+                raw_dir.mkdir(parents=True, exist_ok=True)
+                raw_path = raw_dir / f"v{version}.xml"
+                raw_path.write_bytes(raw_bytes)
+                checkpoint_store.set_record_state(checkpoint, pub_id, content_hash, version, now, namespace=RAW_NAMESPACE)
 
             try:
                 parsed = parse_biblio_response(raw_bytes)
@@ -371,7 +399,6 @@ class WIPOJob(AcquisitionJob):
                 parse_error = f"publication={pub_id}: {exc}"
                 break  # a parser bug is likely systematic -- stop rather than push through the whole batch
 
-            checkpoint_store.set_record_state(checkpoint, pub_id, content_hash, version, now)
             result.records_downloaded += 1
             attempt_rows.append(
                 _record_row(pub_id, run_id, now, "success", query_id, query_text, content_hash=content_hash, version=version)

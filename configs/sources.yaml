@@ -195,7 +195,7 @@ patents_wipo:
   rate_limit: "search endpoint has a tight short-window quota bucket (verified live: exhausted after ~15-20 calls, recovers in ~1-2 min); biblio fetch (retrieval bucket) has ample separate headroom. Also capped at 100 results/request, 2000 total-results/query."
   license_or_access_note: EPO OPS bibliographic data (INPADOC/DOCDB), covers WO-prefixed PCT publications.
   raw_formats: [xml]
-  update_strategy: "full undated discovery sweep every run (5 CQL queries); materialization skips already-successful publications entirely (biblio treated as immutable once published) — see jobs/wipo/job.py docstring."
+  update_strategy: "full undated discovery sweep every run (5 CQL queries); materialization skips already-successful publications by default (no OPS request) as an efficiency default — OPS data can be corrected over time, so `--refresh` opts a run into re-verifying already-successful publications periodically. See jobs/wipo/job.py docstring."
   implementation_status: implemented
   enabled: true
   notes: Job 03 in Prompt.md, promoted to #8 in recommended execution order. Job 10 (EPO) will also use OPS, filtered to EP-prefixed publications, as an architecturally independent job.

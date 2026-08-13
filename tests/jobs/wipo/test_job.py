@@ -304,6 +304,49 @@ def test_raw_xml_persisted_before_parser_crash(tmp_path, monkeypatch):
 
 
 @responses.activate
+def test_raw_snapshot_version_survives_repeated_parse_failures_with_changing_content(tmp_path, monkeypatch):
+    """Round-2 regression test: raw version numbering must be driven by a
+    checkpoint namespace that updates unconditionally on every raw write,
+    NOT by one that only updates on parse success -- otherwise two
+    genuinely different raw contents fetched across two parse-failing runs
+    would both compute version=1 and the second write would silently
+    overwrite the first's raw evidence."""
+    _setup(tmp_path, monkeypatch)
+    h = _hit()
+
+    import jobs.wipo.job as job_module
+
+    def _boom(_bytes):
+        raise RuntimeError("simulated parser bug")
+
+    monkeypatch.setattr(job_module, "parse_biblio_response", _boom)
+
+    xml_a = _biblio_xml(h, title="Content A")
+    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_a})
+    try:
+        WIPOJob().run(_base_args(tmp_path))
+    except RuntimeError:
+        pass
+
+    responses.reset()
+    xml_b = _biblio_xml(h, title="Content B")
+    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})
+    monkeypatch.setattr(job_module, "parse_biblio_response", _boom)
+    try:
+        WIPOJob().run(_base_args(tmp_path))
+    except RuntimeError:
+        pass
+
+    raw_dir = tmp_path / "DATA" / "raw" / "wipo" / _pub_id(h)
+    assert (raw_dir / "v1.xml").read_bytes() == xml_a  # untouched, not overwritten by content B
+    assert (raw_dir / "v2.xml").read_bytes() == xml_b
+
+    attempts = _attempts_df(tmp_path)
+    parse_failed_rows = attempts[attempts["status"] == "parse_failed"].sort_values("attempted_at")
+    assert list(parse_failed_rows["version"]) == [1, 2]
+
+
+@responses.activate
 def test_failed_publication_retried_on_next_run(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     h = _hit()
