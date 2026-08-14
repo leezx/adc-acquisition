@@ -16,6 +16,7 @@ from jobs.europe_pmc.job import EuropePMCJob
 from jobs.fda.job import FDAJob
 from jobs.pubmed.job import PubMedJob
 from jobs.sec.job import SECJob
+from jobs.uspto.job import USPTOJob
 from jobs.wipo.job import WIPOJob
 
 JOBS = {
@@ -27,6 +28,7 @@ JOBS = {
     "fda": FDAJob,
     "ema": EMAJob,
     "wipo": WIPOJob,
+    "uspto": USPTOJob,
 }
 
 

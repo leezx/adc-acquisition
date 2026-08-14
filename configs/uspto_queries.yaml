@@ -1,0 +1,57 @@
+# Job 09 (USPTO) discovery queries — Prompt.md section 7's listed search
+# concepts (reused verbatim from Job 08/WIPO's registry, translated into
+# USPTO ODP's Patent File Wrapper search syntax). Verified live on
+# 2026-08-13 against https://api.uspto.gov/api/v1/patent/applications/search
+# (free-text `q` search covers full specification/title/abstract content,
+# not just the title — broader net than WIPO's title/abstract-only CQL
+# fields). Unlike OPS, USPTO imposes no total-result access cap (verified
+# live: offset=50000 into a 75296-result query still returned data
+# cleanly), so queries don't need splitting to stay under a hard ceiling —
+# kept separate anyway for the same "never collapse multi-query
+# provenance" reason as every other job.
+
+queries:
+  - query_id: USPTO_ADC_PHRASE_SINGULAR_001
+    query_version: 1
+    query_text: '"antibody-drug conjugate"'
+    purpose: >
+      Free-text phrase match for "antibody-drug conjugate" (hyphenated;
+      USPTO's tokenizer normalizes hyphenated/unhyphenated forms
+      identically, confirmed live). Verified live: 739 total results.
+    active: true
+
+  - query_id: USPTO_ADC_PHRASE_PLURAL_001
+    query_version: 1
+    query_text: '"antibody-drug conjugates"'
+    purpose: >
+      Plural form — a genuinely different phrase match (verified live:
+      1845 total results, not fully overlapping with the singular query).
+    active: true
+
+  - query_id: USPTO_ADC_IMMUNOCONJUGATE_001
+    query_version: 1
+    query_text: 'immunoconjugate'
+    purpose: >
+      "immunoconjugate" free-text. Verified live: 141 total results.
+    active: true
+
+  - query_id: USPTO_ADC_LINKER_CYTOTOXIN_001
+    query_version: 1
+    query_text: 'antibody AND linker AND cytotoxin'
+    purpose: >
+      Concept query for "antibody AND linker AND cytotoxin" (Prompt.md's
+      listed concept). Verified live: 0 results for this exact 3-way
+      combination in USPTO's corpus (not a query-syntax bug — confirmed
+      live that "linker AND cytotoxin" alone is already 0; "antibody AND
+      cytotoxin" is 6, "antibody AND linker" is 85). Kept registered for
+      provenance/parity with Prompt.md's listed concepts and Job 08's
+      registry shape, even though currently empty for this corpus.
+    active: true
+
+  - query_id: USPTO_ADC_PAYLOAD_CONJUGATE_001
+    query_version: 1
+    query_text: 'antibody AND payload AND conjugate'
+    purpose: >
+      Concept query for "antibody AND payload AND conjugate". Verified
+      live: 14 total results.
+    active: true
