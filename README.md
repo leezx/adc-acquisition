@@ -458,9 +458,12 @@ unlike WIPO PATENTSCOPE there is no automation ban, just registration.
 Discovery uses the same 5 free-text search concepts as Job 08 (WIPO),
 translated to USPTO's query syntax — confirmed live to search across full
 specification content, not just titles. `uspto.parquet` is the
-application content-version manifest (raw JSON preserved verbatim, keyed
-by application_number); `uspto_documents.parquet` holds Specification
-(`documentCode == "SPEC"`) documents as an independent artifact.
+application content-version manifest (a deterministic serialization of
+the full source record, not the raw HTTP response bytes verbatim — the
+record is extracted from a wrapping envelope and re-serialized with
+`sort_keys=True` — keyed by application_number); `uspto_documents.parquet`
+holds Specification (`documentCode == "SPEC"`) documents as an
+independent artifact, whose raw PDF/XML bytes ARE preserved verbatim.
 
 **Unlike Job 08 (WIPO):** every discovered application is refetched and
 hash-compared every run — USPTO application content is mutable
@@ -477,9 +480,29 @@ confirmed live that two immediately-successive fetches of the exact same
 `/CreationDate`). Hash-compare-then-version — the pattern every other
 document artifact in this repo uses — would treat every re-fetch as
 "changed" and create an unbounded stream of spurious versions forever.
-Documents are instead skipped once their `documentIdentifier` has one
-successful attempt (identity-based, not hash-based), mirroring Job 08's
-skip-by-default design but for a different underlying reason.
+Documents are instead skipped once their `documentIdentifier` already has
+a `document_records` checkpoint entry (identity-based, not hash-based) —
+the skip test reads the checkpoint directly (durable to disk immediately
+after every raw write), not the attempts ledger, so a lost ledger flush
+(e.g. an uncaught exception after the checkpoint save but before the
+end-of-run batch write) self-heals on the next run by reconstructing the
+manifest/attempts rows from the checkpoint's own stored hash/version,
+rather than re-downloading and overwriting the raw file with different
+bytes.
+
+Application-level materialization keeps raw-fetch state (`raw_records`
+checkpoint namespace) and "already fully normalized" as two separate
+facts: unchanged bytes are only classified `skipped_unchanged` when the
+attempts ledger's own most-recent status for that application is already
+resolved (`success` or `skipped_unchanged`); unchanged bytes whose last
+attempt was `parse_failed` (or missing entirely, e.g. after an uncaught
+crash) reuse the existing raw file and retry normalization instead of
+being silently skipped forever. `--limit` fairness is three categories,
+not two: never-attempted (fresh) first, then unresolved retries
+(backlog), then already-resolved applications due for periodic
+re-verification (reverify) — strictly last, so a small `--limit` can never
+get stuck re-verifying the same already-successful applications while
+starving out genuinely new ones.
 
 `--since`/`--until` apply as a genuine server-side bracket-range filter
 (`applicationMetaData.filingDate:[YYYY-MM-DD TO YYYY-MM-DD]`, verified

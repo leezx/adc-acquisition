@@ -19,8 +19,11 @@ response cap) — not bibliographic data — so discovery and materialization
 are two different API calls, same shape as FDA's label-search-then-
 drugsfda-lookup and WIPO's search-then-biblio-fetch.
 
-Three tables: uspto.parquet (application content-version manifest, raw
-JSON preserved verbatim, keyed by application_number), uspto_discovery.parquet
+Three tables: uspto.parquet (application content-version manifest, a
+deterministic sort_keys=True serialization of the source's full
+patentFileWrapperDataBag record — not the raw HTTP response bytes
+verbatim, since the record is extracted from a wrapping envelope and
+re-serialized — keyed by application_number), uspto_discovery.parquet
 (every (application, query, run) triple, written unconditionally right
 after all queries' searches complete, BEFORE any per-application fetch is
 attempted — same "discovery must survive a later step's crash" principle
@@ -49,12 +52,37 @@ way — doing so would make a not-yet-successfully-materialized application
 whose filing predates the cursor undiscoverable by this run's search at
 all, the exact SEC-round-2 failure mode. So --resume and the plain
 default both run a full undated sweep of all 5 registered queries every
-run. Materialization order for a --limit budget: never-attempted (fresh)
-first, then previously-failed (backlog, unresolved retries), then
-already-successfully-materialized applications due for periodic
-re-verification — this last category exists ONLY because USPTO content is
-mutable and cheap to re-check, unlike WIPO/SEC/FDA/EMA's date-bounded
-in_range/backlog split.
+run. Materialization order for a --limit budget is THREE categories, not
+two: never-attempted (fresh) first, then unresolved retries (backlog —
+most recent attempt was failed OR parse_failed), then already-resolved
+applications (reverify — most recent attempt was success OR
+skipped_unchanged) due for periodic re-verification. Round-1 review caught
+a real bug here: an earlier version only excluded `failed` from `fresh_ids`,
+so already-successful applications were wrongly treated as "fresh" too —
+under a small --limit, the same handful of already-successful ids would be
+re-verified every single run while a genuinely fresh id discovered later
+could be starved out forever. The three-category split (with reverify
+strictly last) is what makes --limit fairness actually hold.
+
+RAW ACQUISITION STATE IS NOT THE SAME FACT AS "ALREADY FULLY
+MATERIALIZED" — round-1 review also caught this, the same class of bug
+Job 08/WIPO needed 3 rounds to fully close. An application's raw-fetch
+content_hash/version lives in its own RAW_NAMESPACE checkpoint,
+updated unconditionally right after every raw write AND saved to disk
+IMMEDIATELY (before parsing is attempted) — same invariant as WIPO. But
+"this run's freshly-fetched bytes match RAW_NAMESPACE's stored hash" only
+proves the RAW bytes are unchanged; it does NOT prove normalization
+(parse -> manifest row -> attempts row) ever actually completed for that
+content, because manifest/attempts are only flushed to disk once, at the
+very end of a run — an uncaught exception anywhere downstream of the raw
+write (a parser crash recorded as parse_failed, or any other uncaught bug)
+leaves that flush undone. So the skip-without-reparse decision requires
+BOTH facts: unchanged raw bytes (RAW_NAMESPACE) AND the attempts ledger's
+own most-recent status for this id already being resolved (success or
+skipped_unchanged) — not just the first one. If bytes are unchanged but
+the ledger's last word on this id was parse_failed, or has no attempt
+recorded at all (a crash before the ledger was ever flushed), the raw file
+is reused as-is (no rewrite, no new version) but normalization is retried.
 
 Documents (secondary artifact, Prompt.md's "claims/full text where
 legally and technically available"): each materialized application's file
@@ -95,8 +123,23 @@ that record's checkpoint state (content_hash/version) is BOTH updated in
 memory AND saved to disk IMMEDIATELY, before parsing/normalization is
 attempted — the two-part invariant Job 08/WIPO needed 3 review rounds to
 fully establish (RAW FETCH -> RAW SNAPSHOT -> CHECKPOINT SAVED TO DISK ->
-PARSE), applied here proactively from the start rather than waiting to be
-caught again.
+PARSE).
+
+DOCUMENT SKIP DECISIONS USE THE CHECKPOINT DIRECTLY, NOT THE ATTEMPTS
+LEDGER — round-1 review caught a real overwrite hazard here too. A
+document's DOCUMENT_NAMESPACE checkpoint entry is saved to disk
+immediately after its raw write, but (like the application manifest/
+attempts above) the documents manifest/attempts ledger is only flushed
+once, at the very end of a run. If an uncaught exception happens anywhere
+after that checkpoint save but before the end-of-run flush, the NEXT run
+would see no successful/skipped_unchanged ledger row for this document at
+all — and since USPTO's /download bytes are NOT reproducible across
+requests (see below), re-fetching it would silently overwrite the
+already-durable raw file with different bytes. So the skip test is simply
+"does DOCUMENT_NAMESPACE already have a checkpoint entry for this
+documentIdentifier" — if yes, skip with NO request and reconstruct this
+run's manifest/attempts rows from the checkpoint's own stored hash/version
+(self-healing a lost ledger flush without ever re-downloading).
 """
 
 from __future__ import annotations
@@ -131,6 +174,16 @@ DOCUMENT_EXTRA_FIELDS = ["document_code", "document_description"]
 LICENSE_NOTE = "USPTO Open Data Portal (Patent File Wrapper), public disclosure."
 
 DOCUMENT_NAMESPACE = "document_records"
+
+# Raw-fetch content/version tracking for APPLICATIONS lives in its own
+# checkpoint namespace, updated unconditionally right after every raw write
+# AND saved to disk immediately (before parsing) -- see module docstring.
+# Deliberately kept separate from the attempts ledger's resolved/unresolved
+# status, which is a DIFFERENT fact (whether normalization ever completed).
+RAW_NAMESPACE = "raw_records"
+
+RESOLVED_STATUSES = {"success", "skipped_unchanged"}
+UNRESOLVED_STATUSES = {"failed", "parse_failed"}
 
 DISCOVERY_COLUMNS = ["source", "source_record_id", "query_id", "query_version", "query_text", "discovered_at", "run_id"]
 ATTEMPT_COLUMNS = [
@@ -175,55 +228,25 @@ def _document_attempt_row(
     )
 
 
-def _unresolved_ids(attempts_path: Path) -> set[str]:
-    """Application ids whose MOST RECENT recorded attempt was a failure —
-    unresolved, so they're retried on every run regardless of --resume's
-    cursor (which never narrows USPTO's search itself, see module
-    docstring)."""
+def _latest_status_by_id(attempts_path: Path) -> dict[str, str]:
+    """Every application id's MOST RECENTLY recorded attempt status.
+
+    Used for two distinct decisions that both need "what happened last
+    time": (1) --limit fairness (fresh / backlog / reverify triage, see
+    module docstring) and (2) whether unchanged raw bytes are ALREADY
+    fully materialized (a hash match alone doesn't prove that — see
+    RAW_NAMESPACE docstring). Recognizes resolved as {"success",
+    "skipped_unchanged"} and unresolved as {"failed", "parse_failed"} —
+    not just the first status reached in each direction, since a record's
+    second consecutive skip produces skipped_unchanged (not success again)
+    and a parser crash produces parse_failed (not failed)."""
     if not attempts_path.exists():
-        return set()
+        return {}
     df = pd.read_parquet(attempts_path)
     if df.empty:
-        return set()
+        return {}
     latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
-    return set(latest.loc[latest["status"] == "failed", "source_record_id"])
-
-
-def _resolved_document_keys(documents_attempts_path: Path) -> set[str]:
-    """Document keys whose most recent attempt already succeeded.
-
-    Live-verified on 2026-08-13: USPTO's document download endpoints
-    (/download/applications/.../*.pdf and .../xmlarchive) DYNAMICALLY
-    RE-RENDER the file on every request — repeated fetches of the exact
-    same documentIdentifier return DIFFERENT bytes each time (confirmed:
-    the PDF embeds a `/CreationDate` reflecting render time, and the XML
-    archive differs too). So hash-compare-then-version, the pattern used
-    everywhere else in this repo for documents, cannot work here: it would
-    treat every single re-fetch as "changed" and create an unbounded
-    stream of spurious versions forever, even though the underlying filed
-    document never actually changes. Documents are instead treated as
-    permanent once identified (same shape as Job 08/WIPO's corrected
-    design, but for a different underlying reason: WIPO's publication_number
-    genuinely is a stable, versioned identity; USPTO's documentIdentifier
-    is a stable identity whose SERVED BYTES just aren't reproducible) —
-    skip re-fetching a document whose most recent attempt already
-    succeeded, using the attempts ledger's identity-based history instead
-    of a content hash.
-
-    "Resolved" means status in {"success", "skipped_unchanged"} — NOT just
-    "success". A record's second consecutive skip produces a
-    skipped_unchanged row, not another success row; recognizing only
-    "success" would misclassify it as unresolved on the THIRD run and
-    trigger a needless re-fetch (this exact bug was caught and fixed in
-    Job 08/WIPO's review round 1 — repeated here on the first attempt
-    before being caught again live, corrected proactively)."""
-    if not documents_attempts_path.exists():
-        return set()
-    df = pd.read_parquet(documents_attempts_path)
-    if df.empty:
-        return set()
-    latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
-    return set(latest.loc[latest["status"].isin({"success", "skipped_unchanged"}), "source_record_id"])
+    return dict(zip(latest["source_record_id"], latest["status"]))
 
 
 class USPTOJob(AcquisitionJob):
@@ -303,28 +326,34 @@ class USPTOJob(AcquisitionJob):
             append_only(discovery_rows, discovery_path, DISCOVERY_COLUMNS)
 
         attempts_path = output_dir / "manifests" / "uspto_attempts.parquet"
-        unresolved_ids = _unresolved_ids(attempts_path)
+        latest_status = _latest_status_by_id(attempts_path)
+        unresolved_ids = {aid for aid, st in latest_status.items() if st in UNRESOLVED_STATUSES}
+        resolved_ids = {aid for aid, st in latest_status.items() if st in RESOLVED_STATUSES}
 
-        fresh_ids = sorted(app_id for app_id in all_ids if app_id not in unresolved_ids)
+        # THREE categories, not two (round-1 fix): fresh (never attempted)
+        # first, then backlog (unresolved retries), then reverify
+        # (already-resolved, due for periodic re-verification only because
+        # USPTO content is mutable and cheap to re-check). Putting reverify
+        # STRICTLY LAST is what prevents a small --limit from re-verifying
+        # the same already-successful ids forever while a genuinely fresh
+        # id discovered later gets starved out.
+        fresh_ids = sorted(app_id for app_id in all_ids if app_id not in unresolved_ids and app_id not in resolved_ids)
         backlog_ids = sorted(app_id for app_id in all_ids if app_id in unresolved_ids)
-        # No date-bounded "in range" concept here (see module docstring) --
-        # never-attempted-or-failed ids simply come first for --limit
-        # fairness; already-successful ones (a subset of fresh_ids, since
-        # they're not in unresolved_ids) fill any remaining budget as
-        # periodic re-verification.
-        target_ids = (fresh_ids + backlog_ids)[: args.limit] if args.limit else (fresh_ids + backlog_ids)
+        reverify_ids = sorted(app_id for app_id in all_ids if app_id in resolved_ids)
+        ordered_work = fresh_ids + backlog_ids + reverify_ids
+        target_ids = ordered_work[: args.limit] if args.limit else ordered_work
 
         if args.dry_run:
             result.notes.append(
                 f"dry-run: would materialize {len(target_ids)} of {len(all_ids)} discovered applications "
-                f"({len(backlog_ids)} of those are unresolved retries)"
+                f"({len(fresh_ids)} never attempted, {len(backlog_ids)} unresolved retries, "
+                f"{len(reverify_ids)} already-resolved reverify candidates)"
             )
             return result
 
         manifest_path = output_dir / "manifests" / "uspto.parquet"
         documents_manifest_path = output_dir / "manifests" / "uspto_documents.parquet"
         documents_attempts_path = output_dir / "manifests" / "uspto_documents_attempts.parquet"
-        resolved_document_keys = _resolved_document_keys(documents_attempts_path)
 
         content_rows = []
         attempt_rows = []
@@ -360,29 +389,47 @@ class USPTOJob(AcquisitionJob):
 
             content_bytes = json.dumps(raw_record, sort_keys=True, default=str).encode("utf-8")
             content_hash = sha256_bytes(content_bytes)
-            prior_state = checkpoint_store.get_record_state(checkpoint, app_id)
+            raw_prior_state = checkpoint_store.get_record_state(checkpoint, app_id, namespace=RAW_NAMESPACE)
 
-            if prior_state and prior_state.get("content_hash") == content_hash:
+            if (
+                raw_prior_state
+                and raw_prior_state.get("content_hash") == content_hash
+                and latest_status.get(app_id) in RESOLVED_STATUSES
+            ):
+                # Unchanged bytes AND the ledger's own last word on this id
+                # is already resolved (success or skipped_unchanged) -- a
+                # genuine no-op, skip re-parsing.
                 result.records_skipped_unchanged += 1
                 attempt_rows.append(
-                    _record_row(app_id, run_id, now, "skipped_unchanged", query_id, query_text, content_hash=content_hash, version=prior_state["version"])
+                    _record_row(app_id, run_id, now, "skipped_unchanged", query_id, query_text, content_hash=content_hash, version=raw_prior_state["version"])
                 )
                 continue
 
-            # New or CHANGED application record: persist raw bytes and
-            # save the checkpoint's version state to disk IMMEDIATELY,
-            # before parsing -- a parser crash (or any later exception)
-            # must never leave a later run confused about which version
-            # number this content already occupies (the invariant Job 08/
-            # WIPO needed 3 review rounds to establish; applied here from
-            # the start).
-            version = (prior_state["version"] + 1) if prior_state else 1
-            raw_dir = output_dir / "raw" / "uspto" / app_id
-            raw_dir.mkdir(parents=True, exist_ok=True)
-            raw_path = raw_dir / f"v{version}.json"
-            raw_path.write_bytes(content_bytes)
-            checkpoint_store.set_record_state(checkpoint, app_id, content_hash, version, now)
-            checkpoint_store.save(checkpoint)
+            if raw_prior_state and raw_prior_state.get("content_hash") == content_hash:
+                # Unchanged bytes, but normalization never actually
+                # completed last time (parse_failed, or no attempt
+                # recorded at all -- e.g. an uncaught exception crashed
+                # the run before its end-of-run ledger flush). Reuse the
+                # EXISTING raw file rather than rewriting it -- no new
+                # version, since the bytes genuinely didn't change -- but
+                # retry parsing/normalization.
+                version = raw_prior_state["version"]
+                raw_path = output_dir / "raw" / "uspto" / app_id / f"v{version}.json"
+            else:
+                # New or CHANGED application record: persist raw bytes and
+                # save the checkpoint's RAW_NAMESPACE version state to disk
+                # IMMEDIATELY, before parsing -- a parser crash (or any
+                # later exception) must never leave a later run confused
+                # about which version number this content already
+                # occupies (the invariant Job 08/WIPO needed 3 review
+                # rounds to establish; applied here from the start).
+                version = (raw_prior_state["version"] + 1) if raw_prior_state else 1
+                raw_dir = output_dir / "raw" / "uspto" / app_id
+                raw_dir.mkdir(parents=True, exist_ok=True)
+                raw_path = raw_dir / f"v{version}.json"
+                raw_path.write_bytes(content_bytes)
+                checkpoint_store.set_record_state(checkpoint, app_id, content_hash, version, now, namespace=RAW_NAMESPACE)
+                checkpoint_store.save(checkpoint)
 
             try:
                 parsed = parse_application(raw_record)
@@ -454,20 +501,54 @@ class USPTOJob(AcquisitionJob):
                 if not doc.download_url:
                     continue
 
-                if doc_key in resolved_document_keys:
-                    # Already successfully fetched -- skip with NO HTTP
-                    # request. Not a hash-compare decision (see
-                    # _resolved_document_keys docstring: USPTO dynamically
-                    # re-renders these files per request, so their bytes
-                    # are never stable/reproducible across fetches, making
-                    # hash comparison meaningless here) -- documentIdentifier
-                    # itself is the permanent identity signal.
-                    prior_doc_state = checkpoint_store.get_record_state(checkpoint, doc_key, namespace=DOCUMENT_NAMESPACE)
+                suffix = (doc.mime_type or "pdf").lower()
+                prior_doc_state = checkpoint_store.get_record_state(checkpoint, doc_key, namespace=DOCUMENT_NAMESPACE)
+
+                if prior_doc_state is not None:
+                    # DOCUMENT_NAMESPACE already has an entry for this
+                    # documentIdentifier -- that checkpoint write is saved
+                    # to disk immediately after the raw file is written
+                    # (below), so its mere presence PROVES the raw file
+                    # already exists, even if a prior run crashed between
+                    # that checkpoint save and its own end-of-run ledger
+                    # flush (leaving no success/skipped_unchanged row for
+                    # this document at all). Skip with NO HTTP request and
+                    # reconstruct this run's ledger rows from the
+                    # checkpoint's own stored hash/version -- re-fetching
+                    # would silently overwrite the already-durable raw
+                    # file with DIFFERENT bytes, since USPTO's /download
+                    # endpoints dynamically re-render on every request
+                    # (see module docstring) and documentIdentifier, not
+                    # content, is the permanent identity signal here.
+                    doc_version = prior_doc_state["version"]
+                    doc_hash = prior_doc_state["content_hash"]
+                    doc_path = output_dir / "raw" / "uspto" / app_id / "documents" / f"v{doc_version}_{doc.document_identifier}.{suffix}"
                     document_attempt_rows.append(
-                        _document_attempt_row(
-                            doc_key, app_id, run_id, now, "skipped_unchanged",
-                            content_hash=prior_doc_state["content_hash"] if prior_doc_state else None,
-                            version=prior_doc_state["version"] if prior_doc_state else None,
+                        _document_attempt_row(doc_key, app_id, run_id, now, "skipped_unchanged", content_hash=doc_hash, version=doc_version)
+                    )
+                    document_content_rows.append(
+                        new_manifest_row(
+                            extra_fields=DOCUMENT_EXTRA_FIELDS,
+                            source="uspto",
+                            source_record_id=doc_key,
+                            source_record_type="uspto_document",
+                            title=f"{doc.document_description or doc.document_code} — {app_id}",
+                            url=doc.download_url,
+                            publication_or_release_date=doc.official_date,
+                            retrieved_at=now,
+                            query_id=query_id,
+                            query_text=query_text,
+                            raw_file_path=str(doc_path),
+                            raw_format=suffix,
+                            content_hash=doc_hash,
+                            download_status="success",
+                            http_status=200,
+                            license_or_access_note=LICENSE_NOTE,
+                            parent_record_id=app_id,
+                            version=doc_version,
+                            notes=None,
+                            document_code=doc.document_code,
+                            document_description=doc.document_description,
                         )
                     )
                     continue
@@ -481,10 +562,9 @@ class USPTOJob(AcquisitionJob):
                     continue
 
                 doc_hash = sha256_bytes(doc_bytes)
-                doc_version = 1  # documentIdentifier is a permanent identity -- see _resolved_document_keys.
+                doc_version = 1  # documentIdentifier is a permanent identity -- see module docstring.
                 doc_dir = output_dir / "raw" / "uspto" / app_id / "documents"
                 doc_dir.mkdir(parents=True, exist_ok=True)
-                suffix = (doc.mime_type or "pdf").lower()
                 doc_path = doc_dir / f"v{doc_version}_{doc.document_identifier}.{suffix}"
                 doc_path.write_bytes(doc_bytes)
                 checkpoint_store.set_record_state(checkpoint, doc_key, doc_hash, doc_version, now, namespace=DOCUMENT_NAMESPACE)
@@ -532,7 +612,7 @@ class USPTOJob(AcquisitionJob):
         report_path = output_dir.parent / "reports" / "acquisition" / "uspto.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(
-            build_report(result, manifest_df, all_ids, backlog_ids, document_attempt_rows),
+            build_report(result, manifest_df, all_ids, backlog_ids, document_attempt_rows, reverify_ids),
             encoding="utf-8",
         )
 

@@ -11,7 +11,9 @@ def build_report(
     all_ids: list[str],
     backlog_ids: list[str],
     document_attempt_rows: list[dict],
+    reverify_ids: list[str] | None = None,
 ) -> str:
+    reverify_ids = reverify_ids or []
     run_df = manifest_df[manifest_df["source_record_id"].isin(all_ids)] if not manifest_df.empty else manifest_df
     sample_rows = "n/a"
     if not run_df.empty:
@@ -47,7 +49,7 @@ configs/uspto_queries.yaml (5 queries, same concepts as Job 08/WIPO): singular/p
 
 ## Materialization this run
 
-{result.records_downloaded} new/changed, {result.records_skipped_unchanged} unchanged, {result.records_failed} failed. Unlike Job 08 (WIPO), every discovered application is refetched and hash-compared every run (prosecution status/assignments/continuity data genuinely change over time) — {len(backlog_ids)} of this run's candidates were unresolved retries from a previous failure.
+{result.records_downloaded} new/changed, {result.records_skipped_unchanged} unchanged, {result.records_failed} failed. Unlike Job 08 (WIPO), every discovered application is refetched and hash-compared every run (prosecution status/assignments/continuity data genuinely change over time) — {len(backlog_ids)} of this run's candidates were unresolved retries from a previous failure, {len(reverify_ids)} were already-resolved reverify candidates (scheduled strictly after fresh/backlog under a --limit budget, so they can never starve out a genuinely new application).
 
 ## Documents (independent artifact, see `uspto_documents.parquet`)
 

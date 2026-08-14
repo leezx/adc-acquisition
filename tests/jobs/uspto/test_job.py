@@ -436,3 +436,169 @@ def test_empty_result_set_produces_empty_manifest_without_error(tmp_path, monkey
 
     assert result.records_discovered == 0
     assert result.records_downloaded == 0
+
+
+@responses.activate
+def test_parse_failure_self_heals_without_new_version_when_content_unchanged(tmp_path, monkeypatch):
+    """P0 acceptance test A (round-1 review): raw acquisition state
+    (RAW_NAMESPACE) and "already fully materialized" are different facts.
+    A parse_failed most-recent-attempt with UNCHANGED bytes must not be
+    treated as resolved -- it must be reparsed using the SAME raw file (no
+    new version) once the parser bug is fixed, not permanently stuck."""
+    _setup(tmp_path, monkeypatch)
+    _register_uspto({'"antibody-drug conjugate"': ["111"]}, applications={"111": _application("111")})
+
+    import jobs.uspto.job as job_module
+    from jobs.uspto.parser import parse_application as real_parse_application
+
+    def _boom(raw):
+        raise RuntimeError("simulated parser bug")
+
+    monkeypatch.setattr(job_module, "parse_application", _boom)
+    try:
+        USPTOJob().run(_base_args(tmp_path))
+        raised = False
+    except RuntimeError:
+        raised = True
+    assert raised
+
+    attempts = _attempts_df(tmp_path)
+    assert attempts[attempts["source_record_id"] == "111"].iloc[-1]["status"] == "parse_failed"
+    assert len(_manifest_df(tmp_path)) == 0  # no successful materialization yet
+
+    monkeypatch.setattr(job_module, "parse_application", real_parse_application)
+    responses.reset()
+    _register_uspto({'"antibody-drug conjugate"': ["111"]}, applications={"111": _application("111")})  # SAME bytes
+
+    result = USPTOJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1  # reparsed successfully, not classified skipped_unchanged
+    df = _manifest_df(tmp_path)
+    versions = sorted(df.loc[df["source_record_id"] == "111", "version"])
+    assert versions == [1]  # same raw bytes reused -- no spurious v2 created
+
+
+@responses.activate
+def test_uncaught_crash_after_raw_durable_self_heals_next_run(tmp_path, monkeypatch):
+    """P0 acceptance test B (round-1 review): an uncaught exception
+    (not just a caught parser error) anywhere downstream of the raw write
+    must not leave the NEXT run believing this application is already
+    fully materialized -- unchanged bytes with no successful/
+    skipped_unchanged attempt on record must be re-normalized."""
+    _setup(tmp_path, monkeypatch)
+    _register_uspto({'"antibody-drug conjugate"': ["111"]}, applications={"111": _application("111")})
+
+    import jobs.uspto.job as job_module
+    real_new_manifest_row = job_module.new_manifest_row
+
+    def _boom(*args, **kwargs):
+        if kwargs.get("source_record_type") == "uspto_application":
+            raise RuntimeError("simulated uncaught crash after raw write")
+        return real_new_manifest_row(*args, **kwargs)
+
+    monkeypatch.setattr(job_module, "new_manifest_row", _boom)
+    try:
+        USPTOJob().run(_base_args(tmp_path))
+        raised = False
+    except RuntimeError:
+        raised = True
+    assert raised
+
+    raw_path = tmp_path / "DATA" / "raw" / "uspto" / "111" / "v1.json"
+    assert raw_path.exists()
+    assert not (tmp_path / "DATA" / "manifests" / "uspto_attempts.parquet").exists()
+
+    monkeypatch.setattr(job_module, "new_manifest_row", real_new_manifest_row)
+    result = USPTOJob().run(_base_args(tmp_path))  # same bytes, no crash this time
+
+    assert result.records_downloaded == 1  # re-normalized, NOT skipped_unchanged
+    df = _manifest_df(tmp_path)
+    versions = sorted(df.loc[df["source_record_id"] == "111", "version"])
+    assert versions == [1]  # same raw file reused, no new version
+
+
+@responses.activate
+def test_limit_reverify_does_not_starve_fresh_ids_forever(tmp_path, monkeypatch):
+    """P0 acceptance test (round-1 review): fresh_ids previously excluded
+    only `failed`, so an already-successful application was wrongly
+    treated as "fresh" too. Under a small --limit that meant the same
+    already-successful id would be re-verified every run while a
+    genuinely fresh id discovered later could be starved out forever."""
+    _setup(tmp_path, monkeypatch)
+    _register_uspto({'"antibody-drug conjugate"': ["100"]}, applications={"100": _application("100")})
+    USPTOJob().run(_base_args(tmp_path, limit=1))  # "100" succeeds -- now a "reverify" candidate
+
+    responses.reset()
+    _register_uspto(
+        {'"antibody-drug conjugate"': ["100", "200"]},
+        applications={"100": _application("100"), "200": _application("200")},
+    )
+    result = USPTOJob().run(_base_args(tmp_path, limit=1))
+
+    assert result.records_downloaded == 1
+    df = _manifest_df(tmp_path)
+    assert "200" in set(df["source_record_id"])  # the genuinely fresh id got the single slot
+    assert (df.loc[df["source_record_id"] == "200", "version"] == 1).all()
+
+
+@responses.activate
+def test_document_raw_checkpoint_survives_uncaught_crash_before_ledger_flush(tmp_path, monkeypatch):
+    """P0 acceptance test (round-1 review), documents variant: a
+    DOCUMENT_NAMESPACE checkpoint entry is saved to disk immediately after
+    a document's raw write, but the documents manifest/attempts ledger is
+    only flushed once, at the end of run(). An uncaught exception between
+    those two points must not cause the NEXT run to re-download this
+    document -- USPTO's /download bytes are not reproducible across
+    requests, so a re-download would silently overwrite the already-
+    durable raw file with different bytes."""
+    _setup(tmp_path, monkeypatch)
+    app = _application("111")
+    doc_url = "https://api.uspto.gov/api/v1/download/applications/DOC1.pdf"
+    _register_uspto(
+        {'"antibody-drug conjugate"': ["111"]},
+        applications={"111": app},
+        documents={"111": _document_bag("DOC1", doc_url)},
+        doc_bytes={doc_url: b"%PDF rendering one"},
+    )
+
+    import jobs.uspto.job as job_module
+    real_new_manifest_row = job_module.new_manifest_row
+
+    def _boom(*args, **kwargs):
+        if kwargs.get("source_record_type") == "uspto_document":
+            raise RuntimeError("simulated uncaught crash after checkpoint save")
+        return real_new_manifest_row(*args, **kwargs)
+
+    monkeypatch.setattr(job_module, "new_manifest_row", _boom)
+    try:
+        USPTOJob().run(_base_args(tmp_path))
+        raised = False
+    except RuntimeError:
+        raised = True
+    assert raised
+
+    # The document ledger was never flushed (crash happened before
+    # end-of-run write), but the raw file + checkpoint ARE durable.
+    assert not (tmp_path / "DATA" / "manifests" / "uspto_documents.parquet").exists()
+    raw_doc_path = tmp_path / "DATA" / "raw" / "uspto" / "111" / "documents" / "v1_DOC1.pdf"
+    assert raw_doc_path.exists()
+    assert raw_doc_path.read_bytes() == b"%PDF rendering one"
+
+    monkeypatch.setattr(job_module, "new_manifest_row", real_new_manifest_row)
+    responses.calls.reset()
+    _register_uspto(
+        {'"antibody-drug conjugate"': ["111"]},
+        applications={"111": app},
+        documents={"111": _document_bag("DOC1", doc_url)},
+        doc_bytes={doc_url: b"%PDF a DIFFERENT rendering -- would overwrite if refetched"},
+    )
+
+    USPTOJob().run(_base_args(tmp_path))
+
+    download_calls = [c for c in responses.calls if "/download/" in c.request.url]
+    assert download_calls == []  # reconstructed from checkpoint, not re-downloaded
+    assert raw_doc_path.read_bytes() == b"%PDF rendering one"  # untouched
+
+    docs_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "uspto_documents.parquet")
+    assert len(docs_df) == 1
+    assert docs_df.iloc[0]["version"] == 1
