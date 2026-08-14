@@ -12,6 +12,7 @@ import sys
 from jobs.clinicaltrials.job import ClinicalTrialsJob
 from jobs.crossref.job import CrossrefJob
 from jobs.ema.job import EMAJob
+from jobs.epo.job import EPOJob
 from jobs.europe_pmc.job import EuropePMCJob
 from jobs.fda.job import FDAJob
 from jobs.pubmed.job import PubMedJob
@@ -29,6 +30,7 @@ JOBS = {
     "ema": EMAJob,
     "wipo": WIPOJob,
     "uspto": USPTOJob,
+    "epo": EPOJob,
 }
 
 

@@ -198,7 +198,7 @@ patents_wipo:
   update_strategy: "full undated discovery sweep every run (5 CQL queries); materialization skips already-successful publications by default (no OPS request) as an efficiency default — OPS data can be corrected over time, so `--refresh` opts a run into re-verifying already-successful publications periodically. See jobs/wipo/job.py docstring."
   implementation_status: implemented
   enabled: true
-  notes: Job 03 in Prompt.md, promoted to #8 in recommended execution order. Job 10 (EPO) will also use OPS, filtered to EP-prefixed publications, as an architecturally independent job.
+  notes: Job 03 in Prompt.md, promoted to #8 in recommended execution order. Job 10 (EPO, patents_epo below) also uses OPS, filtered to EP-prefixed publications, as an architecturally independent job.
 
 patents_uspto:
   source_type: patent
@@ -218,17 +218,17 @@ patents_uspto:
 patents_epo:
   source_type: patent
   authority: regional
-  official_url: https://www.epo.org/
-  api_docs_url: https://www.epo.org/en/searching-for-patents/data/web-services/ops
+  official_url: https://ops.epo.org/ (EPO Open Patent Services — same mechanism as Job 08/WIPO, filtered to EP-prefixed publications instead of WO-prefixed)
+  api_docs_url: https://developers.epo.org/ops-v3-2/documentation
   acquisition_method: api
-  authentication_required: true
-  rate_limit: unknown
-  license_or_access_note: OPS requires registration; to be investigated in Job 10.
-  raw_formats: []
-  update_strategy: null
-  implementation_status: not_started
-  enabled: false
-  notes: Job 05 in Prompt.md, promoted to #10 in recommended execution order.
+  authentication_required: "yes — OAuth2 client-credentials (OPS_CONSUMER_KEY/OPS_CONSUMER_SECRET), same free-registration account Job 08 uses"
+  rate_limit: "same OPS account/quota behavior as Job 08/WIPO — search endpoint has a tight short-window quota bucket, biblio fetch (retrieval bucket) has ample separate headroom. Also capped at 100 results/request, 2000 total-results/query."
+  license_or_access_note: EPO OPS bibliographic data (INPADOC/DOCDB), covers EP-prefixed publications.
+  raw_formats: [xml]
+  update_strategy: "full undated discovery sweep every run (5 CQL queries); materialization skips already-successful publications by default (no OPS request) as an efficiency default, same design as Job 08/WIPO (same underlying OPS/DOCDB backend, confirmed live to behave identically) — `--refresh` opts a run into re-verifying already-successful publications periodically. See jobs/epo/job.py docstring."
+  implementation_status: implemented
+  enabled: true
+  notes: Job 05 in Prompt.md, promoted to #10 in recommended execution order. Architecturally independent from Job 08/WIPO (own query_id/provenance namespace), sharing only the OPS client/parser (adc_acquisition/ops_client.py, adc_acquisition/ops_parser.py).
 
 company_pipeline:
   source_type: corporate
