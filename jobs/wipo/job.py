@@ -50,6 +50,25 @@ on every incremental run. `--limit` prioritizes never-attempted (fresh)
 over previously-failed (backlog) over already-successful-under-refresh,
 same fairness rule as SEC/FDA/EMA.
 
+ROUND-1 FIX (2026-08-14, applied identically to Job 10/EPO in the same
+commit as that job's own round-1 review): "the ledger's latest attempt is
+resolved" is STILL not enough on its own to fast-skip — that resolved
+attempt's own recorded version must also match RAW_NAMESPACE's CURRENT
+version. Without this, a --refresh run that writes raw v2 (RAW_NAMESPACE
+durable) but crashes before flushing the manifest/attempts ledger leaves
+the ledger believing v1 is still the resolved state; the NEXT run's
+fast-skip path would see "resolved" (true, but for the STALE v1) and skip
+with no OPS request forever, permanently orphaning the v2 raw file that
+was never read into the manifest. Fixed: a resolved attempt whose version
+doesn't match RAW_NAMESPACE's current version is "pending_recovery" —
+excluded from the fast-skip path and instead routed through the ordinary
+per-item loop below (like backlog). No separate recovery code path is
+needed: that loop's existing "hash matches RAW_NAMESPACE but not already-
+skipped -> reparse the existing raw file without rewriting it" branch
+already produces exactly the missing manifest/attempts row, whether OPS
+still returns the same content or something genuinely new (which
+versions forward as usual).
+
 --since/--until: applied SERVER-SIDE via OPS's own `pd within
 "YYYYMMDD,YYYYMMDD"` CQL filter (verified live) whenever the caller
 supplies them EXPLICITLY — trusted literally, narrows the search itself.
@@ -156,21 +175,61 @@ def _unresolved_publication_ids(attempts_path: Path) -> set[str]:
     return set(latest.loc[latest["status"].isin(UNRESOLVED_STATUSES), "source_record_id"])
 
 
-def _resolved_publication_ids(attempts_path: Path) -> set[str]:
-    """Publication ids whose most recent attempt is already resolved
-    (success, OR skipped_unchanged from a prior successful fetch) — the
-    prior fetch's most recent attempt might itself have been
-    skipped_unchanged rather than success (e.g. after 2+ unchanged runs),
-    so both statuses must count as "already resolved" or this set would
-    stop recognizing a record after its second consecutive unchanged run
-    and it would incorrectly re-enter scope as if brand new."""
+def _latest_attempt_by_id(attempts_path: Path) -> dict[str, dict]:
+    """Every publication id's MOST RECENTLY recorded attempt row (status,
+    version, content_hash) — used to classify resolved/unresolved AND to
+    detect when a resolved attempt is stale relative to RAW_NAMESPACE
+    (see _classify_publication_ids)."""
     if not attempts_path.exists():
-        return set()
+        return {}
     df = pd.read_parquet(attempts_path)
     if df.empty:
-        return set()
+        return {}
     latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
-    return set(latest.loc[latest["status"].isin(RESOLVED_STATUSES), "source_record_id"])
+    return {
+        row["source_record_id"]: {"status": row["status"], "version": row["version"], "content_hash": row["content_hash"]}
+        for _, row in latest.iterrows()
+    }
+
+
+def _classify_publication_ids(
+    all_ids: list[str], latest_attempts: dict[str, dict], checkpoint_store, checkpoint,
+) -> tuple[set[str], list[str]]:
+    """Splits publication ids whose most-recent attempt is RESOLVED
+    (success/skipped_unchanged) into two groups:
+
+    - genuinely resolved: the resolved attempt's own version matches
+      RAW_NAMESPACE's CURRENT version -- safe to fast-skip with no OPS
+      request.
+    - pending_recovery: the resolved attempt is STALE relative to
+      RAW_NAMESPACE (a newer raw version is durable on disk, but the
+      manifest/attempts ledger never recorded it -- an uncaught crash
+      between the raw write and the end-of-run ledger flush). These must
+      NOT be fast-skipped; they are routed through the ordinary per-item
+      loop like backlog, whose existing hash-match-but-not-already-
+      skipped fall-through reparses the existing raw file (or versions
+      forward if OPS returns something new) without a separate recovery
+      code path.
+
+    Ids whose most-recent attempt is not resolved (never attempted,
+    failed, parse_failed) are simply absent from both returned
+    collections — the caller's existing fresh/backlog classification
+    already covers them.
+    """
+    resolved_ids: set[str] = set()
+    pending_recovery_ids: list[str] = []
+    for pub_id in all_ids:
+        att = latest_attempts.get(pub_id)
+        if not att or att["status"] not in RESOLVED_STATUSES:
+            continue
+        raw_state = checkpoint_store.get_record_state(checkpoint, pub_id, namespace=RAW_NAMESPACE)
+        if raw_state is None:
+            continue  # no raw checkpoint at all -- treat conservatively as neither resolved nor recoverable; falls into fresh_ids below.
+        if att["version"] == raw_state["version"]:
+            resolved_ids.add(pub_id)
+        else:
+            pending_recovery_ids.append(pub_id)
+    return resolved_ids, sorted(pending_recovery_ids)
 
 
 class WIPOJob(AcquisitionJob):
@@ -285,19 +344,30 @@ class WIPOJob(AcquisitionJob):
             raise RuntimeError(f"WIPO discovery incomplete (partial results already persisted): {discovery_error}")
 
         attempts_path = output_dir / "manifests" / "wipo_attempts.parquet"
-        resolved_ids = _resolved_publication_ids(attempts_path)
+        latest_attempts = _latest_attempt_by_id(attempts_path)
         unresolved_ids = _unresolved_publication_ids(attempts_path)
 
         all_ids = list(hits_by_id.keys())
-        fresh_ids = sorted(pid for pid in all_ids if pid not in resolved_ids and pid not in unresolved_ids)
+        resolved_ids, pending_recovery_ids = _classify_publication_ids(all_ids, latest_attempts, checkpoint_store, checkpoint)
+        pending_recovery_id_set = set(pending_recovery_ids)
+        fresh_ids = sorted(
+            pid for pid in all_ids
+            if pid not in resolved_ids and pid not in unresolved_ids and pid not in pending_recovery_id_set
+        )
         backlog_ids = sorted(pid for pid in all_ids if pid in unresolved_ids)
-        already_skipped_ids = sorted(pid for pid in all_ids if pid in resolved_ids)
+        already_skipped_ids = sorted(resolved_ids)
 
+        # pending_recovery_ids are ALWAYS included in this run's work,
+        # regardless of --refresh: their ledger status is stale relative
+        # to RAW_NAMESPACE (see _classify_publication_ids), so they are
+        # NOT safe to fast-skip. See _classify_publication_ids's
+        # docstring for why the ordinary per-item loop below already
+        # handles their recovery with no separate code path.
         if args.refresh:
-            ordered_new_work = fresh_ids + backlog_ids + already_skipped_ids
+            ordered_new_work = fresh_ids + backlog_ids + pending_recovery_ids + already_skipped_ids
             fast_skip_ids: list[str] = []
         else:
-            ordered_new_work = fresh_ids + backlog_ids
+            ordered_new_work = fresh_ids + backlog_ids + pending_recovery_ids
             fast_skip_ids = already_skipped_ids
         target_ids = ordered_new_work[: args.limit] if args.limit else ordered_new_work
 
@@ -305,6 +375,8 @@ class WIPOJob(AcquisitionJob):
             result.notes.append(
                 f"dry-run: would materialize {len(target_ids)} of {len(all_ids)} discovered publications "
                 f"({len(fresh_ids)} never attempted, {len(backlog_ids)} unresolved retries, "
+                f"{len(pending_recovery_ids)} pending recovery (raw durable but ledger stale, "
+                "reparsed from the existing raw file), "
                 f"{len(fast_skip_ids)} already successful and skipped with no OPS request"
                 + (", 0 refresh re-checks (--refresh not set)" if not args.refresh else "")
                 + ")"

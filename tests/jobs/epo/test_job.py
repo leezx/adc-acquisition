@@ -392,6 +392,67 @@ def test_raw_checkpoint_state_is_disk_durable_before_downstream_crash(tmp_path, 
 
 
 @responses.activate
+def test_resolved_ledger_entry_stale_relative_to_raw_checkpoint_self_heals(tmp_path, monkeypatch):
+    """P0 acceptance test (round-1 review): a resolved (success/
+    skipped_unchanged) most-recent attempt is NOT sufficient proof of
+    "already fully materialized" if its own recorded version is stale
+    relative to RAW_NAMESPACE's CURRENT version. Scenario: run 1 succeeds
+    at v1; run 2 (--refresh) writes raw v2 + durable checkpoint, but
+    crashes before the manifest/attempts ledger is ever flushed -- so the
+    ledger's last word on this publication is still "success, v1", even
+    though v2 is durable on disk. A plain (non-refresh) run 3 must NOT
+    trust that stale "resolved" ledger entry and fast-skip -- it must
+    detect the version mismatch, materialize the existing v2 raw content
+    into the manifest, and NOT create a spurious v3 (since the underlying
+    content genuinely didn't change again)."""
+    _setup(tmp_path, monkeypatch)
+    h = _hit()
+
+    xml_a = _biblio_xml(h, title="Content A")
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_a})
+    EPOJob().run(_base_args(tmp_path))  # run 1: v1 = A, success
+
+    import jobs.epo.job as job_module
+    original_new_manifest_row = job_module.new_manifest_row
+
+    def _boom(**_kwargs):
+        raise RuntimeError("simulated uncaught crash before manifest/attempts flush")
+
+    responses.reset()
+    xml_b = _biblio_xml(h, title="Content B")
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})
+    monkeypatch.setattr(job_module, "new_manifest_row", _boom)
+    try:
+        EPOJob().run(_base_args(tmp_path, refresh=True))  # run 2: raw v2 + checkpoint durable, THEN crash
+        raised = False
+    except RuntimeError:
+        raised = True
+    assert raised
+    monkeypatch.setattr(job_module, "new_manifest_row", original_new_manifest_row)
+
+    # Ledger still says v1/success (never flushed run 2's v2 success row);
+    # raw v2 + its RAW_NAMESPACE checkpoint entry ARE durable.
+    attempts = pd.read_parquet(tmp_path / "DATA" / "manifests" / "epo_attempts.parquet")
+    assert list(attempts[attempts["source_record_id"] == _pub_id(h)]["version"]) == [1]
+
+    responses.reset()
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})  # OPS still returns B (unchanged)
+    result = EPOJob().run(_base_args(tmp_path))  # run 3: plain run, no --refresh
+
+    assert result.records_downloaded == 1  # materialized, NOT classified skipped_unchanged
+    assert result.records_skipped_unchanged == 0
+
+    df = _manifest_df(tmp_path)
+    matching = df[df["source_record_id"] == _pub_id(h)].sort_values("version")
+    assert list(matching["version"]) == [1, 2]  # v2 recovered into the manifest, no spurious v3
+    assert list(matching["title"]) == ["Content A", "Content B"]
+
+    raw_dir = tmp_path / "DATA" / "raw" / "epo" / _pub_id(h)
+    assert (raw_dir / "v2.xml").read_bytes() == xml_b  # untouched
+    assert not (raw_dir / "v3.xml").exists()
+
+
+@responses.activate
 def test_failed_publication_retried_on_next_run(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     h = _hit()

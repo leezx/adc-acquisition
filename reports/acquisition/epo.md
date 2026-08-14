@@ -34,7 +34,7 @@ configs/epo_queries.yaml (5 queries, each verified live to stay under OPS's 2000
 
 ## Materialization this run
 
-529 never-attempted (fresh), 0 unresolved-retry (backlog), 30 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/epo/job.py docstring). 10 newly downloaded, 0 failed.
+519 never-attempted (fresh), 0 unresolved-retry (backlog), 40 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/epo/job.py docstring). 5 newly downloaded, 0 failed.
 
 ## Failed downloads
 
@@ -46,7 +46,7 @@ Same OPS account/quota as Job 08 (WIPO) — see adc_acquisition/ops_client.py fo
 
 ## Data quality observations
 
-- Live-verified, EP-specific OPS limitation (2026-08-14): `ti=` (title) search with a quoted multi-word phrase, restricted to `pn=EP`, at Range spans greater than 1, reproducibly returns HTTP 500 `SERVER.DomainAccess` — confirmed via isolated A/B testing that this is not query-clause ordering, not OR-combination, and not general OPS system load (concurrent single-word and AND-of-words `pn=EP` queries at the same Range succeeded throughout). Does not reproduce for Job 08 (WIPO)'s identical `pn=WO and ti="..."` pattern. See configs/epo_queries.yaml's header comment for the full investigation. The two phrase queries use `ab=` only as a result (see known coverage gaps below); the immunoconjugate query is unaffected since it searches a single word, not a quoted phrase.
+- Live-verified, EP-specific OPS limitation (2026-08-14, re-confirmed round 2 with 2 additional fallback tests): `ti=` (title) search restricted to `pn=EP` reproducibly returns HTTP 500 `SERVER.DomainAccess` once the query has 3+ effective title terms — whether from a quoted multi-word phrase or an explicit AND of 3+ single words (`ti=antibody and ti=drug and ti=conjugate`) or OPS's own `ti all "..."` operator (both tested, both fail identically). A 2-term `ti=` AND succeeds fine, as does the identical phrase on `ab=`, and the byte-identical `pn=WO` version of every failing query succeeds — isolating this to "3+ terms in ti=, restricted to pn=EP" specifically, not general OPS load or CQL syntax. Does not reproduce for Job 08 (WIPO). See configs/epo_queries.yaml's header comment for the full investigation. The two phrase queries use `ab=` only as a result (see known coverage gaps below); the immunoconjugate query is unaffected since it's a single word.
 
 ## Known coverage gaps
 

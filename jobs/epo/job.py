@@ -49,6 +49,24 @@ underlying reason, not by coincidence:
   attempt recorded due to a lost end-of-run flush) fall through to reuse
   the existing raw file and retry parsing, rather than being misclassified
   skipped_unchanged forever.
+- ROUND-1 FIX (2026-08-14, applied identically to Job 08/WIPO in the same
+  commit): "the ledger's latest attempt is resolved" is STILL not enough
+  on its own — that resolved attempt's own recorded version must also
+  match RAW_NAMESPACE's CURRENT version. Without this, a --refresh run
+  that writes raw v2 (RAW_NAMESPACE durable) but crashes before flushing
+  the manifest/attempts ledger leaves the ledger believing v1 is still
+  the resolved state; the NEXT run's fast-skip path would see "resolved"
+  (true, but for the STALE v1) and skip with no OPS request forever,
+  permanently orphaning the v2 raw file that was never read into the
+  manifest. Fixed: a resolved attempt whose version doesn't match
+  RAW_NAMESPACE's current version is "pending_recovery" — excluded from
+  the fast-skip path and instead routed through the ordinary per-item
+  loop below (like backlog). No separate recovery code path is needed:
+  that loop's existing "hash matches RAW_NAMESPACE but not already-
+  skipped -> reparse the existing raw file without rewriting it" branch
+  (see the loop itself) already produces exactly the missing manifest/
+  attempts row, whether OPS still returns the same content or something
+  genuinely new (which versions forward as usual).
 - Raw XML is persisted, and RAW_NAMESPACE's checkpoint state is saved to
   disk IMMEDIATELY, before parsing is attempted (RAW FETCH -> RAW SNAPSHOT
   -> CHECKPOINT SAVED TO DISK -> PARSE).
@@ -63,21 +81,27 @@ underlying reason, not by coincidence:
 
 ONE genuine EPO-specific live finding DOES differentiate this job's query
 registry from WIPO's, discovered via ~45 minutes of isolated A/B testing
-(2026-08-14): OPS's `ti=` (title) field, searched with a quoted
-multi-word phrase and restricted to `pn=EP`, reproducibly returns HTTP 500
-`SERVER.DomainAccess` at any Range span greater than 1 — while the
-identical phrase search on `ab=` (abstract) succeeds fine, a single-word
-`ti=` search (no phrase quoting) succeeds fine, and the byte-identical
-`pn=WO and ti="..."` pattern Job 08 already runs in production is
-unaffected. Ruled out via direct testing: clause ordering, OR-combination
-itself, and general OPS system load (concurrent non-phrase `pn=EP`
-queries at the same Range succeeded throughout the same test window). See
-configs/epo_queries.yaml's header comment for the full investigation.
-Consequence: the two "antibody-drug conjugate(s)" phrase queries search
-the ABSTRACT ONLY for EP scope (not title+abstract like WIPO) — a
-disclosed, live-verified coverage gap (see jobs/epo/report.py), not a
-silently-forced fit. The immunoconjugate query is unaffected (single
-word, not a phrase) and still searches both fields.
+(2026-08-14, re-confirmed round 2 with 2 additional fallback tests
+requested by review): OPS's `ti=` (title) field, restricted to `pn=EP`,
+reproducibly returns HTTP 500 `SERVER.DomainAccess` once the query has 3+
+effective title terms — whether from a quoted multi-word phrase (e.g.
+"antibody-drug conjugate") or an explicit AND of 3+ single words (e.g.
+`ti=antibody and ti=drug and ti=conjugate`, and OPS's own `ti all "..."`
+operator, both tested per review's request and both failing identically).
+A 2-term `ti=` AND succeeds fine (947 results), as does a single-word
+`ti=`, as does the identical phrase on `ab=` (abstract), and the
+byte-identical `pn=WO` versions of every failing query above all succeed
+— isolating this precisely to "3+ terms in the ti= field, restricted to
+pn=EP specifically." Ruled out via direct testing: clause ordering,
+OR-combination itself, `ti any` truncation syntax (works but returns an
+unusable OR-of-words match, 19208 results), and general OPS system load
+(concurrent <=2-term `pn=EP` queries succeeded throughout every test
+window). See configs/epo_queries.yaml's header comment for the full
+investigation. Consequence: the two "antibody-drug conjugate(s)" phrase
+queries search the ABSTRACT ONLY for EP scope (not title+abstract like
+WIPO) — a disclosed, live-verified coverage gap (see jobs/epo/report.py),
+not a silently-forced fit. The immunoconjugate query is unaffected
+(single word) and still searches both fields.
 """
 
 from __future__ import annotations
@@ -143,6 +167,41 @@ def _record_row(
     )
 
 
+def _publication_manifest_row(
+    pub_id: str, hit, parsed, query_id: str, query_text: str, raw_path: Path, content_hash: str, version: int, now: str,
+) -> dict:
+    return new_manifest_row(
+        extra_fields=PUBLICATION_EXTRA_FIELDS,
+        source="epo",
+        source_record_id=pub_id,
+        source_record_type="epo_publication",
+        title=parsed.title if parsed else None,
+        url=f"https://register.epo.org/application?number={parsed.application_number}" if parsed and parsed.application_number else None,
+        publication_or_release_date=parsed.publication_date if parsed else None,
+        retrieved_at=now,
+        query_id=query_id,
+        query_text=query_text,
+        raw_file_path=str(raw_path),
+        raw_format="xml",
+        content_hash=content_hash,
+        download_status="success",
+        http_status=200,
+        license_or_access_note=LICENSE_NOTE,
+        parent_record_id=None,
+        version=version,
+        notes=parsed.abstract if parsed else None,
+        publication_number=pub_id,
+        family_id=parsed.family_id if parsed else (hit.family_id if hit else None),
+        application_number=parsed.application_number if parsed else None,
+        filing_date=parsed.filing_date if parsed else None,
+        priority_date=parsed.priority_date if parsed else None,
+        applicants=parsed.applicants if parsed else [],
+        inventors=parsed.inventors if parsed else [],
+        ipc_classes=parsed.ipc_classes if parsed else [],
+        cpc_classes=parsed.cpc_classes if parsed else [],
+    )
+
+
 UNRESOLVED_STATUSES = {"failed", "parse_failed"}
 RESOLVED_STATUSES = {"success", "skipped_unchanged"}
 
@@ -161,18 +220,58 @@ def _unresolved_publication_ids(attempts_path: Path) -> set[str]:
     return set(latest.loc[latest["status"].isin(UNRESOLVED_STATUSES), "source_record_id"])
 
 
-def _resolved_publication_ids(attempts_path: Path) -> set[str]:
-    """Publication ids whose most recent attempt is already resolved
-    (success, OR skipped_unchanged from a prior successful fetch) —
-    both statuses must count as "already resolved" or this set would stop
-    recognizing a record after its second consecutive unchanged run."""
+def _latest_attempt_by_id(attempts_path: Path) -> dict[str, dict]:
+    """Every publication id's MOST RECENTLY recorded attempt row (status,
+    version, content_hash) — used to classify resolved/unresolved AND to
+    detect when a resolved attempt is stale relative to RAW_NAMESPACE
+    (see _classify_publication_ids)."""
     if not attempts_path.exists():
-        return set()
+        return {}
     df = pd.read_parquet(attempts_path)
     if df.empty:
-        return set()
+        return {}
     latest = df.sort_values("attempted_at").groupby("source_record_id", as_index=False).tail(1)
-    return set(latest.loc[latest["status"].isin(RESOLVED_STATUSES), "source_record_id"])
+    return {
+        row["source_record_id"]: {"status": row["status"], "version": row["version"], "content_hash": row["content_hash"]}
+        for _, row in latest.iterrows()
+    }
+
+
+def _classify_publication_ids(
+    all_ids: list[str], latest_attempts: dict[str, dict], checkpoint_store, checkpoint,
+) -> tuple[set[str], list[str]]:
+    """Splits publication ids whose most-recent attempt is RESOLVED
+    (success/skipped_unchanged) into two groups:
+
+    - genuinely resolved: the resolved attempt's own version/content_hash
+      matches RAW_NAMESPACE's CURRENT state -- safe to fast-skip with no
+      OPS request.
+    - pending_recovery: the resolved attempt is STALE relative to
+      RAW_NAMESPACE (a newer raw version is durable on disk, but the
+      manifest/attempts ledger never recorded it — the crash scenario
+      this round-1 fix addresses). These must NOT be fast-skipped; they
+      need their existing raw file reparsed to produce the missing
+      manifest/attempts rows, without a new OPS request.
+
+    Ids whose most-recent attempt is not resolved (never attempted,
+    failed, parse_failed) are simply absent from both returned
+    collections — the caller's existing fresh/backlog classification
+    already covers them.
+    """
+    resolved_ids: set[str] = set()
+    pending_recovery_ids: list[str] = []
+    for pub_id in all_ids:
+        att = latest_attempts.get(pub_id)
+        if not att or att["status"] not in RESOLVED_STATUSES:
+            continue
+        raw_state = checkpoint_store.get_record_state(checkpoint, pub_id, namespace=RAW_NAMESPACE)
+        if raw_state is None:
+            continue  # no raw checkpoint at all -- treat conservatively as neither resolved nor recoverable; falls into fresh_ids below.
+        if att["version"] == raw_state["version"]:
+            resolved_ids.add(pub_id)
+        else:
+            pending_recovery_ids.append(pub_id)
+    return resolved_ids, sorted(pending_recovery_ids)
 
 
 class EPOJob(AcquisitionJob):
@@ -287,19 +386,34 @@ class EPOJob(AcquisitionJob):
             raise RuntimeError(f"EPO discovery incomplete (partial results already persisted): {discovery_error}")
 
         attempts_path = output_dir / "manifests" / "epo_attempts.parquet"
-        resolved_ids = _resolved_publication_ids(attempts_path)
+        latest_attempts = _latest_attempt_by_id(attempts_path)
         unresolved_ids = _unresolved_publication_ids(attempts_path)
 
         all_ids = list(hits_by_id.keys())
-        fresh_ids = sorted(pid for pid in all_ids if pid not in resolved_ids and pid not in unresolved_ids)
+        resolved_ids, pending_recovery_ids = _classify_publication_ids(all_ids, latest_attempts, checkpoint_store, checkpoint)
+        pending_recovery_id_set = set(pending_recovery_ids)
+        fresh_ids = sorted(
+            pid for pid in all_ids
+            if pid not in resolved_ids and pid not in unresolved_ids and pid not in pending_recovery_id_set
+        )
         backlog_ids = sorted(pid for pid in all_ids if pid in unresolved_ids)
-        already_skipped_ids = sorted(pid for pid in all_ids if pid in resolved_ids)
+        already_skipped_ids = sorted(resolved_ids)
 
+        # pending_recovery_ids are ALWAYS included in this run's work,
+        # regardless of --refresh: their ledger status is stale relative
+        # to RAW_NAMESPACE (see _classify_publication_ids), so they are
+        # NOT safe to fast-skip. They go through the ordinary per-item
+        # loop below like backlog does; its existing hash-match-but-not-
+        # already-skipped fall-through (see the loop's comments) reparses
+        # the existing raw file without rewriting it if OPS still returns
+        # the same content, or versions forward if OPS returns something
+        # new -- either way the missing manifest/attempts row gets
+        # produced, no separate recovery code path needed.
         if args.refresh:
-            ordered_new_work = fresh_ids + backlog_ids + already_skipped_ids
+            ordered_new_work = fresh_ids + backlog_ids + pending_recovery_ids + already_skipped_ids
             fast_skip_ids: list[str] = []
         else:
-            ordered_new_work = fresh_ids + backlog_ids
+            ordered_new_work = fresh_ids + backlog_ids + pending_recovery_ids
             fast_skip_ids = already_skipped_ids
         target_ids = ordered_new_work[: args.limit] if args.limit else ordered_new_work
 
@@ -307,6 +421,8 @@ class EPOJob(AcquisitionJob):
             result.notes.append(
                 f"dry-run: would materialize {len(target_ids)} of {len(all_ids)} discovered publications "
                 f"({len(fresh_ids)} never attempted, {len(backlog_ids)} unresolved retries, "
+                f"{len(pending_recovery_ids)} pending recovery (raw durable but ledger stale, "
+                "reparsed from the existing raw file), "
                 f"{len(fast_skip_ids)} already successful and skipped with no OPS request"
                 + (", 0 refresh re-checks (--refresh not set)" if not args.refresh else "")
                 + ")"
@@ -406,38 +522,7 @@ class EPOJob(AcquisitionJob):
             attempt_rows.append(
                 _record_row(pub_id, run_id, now, "success", query_id, query_text, content_hash=content_hash, version=version)
             )
-            content_rows.append(
-                new_manifest_row(
-                    extra_fields=PUBLICATION_EXTRA_FIELDS,
-                    source="epo",
-                    source_record_id=pub_id,
-                    source_record_type="epo_publication",
-                    title=parsed.title if parsed else None,
-                    url=f"https://register.epo.org/application?number={parsed.application_number}" if parsed and parsed.application_number else None,
-                    publication_or_release_date=parsed.publication_date if parsed else None,
-                    retrieved_at=now,
-                    query_id=query_id,
-                    query_text=query_text,
-                    raw_file_path=str(raw_path),
-                    raw_format="xml",
-                    content_hash=content_hash,
-                    download_status="success",
-                    http_status=200,
-                    license_or_access_note=LICENSE_NOTE,
-                    parent_record_id=None,
-                    version=version,
-                    notes=parsed.abstract if parsed else None,
-                    publication_number=pub_id,
-                    family_id=parsed.family_id if parsed else hit.family_id,
-                    application_number=parsed.application_number if parsed else None,
-                    filing_date=parsed.filing_date if parsed else None,
-                    priority_date=parsed.priority_date if parsed else None,
-                    applicants=parsed.applicants if parsed else [],
-                    inventors=parsed.inventors if parsed else [],
-                    ipc_classes=parsed.ipc_classes if parsed else [],
-                    cpc_classes=parsed.cpc_classes if parsed else [],
-                )
-            )
+            content_rows.append(_publication_manifest_row(pub_id, hit, parsed, query_id, query_text, raw_path, content_hash, version, now))
 
         manifest_df = write_manifest(content_rows, manifest_path, extra_fields=PUBLICATION_EXTRA_FIELDS)
         append_only(attempt_rows, attempts_path, ATTEMPT_COLUMNS)

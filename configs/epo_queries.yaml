@@ -13,37 +13,51 @@
 # ~similar order, immunoconjugate 102, linker/cytotoxin 3, payload/
 # conjugate 11. All well under the 2000 cap.
 #
-# LIVE-VERIFIED, EP-SPECIFIC OPS LIMITATION (2026-08-14): `ti=` (title)
-# search with a QUOTED MULTI-WORD PHRASE, restricted to `pn=EP`, at any
-# Range span greater than 1, reproducibly returns HTTP 500
-# SERVER.DomainAccess -- confirmed via extensive isolated A/B testing over
-# ~45 minutes: `pn=EP and ti="antibody-drug conjugate"` (ti alone, no OR)
-# fails at Range=1-100 but SUCCEEDS at Range=1-1; `pn=EP and
-# ab="antibody-drug conjugate"` (ab alone, same phrase) succeeds fine at
-# Range=1-100 (342 results); `pn=EP and (ti=immunoconjugate or
-# ab=immunoconjugate)` (SINGLE-WORD ti, no phrase quoting) succeeds fine
-# at Range=1-100. Ruled out: query-clause ordering (fails both ti-first
-# and ab-first), OR-combination itself (fails even with ti= alone, not
-# OR'd), and general OPS system load (concurrent AND-of-single-words
-# queries and the immunoconjugate OR query succeeded at Range=100 during
-# the SAME test window). The failure isolates specifically to "ti field +
-# quoted multi-word phrase + pn=EP country restriction + Range>1" -- this
-# does NOT reproduce for Job 08/WIPO's identical `pn=WO and ti="..."`
-# query, which has been running in production without incident.
+# LIVE-VERIFIED, EP-SPECIFIC OPS LIMITATION (2026-08-14, re-confirmed
+# 2026-08-14 round 2 with additional fallback tests requested by review):
+# `ti=` (title) search restricted to `pn=EP` reproducibly returns HTTP 500
+# SERVER.DomainAccess once the query has 3+ effective title terms --
+# whether from a quoted multi-word phrase OR an explicit AND of 3+ single
+# words. Confirmed via extensive isolated A/B testing:
+#   - `pn=EP and ti="antibody-drug conjugate"` (quoted 3-word phrase, no
+#     OR) -- FAILS at Range=1-100 AND at Range=1-1.
+#   - `pn=EP and ti=antibody and ti=drug and ti=conjugate` (3-term AND,
+#     no phrase quoting at all) -- FAILS identically (round-2 fallback
+#     test #1 requested by review).
+#   - `pn=EP and ti all "antibody drug conjugate"` (OPS's documented
+#     "all terms" title operator) -- FAILS identically (round-2 fallback
+#     test #2 requested by review).
+#   - `pn=EP and ti=antibody and ti=drug` (2-term AND) -- SUCCEEDS (947
+#     results) -- so the threshold is specifically 3+ terms, not "any
+#     multi-word ti query."
+#   - `pn=EP and ab="antibody-drug conjugate"` (ab alone, same phrase) --
+#     succeeds fine at Range=1-100 (342 results).
+#   - `pn=EP and (ti=immunoconjugate or ab=immunoconjugate)` (single-word
+#     ti, no phrase/AND) -- succeeds fine at Range=1-100.
+#   - `pn=WO and ti=antibody and ti=drug and ti=conjugate` (the SAME
+#     3-term AND, but pn=WO instead of pn=EP) -- succeeds fine (761
+#     results) -- confirming this is specific to the EP-scoped index, not
+#     a general OPS/CQL syntax limitation.
+# Ruled out: query-clause ordering, OR-combination itself, `ti any`
+# truncation syntax (works but returns 19208 -- an OR-of-words match, not
+# usable), and general OPS system load (concurrent non-3+-term `pn=EP`
+# queries succeeded throughout every test window, including alongside
+# failing calls). This does NOT reproduce for Job 08/WIPO's identical
+# `pn=WO` patterns, which run in production without incident.
 #
-# Since fetching ti-matches one Range=1-1 request at a time (477+ requests
-# against OPS's most heavily-throttled endpoint) is impractical and would
-# itself look like abusive traffic, the two phrase queries below use
-# `ab=` ONLY for EP scope, accepting a disclosed, live-verified coverage
-# gap: publications whose title (but not abstract) contains the phrase are
-# missed for EP specifically (unlike Job 08/WIPO, which searches both
-# fields). Concretely: the combined ti+ab query returned 477 for the
-# singular phrase; ab-alone returns 342 -- roughly 135 EP publications
-# with the phrase in title only are not discovered by this job. This is a
-# genuine, disclosed limitation (see reports/acquisition/COVERAGE.md /
-# jobs/epo/report.py known-gaps section), not a silently-forced fit.
-# `ti=` remains fully usable for single-word searches (immunoconjugate
-# query below is unaffected) and for `pn=WO` (Job 08 is unaffected).
+# No further live fallback exists that's both (a) precise (not `ti any`'s
+# OR-of-words) and (b) working for pn=EP with 3+ terms. Per the review's
+# own stated acceptance criterion, this closes the investigation: the two
+# phrase queries below use `ab=` ONLY for EP scope, accepting a disclosed
+# coverage gap -- publications whose title (but not abstract) contains
+# the phrase are missed for EP specifically (unlike Job 08/WIPO, which
+# searches both fields). Concretely: the combined ti+ab query returned
+# 477 for the singular phrase; ab-alone returns 342 -- roughly 135 EP
+# publications with the phrase in title only are not discovered by this
+# job. Disclosed in reports/acquisition/COVERAGE.md / jobs/epo/report.py's
+# known-gaps section, not a silently-forced fit. `ti=` remains fully
+# usable for <=2-term searches (immunoconjugate query below is
+# single-word, unaffected) and for `pn=WO` (Job 08 is unaffected).
 
 queries:
   - query_id: EPO_ADC_PHRASE_SINGULAR_001
