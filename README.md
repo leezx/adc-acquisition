@@ -509,6 +509,43 @@ starving out genuinely new ones.
 live) whenever supplied explicitly; `--resume` does not date-restrict the
 search itself, same reasoning as Job 08.
 
+## Running the EPO job (Job 10)
+
+```bash
+python -m adc_acquisition epo --dry-run --limit 20
+python -m adc_acquisition epo --limit 20
+```
+
+Uses the same EPO Open Patent Services (OPS) API Job 08 (WIPO) uses,
+filtered to EP-prefixed publications (`pn=EP`) instead of WO-prefixed
+(PCT) ones — an architecturally independent job (own query registry,
+own query_id/provenance namespace, own `epo.parquet`/`epo_discovery.parquet`/
+`epo_attempts.parquet` triple) sharing only the already-tested OPS client
+and response parser, now factored out to `adc_acquisition/ops_client.py`
+and `adc_acquisition/ops_parser.py` (Job 08's own `client.py`/`parser.py`
+are thin re-export shims onto these shared modules, kept for import-path
+backward compatibility with its own already-merged tests).
+
+**Design mirrors Job 08 exactly** (confirmed live that OPS's EP-prefixed
+biblio response is the byte-identical schema WO-prefixed responses use):
+default-skip-with-`--refresh`-opt-in, the skip decision requires BOTH
+unchanged raw bytes AND the attempts ledger's own most-recent status
+already resolved, raw XML persisted and checkpoint-saved to disk
+immediately before parsing, `--limit` prioritizes fresh over backlog over
+reverify.
+
+**One genuine EPO-specific live finding, though:** OPS's `ti=` (title)
+field, searched with a quoted multi-word phrase and restricted to
+`pn=EP`, reproducibly returns HTTP 500 at any Range span greater than 1 —
+confirmed via direct A/B testing this is specific to "title field + quoted
+phrase + EP scope" (not clause ordering, not OR-combination, not general
+OPS load, and NOT present for Job 08's identical `pn=WO` pattern already
+running in production). See `configs/epo_queries.yaml`'s header comment
+for the full investigation. Consequence: the two "antibody-drug
+conjugate(s)" phrase queries search the abstract only for EP scope (not
+title+abstract like WIPO) — a disclosed coverage gap, not a silently
+narrowed one (see `reports/acquisition/COVERAGE.md`).
+
 ## Tests
 
 ```bash
@@ -522,7 +559,7 @@ or used by the normal test suite.
 
 See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
 (Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), Job 05
-(SEC EDGAR), Job 06 (FDA), Job 07 (EMA), Job 08 (WIPO), and Job 09
-(USPTO) are implemented so far; every other source in `Prompt.md` is
-intentionally not started yet — sources are implemented and reviewed one
-at a time.
+(SEC EDGAR), Job 06 (FDA), Job 07 (EMA), Job 08 (WIPO), Job 09 (USPTO),
+and Job 10 (EPO) are implemented so far; every other source in
+`Prompt.md` is intentionally not started yet — sources are implemented
+and reviewed one at a time.

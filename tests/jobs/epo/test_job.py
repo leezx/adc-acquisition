@@ -5,34 +5,34 @@ from urllib.parse import parse_qs, urlparse
 import pandas as pd
 import responses
 
-from jobs.wipo.client import OPS_AUTH_URL, OPS_SEARCH_URL
-from jobs.wipo.job import WIPOJob
+from adc_acquisition.ops_client import OPS_AUTH_URL, OPS_SEARCH_URL
+from jobs.epo.job import EPOJob
 
 QUERIES_YAML = """
 queries:
-  - query_id: WIPO_TEST_PHRASE
+  - query_id: EPO_TEST_PHRASE
     query_version: 1
-    query_text: 'pn=WO and ab="antibody-drug conjugate"'
+    query_text: 'pn=EP and ab="antibody-drug conjugate"'
     purpose: test
     active: true
 """
 
 TWO_QUERY_YAML = """
 queries:
-  - query_id: WIPO_TEST_A
+  - query_id: EPO_TEST_A
     query_version: 1
-    query_text: 'pn=WO and ab=alpha'
+    query_text: 'pn=EP and ab=alpha'
     purpose: test
     active: true
-  - query_id: WIPO_TEST_B
+  - query_id: EPO_TEST_B
     query_version: 3
-    query_text: 'pn=WO and ab=beta'
+    query_text: 'pn=EP and ab=beta'
     purpose: test
     active: true
 """
 
 
-def _hit(country="WO", doc_number="2026000001", kind="A1", family_id="1"):
+def _hit(country="EP", doc_number="4000001", kind="A1", family_id="1"):
     return {"country": country, "doc_number": doc_number, "kind": kind, "family_id": family_id}
 
 
@@ -68,7 +68,7 @@ def _biblio_xml(h, title="A Title", abstract_text="An abstract."):
         f'<exchange-document family-id="{h["family_id"]}" country="{h["country"]}" doc-number="{h["doc_number"]}" kind="{h["kind"]}">'
         "<bibliographic-data>"
         '<application-reference doc-id="1"><document-id document-id-type="epodoc">'
-        "<doc-number>WOAPP1</doc-number><date>20200101</date></document-id></application-reference>"
+        "<doc-number>EPAPP1</doc-number><date>20200101</date></document-id></application-reference>"
         '<priority-claims><priority-claim sequence="1" kind="national"><document-id document-id-type="epodoc">'
         "<doc-number>US1P</doc-number><date>20190101</date></document-id></priority-claim></priority-claims>"
         f'<invention-title lang="en">{title}</invention-title>'
@@ -125,31 +125,31 @@ def _setup(tmp_path, monkeypatch, queries_yaml=QUERIES_YAML):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("OPS_CONSUMER_KEY", "key")
     monkeypatch.setenv("OPS_CONSUMER_SECRET", "secret")
-    import jobs.wipo.job as job_module
+    import jobs.epo.job as job_module
     monkeypatch.setattr(job_module, "SEARCH_RATE_LIMIT", 1000)
     monkeypatch.setattr(job_module, "BIBLIO_RATE_LIMIT", 1000)
 
 
 def _manifest_df(tmp_path):
-    return pd.read_parquet(tmp_path / "DATA" / "manifests" / "wipo.parquet")
+    return pd.read_parquet(tmp_path / "DATA" / "manifests" / "epo.parquet")
 
 
 def _attempts_df(tmp_path):
-    return pd.read_parquet(tmp_path / "DATA" / "manifests" / "wipo_attempts.parquet")
+    return pd.read_parquet(tmp_path / "DATA" / "manifests" / "epo_attempts.parquet")
 
 
 @responses.activate
 def test_dry_run_discovers_but_does_not_download(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     h = _hit()
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]})
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]})
 
-    result = WIPOJob().run(_base_args(tmp_path, dry_run=True))
+    result = EPOJob().run(_base_args(tmp_path, dry_run=True))
 
     assert result.dry_run is True
     assert result.records_discovered == 1
     assert result.records_downloaded == 0
-    assert not (tmp_path / "DATA" / "manifests" / "wipo.parquet").exists()
+    assert not (tmp_path / "DATA" / "manifests" / "epo.parquet").exists()
 
 
 @responses.activate
@@ -157,23 +157,23 @@ def test_full_run_writes_manifest_discovery_and_attempts(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     h = _hit()
     _register_ops(
-        {'pn=WO and ab="antibody-drug conjugate"': [h]},
+        {'pn=EP and ab="antibody-drug conjugate"': [h]},
         {_docdb(h): _biblio_xml(h, title="CD26 ADC")},
     )
 
-    result = WIPOJob().run(_base_args(tmp_path))
+    result = EPOJob().run(_base_args(tmp_path))
 
     assert result.records_discovered == 1
     assert result.records_downloaded == 1
     df = _manifest_df(tmp_path)
     assert df.iloc[0]["source_record_id"] == _pub_id(h)
     assert df.iloc[0]["title"] == "CD26 ADC"
-    assert df.iloc[0]["application_number"] == "WOAPP1"
+    assert df.iloc[0]["application_number"] == "EPAPP1"
     assert df.iloc[0]["applicants"] == ["Test Applicant"]
 
-    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "wipo_discovery.parquet")
+    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "epo_discovery.parquet")
     assert discovery_df.iloc[0]["source_record_id"] == _pub_id(h)
-    assert discovery_df.iloc[0]["query_id"] == "WIPO_TEST_PHRASE"
+    assert discovery_df.iloc[0]["query_id"] == "EPO_TEST_PHRASE"
 
 
 @responses.activate
@@ -183,13 +183,13 @@ def test_already_successful_publication_skipped_without_ops_request(tmp_path, mo
     _setup(tmp_path, monkeypatch)
     h = _hit()
     _register_ops(
-        {'pn=WO and ab="antibody-drug conjugate"': [h]},
+        {'pn=EP and ab="antibody-drug conjugate"': [h]},
         {_docdb(h): _biblio_xml(h)},
     )
-    WIPOJob().run(_base_args(tmp_path))
+    EPOJob().run(_base_args(tmp_path))
 
     responses.calls.reset()
-    result2 = WIPOJob().run(_base_args(tmp_path))
+    result2 = EPOJob().run(_base_args(tmp_path))
 
     assert result2.records_downloaded == 0
     assert result2.records_skipped_unchanged == 1
@@ -199,22 +199,22 @@ def test_already_successful_publication_skipped_without_ops_request(tmp_path, mo
 
 @responses.activate
 def test_third_consecutive_run_still_skips_without_fetch(tmp_path, monkeypatch):
-    """Regression test for the round-1 bug: _resolved_publication_ids() must
-    treat a "skipped_unchanged" most-recent-attempt as resolved too, or a
-    publication falls back to "fresh" and gets needlessly refetched on the
-    THIRD run (the second run's attempt row is skipped_unchanged, not
-    success)."""
+    """Regression test for the resolved/unresolved classifier bug class
+    (Job 08/WIPO round 1, Job 09/USPTO self-caught repeat):
+    _resolved_publication_ids() must treat a "skipped_unchanged"
+    most-recent-attempt as resolved too, or a publication falls back to
+    "fresh" and gets needlessly refetched on the THIRD run."""
     _setup(tmp_path, monkeypatch)
     h = _hit()
     _register_ops(
-        {'pn=WO and ab="antibody-drug conjugate"': [h]},
+        {'pn=EP and ab="antibody-drug conjugate"': [h]},
         {_docdb(h): _biblio_xml(h)},
     )
-    WIPOJob().run(_base_args(tmp_path))  # run 1: success
-    WIPOJob().run(_base_args(tmp_path))  # run 2: skipped_unchanged (fast path)
+    EPOJob().run(_base_args(tmp_path))  # run 1: success
+    EPOJob().run(_base_args(tmp_path))  # run 2: skipped_unchanged (fast path)
 
     responses.calls.reset()
-    result3 = WIPOJob().run(_base_args(tmp_path))  # run 3: must still skip, not re-fetch
+    result3 = EPOJob().run(_base_args(tmp_path))  # run 3: must still skip, not re-fetch
 
     assert result3.records_downloaded == 0
     assert result3.records_skipped_unchanged == 1
@@ -230,17 +230,17 @@ def test_refresh_flag_detects_changed_content_and_creates_new_version(tmp_path, 
     _setup(tmp_path, monkeypatch)
     h = _hit()
     _register_ops(
-        {'pn=WO and ab="antibody-drug conjugate"': [h]},
+        {'pn=EP and ab="antibody-drug conjugate"': [h]},
         {_docdb(h): _biblio_xml(h, title="Original Title")},
     )
-    WIPOJob().run(_base_args(tmp_path))
+    EPOJob().run(_base_args(tmp_path))
 
     responses.calls.reset()
     _register_ops(
-        {'pn=WO and ab="antibody-drug conjugate"': [h]},
+        {'pn=EP and ab="antibody-drug conjugate"': [h]},
         {_docdb(h): _biblio_xml(h, title="Corrected Title")},
     )
-    result = WIPOJob().run(_base_args(tmp_path, refresh=True))
+    result = EPOJob().run(_base_args(tmp_path, refresh=True))
 
     assert result.records_downloaded == 1
     biblio_calls = [c for c in responses.calls if "/publication/docdb/" in c.request.url]
@@ -256,12 +256,12 @@ def test_refresh_flag_detects_changed_content_and_creates_new_version(tmp_path, 
 def test_refresh_flag_unchanged_content_stays_at_same_version(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     h = _hit()
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): _biblio_xml(h)})
-    WIPOJob().run(_base_args(tmp_path))
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): _biblio_xml(h)})
+    EPOJob().run(_base_args(tmp_path))
 
     responses.calls.reset()
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): _biblio_xml(h)})
-    result = WIPOJob().run(_base_args(tmp_path, refresh=True))
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): _biblio_xml(h)})
+    result = EPOJob().run(_base_args(tmp_path, refresh=True))
 
     assert result.records_downloaded == 0
     assert result.records_skipped_unchanged == 1
@@ -277,9 +277,9 @@ def test_raw_xml_persisted_before_parser_crash(tmp_path, monkeypatch):
     parser crash must not erase the evidence that caused it."""
     _setup(tmp_path, monkeypatch)
     h = _hit()
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): _biblio_xml(h)})
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): _biblio_xml(h)})
 
-    import jobs.wipo.job as job_module
+    import jobs.epo.job as job_module
 
     def _boom(_bytes):
         raise RuntimeError("simulated parser bug")
@@ -287,13 +287,13 @@ def test_raw_xml_persisted_before_parser_crash(tmp_path, monkeypatch):
     monkeypatch.setattr(job_module, "parse_biblio_response", _boom)
 
     try:
-        WIPOJob().run(_base_args(tmp_path))
+        EPOJob().run(_base_args(tmp_path))
         raised = False
     except RuntimeError:
         raised = True
     assert raised
 
-    raw_path = tmp_path / "DATA" / "raw" / "wipo" / _pub_id(h) / "v1.xml"
+    raw_path = tmp_path / "DATA" / "raw" / "epo" / _pub_id(h) / "v1.xml"
     assert raw_path.exists()
     assert raw_path.read_bytes() == _biblio_xml(h)
 
@@ -305,16 +305,16 @@ def test_raw_xml_persisted_before_parser_crash(tmp_path, monkeypatch):
 
 @responses.activate
 def test_raw_snapshot_version_survives_repeated_parse_failures_with_changing_content(tmp_path, monkeypatch):
-    """Round-2 regression test: raw version numbering must be driven by a
-    checkpoint namespace that updates unconditionally on every raw write,
-    NOT by one that only updates on parse success -- otherwise two
-    genuinely different raw contents fetched across two parse-failing runs
-    would both compute version=1 and the second write would silently
-    overwrite the first's raw evidence."""
+    """Raw version numbering must be driven by a checkpoint namespace that
+    updates unconditionally on every raw write, NOT by one that only
+    updates on parse success -- otherwise two genuinely different raw
+    contents fetched across two parse-failing runs would both compute
+    version=1 and the second write would silently overwrite the first's
+    raw evidence."""
     _setup(tmp_path, monkeypatch)
     h = _hit()
 
-    import jobs.wipo.job as job_module
+    import jobs.epo.job as job_module
 
     def _boom(_bytes):
         raise RuntimeError("simulated parser bug")
@@ -322,22 +322,22 @@ def test_raw_snapshot_version_survives_repeated_parse_failures_with_changing_con
     monkeypatch.setattr(job_module, "parse_biblio_response", _boom)
 
     xml_a = _biblio_xml(h, title="Content A")
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_a})
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_a})
     try:
-        WIPOJob().run(_base_args(tmp_path))
+        EPOJob().run(_base_args(tmp_path))
     except RuntimeError:
         pass
 
     responses.reset()
     xml_b = _biblio_xml(h, title="Content B")
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})
     monkeypatch.setattr(job_module, "parse_biblio_response", _boom)
     try:
-        WIPOJob().run(_base_args(tmp_path))
+        EPOJob().run(_base_args(tmp_path))
     except RuntimeError:
         pass
 
-    raw_dir = tmp_path / "DATA" / "raw" / "wipo" / _pub_id(h)
+    raw_dir = tmp_path / "DATA" / "raw" / "epo" / _pub_id(h)
     assert (raw_dir / "v1.xml").read_bytes() == xml_a  # untouched, not overwritten by content B
     assert (raw_dir / "v2.xml").read_bytes() == xml_b
 
@@ -348,21 +348,21 @@ def test_raw_snapshot_version_survives_repeated_parse_failures_with_changing_con
 
 @responses.activate
 def test_raw_checkpoint_state_is_disk_durable_before_downstream_crash(tmp_path, monkeypatch):
-    """Round-3 regression: RAW_NAMESPACE's checkpoint state must be saved
-    to DISK immediately after each raw write, not just updated in the
-    in-memory checkpoint dict -- otherwise an uncaught exception ANYWHERE
-    downstream of the raw write (not just a caught parser error) leaves
-    the on-disk checkpoint believing an older, smaller version number is
-    current, and a later run recomputes the same version and overwrites
-    a raw file that a crashed run already wrote."""
+    """RAW_NAMESPACE's checkpoint state must be saved to DISK immediately
+    after each raw write, not just updated in the in-memory checkpoint
+    dict -- otherwise an uncaught exception ANYWHERE downstream of the raw
+    write (not just a caught parser error) leaves the on-disk checkpoint
+    believing an older, smaller version number is current, and a later run
+    recomputes the same version and overwrites a raw file that a crashed
+    run already wrote."""
     _setup(tmp_path, monkeypatch)
     h = _hit()
 
     xml_a = _biblio_xml(h, title="Content A")
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_a})
-    WIPOJob().run(_base_args(tmp_path))  # run 1: succeeds normally -> v1 = A
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_a})
+    EPOJob().run(_base_args(tmp_path))  # run 1: succeeds normally -> v1 = A
 
-    import jobs.wipo.job as job_module
+    import jobs.epo.job as job_module
     original_new_manifest_row = job_module.new_manifest_row
 
     def _boom(**_kwargs):
@@ -370,10 +370,10 @@ def test_raw_checkpoint_state_is_disk_durable_before_downstream_crash(tmp_path, 
 
     responses.reset()
     xml_b = _biblio_xml(h, title="Content B")
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})
     monkeypatch.setattr(job_module, "new_manifest_row", _boom)
     try:
-        WIPOJob().run(_base_args(tmp_path, refresh=True))  # run 2: raw v2 written, THEN an uncaught crash
+        EPOJob().run(_base_args(tmp_path, refresh=True))  # run 2: raw v2 written, THEN an uncaught crash
         raised = False
     except RuntimeError:
         raised = True
@@ -382,10 +382,10 @@ def test_raw_checkpoint_state_is_disk_durable_before_downstream_crash(tmp_path, 
 
     responses.reset()
     xml_c = _biblio_xml(h, title="Content C")
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_c})
-    WIPOJob().run(_base_args(tmp_path, refresh=True))  # run 3: must create v3, not overwrite v2
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_c})
+    EPOJob().run(_base_args(tmp_path, refresh=True))  # run 3: must create v3, not overwrite v2
 
-    raw_dir = tmp_path / "DATA" / "raw" / "wipo" / _pub_id(h)
+    raw_dir = tmp_path / "DATA" / "raw" / "epo" / _pub_id(h)
     assert (raw_dir / "v1.xml").read_bytes() == xml_a
     assert (raw_dir / "v2.xml").read_bytes() == xml_b  # must survive run 2's crash untouched
     assert (raw_dir / "v3.xml").read_bytes() == xml_c
@@ -393,27 +393,26 @@ def test_raw_checkpoint_state_is_disk_durable_before_downstream_crash(tmp_path, 
 
 @responses.activate
 def test_resolved_ledger_entry_stale_relative_to_raw_checkpoint_self_heals(tmp_path, monkeypatch):
-    """P0 acceptance test (Job 10/EPO round-1 review, applied identically
-    here): a resolved (success/skipped_unchanged) most-recent attempt is
-    NOT sufficient proof of "already fully materialized" if its own
-    recorded version is stale relative to RAW_NAMESPACE's CURRENT
-    version. Scenario: run 1 succeeds at v1; run 2 (--refresh) writes raw
-    v2 + durable checkpoint, but crashes before the manifest/attempts
-    ledger is ever flushed -- so the ledger's last word on this
-    publication is still "success, v1", even though v2 is durable on
-    disk. A plain (non-refresh) run 3 must NOT trust that stale
-    "resolved" ledger entry and fast-skip -- it must detect the version
-    mismatch, materialize the existing v2 raw content into the manifest,
-    and NOT create a spurious v3 (since the underlying content genuinely
-    didn't change again)."""
+    """P0 acceptance test (round-1 review): a resolved (success/
+    skipped_unchanged) most-recent attempt is NOT sufficient proof of
+    "already fully materialized" if its own recorded version is stale
+    relative to RAW_NAMESPACE's CURRENT version. Scenario: run 1 succeeds
+    at v1; run 2 (--refresh) writes raw v2 + durable checkpoint, but
+    crashes before the manifest/attempts ledger is ever flushed -- so the
+    ledger's last word on this publication is still "success, v1", even
+    though v2 is durable on disk. A plain (non-refresh) run 3 must NOT
+    trust that stale "resolved" ledger entry and fast-skip -- it must
+    detect the version mismatch, materialize the existing v2 raw content
+    into the manifest, and NOT create a spurious v3 (since the underlying
+    content genuinely didn't change again)."""
     _setup(tmp_path, monkeypatch)
     h = _hit()
 
     xml_a = _biblio_xml(h, title="Content A")
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_a})
-    WIPOJob().run(_base_args(tmp_path))  # run 1: v1 = A, success
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_a})
+    EPOJob().run(_base_args(tmp_path))  # run 1: v1 = A, success
 
-    import jobs.wipo.job as job_module
+    import jobs.epo.job as job_module
     original_new_manifest_row = job_module.new_manifest_row
 
     def _boom(**_kwargs):
@@ -421,10 +420,10 @@ def test_resolved_ledger_entry_stale_relative_to_raw_checkpoint_self_heals(tmp_p
 
     responses.reset()
     xml_b = _biblio_xml(h, title="Content B")
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})
     monkeypatch.setattr(job_module, "new_manifest_row", _boom)
     try:
-        WIPOJob().run(_base_args(tmp_path, refresh=True))  # run 2: raw v2 + checkpoint durable, THEN crash
+        EPOJob().run(_base_args(tmp_path, refresh=True))  # run 2: raw v2 + checkpoint durable, THEN crash
         raised = False
     except RuntimeError:
         raised = True
@@ -433,12 +432,12 @@ def test_resolved_ledger_entry_stale_relative_to_raw_checkpoint_self_heals(tmp_p
 
     # Ledger still says v1/success (never flushed run 2's v2 success row);
     # raw v2 + its RAW_NAMESPACE checkpoint entry ARE durable.
-    attempts = _attempts_df(tmp_path)
+    attempts = pd.read_parquet(tmp_path / "DATA" / "manifests" / "epo_attempts.parquet")
     assert list(attempts[attempts["source_record_id"] == _pub_id(h)]["version"]) == [1]
 
     responses.reset()
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})  # OPS still returns B (unchanged)
-    result = WIPOJob().run(_base_args(tmp_path))  # run 3: plain run, no --refresh
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]}, {_docdb(h): xml_b})  # OPS still returns B (unchanged)
+    result = EPOJob().run(_base_args(tmp_path))  # run 3: plain run, no --refresh
 
     assert result.records_downloaded == 1  # materialized, NOT classified skipped_unchanged
     assert result.records_skipped_unchanged == 0
@@ -448,7 +447,7 @@ def test_resolved_ledger_entry_stale_relative_to_raw_checkpoint_self_heals(tmp_p
     assert list(matching["version"]) == [1, 2]  # v2 recovered into the manifest, no spurious v3
     assert list(matching["title"]) == ["Content A", "Content B"]
 
-    raw_dir = tmp_path / "DATA" / "raw" / "wipo" / _pub_id(h)
+    raw_dir = tmp_path / "DATA" / "raw" / "epo" / _pub_id(h)
     assert (raw_dir / "v2.xml").read_bytes() == xml_b  # untouched
     assert not (raw_dir / "v3.xml").exists()
 
@@ -457,17 +456,17 @@ def test_resolved_ledger_entry_stale_relative_to_raw_checkpoint_self_heals(tmp_p
 def test_failed_publication_retried_on_next_run(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     h = _hit()
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': [h]})  # no biblio registered -> 404
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': [h]})  # no biblio registered -> 404
 
-    result1 = WIPOJob().run(_base_args(tmp_path))
+    result1 = EPOJob().run(_base_args(tmp_path))
     assert result1.records_failed == 1
 
     responses.calls.reset()
     _register_ops(
-        {'pn=WO and ab="antibody-drug conjugate"': [h]},
+        {'pn=EP and ab="antibody-drug conjugate"': [h]},
         {_docdb(h): _biblio_xml(h)},
     )
-    result2 = WIPOJob().run(_base_args(tmp_path))
+    result2 = EPOJob().run(_base_args(tmp_path))
 
     assert result2.records_downloaded == 1  # retried despite no --resume flag, since it's unresolved
 
@@ -475,17 +474,17 @@ def test_failed_publication_retried_on_next_run(tmp_path, monkeypatch):
 @responses.activate
 def test_limit_prioritizes_fresh_over_backlog(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch, queries_yaml=TWO_QUERY_YAML)
-    old_failed = _hit(doc_number="2020000001", family_id="10")
-    _register_ops({"pn=WO and ab=alpha": [old_failed], "pn=WO and ab=beta": []})
-    WIPOJob().run(_base_args(tmp_path))  # old_failed fails (no biblio registered)
+    old_failed = _hit(doc_number="2000001", family_id="10")
+    _register_ops({"pn=EP and ab=alpha": [old_failed], "pn=EP and ab=beta": []})
+    EPOJob().run(_base_args(tmp_path))  # old_failed fails (no biblio registered)
 
     responses.calls.reset()
-    new_fresh = _hit(doc_number="2026000002", family_id="20")
+    new_fresh = _hit(doc_number="4000002", family_id="20")
     _register_ops(
-        {"pn=WO and ab=alpha": [old_failed, new_fresh], "pn=WO and ab=beta": []},
+        {"pn=EP and ab=alpha": [old_failed, new_fresh], "pn=EP and ab=beta": []},
         {_docdb(new_fresh): _biblio_xml(new_fresh)},
     )
-    result = WIPOJob().run(_base_args(tmp_path, limit=1))
+    result = EPOJob().run(_base_args(tmp_path, limit=1))
 
     assert result.records_downloaded == 1
     df = _manifest_df(tmp_path)
@@ -497,10 +496,10 @@ def test_limit_prioritizes_fresh_over_backlog(tmp_path, monkeypatch):
 def test_since_until_apply_as_server_side_cql_filter(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     h = _hit()
-    query_with_date = 'pn=WO and ab="antibody-drug conjugate" and pd within "20200101,20201231"'
+    query_with_date = 'pn=EP and ab="antibody-drug conjugate" and pd within "20200101,20201231"'
     _register_ops({query_with_date: [h]}, {_docdb(h): _biblio_xml(h)})
 
-    result = WIPOJob().run(_base_args(tmp_path, since="2020-01-01", until="2020-12-31"))
+    result = EPOJob().run(_base_args(tmp_path, since="2020-01-01", until="2020-12-31"))
 
     assert result.records_discovered == 1
     search_calls = [c for c in responses.calls if c.request.url.startswith(OPS_SEARCH_URL)]
@@ -509,17 +508,17 @@ def test_since_until_apply_as_server_side_cql_filter(tmp_path, monkeypatch):
 
 @responses.activate
 def test_query_version_from_registry_propagates_not_hardcoded(tmp_path, monkeypatch):
-    """WIPO_TEST_B is registered at query_version 3 (not 1) -- if the code
+    """EPO_TEST_B is registered at query_version 3 (not 1) -- if the code
     hardcoded query_version instead of reading it from the registry, this
     would fail."""
     _setup(tmp_path, monkeypatch, queries_yaml=TWO_QUERY_YAML)
     h = _hit()
-    _register_ops({"pn=WO and ab=alpha": [], "pn=WO and ab=beta": [h]}, {_docdb(h): _biblio_xml(h)})
+    _register_ops({"pn=EP and ab=alpha": [], "pn=EP and ab=beta": [h]}, {_docdb(h): _biblio_xml(h)})
 
-    WIPOJob().run(_base_args(tmp_path))
+    EPOJob().run(_base_args(tmp_path))
 
-    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "wipo_discovery.parquet")
-    row = discovery_df[discovery_df["query_id"] == "WIPO_TEST_B"].iloc[0]
+    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "epo_discovery.parquet")
+    row = discovery_df[discovery_df["query_id"] == "EPO_TEST_B"].iloc[0]
     assert row["query_version"] == 3
 
 
@@ -529,23 +528,23 @@ def test_multiple_queries_each_get_their_own_discovery_row(tmp_path, monkeypatch
     two queries gets two discovery ledger rows, one manifest row."""
     _setup(tmp_path, monkeypatch, queries_yaml=TWO_QUERY_YAML)
     h = _hit()
-    _register_ops({"pn=WO and ab=alpha": [h], "pn=WO and ab=beta": [h]}, {_docdb(h): _biblio_xml(h)})
+    _register_ops({"pn=EP and ab=alpha": [h], "pn=EP and ab=beta": [h]}, {_docdb(h): _biblio_xml(h)})
 
-    WIPOJob().run(_base_args(tmp_path))
+    EPOJob().run(_base_args(tmp_path))
 
-    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "wipo_discovery.parquet")
+    discovery_df = pd.read_parquet(tmp_path / "DATA" / "manifests" / "epo_discovery.parquet")
     matching = discovery_df[discovery_df["source_record_id"] == _pub_id(h)]
     assert len(matching) == 2
-    assert set(matching["query_id"]) == {"WIPO_TEST_A", "WIPO_TEST_B"}
+    assert set(matching["query_id"]) == {"EPO_TEST_A", "EPO_TEST_B"}
     assert len(_manifest_df(tmp_path)) == 1
 
 
 @responses.activate
 def test_empty_result_set_produces_empty_manifest_without_error(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
-    _register_ops({'pn=WO and ab="antibody-drug conjugate"': []})
+    _register_ops({'pn=EP and ab="antibody-drug conjugate"': []})
 
-    result = WIPOJob().run(_base_args(tmp_path))
+    result = EPOJob().run(_base_args(tmp_path))
 
     assert result.records_discovered == 0
     assert result.records_downloaded == 0

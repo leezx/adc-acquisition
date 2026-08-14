@@ -1,85 +1,107 @@
-"""Job 08: WIPO patent acquisition (Prompt.md section 7, execution order
+"""Job 10: EPO patent acquisition (Prompt.md section 9, execution order
 section 29).
 
-WIPO PATENTSCOPE has no public API, and its own Terms of Use explicitly
-forbid automated/bulk access — so this job acquires WO-prefixed (PCT)
-publication data via EPO's Open Patent Services (OPS) instead, the
-legitimate machine-readable route (see jobs/wipo/client.py for the full
-legal/technical rationale, verified live on 2026-08-13). Job 10 (EPO) will
-also use OPS, filtered to EP-prefixed publications instead — the two stay
-architecturally independent jobs with their own query_id/provenance
-namespaces (same "keep provenance independent per source" principle as
-Job 04's "keep USPTO provenance independent from WIPO").
+Uses EPO's own Open Patent Services (OPS) — the same official API Job 08
+(WIPO) uses, since WIPO PATENTSCOPE has no usable public API of its own
+(see adc_acquisition/ops_client.py's module docstring for that rationale).
+This job queries OPS filtered to EP-prefixed publications via `pn=EP`
+instead of Job 08's `pn=WO` — an architecturally independent job with its
+own query registry (configs/epo_queries.yaml), own query_id/provenance
+namespace, and own manifest/discovery/attempts triple (epo.parquet/
+epo_discovery.parquet/epo_attempts.parquet), sharing only the
+already-tested, source-agnostic OPS client (adc_acquisition/ops_client.py)
+and response parser (adc_acquisition/ops_parser.py) — no EPO-specific
+client/parser code exists, so this job has no separate client.py/parser.py
+of its own (unlike Job 08, whose client.py/parser.py are now thin
+re-export shims onto the same shared modules, kept for import-path
+backward compatibility with its own already-merged tests).
 
-Discovery: configs/wipo_queries.yaml's 5 CQL queries (Prompt.md section
-7's listed search concepts), each verified live to return well under
-OPS's 2000-total-result access cap. Search only returns
+Discovery: configs/epo_queries.yaml's 5 CQL queries (the same Prompt.md
+search concepts Job 08/USPTO use), each verified live to return well
+under OPS's 2000-total-result access cap. Search only returns
 (family_id, country, doc_number, kind) per hit — not bibliographic data —
 so discovery and materialization are naturally two different OPS calls,
-same shape as FDA's label-search-then-drugsfda-lookup.
+same shape as every other two-phase discovery job in this repo.
 
-Three tables: wipo.parquet (publication content-version manifest, raw
+Three tables: epo.parquet (publication content-version manifest, raw
 biblio XML preserved verbatim, keyed by publication_number e.g.
-"WO2026163182A1"), wipo_discovery.parquet (every (publication, query, run)
+"EP4789684A1"), epo_discovery.parquet (every (publication, query, run)
 triple, written unconditionally right after all queries' search sweeps
-complete and BEFORE any biblio fetch is attempted — same "discovery must
-survive a later step's crash" principle as FDA/EMA), wipo_attempts.parquet
-(every fetch attempt: success/skipped_unchanged/failed/parse_failed — the
-last recording that OPS bytes were fetched fine but parsing crashed, with
-the raw file already durable so the record can be reprocessed later
-without a re-fetch).
+complete and BEFORE any biblio fetch is attempted), epo_attempts.parquet
+(every fetch attempt: success/skipped_unchanged/failed/parse_failed).
 
-DEVIATION from the SEC/FDA/EMA --resume design, flagged here prominently
-(same "flag a source-shape deviation, don't bury it" practice as Job 04/
-Crossref): once a specific publication_number (a fixed country+number+kind
-triple) is successfully materialized, its OPS bibliographic record is
-NOT re-verified on every run the way SEC filings/FDA applications/EMA
-medicines are — refetching all ~2500 discovered publications every run to
-hash-compare would be pure wasted OPS quota in the common case. BUT this
-is NOT permanent immutability: EPO OPS's own terms note corrections do get
-incorporated into DOCDB data over time (a review round on this PR caught
-an earlier version of this docstring wrongly claiming the record never
-changes) — so a publication's bibliographic data CAN legitimately change
-after its first successful fetch. Default runs skip an already-successful
-publication with NO OPS request at all (using its last-known
-content_hash/version); the `--refresh` flag opts an entire run into
-re-fetching and hash-comparing every discovered publication (including
-already-successful ones), creating a new version if OPS's content
-actually changed. Run `--refresh` periodically (e.g. monthly) rather than
-on every incremental run. `--limit` prioritizes never-attempted (fresh)
-over previously-failed (backlog) over already-successful-under-refresh,
-same fairness rule as SEC/FDA/EMA.
+DESIGN MIRRORS JOB 08 (WIPO) EXACTLY, reused unmodified rather than
+re-derived — confirmed live (2026-08-14) that OPS's EP-prefixed biblio
+response is the byte-identical exchange-document schema WO-prefixed
+responses use, so every WIPO design decision applies here for the same
+underlying reason, not by coincidence:
+- Once a publication_number is successfully materialized, its OPS record
+  is skipped WITHOUT a request by default (efficiency default, not a
+  permanence claim — EPO OPS's own terms note corrections do get
+  incorporated into DOCDB data over time, same as WIPO). `--refresh` opts
+  a run into re-fetching/hash-comparing every discovered publication
+  (including already-successful ones), versioning on genuine change.
+- The skip decision requires BOTH unchanged raw bytes (RAW_NAMESPACE
+  checkpoint) AND the attempts ledger's own most-recent status already
+  being resolved (success or skipped_unchanged) — not hash match alone
+  (the exact distinction Job 09/USPTO's round-1 review had to correct).
+  Unchanged bytes with an unresolved last attempt (parse_failed, or no
+  attempt recorded due to a lost end-of-run flush) fall through to reuse
+  the existing raw file and retry parsing, rather than being misclassified
+  skipped_unchanged forever.
+- ROUND-1 FIX (2026-08-14, applied identically to Job 08/WIPO in the same
+  commit): "the ledger's latest attempt is resolved" is STILL not enough
+  on its own — that resolved attempt's own recorded version must also
+  match RAW_NAMESPACE's CURRENT version. Without this, a --refresh run
+  that writes raw v2 (RAW_NAMESPACE durable) but crashes before flushing
+  the manifest/attempts ledger leaves the ledger believing v1 is still
+  the resolved state; the NEXT run's fast-skip path would see "resolved"
+  (true, but for the STALE v1) and skip with no OPS request forever,
+  permanently orphaning the v2 raw file that was never read into the
+  manifest. Fixed: a resolved attempt whose version doesn't match
+  RAW_NAMESPACE's current version is "pending_recovery" — excluded from
+  the fast-skip path and instead routed through the ordinary per-item
+  loop below (like backlog). No separate recovery code path is needed:
+  that loop's existing "hash matches RAW_NAMESPACE but not already-
+  skipped -> reparse the existing raw file without rewriting it" branch
+  (see the loop itself) already produces exactly the missing manifest/
+  attempts row, whether OPS still returns the same content or something
+  genuinely new (which versions forward as usual).
+- Raw XML is persisted, and RAW_NAMESPACE's checkpoint state is saved to
+  disk IMMEDIATELY, before parsing is attempted (RAW FETCH -> RAW SNAPSHOT
+  -> CHECKPOINT SAVED TO DISK -> PARSE).
+- `--since`/`--until` apply server-side via OPS's own `pd within
+  "YYYYMMDD,YYYYMMDD"` CQL filter; `--resume` (the implicit cursor) does
+  NOT narrow the search this way, for the same reason as every other job
+  here (an unresolved backlog item predating the cursor must stay
+  discoverable).
+- `--limit` prioritizes never-attempted (fresh) over previously-failed
+  (backlog) over already-successful-under-refresh (reverify, strictly
+  last).
 
-ROUND-1 FIX (2026-08-14, applied identically to Job 10/EPO in the same
-commit as that job's own round-1 review): "the ledger's latest attempt is
-resolved" is STILL not enough on its own to fast-skip — that resolved
-attempt's own recorded version must also match RAW_NAMESPACE's CURRENT
-version. Without this, a --refresh run that writes raw v2 (RAW_NAMESPACE
-durable) but crashes before flushing the manifest/attempts ledger leaves
-the ledger believing v1 is still the resolved state; the NEXT run's
-fast-skip path would see "resolved" (true, but for the STALE v1) and skip
-with no OPS request forever, permanently orphaning the v2 raw file that
-was never read into the manifest. Fixed: a resolved attempt whose version
-doesn't match RAW_NAMESPACE's current version is "pending_recovery" —
-excluded from the fast-skip path and instead routed through the ordinary
-per-item loop below (like backlog). No separate recovery code path is
-needed: that loop's existing "hash matches RAW_NAMESPACE but not already-
-skipped -> reparse the existing raw file without rewriting it" branch
-already produces exactly the missing manifest/attempts row, whether OPS
-still returns the same content or something genuinely new (which
-versions forward as usual).
-
---since/--until: applied SERVER-SIDE via OPS's own `pd within
-"YYYYMMDD,YYYYMMDD"` CQL filter (verified live) whenever the caller
-supplies them EXPLICITLY — trusted literally, narrows the search itself.
---resume (the implicit cursor) does NOT narrow the search this way: doing
-so would make an unresolved backlog item whose actual publication_date
-predates the cursor undiscoverable by this run's search at all, silently
-dropping it from the retry set forever (the exact failure mode the
-SEC round-2 fix rule warns against). So --resume (and the plain default,
-with neither flag) both run an undated, full sweep of all 5 registered
-queries every run; the retry-safety net comes entirely from the attempts
-ledger's most-recent-status check, not from date-scoping the search.
+ONE genuine EPO-specific live finding DOES differentiate this job's query
+registry from WIPO's, discovered via ~45 minutes of isolated A/B testing
+(2026-08-14, re-confirmed round 2 with 2 additional fallback tests
+requested by review): OPS's `ti=` (title) field, restricted to `pn=EP`,
+reproducibly returns HTTP 500 `SERVER.DomainAccess` once the query has 3+
+effective title terms — whether from a quoted multi-word phrase (e.g.
+"antibody-drug conjugate") or an explicit AND of 3+ single words (e.g.
+`ti=antibody and ti=drug and ti=conjugate`, and OPS's own `ti all "..."`
+operator, both tested per review's request and both failing identically).
+A 2-term `ti=` AND succeeds fine (947 results), as does a single-word
+`ti=`, as does the identical phrase on `ab=` (abstract), and the
+byte-identical `pn=WO` versions of every failing query above all succeed
+— isolating this precisely to "3+ terms in the ti= field, restricted to
+pn=EP specifically." Ruled out via direct testing: clause ordering,
+OR-combination itself, `ti any` truncation syntax (works but returns an
+unusable OR-of-words match, 19208 results), and general OPS system load
+(concurrent <=2-term `pn=EP` queries succeeded throughout every test
+window). See configs/epo_queries.yaml's header comment for the full
+investigation. Consequence: the two "antibody-drug conjugate(s)" phrase
+queries search the ABSTRACT ONLY for EP scope (not title+abstract like
+WIPO) — a disclosed, live-verified coverage gap (see jobs/epo/report.py),
+not a silently-forced fit. The immunoconjugate query is unaffected
+(single word) and still searches both fields.
 """
 
 from __future__ import annotations
@@ -99,33 +121,21 @@ from adc_acquisition.http_utils import RateLimiter, RetryingClient
 from adc_acquisition.job_base import AcquisitionJob, JobRunResult
 from adc_acquisition.logging_utils import setup_job_logging
 from adc_acquisition.manifest import append_only, new_manifest_row, write_manifest
+from adc_acquisition.ops_client import BIBLIO_RATE_LIMIT, MAX_RANGE_SPAN, MAX_TOTAL_RESULTS, SEARCH_RATE_LIMIT, OPSClient, OPSThrottleError
+from adc_acquisition.ops_parser import parse_biblio_response, parse_search_response
 from adc_acquisition.query_registry import active_queries, load_queries
-from jobs.wipo.client import BIBLIO_RATE_LIMIT, MAX_RANGE_SPAN, MAX_TOTAL_RESULTS, SEARCH_RATE_LIMIT, OPSClient, OPSThrottleError
-from jobs.wipo.parser import parse_biblio_response, parse_search_response
-from jobs.wipo.report import build_report
+from jobs.epo.report import build_report
 
-QUERIES_PATH = Path("configs/wipo_queries.yaml")
+QUERIES_PATH = Path("configs/epo_queries.yaml")
 PUBLICATION_EXTRA_FIELDS = [
     "publication_number", "family_id", "application_number", "filing_date",
     "priority_date", "applicants", "inventors", "ipc_classes", "cpc_classes",
 ]
-LICENSE_NOTE = "EPO OPS bibliographic data (INPADOC/DOCDB), covers WO-prefixed PCT publications."
+LICENSE_NOTE = "EPO OPS bibliographic data (INPADOC/DOCDB), covers EP-prefixed publications."
 
-# Raw-fetch content/version tracking lives in its OWN checkpoint namespace,
-# updated unconditionally right after every raw write AND SAVED TO DISK
-# IMMEDIATELY (checkpoint_store.save right after set_record_state, before
-# parsing) — independent of whether parsing that content later succeeds.
-# Two review rounds established why both halves matter: (round 2) if
-# version numbering were driven by a checkpoint that only updates on parse
-# success, two different raw contents fetched across two parse-failing
-# runs would both compute version=1 and the second write would silently
-# overwrite the first's raw evidence. (round 3) updating the in-memory
-# checkpoint dict is not enough on its own — an uncaught exception
-# ANYWHERE downstream of the raw write (not just a caught parser error)
-# would leave the on-disk checkpoint still believing an older, smaller
-# version is current, so a later run recomputes the same version number
-# and overwrites a raw file a crashed run already wrote. Saving to disk
-# immediately after every raw write closes that gap.
+# See module docstring / adc_acquisition/ops_client.py for why this must
+# be a SEPARATE checkpoint namespace, updated unconditionally on every raw
+# write and saved to disk immediately, independent of parse outcome.
 RAW_NAMESPACE = "raw_records"
 
 DISCOVERY_COLUMNS = ["source", "source_record_id", "query_id", "query_version", "query_text", "discovered_at", "run_id"]
@@ -151,9 +161,44 @@ def _record_row(
     version: int | None = None,
 ) -> dict:
     return dict(
-        source="wipo", source_record_id=source_record_id, run_id=run_id, attempted_at=attempted_at,
+        source="epo", source_record_id=source_record_id, run_id=run_id, attempted_at=attempted_at,
         status=status, http_status=http_status, error=error, query_id=query_id, query_text=query_text,
         content_hash=content_hash, version=version,
+    )
+
+
+def _publication_manifest_row(
+    pub_id: str, hit, parsed, query_id: str, query_text: str, raw_path: Path, content_hash: str, version: int, now: str,
+) -> dict:
+    return new_manifest_row(
+        extra_fields=PUBLICATION_EXTRA_FIELDS,
+        source="epo",
+        source_record_id=pub_id,
+        source_record_type="epo_publication",
+        title=parsed.title if parsed else None,
+        url=f"https://register.epo.org/application?number={parsed.application_number}" if parsed and parsed.application_number else None,
+        publication_or_release_date=parsed.publication_date if parsed else None,
+        retrieved_at=now,
+        query_id=query_id,
+        query_text=query_text,
+        raw_file_path=str(raw_path),
+        raw_format="xml",
+        content_hash=content_hash,
+        download_status="success",
+        http_status=200,
+        license_or_access_note=LICENSE_NOTE,
+        parent_record_id=None,
+        version=version,
+        notes=parsed.abstract if parsed else None,
+        publication_number=pub_id,
+        family_id=parsed.family_id if parsed else (hit.family_id if hit else None),
+        application_number=parsed.application_number if parsed else None,
+        filing_date=parsed.filing_date if parsed else None,
+        priority_date=parsed.priority_date if parsed else None,
+        applicants=parsed.applicants if parsed else [],
+        inventors=parsed.inventors if parsed else [],
+        ipc_classes=parsed.ipc_classes if parsed else [],
+        cpc_classes=parsed.cpc_classes if parsed else [],
     )
 
 
@@ -164,7 +209,7 @@ RESOLVED_STATUSES = {"success", "skipped_unchanged"}
 def _unresolved_publication_ids(attempts_path: Path) -> set[str]:
     """Publication ids whose MOST RECENT recorded attempt is unresolved
     (a fetch failure or a parse failure) — retried on every run regardless
-    of --resume's cursor (which never narrows WIPO's search itself, see
+    of --resume's cursor (which never narrows EPO's search itself, see
     module docstring)."""
     if not attempts_path.exists():
         return set()
@@ -198,18 +243,15 @@ def _classify_publication_ids(
     """Splits publication ids whose most-recent attempt is RESOLVED
     (success/skipped_unchanged) into two groups:
 
-    - genuinely resolved: the resolved attempt's own version matches
-      RAW_NAMESPACE's CURRENT version -- safe to fast-skip with no OPS
-      request.
+    - genuinely resolved: the resolved attempt's own version/content_hash
+      matches RAW_NAMESPACE's CURRENT state -- safe to fast-skip with no
+      OPS request.
     - pending_recovery: the resolved attempt is STALE relative to
       RAW_NAMESPACE (a newer raw version is durable on disk, but the
-      manifest/attempts ledger never recorded it -- an uncaught crash
-      between the raw write and the end-of-run ledger flush). These must
-      NOT be fast-skipped; they are routed through the ordinary per-item
-      loop like backlog, whose existing hash-match-but-not-already-
-      skipped fall-through reparses the existing raw file (or versions
-      forward if OPS returns something new) without a separate recovery
-      code path.
+      manifest/attempts ledger never recorded it — the crash scenario
+      this round-1 fix addresses). These must NOT be fast-skipped; they
+      need their existing raw file reparsed to produce the missing
+      manifest/attempts rows, without a new OPS request.
 
     Ids whose most-recent attempt is not resolved (never attempted,
     failed, parse_failed) are simply absent from both returned
@@ -232,14 +274,14 @@ def _classify_publication_ids(
     return resolved_ids, sorted(pending_recovery_ids)
 
 
-class WIPOJob(AcquisitionJob):
-    name = "wipo"
+class EPOJob(AcquisitionJob):
+    name = "epo"
 
     @classmethod
     def add_job_arguments(cls, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
             "--queries-file", type=str, default=str(QUERIES_PATH),
-            help="Path to the WIPO/OPS discovery query registry YAML.",
+            help="Path to the EPO/OPS discovery query registry YAML.",
         )
         parser.add_argument(
             "--refresh", action="store_true",
@@ -262,7 +304,7 @@ class WIPOJob(AcquisitionJob):
         if not consumer_key or not consumer_secret:
             raise RuntimeError(
                 "OPS_CONSUMER_KEY/OPS_CONSUMER_SECRET must be set (free registration at "
-                "https://developers.epo.org/) — WIPO PATENTSCOPE itself has no usable public API."
+                "https://developers.epo.org/) — same OPS account Job 08 (WIPO) uses."
             )
         client = OPSClient(
             search_client=RetryingClient(RateLimiter(SEARCH_RATE_LIMIT)),
@@ -322,16 +364,16 @@ class WIPOJob(AcquisitionJob):
             # surfacing the error — a partial discovery sweep must not lose
             # the provenance it already collected.
             discovery_error = str(exc)
-            logger.error("WIPO discovery stopped early: %s", discovery_error)
+            logger.error("EPO discovery stopped early: %s", discovery_error)
 
         result.queries_run = len(queries)
         result.records_discovered = len(hits_by_id)
 
-        discovery_path = output_dir / "manifests" / "wipo_discovery.parquet"
+        discovery_path = output_dir / "manifests" / "epo_discovery.parquet"
         if not args.dry_run:
             discovery_rows = [
                 dict(
-                    source="wipo", source_record_id=pub_id, query_id=qid, query_version=next(
+                    source="epo", source_record_id=pub_id, query_id=qid, query_version=next(
                         qq.query_version for qq in queries if qq.query_id == qid
                     ),
                     query_text=qtext, discovered_at=now, run_id=run_id,
@@ -341,9 +383,9 @@ class WIPOJob(AcquisitionJob):
             append_only(discovery_rows, discovery_path, DISCOVERY_COLUMNS)
 
         if discovery_error is not None:
-            raise RuntimeError(f"WIPO discovery incomplete (partial results already persisted): {discovery_error}")
+            raise RuntimeError(f"EPO discovery incomplete (partial results already persisted): {discovery_error}")
 
-        attempts_path = output_dir / "manifests" / "wipo_attempts.parquet"
+        attempts_path = output_dir / "manifests" / "epo_attempts.parquet"
         latest_attempts = _latest_attempt_by_id(attempts_path)
         unresolved_ids = _unresolved_publication_ids(attempts_path)
 
@@ -360,9 +402,13 @@ class WIPOJob(AcquisitionJob):
         # pending_recovery_ids are ALWAYS included in this run's work,
         # regardless of --refresh: their ledger status is stale relative
         # to RAW_NAMESPACE (see _classify_publication_ids), so they are
-        # NOT safe to fast-skip. See _classify_publication_ids's
-        # docstring for why the ordinary per-item loop below already
-        # handles their recovery with no separate code path.
+        # NOT safe to fast-skip. They go through the ordinary per-item
+        # loop below like backlog does; its existing hash-match-but-not-
+        # already-skipped fall-through (see the loop's comments) reparses
+        # the existing raw file without rewriting it if OPS still returns
+        # the same content, or versions forward if OPS returns something
+        # new -- either way the missing manifest/attempts row gets
+        # produced, no separate recovery code path needed.
         if args.refresh:
             ordered_new_work = fresh_ids + backlog_ids + pending_recovery_ids + already_skipped_ids
             fast_skip_ids: list[str] = []
@@ -383,7 +429,7 @@ class WIPOJob(AcquisitionJob):
             )
             return result
 
-        manifest_path = output_dir / "manifests" / "wipo.parquet"
+        manifest_path = output_dir / "manifests" / "epo.parquet"
 
         content_rows = []
         attempt_rows = []
@@ -425,20 +471,18 @@ class WIPOJob(AcquisitionJob):
             content_hash = sha256_bytes(raw_bytes)
             # Raw version numbering is driven ENTIRELY by RAW_NAMESPACE,
             # updated unconditionally right after every raw write --
-            # independent of whether parsing succeeds. This is what makes
-            # the raw snapshot immutable/append-only even across repeated
-            # parse failures with genuinely different OPS content each time.
+            # independent of whether parsing succeeds.
             raw_prior_state = checkpoint_store.get_record_state(checkpoint, pub_id, namespace=RAW_NAMESPACE)
-            raw_dir = output_dir / "raw" / "wipo" / pub_id
+            raw_dir = output_dir / "raw" / "epo" / pub_id
 
             if raw_prior_state and raw_prior_state.get("content_hash") == content_hash:
                 version = raw_prior_state["version"]
                 raw_path = raw_dir / f"v{version}.xml"
                 if pub_id in already_skipped_id_set:
                     # Already fully resolved before this run (a --refresh
-                    # re-check); content is unchanged, so this is a genuine
-                    # no-op -- the manifest row for this version already
-                    # exists, no need to re-parse it.
+                    # re-check): unchanged content AND the ledger's own
+                    # most-recent status is already resolved -- a genuine
+                    # no-op, no re-parse needed.
                     result.records_skipped_unchanged += 1
                     attempt_rows.append(
                         _record_row(
@@ -453,15 +497,6 @@ class WIPOJob(AcquisitionJob):
                 # failure) -- fall through and retry parsing below,
                 # reusing the existing raw file rather than rewriting it.
             else:
-                # New or CHANGED raw content: persist it IMMEDIATELY, and
-                # save the checkpoint's RAW_NAMESPACE state to disk RIGHT
-                # THEN -- before parsing -- so that even an uncaught
-                # downstream exception (not just a caught parser error)
-                # can never leave a later run's version numbering
-                # confused about what raw content already exists on disk
-                # (same invariant as EMA's bulk-snapshot fix: RAW FETCH ->
-                # DURABLE SNAPSHOT -> PARSE, with "durable" meaning
-                # on-disk, not just in the in-memory checkpoint dict).
                 version = (raw_prior_state["version"] + 1) if raw_prior_state else 1
                 raw_dir.mkdir(parents=True, exist_ok=True)
                 raw_path = raw_dir / f"v{version}.xml"
@@ -487,38 +522,7 @@ class WIPOJob(AcquisitionJob):
             attempt_rows.append(
                 _record_row(pub_id, run_id, now, "success", query_id, query_text, content_hash=content_hash, version=version)
             )
-            content_rows.append(
-                new_manifest_row(
-                    extra_fields=PUBLICATION_EXTRA_FIELDS,
-                    source="wipo",
-                    source_record_id=pub_id,
-                    source_record_type="wipo_publication",
-                    title=parsed.title if parsed else None,
-                    url=f"https://register.epo.org/application?number={parsed.application_number}" if parsed and parsed.application_number else None,
-                    publication_or_release_date=parsed.publication_date if parsed else None,
-                    retrieved_at=now,
-                    query_id=query_id,
-                    query_text=query_text,
-                    raw_file_path=str(raw_path),
-                    raw_format="xml",
-                    content_hash=content_hash,
-                    download_status="success",
-                    http_status=200,
-                    license_or_access_note=LICENSE_NOTE,
-                    parent_record_id=None,
-                    version=version,
-                    notes=parsed.abstract if parsed else None,
-                    publication_number=pub_id,
-                    family_id=parsed.family_id if parsed else hit.family_id,
-                    application_number=parsed.application_number if parsed else None,
-                    filing_date=parsed.filing_date if parsed else None,
-                    priority_date=parsed.priority_date if parsed else None,
-                    applicants=parsed.applicants if parsed else [],
-                    inventors=parsed.inventors if parsed else [],
-                    ipc_classes=parsed.ipc_classes if parsed else [],
-                    cpc_classes=parsed.cpc_classes if parsed else [],
-                )
-            )
+            content_rows.append(_publication_manifest_row(pub_id, hit, parsed, query_id, query_text, raw_path, content_hash, version, now))
 
         manifest_df = write_manifest(content_rows, manifest_path, extra_fields=PUBLICATION_EXTRA_FIELDS)
         append_only(attempt_rows, attempts_path, ATTEMPT_COLUMNS)
@@ -528,7 +532,7 @@ class WIPOJob(AcquisitionJob):
         checkpoint["last_success_max_date"] = args.until or now[:10]
         checkpoint_store.save(checkpoint)
 
-        report_path = output_dir.parent / "reports" / "acquisition" / "wipo.md"
+        report_path = output_dir.parent / "reports" / "acquisition" / "epo.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(
             build_report(result, manifest_df, all_ids, fresh_ids, backlog_ids, fast_skip_ids),
@@ -537,7 +541,7 @@ class WIPOJob(AcquisitionJob):
 
         if parse_error is not None:
             raise RuntimeError(
-                f"WIPO biblio parsing failed (raw bytes and prior progress already persisted): {parse_error}"
+                f"EPO biblio parsing failed (raw bytes and prior progress already persisted): {parse_error}"
             )
 
         return result

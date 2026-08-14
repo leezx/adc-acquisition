@@ -74,7 +74,7 @@ def test_biblio_success_returns_raw_bytes():
 
 @responses.activate
 def test_search_throttle_403_retries_then_succeeds(monkeypatch):
-    import jobs.wipo.client as client_module
+    import adc_acquisition.ops_client as client_module
     monkeypatch.setattr(client_module.time, "sleep", lambda _s: None)
 
     _mock_token()
@@ -90,7 +90,7 @@ def test_search_throttle_403_retries_then_succeeds(monkeypatch):
 
 @responses.activate
 def test_search_throttle_403_gives_up_after_max_attempts(monkeypatch):
-    import jobs.wipo.client as client_module
+    import adc_acquisition.ops_client as client_module
     monkeypatch.setattr(client_module.time, "sleep", lambda _s: None)
 
     _mock_token()
