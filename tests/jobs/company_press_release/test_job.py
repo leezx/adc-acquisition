@@ -409,7 +409,11 @@ def test_unknown_template_company_still_attempts_and_records_failure(tmp_path, m
     """Mirrors the live-verified Zymeworks case: a registered
     press_release_url with no known press_release_template (page
     currently unreachable/never observed) must still attempt a fetch so
-    failures are recorded normally, and must not crash the run."""
+    failures are recorded normally, and must not crash the run. Round-1
+    fix: this must now be a STRUCTURED discovery failure (visible in
+    result.notes), not just a log line -- a listing failure looking
+    identical to "0 new releases found" is exactly what round-1 review
+    flagged."""
     _setup(tmp_path, monkeypatch, registry_yaml=UNKNOWN_TEMPLATE_YAML)
     responses.add(responses.GET, "https://ir.gamma.example/news", status=500)
 
@@ -418,6 +422,196 @@ def test_unknown_template_company_still_attempts_and_records_failure(tmp_path, m
     assert result.records_discovered == 0
     assert result.records_downloaded == 0
     assert result.records_failed == 0  # not a materialization attempt -- no attempts-ledger row, just a logged failure
+    assert any("gamma" in n and "HTTP_NON_200" in n for n in result.notes)
+
+
+@responses.activate
+def test_discovery_failure_isolated_per_company(tmp_path, monkeypatch):
+    """Round-1 fix: one company's listing fetch failing entirely must
+    NOT abort other companies' discovery or block materializing whatever
+    they successfully found, and must be reported as a structured,
+    per-company discovery failure -- not silently look like "no new
+    releases this run"."""
+    _setup(tmp_path, monkeypatch, registry_yaml=FULL_REGISTRY_YAML)
+    responses.add(responses.GET, "https://ir.acme.example/news?o=0", body=ONE_RELEASE_PAGE, content_type="text/html")
+    responses.add(responses.GET, "https://ir.acme.example/news?o=1", body=EMPTY_PAGE, content_type="text/html")
+    responses.add(responses.GET, "https://ir.acme.example/2026-08-13-Acme-Reports-Results", body=b"<html>body</html>", content_type="text/html")
+    responses.add(responses.GET, "https://ir.beta.example/press-releases?page=1", status=500)
+
+    result = CompanyPressReleaseJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1  # acme's release still materialized despite beta's discovery failure
+    df = _manifest_df(tmp_path)
+    assert set(df["company_id"]) == {"acme"}
+    assert any("beta" in n and "HTTP_NON_200" in n for n in result.notes)
+
+
+@responses.activate
+def test_first_page_parse_zero_flagged_as_discovery_failure(tmp_path, monkeypatch):
+    """Round-1 fix: a KNOWN template's first page parsing to ZERO items
+    (e.g. the site changed its markup) must be flagged as a discovery
+    failure, not silently treated as "0 new releases this run" -- the
+    exact silent-failure risk round-1 review flagged."""
+    _setup(tmp_path, monkeypatch)
+    responses.add(
+        responses.GET, "https://ir.acme.example/news?o=0",
+        body="<html><body>totally different markup, no wd_item here at all</body></html>",
+        content_type="text/html",
+    )
+
+    result = CompanyPressReleaseJob().run(_base_args(tmp_path))
+
+    assert result.records_discovered == 0
+    assert any("FIRST_PAGE_PARSE_ZERO" in n for n in result.notes)
+
+
+@responses.activate
+def test_manifest_discovery_attempts_query_provenance_consistent(tmp_path, monkeypatch):
+    """Round-1 fix: the manifest's query_text must match the discovery
+    and attempts ledgers' query_text for the SAME query_id (the company's
+    listing query) -- it must not silently substitute the release's own
+    detail-page URL, which is already preserved verbatim in the
+    manifest's own `url` field."""
+    _setup(tmp_path, monkeypatch)
+    responses.add(responses.GET, "https://ir.acme.example/news?o=0", body=ONE_RELEASE_PAGE, content_type="text/html")
+    responses.add(responses.GET, "https://ir.acme.example/news?o=1", body=EMPTY_PAGE, content_type="text/html")
+    responses.add(responses.GET, "https://ir.acme.example/2026-08-13-Acme-Reports-Results", body=b"<html>body</html>", content_type="text/html")
+    CompanyPressReleaseJob().run(_base_args(tmp_path))
+
+    manifest = _manifest_df(tmp_path)
+    disc = _discovery_df(tmp_path)
+    attempts = _attempts_df(tmp_path)
+
+    assert manifest.iloc[0]["query_id"] == disc.iloc[0]["query_id"] == attempts.iloc[0]["query_id"] == "PRESSRELEASE_LISTING_ACME"
+    assert manifest.iloc[0]["query_text"] == disc.iloc[0]["query_text"] == attempts.iloc[0]["query_text"] == "https://ir.acme.example/news"
+    assert manifest.iloc[0]["url"] == "https://ir.acme.example/2026-08-13-Acme-Reports-Results"
+
+
+@responses.activate
+def test_backlog_release_behind_resolved_page_still_retried_without_refresh(tmp_path, monkeypatch):
+    """Reproduces round-1's blocker #1 exactly: an old FAILED backlog
+    release ends up sitting BEHIND a page containing only genuinely
+    resolved releases -- an ordinary run's live pagination early-stops at
+    that resolved page and never reaches the backlog release's own page,
+    yet it must still be retried this run (reconstructed directly from
+    the discovery ledger's own stored headline/date, not re-discovered
+    via pagination)."""
+    _setup(tmp_path, monkeypatch)
+
+    # Run 1 (week 1): only release-1 exists; its materialization fails.
+    responses.add(
+        responses.GET, "https://ir.acme.example/news?o=0",
+        body=_workiva_page([_workiva_item("https://ir.acme.example/release-1", "Release 1", date="Aug 1, 2026")]),
+        content_type="text/html",
+    )
+    responses.add(responses.GET, "https://ir.acme.example/news?o=1", body=EMPTY_PAGE, content_type="text/html")
+    responses.add(responses.GET, "https://ir.acme.example/release-1", status=500)
+    CompanyPressReleaseJob().run(_base_args(tmp_path))
+
+    # Run 2 (week 2): release-2 published (newer, ahead of release-1);
+    # release-2 materializes successfully, release-1 still fails.
+    responses.reset()
+    responses.add(
+        responses.GET, "https://ir.acme.example/news?o=0",
+        body=_workiva_page([_workiva_item("https://ir.acme.example/release-2", "Release 2", date="Aug 8, 2026")]),
+        content_type="text/html",
+    )
+    responses.add(
+        responses.GET, "https://ir.acme.example/news?o=1",
+        body=_workiva_page([_workiva_item("https://ir.acme.example/release-1", "Release 1", date="Aug 1, 2026")]),
+        content_type="text/html",
+    )
+    responses.add(responses.GET, "https://ir.acme.example/news?o=2", body=EMPTY_PAGE, content_type="text/html")
+    responses.add(responses.GET, "https://ir.acme.example/release-2", body=b"<html>r2</html>", content_type="text/html")
+    responses.add(responses.GET, "https://ir.acme.example/release-1", status=500)
+    CompanyPressReleaseJob().run(_base_args(tmp_path))
+
+    # Run 3 (week 3): release-3 published (newest); release-2 is now
+    # RESOLVED and sits alone on its own page ahead of release-1 (still
+    # unresolved). An ordinary run's live pagination early-stops at o=1
+    # (release-2, fully resolved) and never reaches o=2 (release-1) --
+    # o=2 is deliberately NOT registered with `responses` below, so this
+    # test would fail with a connection error if the job tried to fetch
+    # it, proving the early-stop behaved as designed.
+    responses.reset()
+    responses.add(
+        responses.GET, "https://ir.acme.example/news?o=0",
+        body=_workiva_page([_workiva_item("https://ir.acme.example/release-3", "Release 3", date="Aug 15, 2026")]),
+        content_type="text/html",
+    )
+    responses.add(
+        responses.GET, "https://ir.acme.example/news?o=1",
+        body=_workiva_page([_workiva_item("https://ir.acme.example/release-2", "Release 2", date="Aug 8, 2026")]),
+        content_type="text/html",
+    )
+    responses.add(responses.GET, "https://ir.acme.example/release-3", body=b"<html>r3</html>", content_type="text/html")
+    responses.add(responses.GET, "https://ir.acme.example/release-1", body=b"<html>r1 finally fixed</html>", content_type="text/html")
+
+    result = CompanyPressReleaseJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 2  # release-3 (fresh) AND release-1 (backlog, resurrected)
+    df = _manifest_df(tmp_path)
+    assert set(df["title"]) == {"Release 1", "Release 2", "Release 3"}
+
+
+@responses.activate
+def test_limit_omitted_release_still_retried_after_being_pushed_behind_resolved_page(tmp_path, monkeypatch):
+    """Reproduces round-1's blocker #1 scenario B: a release discovered
+    but never attempted at all due to --limit truncation (no
+    attempts-ledger row whatsoever, not even a failure) must still be
+    retried on a LATER ordinary run, even after new releases push it
+    behind an otherwise-fully-resolved page.
+
+    NOTE: `--limit` truncation picks fresh_ids in source_record_id-sorted
+    (hash) order, NOT listing/date order -- verified directly that
+    "release-b"'s hash sorts before "release-a"'s for company_id=acme, so
+    release-b is the one materialized under limit=1 here, not release-a."""
+    _setup(tmp_path, monkeypatch)
+
+    # Run 1: release-a and release-b both discovered; --limit=1 lets only
+    # release-b materialize (hash-sort order, see docstring). release-a
+    # is discovered but never attempted at all this run.
+    responses.add(
+        responses.GET, "https://ir.acme.example/news?o=0",
+        body=_workiva_page([_workiva_item("https://ir.acme.example/release-a", "Release A", date="Aug 5, 2026")]),
+        content_type="text/html",
+    )
+    responses.add(
+        responses.GET, "https://ir.acme.example/news?o=1",
+        body=_workiva_page([_workiva_item("https://ir.acme.example/release-b", "Release B", date="Aug 1, 2026")]),
+        content_type="text/html",
+    )
+    responses.add(responses.GET, "https://ir.acme.example/news?o=2", body=EMPTY_PAGE, content_type="text/html")
+    responses.add(responses.GET, "https://ir.acme.example/release-b", body=b"<html>b</html>", content_type="text/html")
+    result1 = CompanyPressReleaseJob().run(_base_args(tmp_path, limit=1))
+    assert result1.records_downloaded == 1
+    df1 = _manifest_df(tmp_path)
+    assert set(df1["title"]) == {"Release B"}
+
+    # Run 2: release-new is published (newest); release-b is now fully
+    # resolved and sits alone on its own page ahead of release-a -- an
+    # ordinary run's live pagination early-stops there and never reaches
+    # release-a's page (deliberately NOT registered with `responses`
+    # below).
+    responses.reset()
+    responses.add(
+        responses.GET, "https://ir.acme.example/news?o=0",
+        body=_workiva_page([_workiva_item("https://ir.acme.example/release-new", "Release New", date="Aug 10, 2026")]),
+        content_type="text/html",
+    )
+    responses.add(
+        responses.GET, "https://ir.acme.example/news?o=1",
+        body=_workiva_page([_workiva_item("https://ir.acme.example/release-b", "Release B", date="Aug 1, 2026")]),
+        content_type="text/html",
+    )
+    responses.add(responses.GET, "https://ir.acme.example/release-new", body=b"<html>new</html>", content_type="text/html")
+    responses.add(responses.GET, "https://ir.acme.example/release-a", body=b"<html>a finally</html>", content_type="text/html")
+
+    result2 = CompanyPressReleaseJob().run(_base_args(tmp_path))
+
+    assert result2.records_downloaded == 2  # release-new (fresh) AND release-a (never-attempted backlog, resurrected)
+    df2 = _manifest_df(tmp_path)
+    assert set(df2["title"]) == {"Release A", "Release B", "Release New"}
 
 
 @responses.activate

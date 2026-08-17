@@ -14,7 +14,12 @@ def build_report(
     pending_recovery_ids: list,
     fast_skip_ids: list,
     companies: list,
+    discovery_failures: list | None = None,
 ) -> str:
+    discovery_failures = discovery_failures or []
+    discovery_failure_rows = "\n".join(
+        f"- {f['company_id']}: {f['reason']} -- {f['detail']}" for f in discovery_failures
+    ) or "None this run."
     run_df = manifest_df[manifest_df["source_record_id"].isin(all_ids)] if not manifest_df.empty else manifest_df
     sample_rows = "n/a"
     if not run_df.empty:
@@ -52,6 +57,12 @@ No official API exists for any of these IR newsrooms — "fundamentally differen
 ## Failed downloads
 
 {result.records_failed} (see DATA/logs/company_press_release_failures.log and company_press_release_attempts.parquet, status=failed). A failure never occupies a manifest version slot, and is retried on every future run.
+
+## Discovery failures
+
+A company's own listing fetch/parse failing (network error, non-200 status, an unregistered template, a known template's first page parsing to zero items — usually template drift, not "nothing new" — or hitting the MAX_PAGES safety cap) is isolated to that company: it does not abort other companies' discovery or block materializing whatever was already found.
+
+{discovery_failure_rows}
 
 ## Known access limitation
 
