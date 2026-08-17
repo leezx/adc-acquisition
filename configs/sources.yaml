@@ -258,13 +258,30 @@ company_press_release:
   api_docs_url: null
   acquisition_method: scrape
   authentication_required: false
-  rate_limit: per_company
-  license_or_access_note: Official company domains only.
+  rate_limit: "0.5 req/s default per company, conservative (no documented rate limit for any registered IR newsroom domain)"
+  license_or_access_note: Official company domains only; shared configs/company_registry.yaml (also used by Job 05/SEC and Job 11/company pipeline pages).
   raw_formats: [html, pdf]
-  update_strategy: incremental_by_release_date
-  implementation_status: not_started
-  enabled: false
-  notes: Job 08 in Prompt.md, promoted to #12 in recommended execution order.
+  update_strategy: "discovery walks each company's press-release listing pagination, stopping once a page contributes zero not-yet-resolved items (an incremental efficiency optimization, not a date filter -- --since/--until filter which of the already-discovered releases get MATERIALIZED this run, client-side, by the listing page's own release date); materialization skips already-successful releases by default (no request) as an efficiency default, same OPS/WIPO/EPO-derived design -- `--refresh` opts a run into re-verifying already-successful releases AND disables the discovery early-stop (otherwise nothing would be left to reverify). See jobs/company_press_release/job.py docstring."
+  implementation_status: implemented
+  enabled: true
+  notes: >
+    Job 08 in Prompt.md, promoted to #12 in recommended execution order.
+    "Separate this from company pipeline pages" (Prompt.md) -- acquires
+    each company's own discrete, dated announcements rather than a
+    current-state snapshot; genuinely needs a discovery ledger (unlike
+    Job 11's curated pipeline_urls) since individual releases behind a
+    company's press_release_url are a discovery outcome, not a curated
+    URL. No unified API exists across companies (same "fundamentally
+    different from database APIs" framing as Job 11) -- live-verified
+    2026-08-17 that registered companies' listing pages reduce to 3
+    reused third-party IR-platform templates
+    (configs/company_registry.yaml's press_release_template field,
+    jobs/company_press_release/parser.py). "Only official company
+    domains... do not mix media reports" enforced at discovery time via
+    an official_domain membership check on every listing item. Zymeworks'
+    entire ir.zymeworks.com subdomain is currently unreachable (confirmed
+    live: a direct request times out, distinct from a bot-detection
+    block) -- recorded as a normal logged failure, not bypassed.
 
 patent_bioactivity_corpus:
   source_type: derived

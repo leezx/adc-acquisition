@@ -589,6 +589,46 @@ downstream knowledge extraction.
    pages are all plain static HTML, live-verified accessible and
    materialized with real content.
 
+## Running the company press-release job (Job 12)
+
+```bash
+python -m adc_acquisition company_press_release --dry-run
+python -m adc_acquisition company_press_release
+python -m adc_acquisition company_press_release --company sutro_biopharma
+python -m adc_acquisition company_press_release --refresh   # periodic re-verification, not for every run
+```
+
+"Separate this from company pipeline pages" (Prompt.md's own instruction)
+— Job 11 archives a company's current-state pipeline snapshot; this job
+acquires discrete, dated ANNOUNCEMENTS. Unlike Job 11, this genuinely
+needs a discovery ledger: each company's `press_release_url`
+(`configs/company_registry.yaml`, shared with Job 05/Job 11) is a curated
+LISTING page, but the individual releases behind it are a discovery
+outcome that grows over time. No unified API exists across companies —
+live-verified 2026-08-17 that the registered companies' listing pages
+reduce to 3 reused third-party IR-platform templates, selected per
+company via the registry's new `press_release_template` field
+(`jobs/company_press_release/parser.py`).
+
+Discovery walks each company's listing pagination, stopping once a page
+contributes zero not-yet-*resolved* items — checked against every release
+whose most recent attempt is genuinely resolved (not just "ever
+discovered"; a failed or never-materialized release must re-enter scope
+on the very next ordinary run, not just under `--refresh`). Two of the
+three templates clamp/wrap to repeat an already-seen page past the real
+end instead of emptying out (live-verified) — this stop rule handles both
+behaviors uniformly. Materialization mirrors Job 10 (EPO)'s fully-hardened
+skip-by-default + `--refresh` + stale-ledger-recovery design, applied
+proactively from the start. "Only official company domains... do not mix
+media reports" is enforced at discovery time via an `official_domain`
+membership check on every listing item.
+
+**Live finding (2026-08-17):** Zymeworks' entire `ir.zymeworks.com`
+subdomain is currently unreachable (a direct request with a descriptive
+User-Agent hangs to a read timeout — distinct from AbbVie's fast
+Cloudflare 403 in Job 11) — recorded as a normal, logged failed attempt,
+not bypassed or silently dropped.
+
 ## Tests
 
 ```bash
@@ -603,6 +643,7 @@ or used by the normal test suite.
 See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
 (Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), Job 05
 (SEC EDGAR), Job 06 (FDA), Job 07 (EMA), Job 08 (WIPO), Job 09 (USPTO),
-Job 10 (EPO), and Job 11 (company pipeline pages) are implemented so far;
-every other source in `Prompt.md` is intentionally not started yet —
-sources are implemented and reviewed one at a time.
+Job 10 (EPO), Job 11 (company pipeline pages), and Job 12 (company press
+releases) are implemented so far; every other source in `Prompt.md` is
+intentionally not started yet — sources are implemented and reviewed one
+at a time.
