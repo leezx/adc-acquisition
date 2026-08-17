@@ -88,16 +88,15 @@ import argparse
 import json
 import os
 from collections import Counter, defaultdict
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
 import requests
-import yaml
 from dotenv import load_dotenv
 
 from adc_acquisition.checkpoint import CheckpointStore
+from adc_acquisition.company_registry import Company, load_companies
 from adc_acquisition.hashing import sha256_bytes
 from adc_acquisition.http_utils import RateLimiter, RetryingClient
 from adc_acquisition.job_base import AcquisitionJob, JobRunResult
@@ -145,23 +144,6 @@ FILING_INDEX_SUFFIX = ":__filing_index__"
 # specifically; the filing's exhibits (if any) are still tracked
 # independently via _unresolved_exhibit_parent_ids.
 TERMINAL_PRIMARY_ERRORS = {"no_primary_document"}
-
-
-@dataclass(frozen=True)
-class Company:
-    company_id: str
-    canonical_name: str
-    ciks: list
-    aliases: list
-    tickers: list
-    active: bool
-    notes: str | None = None
-
-
-def load_companies(path: Path) -> list[Company]:
-    with Path(path).open("r", encoding="utf-8") as f:
-        data = yaml.safe_load(f) or {}
-    return [Company(**c) for c in data.get("companies", [])]
 
 
 def _now_iso() -> str:

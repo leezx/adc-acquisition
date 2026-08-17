@@ -546,6 +546,49 @@ conjugate(s)" phrase queries search the abstract only for EP scope (not
 title+abstract like WIPO) — a disclosed coverage gap, not a silently
 narrowed one (see `reports/acquisition/COVERAGE.md`).
 
+## Running the company pipeline job (Job 11)
+
+```bash
+python -m adc_acquisition company_pipeline --dry-run
+python -m adc_acquisition company_pipeline
+python -m adc_acquisition company_pipeline --company zymeworks
+```
+
+"Fundamentally different from database APIs" (Prompt.md's own framing):
+no live search/discovery step exists — every (company, pipeline_url) pair
+comes directly from the curated `configs/company_registry.yaml`, shared
+with Job 05 (SEC), now extended with `official_domain`/`pipeline_urls`/
+`investor_relations_url`/`press_release_url` fields
+(`adc_acquisition/company_registry.py`). No discovery ledger is needed —
+a pipeline_url is curated, not a discovery outcome, same reason SEC's own
+CIK level never needed one. Just two tables:
+`company_pipeline.parquet` (page snapshot manifest) and
+`company_pipeline_attempts.parquet`.
+
+Every registered pair is refetched and hash-compared **every run** (the
+ordinary SEC/FDA/EMA/USPTO pattern, not WIPO/EPO's skip-by-default) —
+Prompt.md is explicit that pipeline pages change over time and snapshots
+are essential, and the curated set is small enough that there's no
+efficiency pressure to skip. Individual pipeline program entries (drug
+names, phases) are deliberately NOT extracted — only the raw page
+snapshot and its `<title>` tag are preserved; parsing out programs is
+downstream knowledge extraction.
+
+**Two live findings from verifying all 8 registered companies (2026-08-14):**
+1. Seagen, ImmunoGen, and Mersana (all acquired/absorbed) have no
+   standalone pipeline page anymore — `pipeline_urls: []` for those three;
+   their former ADC assets appear only in their acquirers' own pipeline
+   pages (confirmed live: Pfizer's oncology pipeline page lists
+   PADCEV/TIVDAK/disitamab vedotin, all former Seagen assets).
+2. AbbVie's pipeline page is behind an active Cloudflare JS challenge
+   (HTTP 403, "Just a moment..." interstitial) — confirmed a descriptive
+   User-Agent (the fix that resolved fda.gov's simpler bot detection)
+   does NOT get past it. Not bypassed (Prompt.md prohibits CAPTCHA/bot-
+   challenge circumvention) — recorded as a normal, logged failed attempt.
+   Zymeworks, Sutro Biopharma, ADC Therapeutics, and Pfizer's pipeline
+   pages are all plain static HTML, live-verified accessible and
+   materialized with real content.
+
 ## Tests
 
 ```bash
@@ -560,6 +603,6 @@ or used by the normal test suite.
 See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
 (Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), Job 05
 (SEC EDGAR), Job 06 (FDA), Job 07 (EMA), Job 08 (WIPO), Job 09 (USPTO),
-and Job 10 (EPO) are implemented so far; every other source in
-`Prompt.md` is intentionally not started yet — sources are implemented
-and reviewed one at a time.
+Job 10 (EPO), and Job 11 (company pipeline pages) are implemented so far;
+every other source in `Prompt.md` is intentionally not started yet —
+sources are implemented and reviewed one at a time.

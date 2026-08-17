@@ -27,6 +27,21 @@
 # in the SEC job (e.g. "seagen" CIK 0001060736 -> query_id
 # "SEC_FILINGS_SEAGEN_0001060736"). Do not rename an existing company_id
 # once records reference it.
+#
+# EXTENDED for Job 07 (company pipeline pages, Prompt.md section 11) and
+# Job 08 (company press releases, Prompt.md section 12) on 2026-08-14:
+# official_domain/pipeline_urls/investor_relations_url/press_release_url,
+# per the SAME Company entries SEC already uses (Prompt.md's own section
+# 11 names the registry file identically to SEC's) — see
+# adc_acquisition/company_registry.py for why one shared dataclass, not a
+# second competing registry. Live-verified 2026-08-14 (plain
+# requests + a descriptive User-Agent, same technique already used for
+# fda.gov's bot detection): a company acquired/delisted can still have NO
+# standalone pipeline page at all (its former assets appear only in the
+# acquirer's own pipeline page instead) -- `pipeline_urls: []` for those,
+# not a guessed/broken URL. `active` continues to mean "still worth
+# tracking historically" (as SEC already uses it) -- it does NOT mean
+# "has a pipeline page"; that's simply an empty pipeline_urls list.
 
 companies:
   - company_id: seagen
@@ -35,7 +50,17 @@ companies:
     aliases: ["Seattle Genetics", "Seattle Genetics Inc"]
     tickers: []
     active: true
-    notes: Acquired by Pfizer, December 2023. Delisted; CIK retained for historical filings (name change only, same CIK throughout).
+    official_domain: seagen.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      Acquired by Pfizer, December 2023. Delisted; CIK retained for
+      historical filings (name change only, same CIK throughout). No
+      standalone pipeline page as of 2026-08-14 -- former Seagen ADC
+      assets (PADCEV/enfortumab vedotin, TIVDAK/tisotumab vedotin,
+      disitamab vedotin, sigvotatug vedotin) now appear only in Pfizer's
+      own oncology pipeline page (see pfizer's pipeline_urls below).
 
   - company_id: immunogen
     canonical_name: ImmunoGen, Inc.
@@ -43,7 +68,17 @@ companies:
     aliases: []
     tickers: []
     active: true
-    notes: Acquired by AbbVie, February 2024. Delisted; CIK retained for historical filings.
+    official_domain: immunogen.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      Acquired by AbbVie, February 2024. Delisted; CIK retained for
+      historical filings. No standalone pipeline page as of 2026-08-14 --
+      abbvie.com/immunogen.html is an informational redirect page only,
+      not a pipeline listing. Former ImmunoGen ADC assets now appear only
+      in AbbVie's own pipeline page (see abbvie's pipeline_urls below,
+      noting its own live-verified access limitation).
 
   - company_id: mersana
     canonical_name: Mersana Therapeutics, Inc.
@@ -51,7 +86,17 @@ companies:
     aliases: []
     tickers: []
     active: true
-    notes: null
+    official_domain: mersana.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      Acquired by Day One Biopharmaceuticals, completed 2026-01-06.
+      mersana.com/pipeline/ now 302-redirects to dayonebio.com; Mersana's
+      lead ADC asset (Emi-Le / emiltatug ledadotin) moved to Day One's own
+      pipeline. Day One is NOT yet a registered company in this file --
+      tracking its pipeline page would require adding it as a new entry,
+      a scope decision left for a future round rather than assumed here.
 
   - company_id: zymeworks
     canonical_name: Zymeworks Inc.
@@ -59,6 +104,10 @@ companies:
     aliases: []
     tickers: ["ZYME"]
     active: true
+    official_domain: zymeworks.com
+    pipeline_urls: ["https://www.zymeworks.com/pipeline/"]
+    investor_relations_url: https://ir.zymeworks.com/
+    press_release_url: https://ir.zymeworks.com/news-releases
     notes: >
       Two CIKs, not a name change: 0001937653 is the current Delaware entity
       (used since the 2022-07 redomicile), which SEC's own submissions API
@@ -66,7 +115,9 @@ companies:
       2022-10-13 rename to "Zymeworks Inc." 0001403752 is the predecessor —
       "Zymeworks BC Inc." (British Columbia), named "Zymeworks Inc." until
       the redomicile — and holds the entire pre-2022-10-13 filing history.
-      Both must be pulled to get Zymeworks' complete filing set.
+      Both must be pulled to get Zymeworks' complete filing set. Pipeline
+      page verified live 2026-08-14: plain static HTML (ZW191, ZW251,
+      ZW220, ZW209, ZW1528, zanidatamab variants), no JS rendering needed.
 
   - company_id: sutro_biopharma
     canonical_name: Sutro Biopharma, Inc.
@@ -74,7 +125,14 @@ companies:
     aliases: []
     tickers: ["STRO"]
     active: true
-    notes: null
+    official_domain: sutrobio.com
+    pipeline_urls: ["https://www.sutrobio.com/pipeline/"]
+    investor_relations_url: https://ir.sutrobio.com/
+    press_release_url: https://ir.sutrobio.com/news-events/news-releases
+    notes: >
+      Pipeline page verified live 2026-08-14: plain static HTML tables
+      (STRO-004, STRO-006, STRO-227, STRO-00Y proprietary programs; VAX-31,
+      VAX-24, ASP2998 partnered programs), no JS rendering needed.
 
   - company_id: adc_therapeutics
     canonical_name: ADC Therapeutics SA
@@ -82,7 +140,15 @@ companies:
     aliases: []
     tickers: ["ADCT"]
     active: true
-    notes: Swiss company, files as a foreign private issuer where applicable.
+    official_domain: adctherapeutics.com
+    pipeline_urls: ["https://www.adctherapeutics.com/our-pipeline1-1/"]
+    investor_relations_url: https://ir.adctherapeutics.com/
+    press_release_url: https://ir.adctherapeutics.com/press-releases
+    notes: >
+      Swiss company, files as a foreign private issuer where applicable.
+      Pipeline page verified live 2026-08-14: plain static HTML
+      (ZYNLONTA/loncastuximab tesirine-lpyl, LOTIS-2/5/7 trials), no JS
+      rendering needed.
 
   - company_id: abbvie
     canonical_name: AbbVie Inc.
@@ -90,7 +156,25 @@ companies:
     aliases: []
     tickers: ["ABBV"]
     active: true
-    notes: Large diversified filer post-ImmunoGen acquisition; expect substantial non-ADC-relevant filing volume — acquisition layer preserves all relevant-form filings regardless, relevance filtering is downstream.
+    official_domain: abbvie.com
+    pipeline_urls: ["https://www.abbvie.com/science/pipeline.html"]
+    investor_relations_url: null
+    press_release_url: https://news.abbvie.com/
+    notes: >
+      Large diversified filer post-ImmunoGen acquisition; expect
+      substantial non-ADC-relevant filing/pipeline volume — acquisition
+      layer preserves everything regardless, relevance filtering is
+      downstream. LIVE-VERIFIED ACCESS LIMITATION (2026-08-14): the
+      pipeline URL is behind a Cloudflare JS challenge ("Just a
+      moment..." interstitial, HTTP 403) -- confirmed this is NOT the
+      same simple User-Agent-sniffing block fda.gov had (a descriptive
+      User-Agent does not help here); it requires executing JavaScript to
+      pass, which this repo does not attempt (would cross into the
+      CAPTCHA/bot-challenge-bypassing territory Prompt.md explicitly
+      prohibits). The pipeline job will record every attempt against this
+      URL as a normal, logged `failed` attempt (never silently dropped)
+      until AbbVie's own official channels offer an alternative
+      machine-readable route.
 
   - company_id: pfizer
     canonical_name: Pfizer Inc.
@@ -98,4 +182,20 @@ companies:
     aliases: []
     tickers: ["PFE"]
     active: true
-    notes: Large diversified filer post-Seagen acquisition; same caveat as AbbVie above.
+    official_domain: pfizer.com
+    pipeline_urls: ["https://www.pfizer.com/science/oncology-cancer/pipeline"]
+    investor_relations_url: null
+    press_release_url: https://www.pfizer.com/news/press-release
+    notes: >
+      Large diversified filer post-Seagen acquisition; same "acquire
+      broadly, filter downstream" caveat as AbbVie above. Pipeline page
+      verified live 2026-08-14: plain static HTML, accessible with a
+      descriptive User-Agent (unlike AbbVie's Cloudflare challenge) --
+      confirmed real ADC program names present in the raw response
+      (PADCEV/enfortumab vedotin, TIVDAK/tisotumab vedotin, disitamab
+      vedotin, sigvotatug vedotin), no JS rendering needed. The oncology-
+      specific pipeline URL is used rather than pfizer.com/pipeline (the
+      full cross-therapeutic-area product pipeline) to keep this
+      registered URL reasonably scoped, though Pfizer's overall pipeline
+      is still far broader than ADCs alone -- same downstream-filtering
+      caveat applies.
