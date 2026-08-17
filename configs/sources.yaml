@@ -237,13 +237,19 @@ company_pipeline:
   api_docs_url: null
   acquisition_method: scrape
   authentication_required: false
-  rate_limit: per_company
-  license_or_access_note: Public pipeline pages; curated company_registry.yaml required first.
+  rate_limit: "0.5 req/s default, conservative (no documented rate limit for any registered company domain)"
+  license_or_access_note: Public pipeline pages; shared configs/company_registry.yaml (also used by Job 05/SEC).
   raw_formats: [html, pdf, json]
-  update_strategy: snapshot_on_change
-  implementation_status: not_started
-  enabled: false
-  notes: Job 07 in Prompt.md, promoted to #11 in recommended execution order.
+  update_strategy: "every registered (company, pipeline_url) pair refetched and hash-compared every run (no skip-by-default); no discovery ledger (pipeline_urls are curated, not discovered, same as SEC's CIK level)"
+  implementation_status: implemented
+  enabled: true
+  notes: >
+    Job 07 in Prompt.md, promoted to #11 in recommended execution order.
+    Live-verified 2026-08-14: Seagen/ImmunoGen/Mersana have no standalone
+    pipeline page (fully absorbed into acquirers or a new acquirer,
+    tracked there instead); AbbVie's pipeline page is behind an active
+    Cloudflare JS challenge, recorded as a normal logged failure rather
+    than bypassed (Prompt.md prohibits CAPTCHA/bot-challenge bypassing).
 
 company_press_release:
   source_type: corporate

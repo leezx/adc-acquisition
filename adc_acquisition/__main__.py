@@ -10,6 +10,7 @@ from __future__ import annotations
 import sys
 
 from jobs.clinicaltrials.job import ClinicalTrialsJob
+from jobs.company_pipeline.job import CompanyPipelineJob
 from jobs.crossref.job import CrossrefJob
 from jobs.ema.job import EMAJob
 from jobs.epo.job import EPOJob
@@ -31,6 +32,7 @@ JOBS = {
     "wipo": WIPOJob,
     "uspto": USPTOJob,
     "epo": EPOJob,
+    "company_pipeline": CompanyPipelineJob,
 }
 
 
