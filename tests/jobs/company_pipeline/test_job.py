@@ -219,6 +219,51 @@ companies:
 
 
 @responses.activate
+def test_manifest_missing_row_recovers_without_bumping_version(tmp_path, monkeypatch):
+    """Reproduces a crash between checkpoint_store.save() (durable
+    per-item, immediately after the raw write) and the end-of-run
+    write_manifest()/append_only() flush (batched once after the whole
+    loop): the checkpoint durably remembers v1/hash A, but
+    company_pipeline.parquet and company_pipeline_attempts.parquet never
+    got v1's row at all. The next run, fetching the SAME content, must
+    recover the missing row -- not misclassify this as skipped_unchanged
+    forever and silently orphan the page from the manifest."""
+    _setup(tmp_path, monkeypatch)
+    responses.add(responses.GET, "https://acme.example/pipeline", body=PAGE_A, content_type="text/html")
+    CompanyPipelineJob().run(_base_args(tmp_path))
+
+    # Simulate the crash: the checkpoint (already saved durably mid-loop,
+    # before the crash) is left untouched, but the manifest/attempts
+    # ledger -- only flushed once, after the entire loop -- never made it
+    # to disk.
+    (tmp_path / "DATA" / "manifests" / "company_pipeline.parquet").unlink()
+    (tmp_path / "DATA" / "manifests" / "company_pipeline_attempts.parquet").unlink()
+    assert (tmp_path / "DATA" / "checkpoints" / "company_pipeline.json").exists()
+
+    responses.reset()
+    responses.add(responses.GET, "https://acme.example/pipeline", body=PAGE_A, content_type="text/html")
+    result = CompanyPipelineJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1
+    assert result.records_skipped_unchanged == 0
+
+    df = _manifest_df(tmp_path)
+    assert len(df) == 1
+    assert df.iloc[0]["version"] == 1
+    assert df.iloc[0]["title"] == "Acme Pipeline"
+
+    attempts = _attempts_df(tmp_path)
+    assert attempts.iloc[0]["status"] == "success"
+    assert attempts.iloc[0]["version"] == 1
+
+    # Recovery reuses the already-durable raw file -- no spurious v2.
+    raw_dir = tmp_path / "DATA" / "raw" / "company_pipeline" / "acme"
+    raw_files = list(raw_dir.rglob("v*.html"))
+    assert len(raw_files) == 1
+    assert raw_files[0].name == "v1.html"
+
+
+@responses.activate
 def test_query_id_deterministic_and_stable(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
     responses.add(responses.GET, "https://acme.example/pipeline", body=PAGE_A, content_type="text/html")

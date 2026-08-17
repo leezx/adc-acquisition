@@ -24,11 +24,32 @@ run — the ordinary SEC/FDA/EMA/USPTO pattern, not WIPO/EPO's skip-by-
 default — because Prompt.md is explicit that "company pipeline pages
 change over time... snapshots are essential," and the curated set here is
 tiny (a handful of companies), so there is no efficiency pressure of the
-kind that motivated WIPO's design. Because every pair is always actually
-fetched (never fast-skipped without a request), this job is structurally
-immune to the "resolved ledger entry stale relative to a raw checkpoint"
-bug class Job 08/WIPO and Job 10/EPO's round-1 review caught — there is
-no fast-skip branch here to have that bug in.
+kind that motivated WIPO's design.
+
+ROUND-1 FIX (2026-08-17): always re-fetching does NOT make this job
+immune to the "resolved state stale relative to a raw checkpoint" bug
+class Job 08/WIPO and Job 10/EPO's round-1 reviews caught -- an earlier
+version of this docstring claimed exactly that immunity, which review
+correctly rejected. The checkpoint's content_hash/version is saved to
+disk immediately after a raw write, but `company_pipeline.parquet` (the
+manifest) and `company_pipeline_attempts.parquet` (the attempts ledger)
+are only flushed ONCE, after the entire per-run loop completes. If the
+process crashes after `checkpoint_store.save()` for one pair but before
+that end-of-run flush, the checkpoint durably remembers "content hash A,
+version 1" while the manifest never got a v1 row for it at all. The next
+run refetches (as always), sees the SAME content hash A, and — with only
+a checkpoint-hash comparison — would wrongly call this `skipped_unchanged`
+forever, permanently orphaning that pipeline page from the manifest.
+Fixed: a `materialized_state` snapshot is read from the EXISTING
+`company_pipeline.parquet` at the START of each run (before this run
+writes anything), and a checkpoint-hash match is only treated as a
+genuine no-op ("skipped_unchanged") if the manifest itself already has a
+row for that same content_hash. If the checkpoint says unchanged but the
+manifest doesn't have it yet, this is `pending_recovery`: reuse the
+existing raw file (already durable on disk), re-extract the title, and
+emit the missing manifest/attempt rows with status `success` -- WITHOUT
+bumping the version, since it's the same content that was already
+fetched once, not a new one.
 
 query_id/query_text: there is no static query registry YAML for this job
 (unlike PubMed/WIPO/EPO/USPTO's configs/*_queries.yaml) — the "query"
@@ -136,6 +157,53 @@ def _latest_status_by_id(attempts_path: Path) -> dict[str, str]:
     return dict(zip(latest["source_record_id"], latest["status"]))
 
 
+def _materialized_state_by_id(manifest_path: Path) -> dict[str, dict]:
+    """The current content_hash/version already durable in the manifest
+    ITSELF, read fresh at the start of a run -- the ground truth for
+    "already materialized", independent of what the checkpoint or attempts
+    ledger separately claim (see module docstring's round-1 fix)."""
+    if not manifest_path.exists():
+        return {}
+    df = pd.read_parquet(manifest_path)
+    if df.empty:
+        return {}
+    latest = df.sort_values("version").groupby("source_record_id", as_index=False).tail(1)
+    return {
+        row["source_record_id"]: {"content_hash": row["content_hash"], "version": row["version"]}
+        for _, row in latest.iterrows()
+    }
+
+
+def _pipeline_manifest_row(
+    company: Company, url: str, source_record_id: str, query_id: str, title: str | None,
+    raw_path: Path, raw_format: str, content_hash: str, version: int, now: str, http_status: int,
+) -> dict:
+    return new_manifest_row(
+        extra_fields=EXTRA_FIELDS,
+        source="company_pipeline",
+        source_record_id=source_record_id,
+        source_record_type="company_pipeline_page",
+        title=title,
+        url=url,
+        publication_or_release_date=None,
+        retrieved_at=now,
+        query_id=query_id,
+        query_text=url,
+        raw_file_path=str(raw_path),
+        raw_format=raw_format,
+        content_hash=content_hash,
+        download_status="success",
+        http_status=http_status,
+        license_or_access_note=LICENSE_NOTE,
+        parent_record_id=None,
+        version=version,
+        notes=None,
+        company_id=company.company_id,
+        company=company.canonical_name,
+        official_domain=company.official_domain,
+    )
+
+
 class CompanyPipelineJob(AcquisitionJob):
     name = "company_pipeline"
 
@@ -214,6 +282,11 @@ class CompanyPipelineJob(AcquisitionJob):
             return result
 
         manifest_path = output_dir / "manifests" / "company_pipeline.parquet"
+        # Read BEFORE this run writes anything -- the ground-truth snapshot
+        # of what's actually durable in the manifest, used below to tell a
+        # genuine no-op apart from a pending-recovery crash artifact (see
+        # module docstring's round-1 fix).
+        materialized_state = _materialized_state_by_id(manifest_path)
 
         content_rows = []
         attempt_rows = []
@@ -248,11 +321,46 @@ class CompanyPipelineJob(AcquisitionJob):
             raw_format = infer_raw_format(response.headers.get("Content-Type"), url)
 
             if prior_state and prior_state.get("content_hash") == content_hash:
-                result.records_skipped_unchanged += 1
+                materialized = materialized_state.get(source_record_id)
+                if materialized and materialized.get("content_hash") == content_hash:
+                    # Genuine no-op: the checkpoint AND the manifest itself
+                    # already agree this exact content is durable.
+                    result.records_skipped_unchanged += 1
+                    attempt_rows.append(
+                        _record_row(
+                            source_record_id, run_id, now, "skipped_unchanged", query_id, url,
+                            content_hash=content_hash, version=prior_state["version"],
+                        )
+                    )
+                    continue
+
+                # Pending recovery: the checkpoint says this content is
+                # already durable, but the manifest never recorded it (a
+                # prior run crashed between the checkpoint save and the
+                # end-of-run manifest flush -- see module docstring). Reuse
+                # the existing raw file (already durable on disk under this
+                # version), re-extract the title, and emit the missing
+                # manifest/attempt rows WITHOUT bumping the version.
+                version = prior_state["version"]
+                raw_dir = output_dir / "raw" / "company_pipeline" / company.company_id / sha256_bytes(url.encode("utf-8"))[:12]
+                raw_path = raw_dir / f"v{version}.{raw_format}"
+                if not raw_path.exists():
+                    raw_dir.mkdir(parents=True, exist_ok=True)
+                    raw_path.write_bytes(content_bytes)
+
+                title = extract_html_title(content_bytes) if raw_format == "html" else None
+
+                result.records_downloaded += 1
                 attempt_rows.append(
                     _record_row(
-                        source_record_id, run_id, now, "skipped_unchanged", query_id, url,
-                        content_hash=content_hash, version=prior_state["version"],
+                        source_record_id, run_id, now, "success", query_id, url,
+                        content_hash=content_hash, version=version,
+                    )
+                )
+                content_rows.append(
+                    _pipeline_manifest_row(
+                        company, url, source_record_id, query_id, title,
+                        raw_path, raw_format, content_hash, version, now, response.status_code,
                     )
                 )
                 continue
@@ -280,29 +388,9 @@ class CompanyPipelineJob(AcquisitionJob):
                 )
             )
             content_rows.append(
-                new_manifest_row(
-                    extra_fields=EXTRA_FIELDS,
-                    source="company_pipeline",
-                    source_record_id=source_record_id,
-                    source_record_type="company_pipeline_page",
-                    title=title,
-                    url=url,
-                    publication_or_release_date=None,
-                    retrieved_at=now,
-                    query_id=query_id,
-                    query_text=url,
-                    raw_file_path=str(raw_path),
-                    raw_format=raw_format,
-                    content_hash=content_hash,
-                    download_status="success",
-                    http_status=response.status_code,
-                    license_or_access_note=LICENSE_NOTE,
-                    parent_record_id=None,
-                    version=version,
-                    notes=None,
-                    company_id=company.company_id,
-                    company=company.canonical_name,
-                    official_domain=company.official_domain,
+                _pipeline_manifest_row(
+                    company, url, source_record_id, query_id, title,
+                    raw_path, raw_format, content_hash, version, now, response.status_code,
                 )
             )
 
