@@ -28,20 +28,39 @@
 # "SEC_FILINGS_SEAGEN_0001060736"). Do not rename an existing company_id
 # once records reference it.
 #
-# EXTENDED for Job 07 (company pipeline pages, Prompt.md section 11) and
-# Job 08 (company press releases, Prompt.md section 12) on 2026-08-14:
-# official_domain/pipeline_urls/investor_relations_url/press_release_url,
-# per the SAME Company entries SEC already uses (Prompt.md's own section
-# 11 names the registry file identically to SEC's) — see
-# adc_acquisition/company_registry.py for why one shared dataclass, not a
-# second competing registry. Live-verified 2026-08-14 (plain
-# requests + a descriptive User-Agent, same technique already used for
-# fda.gov's bot detection): a company acquired/delisted can still have NO
-# standalone pipeline page at all (its former assets appear only in the
+# EXTENDED for Job 11 (company pipeline pages, Prompt.md section 11) and
+# Job 12 (company press releases, Prompt.md section 12) on 2026-08-14/17:
+# official_domain/pipeline_urls/investor_relations_url/press_release_url/
+# press_release_template, per the SAME Company entries SEC already uses
+# (Prompt.md's own section 11 names the registry file identically to
+# SEC's) — see adc_acquisition/company_registry.py for why one shared
+# dataclass, not a second competing registry. Live-verified 2026-08-14
+# (plain requests + a descriptive User-Agent, same technique already used
+# for fda.gov's bot detection): a company acquired/delisted can still have
+# NO standalone pipeline page at all (its former assets appear only in the
 # acquirer's own pipeline page instead) -- `pipeline_urls: []` for those,
 # not a guessed/broken URL. `active` continues to mean "still worth
 # tracking historically" (as SEC already uses it) -- it does NOT mean
 # "has a pipeline page"; that's simply an empty pipeline_urls list.
+#
+# `press_release_template` (added 2026-08-17, Job 12): each company's IR
+# newsroom is a bespoke site with its own listing-page HTML structure and
+# pagination scheme -- no shared API exists across companies (same
+# "fundamentally different from database APIs" framing Prompt.md gives
+# pipeline pages). Live-verified 2026-08-17 that these fall into a small
+# number of REUSED third-party IR-platform templates rather than each
+# being genuinely unique:
+#   - "workiva_ir_newsroom": <li class="wd_item"> listing items,
+#     offset-based `?o=N` pagination (ADC Therapeutics, AbbVie -- byte-
+#     identical template between the two, confirmed live).
+#   - "q4_ir_media": <article class="media"> listing items with an ISO
+#     `datetime` attribute, 1-indexed `?page=N` pagination (Sutro
+#     Biopharma).
+#   - "pfizer_drupal_newsroom": Pfizer's own Drupal-based newsroom,
+#     0-indexed `?page=N` pagination -- a genuinely one-off template, not
+#     shared with any other registered company.
+# See jobs/company_press_release/parser.py for the per-template parsers
+# this field selects between.
 
 companies:
   - company_id: seagen
@@ -108,6 +127,7 @@ companies:
     pipeline_urls: ["https://www.zymeworks.com/pipeline/"]
     investor_relations_url: https://ir.zymeworks.com/
     press_release_url: https://ir.zymeworks.com/news-releases
+    press_release_template: null
     notes: >
       Two CIKs, not a name change: 0001937653 is the current Delaware entity
       (used since the 2022-07 redomicile), which SEC's own submissions API
@@ -118,6 +138,19 @@ companies:
       Both must be pulled to get Zymeworks' complete filing set. Pipeline
       page verified live 2026-08-14: plain static HTML (ZW191, ZW251,
       ZW220, ZW209, ZW1528, zanidatamab variants), no JS rendering needed.
+      LIVE-VERIFIED ACCESS LIMITATION (2026-08-17, Job 12): the ENTIRE
+      ir.zymeworks.com subdomain (not just the news-releases page) is
+      unreachable -- confirmed twice with a direct `requests` call and a
+      descriptive User-Agent, both a plain GET to ir.zymeworks.com/ and to
+      the news-releases page itself hang to a 30s read timeout with zero
+      bytes ever received (TLS handshake completes, then nothing) --
+      distinct from AbbVie's fast Cloudflare 403 challenge response.
+      www.zymeworks.com (the pipeline page's own domain) is unaffected.
+      press_release_template left null since the page's actual HTML
+      structure has never been observed; every fetch attempt against this
+      URL is recorded as a normal, logged `failed` attempt (timeout), not
+      silently dropped or worked around, until this becomes reachable
+      again or Zymeworks offers an alternative route.
 
   - company_id: sutro_biopharma
     canonical_name: Sutro Biopharma, Inc.
@@ -129,10 +162,17 @@ companies:
     pipeline_urls: ["https://www.sutrobio.com/pipeline/"]
     investor_relations_url: https://ir.sutrobio.com/
     press_release_url: https://ir.sutrobio.com/news-events/news-releases
+    press_release_template: q4_ir_media
     notes: >
       Pipeline page verified live 2026-08-14: plain static HTML tables
       (STRO-004, STRO-006, STRO-227, STRO-00Y proprietary programs; VAX-31,
       VAX-24, ASP2998 partnered programs), no JS rendering needed.
+      Press-release listing verified live 2026-08-17: registry URL
+      301-redirects to https://ir.sutrobio.com/press-releases (a Q4 IR
+      platform template), 10 releases/page via `?page=N` (1-indexed),
+      ~230+ releases going back years. Also has an RSS feed
+      (/press-releases/rss) not currently used by this job. Individual
+      release URLs stay on ir.sutrobio.com -- no wire-service redirect.
 
   - company_id: adc_therapeutics
     canonical_name: ADC Therapeutics SA
@@ -143,12 +183,22 @@ companies:
     official_domain: adctherapeutics.com
     pipeline_urls: ["https://www.adctherapeutics.com/our-pipeline1-1/"]
     investor_relations_url: https://ir.adctherapeutics.com/
-    press_release_url: https://ir.adctherapeutics.com/press-releases
+    press_release_url: https://ir.adctherapeutics.com/news
+    press_release_template: workiva_ir_newsroom
     notes: >
       Swiss company, files as a foreign private issuer where applicable.
       Pipeline page verified live 2026-08-14: plain static HTML
       (ZYNLONTA/loncastuximab tesirine-lpyl, LOTIS-2/5/7 trials), no JS
-      rendering needed.
+      rendering needed. CORRECTED 2026-08-17 (Job 12): the previously
+      registered press_release_url (ir.adctherapeutics.com/press-releases)
+      now 301-redirects to a dead /404 page (confirmed live, HTTP 200 body
+      is the site's own 404 page) -- the current correct URL is
+      ir.adctherapeutics.com/news, a Workiva-hosted IR newsroom template
+      (`<li class="wd_item">`, offset-based `?o=N` pagination, confirmed
+      up to o=220, ~224 releases total, genuinely returns 0 items past the
+      real end). Individual release URLs stay on ir.adctherapeutics.com
+      (date-prefixed slugs, e.g. /2026-08-13-ADC-Therapeutics-...) -- no
+      wire-service redirect.
 
   - company_id: abbvie
     canonical_name: AbbVie Inc.
@@ -160,6 +210,7 @@ companies:
     pipeline_urls: ["https://www.abbvie.com/science/pipeline.html"]
     investor_relations_url: null
     press_release_url: https://news.abbvie.com/
+    press_release_template: workiva_ir_newsroom
     notes: >
       Large diversified filer post-ImmunoGen acquisition; expect
       substantial non-ADC-relevant filing/pipeline volume — acquisition
@@ -174,7 +225,20 @@ companies:
       prohibits). The pipeline job will record every attempt against this
       URL as a normal, logged `failed` attempt (never silently dropped)
       until AbbVie's own official channels offer an alternative
-      machine-readable route.
+      machine-readable route. PRESS RELEASES (Job 12, verified live
+      2026-08-17): news.abbvie.com is a SEPARATE subdomain from
+      abbvie.com and is NOT behind the same Cloudflare challenge --
+      confirmed a plain HTTP 200 with a descriptive User-Agent. It's a
+      Workiva-hosted IR newsroom, byte-identical template to ADC
+      Therapeutics' (`?o=N` offset pagination, `<li class="wd_item">`
+      listing items, date-prefixed release slugs). This feed covers
+      AbbVie's ENTIRE newsroom (all therapeutic areas, not ADC-specific)
+      -- same "acquire broadly, filter downstream" caveat as the pipeline
+      page above; likely hundreds of releases across AbbVie's full
+      history, so an initial full-history discovery sweep here is
+      expected to walk many pages (see jobs/company_press_release/job.py's
+      MAX_PAGES safety cap and its incremental early-stop logic for
+      subsequent runs).
 
   - company_id: pfizer
     canonical_name: Pfizer Inc.
@@ -185,7 +249,8 @@ companies:
     official_domain: pfizer.com
     pipeline_urls: ["https://www.pfizer.com/science/oncology-cancer/pipeline"]
     investor_relations_url: null
-    press_release_url: https://www.pfizer.com/news/press-release
+    press_release_url: https://www.pfizer.com/newsroom/press-releases
+    press_release_template: pfizer_drupal_newsroom
     notes: >
       Large diversified filer post-Seagen acquisition; same "acquire
       broadly, filter downstream" caveat as AbbVie above. Pipeline page
@@ -198,4 +263,16 @@ companies:
       full cross-therapeutic-area product pipeline) to keep this
       registered URL reasonably scoped, though Pfizer's overall pipeline
       is still far broader than ADCs alone -- same downstream-filtering
-      caveat applies.
+      caveat applies. CORRECTED 2026-08-17 (Job 12): the previously
+      registered press_release_url (pfizer.com/news/press-release) is a
+      hard 404 (confirmed live) -- the current correct URL is
+      pfizer.com/newsroom/press-releases, a one-off Drupal-based template
+      (`?page=N` 0-indexed pagination, `<h5><a href="/news/press-release/
+      press-release-detail/{slug}">` listing items, relative URLs).
+      Confirmed real ADC-relevant releases present across at least 8
+      pages of history (PADCEV, disitamab vedotin, Arvinas/vepdegestrant
+      collaboration). Requesting far past the real end does not go empty
+      (clamps to repeating a previously-seen page instead of ADC
+      Therapeutics'/AbbVie's Workiva template, which genuinely empties
+      out) -- handled by the job's own already-discovered-URL stop
+      condition rather than relying on an empty-page signal.

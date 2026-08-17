@@ -11,6 +11,7 @@ import sys
 
 from jobs.clinicaltrials.job import ClinicalTrialsJob
 from jobs.company_pipeline.job import CompanyPipelineJob
+from jobs.company_press_release.job import CompanyPressReleaseJob
 from jobs.crossref.job import CrossrefJob
 from jobs.ema.job import EMAJob
 from jobs.epo.job import EPOJob
@@ -33,6 +34,7 @@ JOBS = {
     "uspto": USPTOJob,
     "epo": EPOJob,
     "company_pipeline": CompanyPipelineJob,
+    "company_press_release": CompanyPressReleaseJob,
 }
 
 

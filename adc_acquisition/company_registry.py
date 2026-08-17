@@ -1,15 +1,16 @@
 """Shared company registry (configs/company_registry.yaml), used by every
 job keyed on a curated list of ADC-relevant pharma/biotech companies (Job
-05/SEC, Job 07/company pipeline pages, and eventually Job 08/company press
-releases) — one company can have fields relevant to some jobs and not
-others (e.g. `ciks` only matters to SEC, `pipeline_urls` only to the
-pipeline job), so this single dataclass carries the union of all of them
-rather than each job defining its own narrower, incompatible `Company`
-shape. A job that doesn't need a field simply doesn't read it; a company
-with no meaningful value for a job-specific field (e.g. `pipeline_urls: []`
-for a company with no standalone pipeline page, `ciks: []` for a company
-never registered separately with SEC) just leaves it empty, which each
-job's own filtering already treats as "nothing to do for this company."
+05/SEC, Job 11/company pipeline pages, Job 12/company press releases) —
+one company can have fields relevant to some jobs and not others (e.g.
+`ciks` only matters to SEC, `pipeline_urls` only to the pipeline job,
+`press_release_template` only to the press-release job), so this single
+dataclass carries the union of all of them rather than each job defining
+its own narrower, incompatible `Company` shape. A job that doesn't need a
+field simply doesn't read it; a company with no meaningful value for a
+job-specific field (e.g. `pipeline_urls: []` for a company with no
+standalone pipeline page, `ciks: []` for a company never registered
+separately with SEC) just leaves it empty, which each job's own filtering
+already treats as "nothing to do for this company."
 
 `load_companies` also tolerates and drops any YAML key that isn't a
 recognized field, so this file can keep gaining new job-specific fields
@@ -38,6 +39,7 @@ class Company:
     pipeline_urls: list = field(default_factory=list)
     investor_relations_url: str | None = None
     press_release_url: str | None = None
+    press_release_template: str | None = None
 
 
 _KNOWN_FIELDS = {f.name for f in fields(Company)}
