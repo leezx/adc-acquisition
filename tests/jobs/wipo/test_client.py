@@ -73,6 +73,25 @@ def test_biblio_success_returns_raw_bytes():
 
 
 @responses.activate
+def test_search_zero_results_returns_parseable_stub_not_an_error():
+    """Live-verified (Job 15): OPS returns HTTP 404/SERVER.EntityNotFound
+    for a query with genuinely zero hits, not an empty 200 -- must not
+    crash the caller's discovery loop."""
+    from adc_acquisition.ops_parser import parse_search_response
+
+    _mock_token()
+    responses.add(
+        responses.GET, OPS_SEARCH_URL, status=404,
+        body='<fault xmlns="http://ops.epo.org"><code>SERVER.EntityNotFound</code><message>No results found</message></fault>',
+    )
+
+    result = _client().search('pn=WO and (ti="Enhertu" or ab="Enhertu")', 1, 100)
+    hits, total = parse_search_response(result)
+    assert hits == []
+    assert total == 0
+
+
+@responses.activate
 def test_search_throttle_403_retries_then_succeeds(monkeypatch):
     import adc_acquisition.ops_client as client_module
     monkeypatch.setattr(client_module.time, "sleep", lambda _s: None)

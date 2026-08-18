@@ -14,27 +14,13 @@ configs/epo_queries.yaml (5 queries, each verified live to stay under OPS's 2000
 
 ## Publications discovered
 
-559 unique EP publications matched across 5 queries this run.
+1 unique EP publications matched across 7 queries this run.
 
-- EP0222360A2: A method of producing a patient-specific cytotoxic reagent and composition. (family 25170824)
-- EP0271918A2: Stable formulations of ricin  toxin A chain and of RTA-immunoconjugates and stabilizer screening methods therefor. (family 25481236)
-- EP0306943A2: Immunconjugates joined by thioether bonds having reduced toxicity and improved selectivity. (family 22250495)
-- EP0318948A2: Cleavable immunoconjugates for the delivery and release of agents in native form. (family 22431215)
-- EP0329184A2: Antimers and antimeric conjugation. (family 22565750)
-- EP0350230A2: Immunoconjugates for cancer diagnosis and therapy. (family 22807704)
-- EP0392745A2: Immunoconjugates and prodrugs and their use in association for drug delivery. (family 10654469)
-- EP0485749A2: Chemical modification of antibodies for creating of immunoconjugates. (family 24457023)
-- EP0637591A2: A novel expression vector for phytolacca antiviral protein. (family 19358572)
-- EP0665020A2: Method for preparing thioether conjugates. (family 22688565)
-- EP0842668A1: Ex-corpore method for treating human blood cells (family 08223402)
-- EP0873140A2: IMMUNOCONJUGATE FOR THE TREATMENT OF AIDS (family 24339486)
-- EP0931836A1: Vasopermeability enhancing peptide of human interleukin-2 and immunoconjugates thereof (family 31720801)
-- EP0968002A1: CONCURRENT IN-VIVO IMMUNOCONJUGATE BINDING TO MULTIPLE EPITOPES OF VASCULAR PERMEABILITY FACTOR ON TUMOR-ASSOCIATED BLOOD VESSELS (family 25197602)
-- EP1179541A1: Compositions and methods for cancer treatment by selectively inhibiting VEGF (family 22449437)
+- EP4248989A2: USE OF AN ANTI-PD-1 ANTIBODY IN COMBINATION WITH AN ANTI-CD30 ANTIBODY IN LYMPHOMA TREATMENT (family 59067913)
 
 ## Materialization this run
 
-519 never-attempted (fresh), 0 unresolved-retry (backlog), 40 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/epo/job.py docstring). 5 newly downloaded, 0 failed.
+1 never-attempted (fresh), 0 unresolved-retry (backlog), 0 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/epo/job.py docstring). 1 newly downloaded, 0 failed.
 
 ## Failed downloads
 

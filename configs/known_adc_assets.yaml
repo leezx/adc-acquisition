@@ -1,0 +1,136 @@
+# Known-ADC asset registry (Job 15, Prompt.md section 19).
+#
+# Curated, not discovered — Prompt.md's own framing is "another acquisition
+# loop [that] should operate from known asset names," i.e. this list IS the
+# input, not an output of Jobs 01-14's broad discovery pass. Each entry is a
+# real, publicly documented antibody-drug conjugate (FDA-approved or in late
+# clinical development); `aliases` holds brand/trade names, `dev_codes` holds
+# sponsor development codes — kept in separate fields since literature/
+# patents often use only the dev code, never the eventual brand name (or
+# vice versa for older assets), and both need their own query provenance.
+#
+# asset_id must be a stable, lowercase, underscore-separated slug — it seeds
+# every query_id this job generates (Prompt.md section 20: query_ids must be
+# stable and traceable), so do not rename an asset_id once queries have been
+# run against it; add a new entry instead if a genuine rename is needed.
+
+assets:
+  - asset_id: gemtuzumab_ozogamicin
+    canonical_name: Gemtuzumab ozogamicin
+    aliases: [Mylotarg]
+    dev_codes: [CMA-676]
+    target: CD33
+    company: Pfizer
+    active: true
+
+  - asset_id: brentuximab_vedotin
+    canonical_name: Brentuximab vedotin
+    aliases: [Adcetris]
+    dev_codes: [SGN-35]
+    target: CD30
+    company: Seagen
+    active: true
+
+  - asset_id: trastuzumab_emtansine
+    canonical_name: Trastuzumab emtansine
+    aliases: [Kadcyla]
+    dev_codes: [T-DM1]
+    target: HER2
+    company: Genentech
+    active: true
+
+  - asset_id: inotuzumab_ozogamicin
+    canonical_name: Inotuzumab ozogamicin
+    aliases: [Besponsa]
+    dev_codes: [CMC-544]
+    target: CD22
+    company: Pfizer
+    active: true
+
+  - asset_id: moxetumomab_pasudotox
+    canonical_name: Moxetumomab pasudotox
+    aliases: [Lumoxiti]
+    dev_codes: [CAT-8015]
+    target: CD22
+    company: AstraZeneca
+    active: true
+
+  - asset_id: polatuzumab_vedotin
+    canonical_name: Polatuzumab vedotin
+    aliases: [Polivy]
+    dev_codes: [DCDS4501A, RG7596]
+    target: CD79b
+    company: Genentech
+    active: true
+
+  - asset_id: enfortumab_vedotin
+    canonical_name: Enfortumab vedotin
+    aliases: [Padcev]
+    dev_codes: [ASG-22ME]
+    target: Nectin-4
+    company: Seagen
+    active: true
+
+  - asset_id: trastuzumab_deruxtecan
+    canonical_name: Trastuzumab deruxtecan
+    aliases: [Enhertu]
+    dev_codes: [DS-8201, T-DXd]
+    target: HER2
+    company: Daiichi Sankyo
+    active: true
+
+  - asset_id: sacituzumab_govitecan
+    canonical_name: Sacituzumab govitecan
+    aliases: [Trodelvy]
+    dev_codes: [IMMU-132]
+    target: Trop-2
+    company: Gilead Sciences
+    active: true
+
+  - asset_id: belantamab_mafodotin
+    canonical_name: Belantamab mafodotin
+    aliases: [Blenrep]
+    dev_codes: [GSK2857916]
+    target: BCMA
+    company: GSK
+    active: true
+
+  - asset_id: loncastuximab_tesirine
+    canonical_name: Loncastuximab tesirine
+    aliases: [Zynlonta]
+    dev_codes: [ADCT-402]
+    target: CD19
+    company: ADC Therapeutics
+    active: true
+
+  - asset_id: tisotumab_vedotin
+    canonical_name: Tisotumab vedotin
+    aliases: [Tivdak]
+    dev_codes: [HuMax-TF-ADC]
+    target: Tissue Factor
+    company: Genmab
+    active: true
+
+  - asset_id: mirvetuximab_soravtansine
+    canonical_name: Mirvetuximab soravtansine
+    aliases: [Elahere]
+    dev_codes: [IMGN853]
+    target: Folate receptor alpha
+    company: ImmunoGen
+    active: true
+
+  - asset_id: disitamab_vedotin
+    canonical_name: Disitamab vedotin
+    aliases: [Aidixi]
+    dev_codes: [RC48]
+    target: HER2
+    company: RemeGen
+    active: true
+
+  - asset_id: datopotamab_deruxtecan
+    canonical_name: Datopotamab deruxtecan
+    aliases: [Datroway]
+    dev_codes: [DS-1062, Dato-DXd]
+    target: Trop-2
+    company: Daiichi Sankyo
+    active: true
