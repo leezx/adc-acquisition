@@ -10,7 +10,10 @@ https://clinicaltrials.gov/api/v2/studies — https://clinicaltrials.gov/data-ap
 
 ## Queries used
 
-- `CTGOV_LOOKUP_INTR_592ad6122143` (v1): `query.intr=SGN-35` — known-asset lookup for intervention 'SGN-35'
+- `CTGOV_ADC_001` (v1): `"antibody-drug conjugate"` — Primary phrase form (hyphen-invariant under Essie tokenization; covers the unhyphenated form too).
+- `CTGOV_ADC_002` (v1): `ADC AND antibody AND conjugate` — Abbreviation form, constrained by co-occurring antibody/conjugate terms to avoid unrelated "ADC" hits.
+- `CTGOV_ADC_003` (v1): `immunoconjugate AND cytotoxic` — Older/alternative terminology for the same asset class.
+- `CTGOV_ADC_004` (v1): `AREA[InterventionName]ADC` — Higher-precision supplementary query restricted to the structured intervention-name field.
 
 ## Date coverage
 
@@ -18,27 +21,31 @@ since=(no lower bound), until=(no upper bound) (filtered via `AREA[LastUpdatePos
 
 ## Records discovered
 
-100 query-hits across 1 active queries; 100 unique NCT IDs.
+330 query-hits across 4 active queries; 261 unique NCT IDs.
 
 ## Records downloaded
 
-0 new/changed trial snapshots, 3 skipped as unchanged (matched checkpoint content hash).
+0 new/changed trial snapshots, 20 skipped as unchanged (matched checkpoint content hash).
 
 ## Duplicates
 
-0 NCT IDs were discovered by more than one query. As with PubMed/Europe PMC, the content manifest attributes one primary query_id per record; the full multi-query history lives in `clinicaltrials_discovery.parquet`.
+63 NCT IDs were discovered by more than one query. As with PubMed/Europe PMC, the content manifest attributes one primary query_id per record; the full multi-query history lives in `clinicaltrials_discovery.parquet`.
 
 ### Records per query
 
-- CTGOV_LOOKUP_INTR_592ad6122143: 100
+- CTGOV_ADC_001: 100
+- CTGOV_ADC_002: 100
+- CTGOV_ADC_003: 30
+- CTGOV_ADC_004: 100
 
 ## Missing fields
 
-- start_date missing in 1/3 records
+- official_title missing in 1/20 records
+- start_date missing in 1/20 records
 
-- records with at least one phase recorded: 3
-- records with enrollment count: 3
-- overall status distribution: COMPLETED: 3
+- records with at least one phase recorded: 20
+- records with enrollment count: 17
+- overall status distribution: COMPLETED: 11, TERMINATED: 6, UNKNOWN: 3
 
 ## Failed downloads
 
@@ -62,5 +69,5 @@ No API key or authentication required. No officially published numeric rate limi
 ## Reproduction command
 
 ```bash
-python -m adc_acquisition clinicaltrials --limit 100 --output DATA
+python -m adc_acquisition clinicaltrials --limit 261 --output DATA
 ```

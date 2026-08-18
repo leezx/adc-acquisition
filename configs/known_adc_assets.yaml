@@ -47,13 +47,21 @@ assets:
     company: Pfizer
     active: true
 
+  # Moxetumomab pasudotox (Lumoxiti, CAT-8015) is EXCLUDED from this
+  # strict-ADC registry -- NCI's own drug dictionary classifies it as a
+  # recombinant IMMUNOTOXIN (an anti-CD22 antibody Fv fused to a
+  # Pseudomonas exotoxin A fragment, PE38), not a classic
+  # antibody-linker-payload conjugate. Kept here (inactive) for
+  # provenance rather than deleted outright, since it's a real,
+  # historically significant CD22-targeted biologic worth tracking if
+  # this registry's scope is ever widened to include immunotoxins.
   - asset_id: moxetumomab_pasudotox
     canonical_name: Moxetumomab pasudotox
     aliases: [Lumoxiti]
     dev_codes: [CAT-8015]
     target: CD22
     company: AstraZeneca
-    active: true
+    active: false
 
   - asset_id: polatuzumab_vedotin
     canonical_name: Polatuzumab vedotin

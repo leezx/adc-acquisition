@@ -8,13 +8,15 @@ import jobs.known_adc_asset_expansion.job as job_module
 from adc_acquisition import http_utils
 from adc_acquisition.checkpoint import CheckpointStore
 from adc_acquisition.job_base import JobRunResult
-from jobs.known_adc_asset_expansion.job import KnownADCAssetExpansionJob, _invoke_preserving_resume_cursor
+from jobs.known_adc_asset_expansion.job import KnownADCAssetExpansionJob, _invoke_isolated
+from jobs.known_adc_asset_expansion.query_templates import _query_id
 
 PUBMED_ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 EUROPEPMC_SEARCH_URL = "https://www.ebi.ac.uk/europepmc/webservices/rest/search"
 OPS_AUTH_URL = "https://ops.epo.org/3.2/auth/accesstoken"
 OPS_SEARCH_URL = "https://ops.epo.org/3.2/rest-services/published-data/search"
 CTGOV_STUDIES_URL = "https://clinicaltrials.gov/api/v2/studies"
+USPTO_SEARCH_URL = "https://api.uspto.gov/api/v1/patent/applications/search"
 
 MINIMAL_ASSETS_YAML = """
 assets:
@@ -89,15 +91,18 @@ def _install_fake_sources(monkeypatch, records_discovered=2, records_downloaded=
         ("europe_pmc", _make_fake_job_class("europe_pmc", calls, records_discovered, records_downloaded), job_module.europe_pmc_queries),
         ("wipo", _make_fake_job_class("wipo", calls, records_discovered, records_downloaded), job_module.wipo_queries),
         ("epo", _make_fake_job_class("epo", calls, records_discovered, records_downloaded), job_module.epo_queries),
+        ("uspto", _make_fake_job_class("uspto", calls, records_discovered, records_downloaded), job_module.uspto_queries),
     ])
+    monkeypatch.setattr(job_module, "ALLOWED_SOURCES", {"pubmed", "europe_pmc", "wipo", "epo", "uspto", "clinicaltrials"})
     monkeypatch.setattr(job_module, "ClinicalTrialsJob", _make_fake_job_class("clinicaltrials", calls, records_discovered, records_downloaded))
     return calls
 
 
 def test_generates_correct_number_of_queries_per_source(tmp_path, monkeypatch):
     """test_adc_one has 3 identifiers (canonical + alias + dev code) ->
-    3 bare + 6 suffix = 9 queries for pubmed/europe_pmc, 3 for wipo/epo.
-    test_adc_two is inactive and must be excluded entirely."""
+    3 bare + 6 suffix = 9 queries for pubmed/europe_pmc/uspto, 3 for
+    wipo/epo (bare identifiers only). test_adc_two is inactive and must
+    be excluded entirely."""
     calls = _install_fake_sources(monkeypatch)
     KnownADCAssetExpansionJob().run(_base_args(tmp_path))
 
@@ -116,6 +121,11 @@ def test_generates_correct_number_of_queries_per_source(tmp_path, monkeypatch):
         epo_queries = yaml.safe_load(f)["queries"]
     assert all(q["query_text"].startswith("pn=EP") for q in epo_queries)
 
+    with open(calls["uspto"][0].queries_file) as f:
+        uspto_queries = yaml.safe_load(f)["queries"]
+    assert len(uspto_queries) == 9  # gets suffix templates too, unlike wipo/epo
+    assert any(q["query_text"].endswith("AND ic50") for q in uspto_queries)
+
 
 def test_clinicaltrials_called_once_per_identifier(tmp_path, monkeypatch):
     calls = _install_fake_sources(monkeypatch)
@@ -130,10 +140,11 @@ def test_aggregates_results_across_sources(tmp_path, monkeypatch):
     _install_fake_sources(monkeypatch, records_discovered=2, records_downloaded=1)
     result = KnownADCAssetExpansionJob().run(_base_args(tmp_path))
 
-    # 4 query-driven sources (1 call each) + clinicaltrials (3 calls, one per identifier)
-    assert result.records_discovered == 4 * 2 + 3 * 2
-    assert result.records_downloaded == 4 * 1 + 3 * 1
+    # 5 query-driven sources (1 call each) + clinicaltrials (3 calls, one per identifier)
+    assert result.records_discovered == 5 * 2 + 3 * 2
+    assert result.records_downloaded == 5 * 1 + 3 * 1
     assert any("pubmed:" in n for n in result.notes)
+    assert any("uspto:" in n for n in result.notes)
     assert any("clinicaltrials:" in n for n in result.notes)
 
 
@@ -146,6 +157,26 @@ def test_sources_filter_limits_which_jobs_run(tmp_path, monkeypatch):
     assert "europe_pmc" not in calls
     assert "wipo" not in calls
     assert "epo" not in calls
+    assert "uspto" not in calls
+
+
+def test_sources_filter_tolerates_whitespace(tmp_path, monkeypatch):
+    calls = _install_fake_sources(monkeypatch)
+    KnownADCAssetExpansionJob().run(_base_args(tmp_path, sources=" pubmed , uspto "))
+
+    assert "pubmed" in calls
+    assert "uspto" in calls
+    assert "europe_pmc" not in calls
+
+
+def test_unknown_sources_value_raises_not_silently_skips(tmp_path, monkeypatch):
+    """Round-1 fix: a typo/stray value in --sources must raise immediately,
+    not silently run a smaller subset while still reporting overall
+    success."""
+    _install_fake_sources(monkeypatch)
+
+    with pytest.raises(ValueError, match="pubmedd"):
+        KnownADCAssetExpansionJob().run(_base_args(tmp_path, sources="pubmedd,uspto"))
 
 
 def test_since_until_passed_through_to_subjobs(tmp_path, monkeypatch):
@@ -214,6 +245,7 @@ def test_real_subjobs_dry_run_end_to_end(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("OPS_CONSUMER_KEY", "test-key")
     monkeypatch.setenv("OPS_CONSUMER_SECRET", "test-secret")
+    monkeypatch.setenv("USPTO_API_KEY", "test-uspto-key")
     monkeypatch.setattr(http_utils.time, "sleep", lambda seconds: None)
 
     assets_path = tmp_path / "assets.yaml"
@@ -226,6 +258,7 @@ def test_real_subjobs_dry_run_end_to_end(tmp_path, monkeypatch):
         responses.GET, OPS_SEARCH_URL, status=404,
         body='<fault xmlns="http://ops.epo.org"><code>SERVER.EntityNotFound</code></fault>',
     )
+    responses.add(responses.GET, USPTO_SEARCH_URL, json={"patentFileWrapperDataBag": [], "count": 0})
     responses.add(responses.GET, CTGOV_STUDIES_URL, json={"studies": [], "totalCount": 0})
 
     args = argparse.Namespace(
@@ -240,19 +273,32 @@ def test_real_subjobs_dry_run_end_to_end(tmp_path, monkeypatch):
     assert result.records_failed == 0
 
 
-def test_resume_cursor_preserved_across_subjob_call(tmp_path):
-    """Direct regression test for the self-caught resume-cursor isolation
-    bug: a sub-job that (like every real Jobs 01/02/03/08/10) writes
-    checkpoint["last_success_max_date"] unconditionally must NOT be
-    allowed to permanently move that job's OWN resume cursor just because
-    this job called it with a different query set."""
+def _write_report(output_dir, job_name, text):
+    report_path = output_dir.parent / "reports" / "acquisition" / f"{job_name}.md"
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(text, encoding="utf-8")
+    return report_path
+
+
+def _read_report(output_dir, job_name):
+    return (output_dir.parent / "reports" / "acquisition" / f"{job_name}.md").read_text(encoding="utf-8")
+
+
+def test_cursor_and_report_preserved_across_successful_subjob_call(tmp_path):
+    """Direct regression test for the self-caught isolation bug: a
+    sub-job that (like every real Jobs 01/02/03/08/09/10) writes
+    checkpoint["last_success_max_date"] AND overwrites its own report.md
+    unconditionally must NOT be allowed to permanently move that job's
+    OWN resume cursor or clobber its OWN broad report just because this
+    job called it with a different query set."""
     output_dir = tmp_path / "DATA"
     checkpoint_store = CheckpointStore("fake_source", output_dir)
     checkpoint = checkpoint_store.load()
     checkpoint["last_success_max_date"] = "2020-01-01"
     checkpoint_store.save(checkpoint)
+    _write_report(output_dir, "fake_source", "# Broad report\noriginal content")
 
-    class _FakeJobThatWritesCheckpoint:
+    class _FakeJobThatMutatesSharedState:
         name = "fake_source"
 
         def run(self, args):
@@ -261,12 +307,122 @@ def test_resume_cursor_preserved_across_subjob_call(tmp_path):
             cp["last_run_at"] = "SIMULATED_RUN"
             cp["last_success_max_date"] = "2099-01-01"  # the hazard this test guards against
             store.save(cp)
+            _write_report(output_dir, self.name, "# Asset-expansion-only report\noverwritten content")
             return JobRunResult(job_name=self.name, dry_run=False, records_discovered=1)
 
     args = argparse.Namespace(dry_run=False, limit=None, resume=False, since=None, until=None, output=str(output_dir))
-    result = _invoke_preserving_resume_cursor(_FakeJobThatWritesCheckpoint, args, output_dir)
+    result = _invoke_isolated(_FakeJobThatMutatesSharedState, args, output_dir)
 
     assert result.records_discovered == 1
     final_checkpoint = checkpoint_store.load()
     assert final_checkpoint["last_success_max_date"] == "2020-01-01"  # restored, not overwritten
     assert final_checkpoint["last_run_at"] == "SIMULATED_RUN"  # informational field, fine to update
+    assert _read_report(output_dir, "fake_source") == "# Broad report\noriginal content"  # restored, not overwritten
+
+
+def test_cursor_and_report_preserved_even_if_subjob_raises(tmp_path):
+    """P1 fix: restoration must happen in a `finally`, not just code that
+    runs after a successful call -- the exact scenario this isolation
+    exists for (a sub-job crash mid-run) must not leave the broad pass's
+    cursor/report corrupted. The exception must still propagate."""
+    output_dir = tmp_path / "DATA"
+    checkpoint_store = CheckpointStore("fake_source", output_dir)
+    checkpoint = checkpoint_store.load()
+    checkpoint["last_success_max_date"] = "2020-01-01"
+    checkpoint_store.save(checkpoint)
+    _write_report(output_dir, "fake_source", "# Broad report\noriginal content")
+
+    class _FakeJobThatMutatesThenRaises:
+        name = "fake_source"
+
+        def run(self, args):
+            store = CheckpointStore(self.name, output_dir)
+            cp = store.load()
+            cp["last_success_max_date"] = "2099-01-01"
+            store.save(cp)
+            _write_report(output_dir, self.name, "# Corrupted mid-crash report")
+            raise RuntimeError("simulated sub-job crash")
+
+    args = argparse.Namespace(dry_run=False, limit=None, resume=False, since=None, until=None, output=str(output_dir))
+    with pytest.raises(RuntimeError, match="simulated sub-job crash"):
+        _invoke_isolated(_FakeJobThatMutatesThenRaises, args, output_dir)
+
+    final_checkpoint = checkpoint_store.load()
+    assert final_checkpoint["last_success_max_date"] == "2020-01-01"  # still restored despite the exception
+    assert _read_report(output_dir, "fake_source") == "# Broad report\noriginal content"  # still restored
+
+
+def test_report_removed_if_it_did_not_exist_before(tmp_path):
+    """A sub-job invoked for the FIRST time ever (no prior report.md) must
+    not leave behind an asset-expansion-only report masquerading as that
+    job's broad report."""
+    output_dir = tmp_path / "DATA"
+
+    class _FakeJobThatWritesAReport:
+        name = "brand_new_source"
+
+        def run(self, args):
+            _write_report(output_dir, self.name, "# Asset-expansion-only report")
+            return JobRunResult(job_name=self.name, dry_run=False, records_discovered=1)
+
+    args = argparse.Namespace(dry_run=False, limit=None, resume=False, since=None, until=None, output=str(output_dir))
+    _invoke_isolated(_FakeJobThatWritesAReport, args, output_dir)
+
+    report_path = output_dir.parent / "reports" / "acquisition" / "brand_new_source.md"
+    assert not report_path.exists()
+
+
+def test_cursor_key_absent_before_stays_absent_after(tmp_path):
+    """Mirrors the report-absence case for the cursor field: if a sub-job
+    checkpoint file never had last_success_max_date at all (e.g. a legacy
+    checkpoint predating that field), it must not gain one just because
+    the sub-job happened to set it during this call. CheckpointStore.load()
+    normally defaults a MISSING checkpoint file to a dict that already
+    has the key set to None -- to exercise the genuinely-absent-key path
+    this test writes the checkpoint file directly, bypassing that
+    default."""
+    output_dir = tmp_path / "DATA"
+    checkpoint_path = output_dir / "checkpoints" / "fake_source_no_cursor.json"
+    checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+    checkpoint_path.write_text('{"job": "fake_source_no_cursor", "records": {}}', encoding="utf-8")
+
+    class _FakeJobWithNoPriorCursor:
+        name = "fake_source_no_cursor"
+
+        def run(self, args):
+            store = CheckpointStore(self.name, output_dir)
+            cp = store.load()
+            cp["last_success_max_date"] = "2099-01-01"
+            store.save(cp)
+            return JobRunResult(job_name=self.name, dry_run=False, records_discovered=1)
+
+    args = argparse.Namespace(dry_run=False, limit=None, resume=False, since=None, until=None, output=str(output_dir))
+    _invoke_isolated(_FakeJobWithNoPriorCursor, args, output_dir)
+
+    final_checkpoint = CheckpointStore("fake_source_no_cursor", output_dir).load()
+    assert "last_success_max_date" not in final_checkpoint
+
+
+def test_query_id_changes_when_canonical_name_changes():
+    """P1/P2 fix: since Prompt.md's own asset input is explicitly
+    'canonical/temporary ADC name', a name can legitimately be
+    corrected/finalized later. The suffix query_id must change when the
+    underlying query_text changes, not stay fixed forever."""
+    id_v1 = _query_id("PUBMED_ASSETEXP", "x", "IC50", '"Temporary-123"[tiab] AND ic50[tiab]')
+    id_v2 = _query_id("PUBMED_ASSETEXP", "x", "IC50", '"Finalumab vedotin"[tiab] AND ic50[tiab]')
+    assert id_v1 != id_v2
+
+
+def test_query_id_stable_for_unchanged_query_text():
+    id_a = _query_id("PUBMED_ASSETEXP", "x", "IC50", '"Same Name"[tiab] AND ic50[tiab]')
+    id_b = _query_id("PUBMED_ASSETEXP", "x", "IC50", '"Same Name"[tiab] AND ic50[tiab]')
+    assert id_a == id_b
+
+
+def test_query_id_does_not_collide_when_slug_would():
+    """Two different identifiers that _slug() would normalize to the same
+    string must still get distinct query_ids, since the hash is derived
+    from the actual query_text, not the slug alone."""
+    id_a = _query_id("PUBMED_ASSETEXP", "x", "T_DXD", '"T-DXd"[tiab]')
+    id_b = _query_id("PUBMED_ASSETEXP", "x", "T_DXD", '"T DXd"[tiab]')
+    assert id_a != id_b
