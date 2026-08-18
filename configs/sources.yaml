@@ -315,18 +315,44 @@ patent_bioactivity_corpus:
 
 publication_bioactivity_corpus:
   source_type: derived
-  authority: null
-  official_url: null
-  api_docs_url: null
-  acquisition_method: null
-  authentication_required: false
-  rate_limit: null
-  license_or_access_note: Second-pass job; depends on pubmed/europe_pmc identifiers.
-  raw_formats: []
-  update_strategy: null
-  implementation_status: not_started
-  enabled: false
-  notes: Job 14 in Prompt.md, promoted to #14 in recommended execution order.
+  authority: primary
+  official_url: https://unpaywall.org/ (Unpaywall API, https://unpaywall.org/products/api)
+  api_docs_url: https://unpaywall.org/products/api
+  acquisition_method: api
+  authentication_required: "no API key -- just a real-looking contact email query param (UNPAYWALL_CONTACT_EMAIL); placeholder addresses like test@example.com are rejected with HTTP 422 (verified live)"
+  rate_limit: "documented 100,000 calls/day; no per-second limit documented, we use a conservative 2 req/s for the Unpaywall lookup itself, plus a separate 0.5 req/s limiter for the arbitrary publisher/repository hosts the actual content is fetched from"
+  license_or_access_note: "Second-pass job; DOI candidates read from Job 01 (pubmed.parquet), Job 02 (europe_pmc.parquet), and Job 04 (crossref.parquet), NOT a new discovery search. Unpaywall-identified legal open-access copies only -- publisher paywalls are never bypassed."
+  raw_formats: [html, pdf]
+  update_strategy: "no discovery ledger (candidates come from already-materialized upstream manifests, same reasoning as Crossref/Job 13); materialization skips already-successful DOIs by default (no request) -- `--refresh` re-verifies both the Unpaywall lookup and the content fetch; `not_available` (Unpaywall confirms no OA copy, or DOI unknown to it) is retried on every ordinary run, NOT treated as permanently terminal."
+  implementation_status: implemented
+  enabled: true
+  notes: >
+    Job 14 in Prompt.md, promoted to #14 in recommended execution order.
+    Researched before coding (avoiding Job 13's "generalize from n=1"
+    mistake): Job 02 (Europe PMC) only fetches full text for records ITS
+    OWN queries discovered AND flagged is_open_access -- verified live
+    that this repo's real europe_pmc_fulltext.parquet has 0 rows, so
+    nothing has been acquired that way yet. Unpaywall's coverage is
+    empirically NOT a subset of Europe PMC's OA subset (covers DOIs
+    Job 02 never discovered, and DOIs where Europe PMC's own
+    is_open_access flag is false but a legal OA copy exists elsewhere).
+    For each candidate DOI, tries every OA location Unpaywall offers (not
+    just the single "best" one) in order -- a publisher landing page can
+    403 a bot while a repository mirror of the same work succeeds.
+    Excludes DOIs Job 02 already has resolved full text for (checked
+    empirically every run, joined via pmcid -> doi), the same
+    don't-duplicate-an-existing-job's-work precedent as Job 13's USPTO
+    exclusion. DOIs are normalized (stripped + lowercased) before
+    becoming a candidate identity -- caught live against this repo's own
+    committed data that PubMed and Crossref can record the identical
+    work's DOI in different casing (DOIs are case-insensitive by spec),
+    which would otherwise fetch/store the same OA article twice. Live-
+    verified end-to-end against this repo's own real committed
+    pubmed.parquet/europe_pmc.parquet/crossref.parquet (44 upstream
+    mentions, 24 unique candidate DOIs after case-normalization): 3
+    success, 20 not_available (mostly older, closed-access literature --
+    expected for this demo set), 1 failed (a Wiley landing page 403),
+    stable skip-by-default confirmed on rerun.
 
 known_adc_asset_expansion:
   source_type: derived

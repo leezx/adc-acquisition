@@ -681,6 +681,76 @@ free tier has a 4GB/WEEK data quota across all OPS usage — full-text
 documents are far larger than biblio XML, so `result.notes` reports
 per-run downloaded bytes for monitoring.
 
+## Running the publication bioactivity corpus job (Job 14)
+
+```bash
+python -m adc_acquisition publication_bioactivity_corpus --dry-run
+python -m adc_acquisition publication_bioactivity_corpus
+python -m adc_acquisition publication_bioactivity_corpus --refresh   # periodic re-verification, not for every run
+```
+
+A SECOND-PASS job — Prompt.md's input for this job is "PMIDs / PMCIDs /
+DOIs / known ADC aliases," not a new literature search. DOI candidates
+are read directly from Job 01 (PubMed)'s `pubmed.parquet`, Job 02
+(Europe PMC)'s `europe_pmc.parquet`, and Job 04 (Crossref)'s
+`crossref.parquet` (latest version per record only), not from a new
+discovery query.
+
+**Mechanism, researched before writing any code** (explicitly to avoid
+repeating Job 13's "generalize from a single test point" mistake): Job 02
+(Europe PMC) only fetches full-text JATS XML for records ITS OWN search
+queries discovered AND that are flagged `is_open_access` — verified live
+that this repo's real `europe_pmc_fulltext.parquet` currently has zero
+rows, so nothing has actually been acquired that way yet in this repo's
+own data. [Unpaywall](https://unpaywall.org/products/api) (free, no API
+key, just a real-looking contact email — verified live that a
+placeholder like `test@example.com` is rejected with HTTP 422) closes a
+genuinely separate gap: its coverage is empirically NOT a subset of
+Europe PMC's OA subset — it also covers DOIs Job 02 never discovered at
+all, and DOIs where Europe PMC's own `is_open_access` flag is
+false/absent but a legal OA copy exists elsewhere (hybrid OA,
+institutional repository, etc.).
+
+For each candidate DOI: (1) an Unpaywall lookup for OA status and an
+ordered list of OA locations; (2) a content fetch trying every location
+Unpaywall offers, not just the single "best" one — a publisher landing
+page can block a bot while a repository mirror of the identical work
+succeeds, the same "attempt broadly, don't trust n=1" lesson Job 13's
+round-1 review enforced for patent authorities, applied here to OA
+location selection. A DOI Unpaywall doesn't know, or confirms has no OA
+copy, is `not_available` (a genuine negative, retried every ordinary run,
+never treated as permanent); a content fetch failing across every
+offered location is `failed` (Unpaywall confirmed a copy exists, the
+fetch itself just didn't succeed this run).
+
+**Job 02 (Europe PMC)'s own already-resolved full text is not
+duplicated here** — a DOI whose Europe PMC full text is already
+successfully materialized (joined via pmcid → doi) is excluded from this
+job's candidate set every run, the same don't-duplicate-an-existing-
+job's-work precedent as Job 13's USPTO exclusion.
+
+**Self-caught before this job was ever run for real:** DOIs are
+case-insensitive by specification, but this repo's own committed data
+has the identical work recorded as `10.1007/BF01741596` in PubMed's
+manifest and `10.1007/bf01741596` in Crossref's (Crossref itself
+lowercases the doi field it returns) — every DOI is normalized (stripped
++ lowercased) before becoming a candidate identity, or this job would
+silently fetch/store the same OA article twice under two manifest rows.
+
+Materialization mirrors Job 13's fully-hardened design (own raw
+checkpoint namespace, resolved-status-AND-version-match skip decision,
+`--refresh` re-verifying both the Unpaywall lookup and the content
+fetch), applied proactively. Live-verified end-to-end against this
+repo's own real committed `pubmed.parquet`/`europe_pmc.parquet`/
+`crossref.parquet` (44 upstream mentions, 24 unique candidate DOIs after
+case-normalization): 3 success, 20 `not_available` (mostly older,
+closed-access literature — expected for this small demo set), 1 `failed`
+(a Wiley landing page 403), stable skip-by-default confirmed on rerun.
+
+**Requires `UNPAYWALL_CONTACT_EMAIL`** (`.env`) — free, no registration
+at https://unpaywall.org/products/api, but Unpaywall rejects
+placeholder-looking addresses with HTTP 422.
+
 ## Tests
 
 ```bash
@@ -696,6 +766,7 @@ See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
 (Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), Job 05
 (SEC EDGAR), Job 06 (FDA), Job 07 (EMA), Job 08 (WIPO), Job 09 (USPTO),
 Job 10 (EPO), Job 11 (company pipeline pages), Job 12 (company press
-releases), and Job 13 (patent bioactivity corpus) are implemented so
-far; every other source in `Prompt.md` is intentionally not started
-yet — sources are implemented and reviewed one at a time.
+releases), Job 13 (patent bioactivity corpus), and Job 14 (publication
+bioactivity corpus) are implemented so far; only Job 15 (known-ADC asset
+expansion) remains — sources are implemented and reviewed one at a
+time.
