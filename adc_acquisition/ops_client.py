@@ -196,9 +196,10 @@ class OPSClient:
 
     def fetch_description(self, docdb_id: str) -> bytes | None:
         """Raw XML of a publication's specification/description text --
-        EP-prefixed docdb_ids only, see module docstring for the
-        live-verified WO limitation. None on OPS's genuine "no full text"
-        404 (SERVER.EntityNotFound)."""
+        works for both WO- and EP-prefixed docdb_ids; per-publication
+        availability is empirical (see module docstring), not restricted
+        to one authority. None on OPS's genuine "no full text" 404
+        (SERVER.EntityNotFound)."""
         url = f"{OPS_BASE}/published-data/publication/docdb/{docdb_id}/description"
         response = self._get(self.biblio_client, url, {})
         if response.status_code == 404:
@@ -207,8 +208,8 @@ class OPSClient:
         return response.content
 
     def fetch_claims(self, docdb_id: str) -> bytes | None:
-        """Raw XML of a publication's claim text -- same EP-only
-        limitation and 404-as-genuine-absence semantics as
+        """Raw XML of a publication's claim text -- same both-authorities
+        coverage and 404-as-genuine-absence semantics as
         fetch_description."""
         url = f"{OPS_BASE}/published-data/publication/docdb/{docdb_id}/claims"
         response = self._get(self.biblio_client, url, {})
