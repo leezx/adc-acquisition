@@ -22,6 +22,7 @@ class KnownADCAsset:
     target: str | None
     company: str | None
     active: bool
+    ambiguous_identifiers: list[str]
 
     def identifiers(self) -> list[str]:
         """Every distinct string worth searching for verbatim (canonical
@@ -36,6 +37,15 @@ class KnownADCAsset:
                 seen.add(identifier)
                 ordered.append(identifier)
         return ordered
+
+    def is_ambiguous(self, identifier: str) -> bool:
+        """True if this identifier is ALSO a common word/real person's
+        surname (confirmed live via the NAR ADCdb benchmark audit, see
+        configs/known_adc_assets.yaml's module comment for the concrete
+        "Polivy" evidence) -- such an identifier must never be searched
+        standalone; query_templates.py qualifies it with canonical_name
+        instead."""
+        return identifier in self.ambiguous_identifiers
 
 
 def load_known_adc_assets(path: Path) -> list[KnownADCAsset]:
@@ -52,6 +62,7 @@ def load_known_adc_assets(path: Path) -> list[KnownADCAsset]:
             target=entry.get("target"),
             company=entry.get("company"),
             active=entry.get("active", True),
+            ambiguous_identifiers=list(entry.get("ambiguous_identifiers") or []),
         )
         if asset.asset_id in seen_ids:
             raise ValueError(f"duplicate asset_id in {path}: {asset.asset_id}")

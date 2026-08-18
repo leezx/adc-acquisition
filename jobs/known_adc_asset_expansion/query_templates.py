@@ -51,6 +51,22 @@ disambiguates even when the readable component doesn't. Re-running this
 job with an UNCHANGED registry reproduces the exact same query_ids (the
 hash is a pure function of the query text), so ordinary reruns are still
 stable.
+
+AMBIGUOUS-IDENTIFIER QUALIFICATION (found via a live external benchmark
+audit against the NAR ADCdb database, reports/validation/
+nar_adcdb_comparison.md section 11): a bare-identifier query for
+"Polivy" (polatuzumab vedotin's brand name) produced 41 confirmed
+false-positive records across PubMed, Europe PMC, AND USPTO -- "Polivy"
+is ALSO the surname of a real, prolific eating-behavior researcher
+(cited in-text in unrelated abstracts) and a real USPTO patent inventor
+(Microsoft), confirmed directly against the actual acquired records, not
+assumed. `_bare_identifier_queries()` now takes a `qualifier` -- when
+`KnownADCAsset.is_ambiguous(identifier)` is True (an explicit,
+per-identifier opt-in in configs/known_adc_assets.yaml, populated only
+from concrete confirmed evidence, never speculatively), every source's
+query is built as `identifier AND canonical_name` instead of a bare
+identifier, so a confirmed-ambiguous brand name/dev code can never
+surface an unrelated person's writing again.
 """
 
 from __future__ import annotations
@@ -77,15 +93,26 @@ def _query_id(prefix: str, asset_id: str, readable: str, query_text: str) -> str
 
 
 def _bare_identifier_queries(assets: list[KnownADCAsset], prefix: str, build_query_text) -> list[dict]:
+    """build_query_text(identifier, qualifier) -> query_text. `qualifier`
+    is None for an ordinary identifier, or the asset's own canonical_name
+    when KnownADCAsset.is_ambiguous(identifier) is True -- every source's
+    build_query_text must AND the two together in that case, so a
+    confirmed-ambiguous brand name/dev code (e.g. "Polivy", which collides
+    with two unrelated real people's surnames -- see
+    configs/known_adc_assets.yaml) is NEVER searched standalone."""
     queries = []
     for asset in assets:
         for identifier in asset.identifiers():
-            query_text = build_query_text(identifier)
+            qualifier = asset.canonical_name if asset.is_ambiguous(identifier) else None
+            query_text = build_query_text(identifier, qualifier)
+            purpose = f"Known-ADC asset expansion: bare identifier {identifier!r} for asset {asset.asset_id}."
+            if qualifier:
+                purpose += f" Qualified with canonical name {qualifier!r} -- confirmed ambiguous identifier."
             queries.append(dict(
                 query_id=_query_id(prefix, asset.asset_id, _slug(identifier), query_text),
                 query_version=1,
                 query_text=query_text,
-                purpose=f"Known-ADC asset expansion: bare identifier {identifier!r} for asset {asset.asset_id}.",
+                purpose=purpose,
                 active=True,
             ))
     return queries
@@ -107,18 +134,26 @@ def _suffix_queries(assets: list[KnownADCAsset], prefix: str, build_query_text) 
 
 
 def pubmed_queries(assets: list[KnownADCAsset]) -> list[dict]:
+    def bare(identifier: str, qualifier: str | None) -> str:
+        if qualifier:
+            return f'"{identifier}"[tiab] AND "{qualifier}"[tiab]'
+        return f'"{identifier}"[tiab]'
+
     return (
-        _bare_identifier_queries(assets, "PUBMED_ASSETEXP", lambda identifier: f'"{identifier}"[tiab]')
+        _bare_identifier_queries(assets, "PUBMED_ASSETEXP", bare)
         + _suffix_queries(assets, "PUBMED_ASSETEXP", lambda name, suffix: f'"{name}"[tiab] AND {suffix}[tiab]')
     )
 
 
 def europe_pmc_queries(assets: list[KnownADCAsset]) -> list[dict]:
+    def bare(identifier: str, qualifier: str | None) -> str:
+        base = f'(TITLE:"{identifier}" OR ABSTRACT:"{identifier}")'
+        if qualifier:
+            return f'{base} AND (TITLE:"{qualifier}" OR ABSTRACT:"{qualifier}")'
+        return base
+
     return (
-        _bare_identifier_queries(
-            assets, "EPMC_ASSETEXP",
-            lambda identifier: f'(TITLE:"{identifier}" OR ABSTRACT:"{identifier}")',
-        )
+        _bare_identifier_queries(assets, "EPMC_ASSETEXP", bare)
         + _suffix_queries(
             assets, "EPMC_ASSETEXP",
             lambda name, suffix: f'(TITLE:"{name}" OR ABSTRACT:"{name}") AND {suffix}',
@@ -132,10 +167,13 @@ def wipo_queries(assets: list[KnownADCAsset]) -> list[dict]:
     queries confirm this ti=/pn=WO combination is not affected by the
     title-search bug epo_queries.yaml documents for pn=EP. Bare identifiers
     only -- no suffix templates, see module docstring."""
-    return _bare_identifier_queries(
-        assets, "WIPO_ASSETEXP",
-        lambda identifier: f'pn=WO and (ti="{identifier}" or ab="{identifier}")',
-    )
+    def bare(identifier: str, qualifier: str | None) -> str:
+        base = f'pn=WO and (ti="{identifier}" or ab="{identifier}")'
+        if qualifier:
+            return f'{base} and (ti="{qualifier}" or ab="{qualifier}")'
+        return base
+
+    return _bare_identifier_queries(assets, "WIPO_ASSETEXP", bare)
 
 
 def epo_queries(assets: list[KnownADCAsset]) -> list[dict]:
@@ -145,10 +183,13 @@ def epo_queries(assets: list[KnownADCAsset]) -> list[dict]:
     restricted to pn=EP; ab= sidesteps it entirely rather than risking a
     per-asset failure). Bare identifiers only -- no suffix templates, see
     module docstring."""
-    return _bare_identifier_queries(
-        assets, "EPO_ASSETEXP",
-        lambda identifier: f'pn=EP and ab="{identifier}"',
-    )
+    def bare(identifier: str, qualifier: str | None) -> str:
+        base = f'pn=EP and ab="{identifier}"'
+        if qualifier:
+            return f'{base} and ab="{qualifier}"'
+        return base
+
+    return _bare_identifier_queries(assets, "EPO_ASSETEXP", bare)
 
 
 def uspto_queries(assets: list[KnownADCAsset]) -> list[dict]:
@@ -159,7 +200,12 @@ def uspto_queries(assets: list[KnownADCAsset]) -> list[dict]:
     module docstring). `AND` is USPTO's own established boolean operator
     for this field (already used by its broad-discovery query family,
     e.g. 'antibody AND linker AND cytotoxin')."""
+    def bare(identifier: str, qualifier: str | None) -> str:
+        if qualifier:
+            return f'"{identifier}" AND "{qualifier}"'
+        return f'"{identifier}"'
+
     return (
-        _bare_identifier_queries(assets, "USPTO_ASSETEXP", lambda identifier: f'"{identifier}"')
+        _bare_identifier_queries(assets, "USPTO_ASSETEXP", bare)
         + _suffix_queries(assets, "USPTO_ASSETEXP", lambda name, suffix: f'"{name}" AND {suffix}')
     )

@@ -1,0 +1,703 @@
+nar_asset	nar_adc_id	our_asset	match_type	match_confidence	nar_aliases	our_matching_identifier	target	company	nar_status	evidence_source	notes
+ETX-22	DRG0AAJTS		NO_MATCH		ETx22; Etx 22		Nectin-4 (NECTIN4)	Emergence Therapeutics AG	Investigative	configs/known_adc_assets.yaml	
+AbGn-108	DRG0ADKKF		NO_MATCH		AbGn 108; AbGn108		Undisclosed	AbGenomics International, Inc	Investigative	configs/known_adc_assets.yaml	
+MTX-13	DRG0AHKIO		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BAT-8008	DRG0AJCCS		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Raludotatug deruxtecan	DRG0AKFYV		NO_MATCH		Raludotatug deruxtecan		Cadherin-6 (CDH6)		Investigative	configs/known_adc_assets.yaml	
+NKTR-288	DRG0ALCYL		NO_MATCH		NKTR 288; NKTR288		Interferon alpha-1/13 (IFNA1; IFNA13)	Nektar Therapeutics	Investigative	configs/known_adc_assets.yaml	
+DN-028	DRG0AMZIS		NO_MATCH		DN028; DN 028		Undisclosed	Piistech; Shanghai Gopherwood Biotech Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+JSKN021	DRG0ANRPC		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+RG-7636	DRG0AQITP		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BIIB-015	DRG0ARHOG		NO_MATCH		Anti-CRIPTO; Anti-Cripto mAB; Anti-Cripto-DM4; BIIB 015; BIIB-015; BIIB015		Teratocarcinoma-derived growth factor 1 (TDGF1)	Biogen, Inc	Phase 1	configs/known_adc_assets.yaml	
+CMD-193	DRG0ARIWN		NO_MATCH		CD193; CMD 193; CMD-193; Hu3S193-CM; Hu3S193-CalichDMH		Lewis Y	Wyeth AB; Pfizer Inc	Phase 1	configs/known_adc_assets.yaml	
+Izeltabart tapatansine	DRG0ASYKZ		NO_MATCH		Izeltabart tapatansine		Disintegrin and metalloproteinase domain-containing protein 9 (ADAM9)		Investigative	configs/known_adc_assets.yaml	
+Laprituximab emtansine	DRG0ATULB		NO_MATCH		IMGN 289; IMGN-289; IMGN2 89; IMGN289; J2898A-SMCC-DM1; Laprituximab emtansine		Epidermal growth factor receptor (EGFR)	ImmunoGen, Inc	Phase 1	configs/known_adc_assets.yaml	
+ZL-6201	DRG0AUAOQ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+SYD1091	DRG0AVEQT		NO_MATCH		WO2015177360A1_ADC-HC41; SYD 1091; SYD-1091		Glutamate carboxypeptidase 2 (FOLH1)	Byodes Private Ltd	Investigative	configs/known_adc_assets.yaml	
+AOC-1020	DRG0AVJCO		NO_MATCH		AOC 1020; AOC-1020; AOC-FSHD; AOC1020		Transferrin receptor protein 1 (TFRC)	Avidity Biosciences, Inc	Phase 2	configs/known_adc_assets.yaml	
+PF-06804103	DRG0AWQJG		NO_MATCH		Anti-HER2 ADC (Pfizer Inc.); Anti-NG-HER2 ADC; NG-HER2 ADC; PF 06804103; PF-06804103; PF-06804103, NG-HER2 ADC; PF06804103; anti-HER2-vc0101; anti-HER2-vcAur0101 ADC		Receptor tyrosine-protein kinase erbB-2 (HER2)	Pfizer Inc	Phase 1	configs/known_adc_assets.yaml	
+HDP-104	DRG0AWSBJ		NO_MATCH		HDP 104; HDP104		Undisclosed	Heidelberg Pharma AG	Investigative	configs/known_adc_assets.yaml	
+Indatuximab ravtansine	DRG0AWUIJ		NO_MATCH		Anti-myeloma monoclonal antibody-DM4 immunoconjugate BT-062; BT-062; Indatuximab ravtansine; Maytansinoid-conjugated anti-myeloma monoclonal antibody BT-062; nBT-062		Syndecan-1 (SDC1)	Biotest Pharma GmbH; Biotest AG	Phase 2	configs/known_adc_assets.yaml	
+IIIA4-USAN	DRG0AXDIU		NO_MATCH		Anti-EphA3 antibody-drug conjugate (Humanigen); Anti-EphA3 antibody-drug conjugate		Ephrin type-A receptor 3 (EPHA3)	Humanigen, Inc	Investigative	configs/known_adc_assets.yaml	
+BIL-03n	DRG0AXGPR		NO_MATCH		BOL03n; BIL 03n		P2X purinoceptor 7 (P2RX7)	Biosceptre International Ltd	Investigative	configs/known_adc_assets.yaml	
+BIO-112	DRG0AXWSD		NO_MATCH		BIO 112 (BiOneCure Therapeutics); BIO 112; BIO112		Undisclosed		Investigative	configs/known_adc_assets.yaml	
+PF-08046037	DRG0AYTGS		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Iladatuzumab vedotin	DRG0AZRNL		NO_MATCH		DCDS 0780A; DCDS-0780A; DCDS0780A; Iladatuzumab vedotin; RG 7986; RG7986; RO-7032005		B-cell antigen receptor complex-associated protein beta chain (CD79B)	F. Hoffmann-La Roche Ltd; Roche Holding AG	Phase 1	configs/known_adc_assets.yaml	
+ZV-0203	DRG0AZUEZ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+DXC-004A	DRG0BBHPW		NO_MATCH		DXC 004A; DXC-004A; DXC004A		Epidermal growth factor receptor (EGFR)	Hangzhou DAC Biotech Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+Enfortumab vedotin	DRG0BBQSE	enfortumab_vedotin	EXACT_NAME	high	AGS-22C3; AGS-22CE; AGS-22M6E; AGS-22ME; AGS-M6; ASG-22CE; ASG-22M6E; ASG-22ME; ASP7465; DLE8519RWM; Enfortumab Vedotin-ejfv	Enfortumab vedotin	Nectin-4 (NECTIN4)	Astellas Pharma, Inc; Seagen Inc; Baxter Oncology GmbH	Approved	configs/known_adc_assets.yaml	
+SYS6023	DRG0BBWPI		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Bivatuzumab mertansine	DRG0BBYHA		NO_MATCH		Anti-CD44v6-DM1 immunoconjugate; BIW1-1; BIWI-1; Bivatuzumab mertansine; Monoclonal antibody CD44v6-DM1 immunoconjugate		CD44 antigen (CD44)	ImmunoGen, Inc; Boehringer Ingelheim GmbH	Phase 1	configs/known_adc_assets.yaml	
+BSI-077	DRG0BCSND		NO_MATCH		Anticlaudin18.2 monoclonal antibody Biosion; BSI077; BSI 077		Claudin-18.2 (CLDN18.2)	Biosion, Inc	Investigative	configs/known_adc_assets.yaml	
+BL-M005A2	DRG0BDOJD		NO_MATCH		BLM005A2; BL M005A2		Undisclosed	Systimmune, Inc	Investigative	configs/known_adc_assets.yaml	
+GQ-1001	DRG0BFNMH		NO_MATCH		GQ 1001; GQ-1001; GQ1001; GQ1001(Trastuzumab-ADC)		Receptor tyrosine-protein kinase erbB-2 (HER2)	GeneQuantum Healthcare (Suzhou) Co. Ltd	Phase 1	configs/known_adc_assets.yaml	
+TAK-500	DRG0BGJNX		NO_MATCH		TAK 500; TAK-500; TAK500		C-C chemokine receptor type 2 (CCR2)	Takeda Pharmaceutical Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+ADCT-901	DRG0BGQOD		NO_MATCH		3A4-PL1601; ADCT 901; ADCT-901; ADCT901		Kidney-associated antigen 1 (KAAG1)	ADC Therapeutics SA; Overland Pharmaceuticals	Phase 1	configs/known_adc_assets.yaml	
+AZD-5335	DRG0BIQVN		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+LMB-12	DRG0BJYDH		NO_MATCH		LMB 12; SS1-dsFv-LRggs		Mesothelin (MSLN)		Investigative	configs/known_adc_assets.yaml	
+SLV-324	DRG0BKLSW		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ALT-Q5	DRG0BLINK		NO_MATCH		ALT-Q5 ADC; ALT Q5 ADC; Q5-drug conjugate (Alteogen); ALT Q5; ALT-05; ALTQ5		Folate receptor alpha (FOLR1)	Alteogen, Inc	Investigative	configs/known_adc_assets.yaml	
+7MW-3711	DRG0BPIAV		NO_MATCH		7MW 3711; 7MW3711		CD276 antigen (CD276)	Mabwell (Shanghai) Bioscience Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+KM254-ADC	DRG0BRHCV		NO_MATCH		KM254 ADC; KM254ADC		Receptor tyrosine-protein kinase erbB-2 (HER2)	Xuanzhu Biopharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Sacituzumab tirumotecan	DRG0BSQPI		NO_MATCH		A-264; KL-A264; MK-2870; MK2870; SKB 264; SKB-264; SKB264; TROP-2-targeted antibody-drug conjugate; sacituzumab tirumotecan(MK-2870)		Tumor-associated calcium signal transducer 2 (TROP2)	Sichuan Kelun Pharmaceutical Co., Ltd; KLUS Pharma, Inc; Merck & Co., Inc	Approved	configs/known_adc_assets.yaml	
+QLS5316	DRG0BSWTQ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ARX-305	DRG0BWCTV		NO_MATCH		ARX 305; ARX-305; ARX305; NCB-002		CD70 antigen (CD70)	Ambrx, Inc; Zhejiang Medicine Co., Ltd; Novocodex Biopharmaceuticals Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+BL-M15D1	DRG0BWWWF		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Veltuzumab-SN-38	DRG0BXRDQ		NO_MATCH		Vmab-SN-38		B-lymphocyte antigen CD20 (MS4A1)		Investigative	configs/known_adc_assets.yaml	
+DAC-002	DRG0BZCIJ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+JAB-BX400	DRG0BZEMH		NO_MATCH		JAB BX400; JABBX400		Receptor tyrosine-protein kinase erbB-2 (HER2)	Jacobio Pharmaceuticals Group Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+RC-118	DRG0CAEXH		NO_MATCH		RC-118; RC118; RC118-ADC,YH005; Recombinant humanized IgG1 anti-Claudin18.2 monoclonal antibody conjugated to MMAE; YH-005; YH005; YH005-ADC		Claudin-18.2 (CLDN18.2)	RemeGen Co., Ltd; Biocytogen Pharmaceuticals (Beijing) Co., Ltd; Eucure (Beijing) Biopharma Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+MG1901	DRG0CBHSI		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BGB-C354	DRG0CBLIJ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ABBV-400	DRG0CCEQO		NO_MATCH		ABBV-400; ABBV 400; ABBV400		Hepatocyte growth factor receptor (MET)	AbbVie, Inc	Phase 3	configs/known_adc_assets.yaml	
+MM-310	DRG0CCQWD		NO_MATCH		MM 310; MM-310; MM310		Ephrin type-A receptor 2 (EPHA2)	Merrimack Pharmaceuticals, Inc	Phase 1	configs/known_adc_assets.yaml	
+MYTX-011	DRG0CDYJL		NO_MATCH		MYTX 011; MYTX-011; MYTX011		Hepatocyte growth factor receptor (MET)	Mythic Therapeutics, Inc	Phase 1	configs/known_adc_assets.yaml	
+Trastuzumab rezetecan	DRG0CECRA		NO_MATCH		SHR A1811; SHR-A1811; SHRA1811		Receptor tyrosine-protein kinase erbB-2 (HER2)	Jiangsu Hengrui Pharmaceuticals Co., Ltd; Suzhou Suncadia Biopharmaceuticals Co., Ltd	Approved	configs/known_adc_assets.yaml	
+DB-1317	DRG0CEJDT		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Recombinant humanized anti-Trop2 antibody	DRG0CESQS		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+NEP1-40	DRG0CHZRH		NO_MATCH		1D9; 1H2; 2E10; 7E11; NEP1 40		Tumor necrosis factor receptor superfamily member 16 (NGFR)	Biogen, Inc	Investigative	configs/known_adc_assets.yaml	
+AMT-676	DRG0CIZWI		NO_MATCH		AMT 676; AMT-676; AMT676		Cadherin-17 (CDH17)	Multitude Therapeutics, Inc	Phase 1	configs/known_adc_assets.yaml	
+CMG-901	DRG0CKSWS		NO_MATCH		CMG 901; CMG-901; CMG901; MRG005; Sonesitatug vedotin; AZD0901		Claudin-18.2 (CLDN18.2)	Keymed Biosciences, Inc; Shanghai Miracogen Inc; Lepu Biopharma Co., Ltd; AstraZeneca PLC	Phase 3	configs/known_adc_assets.yaml	
+BA-3181	DRG0CKWNZ		NO_MATCH		BA 3181; BA3181; CAB-EpCAM-ADC		Epithelial cell adhesion molecule (EPCAM)	BioAtla, Inc	Investigative	configs/known_adc_assets.yaml	
+NNAS-Mc-Val-Cit-PABC-MMAE	DRG0CLBRQ		NO_MATCH		NNAS-vcMMAE		Receptor tyrosine-protein kinase erbB-2 (HER2)	Genzyme Corp	Investigative	configs/known_adc_assets.yaml	
+ADCX-020	DRG0CMPYD		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BG-C0902	DRG0CMUPE		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+JK-06	DRG0CNJHC		NO_MATCH		JK 06; JK-06; JK06		Trophoblast glycoprotein (TPBG)	Salubris Biotherapeutics, Inc	Phase 2	configs/known_adc_assets.yaml	
+ABBV-901	DRG0CNWMR		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Telisotuzumab vedotin	DRG0COMTY		NO_MATCH		ABBV 399; ABBV-399; ABBV399; ABT 399; ABT-399; Teliso-V; Teliso-V (ABBV-399); Telisotuzumab vedotin		Hepatocyte growth factor receptor (MET)	AbbVie, Inc; BSP Pharmaceuticals SpA	Approved	configs/known_adc_assets.yaml	
+DS6-DM1	DRG0CPNIE		NO_MATCH		DS6DM1; DS6 DM1		Mucin-1 (MUC1)	ImmunoGen, Inc	Investigative	configs/known_adc_assets.yaml	
+HKT-288	DRG0CRDKL		NO_MATCH		HKT 288; HKT-288; HKT28 8, NOV-13; HKT288; NOV-13		Cadherin-6 (CDH6)	Novartis Pharma AG; Novartis AG	Phase 1	configs/known_adc_assets.yaml	
+DP-303c	DRG0CRYVT		NO_MATCH		DP 303c; DP-303c; DP303c		Receptor tyrosine-protein kinase erbB-2 (HER2)	CSPC Zhongqi Pharmaceutical Technology Shijiazhuang Co., Ltd; CSPC Pharmaceutical Group Ltd	Phase 3	configs/known_adc_assets.yaml	
+MG2011C	DRG0CVTZD		NO_MATCH		MG2011C (Shanghai MabGen Biotech); MG-2011C; MG 2011C		Undisclosed	Shanghai MabGen Biotech Ltd; Shanghai Meijing Science & Technology Co. Ltd	Investigative	configs/known_adc_assets.yaml	
+AZD-9592	DRG0CWADI		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Serclutamab talirine	DRG0CXFTH		NO_MATCH		ABBV 321; ABBV-321; ABBV321; Serclutamab talirine		Epidermal growth factor receptor (EGFR)	AbbVie, Inc	Phase 1	configs/known_adc_assets.yaml	
+JSKN022	DRG0CXRVR		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+SIBP-A19	DRG0CXSNU		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+OGD-204	DRG0CYJSZ		NO_MATCH		OGD 204; OGD204		O-acetyl derivative of GD2 ganglioside (OAcGD2)	OGD2 Pharma SAS	Investigative	configs/known_adc_assets.yaml	
+Trastuzumab emtansine	DRG0CYMEB	trastuzumab_emtansine	EXACT_NAME	high	PRO-132365; ADO-Trastuzumab Emtansine; R-3502; R3502; RG 3502; RG-3502; RO 5304020; RO-5304020; T-DM1; DM1-trastuzumab immunoconjugate; Herceptin-DM1; Trastuzu; Trastuzumab-DM1; Trastuzumab-DM1 immunoconjugate; Trastuzumab-MCC-DM1; Trastuzumab-MCC-DM1 antibody-drug conjugate	Trastuzumab emtansine	Receptor tyrosine-protein kinase erbB-2 (HER2)	Genentech, Inc; Roche Holding AG; Chugai Pharmaceutical Co., Ltd; F. Hoffmann-La Roche Ltd	Approved	configs/known_adc_assets.yaml	
+Patritumab deruxtecan	DRG0DAKKB		NO_MATCH		HER3-DXd; Patritumab deruxtecan; Patritumab-DX-8951 conjugate; U3-1402; U3-1402a		Receptor tyrosine-protein kinase erbB-3 (HER3)	Daiichi Sankyo Co., Ltd; AstraZeneca PLC; Baxter Oncology GmbH; BSP Pharmaceuticals SpA	Phase 3	configs/known_adc_assets.yaml	
+SHR-7631	DRG0DCONA		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+A-410	DRG0DDMKC		NO_MATCH		A 410; A410		Nectin-4 (NECTIN4)	Sichuan Kelun Pharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+XYD-9668-198	DRG0DDQHT		NO_MATCH		XYD 9668-198; XYD9668-198		Undisclosed	Kunshan Xinyunda Biotechnology Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+HLX-43	DRG0DDTZB		NO_MATCH		HLX 43; HLX-43; HLX43; YL222		Programmed cell death 1 ligand 1 (CD274)	Shanghai Henlius Biotech, Inc; Shanghai Fosun Pharmaceutical (Group) Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+CPO-301	DRG0DDWPP		NO_MATCH		CPO301; CPO 301		Epidermal growth factor receptorn (EGFR C797S) (EGFR C797S)	CSPC Pharmaceutical Group Ltd	Investigative	configs/known_adc_assets.yaml	
+Vobramitamab duocarmazine	DRG0DEGEG		NO_MATCH		AEX4089DC1; Anti-B7-H3 antibody drug conjugate; MGC 018; MGC-018; MGC018; Vobramitamab duocarmazine		CD276 antigen (CD276)	MacroGenics, Inc	Phase 2	configs/known_adc_assets.yaml	
+Cantuzumab mertansine	DRG0DIWSF		NO_MATCH		C-242 DM1; C-242 May; C242 maytansinoid conjugate; Cantuzumab mertansine; Monoclonal antibody C-242 DM1 conjugate; Monoclonal antibody C-242 May conjugate; Monoclonal antibody huC242-May conjugate; SB-408075; huC242 maytansinoid conjugate; huC242-DM1		Mucin-1 (MUC1)	ImmunoGen, Inc	Phase 1	configs/known_adc_assets.yaml	
+IMAB362-Val-Cit-MMAE	DRG0DJFNE		NO_MATCH		IMAB362 vcMMAE; IMAB362-vc-MMAE; IMAB362 vc MMAE		Claudin-18.2 (CLDN18.2)	Ganymed Pharmaceuticals AG; Astellas Pharma, Inc	Investigative	configs/known_adc_assets.yaml	
+DB-1305	DRG0DLKUH		NO_MATCH		BNT325; DB 1305; DB-1305; DB1305		Tumor-associated calcium signal transducer 2 (TROP2)	Duality Biologics	Phase 2	configs/known_adc_assets.yaml	
+SC-007	DRG0DLZVY		NO_MATCH		SC 007; SC-007; SC007		Undisclosed	Stemcentrx, Inc; AbbVie, Inc	Phase 1	configs/known_adc_assets.yaml	
+RN765C	DRG0DNGPW		NO_MATCH		RN 765C; RN-765C		Epidermal growth factor receptor (EGFR)	Rinat Neuroscience Corp	Investigative	configs/known_adc_assets.yaml	
+GMA-305	DRG0DOBID		NO_MATCH		GMA305; GMA 305		Undisclosed	Gmax Biopharm LLC	Investigative	configs/known_adc_assets.yaml	
+CUSP06	DRG0DOTIX		NO_MATCH		AMT 707; AMT-707; AMT707; CUSP 06; CUSP-06; CUSP06		Cadherin-6 (CDH6)	Multitude Therapeutics, Inc; OnCusp Therapeutics	Phase 1	configs/known_adc_assets.yaml	
+IMGS-501	DRG0DSMMR		NO_MATCH		STING-ISAC; IMGS 501; IMGS501		Programmed cell death 1 ligand 1 (CD274); Programmed cell death 1 ligand 2 (PDCD1LG2)	Immunogenesis, Inc	Investigative	configs/known_adc_assets.yaml	
+LY3343544	DRG0DSOMP		NO_MATCH		LY-3343544; LY 3343544		Hepatocyte growth factor receptor (MET)	Eli Lilly & Co	Investigative	configs/known_adc_assets.yaml	
+LCB14-15nm	DRG0DVKJO		NO_MATCH		LCB14 15nm		Undisclosed	LegoChem Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+SIM 0686	DRG0DWHZY		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+CAT-03-106	DRG0DXEAS		NO_MATCH		CAT03106; CAT 03 106		Undisclosed	Catalent, Inc	Investigative	configs/known_adc_assets.yaml	
+Cetuximab sarotalocan	DRG0DXROV		NO_MATCH		ASP-1929; RM-1929; Cetuximab-IR700; Cetuximab Sarotalocan Sodium		Epidermal growth factor receptor (EGFR)	Rakuten Medical, Inc	Approved	configs/known_adc_assets.yaml	
+IBI3009	DRG0EBFGG		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Lintuzumab Ac-225	DRG0EDBXG		NO_MATCH		225Ac-HuM-195; 225Ac-HuM195; 225Ac-lintuzumab; AC225 MOAB M195; AC225-MOAB-M195; Ac-225-Lintuzumab; Ac225 monoclonal antibody M195; Actimab-A; Actimab-M; Actimab-MDS; Actinium (225ac) lintuzumab satetraxetan; Actinium AC 225 lintuzumab; Actinium AC-225 lintuzumab; Actinium-225 (225Ac)-Lintuzumab; Actinium-225-labeled humanized anti-cd33 monoclonal antibody HUM195; Actinium-225-labelled HuM195; HUM-195 AC-225; HuM195-Ac-225; Lintuzumab Ac-225; Lintuzumab actinium Ac-225; Lintuzumab satetraxetan AC-225		Myeloid cell surface antigen CD33 (CD33)	PDL BioPharma, Inc; Actinium Pharmaceuticals, Inc	Phase 1	configs/known_adc_assets.yaml	
+DXC-008	DRG0EEDEE		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BAT-8006	DRG0EGQMP		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+DAC-005	DRG0EGTVL		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+SBT-8230	DRG0EGZQD		NO_MATCH		SBT8230; SBT 8230; Asgr1-Tlr8; Asgr1-Tlr8-S; ASGR1-TLR8 ImmunoTAC conjugate		Asialoglycoprotein receptor 1 (ASGR1)	Silverback Therapeutics, Inc; ARS Pharmaceuticals, Inc	Investigative	configs/known_adc_assets.yaml	
+CME-548	DRG0EHWIM		NO_MATCH		CME-548 (Oxford Biomedica Plc)		Trophoblast glycoprotein (TPBG)	Oxford Biomedica Plc; Pfizer Inc	Investigative	configs/known_adc_assets.yaml	
+BL-M07D1	DRG0EJBII		NO_MATCH		BL M07D1; BL-M07D1; BLM07D1		Receptor tyrosine-protein kinase erbB-2 (HER2)	Sichuan Baili Pharmaceutical Co., Ltd; Systimmune, Inc; Chengdu Bailidote Biological Pharmaceutical Co., Ltd	Phase 3	configs/known_adc_assets.yaml	
+SYN-101	DRG0EJZGZ		NO_MATCH		SYN101; SYN 101		Transforming growth factor beta-1 proprotein (TGFB1)	Synthis LLC	Investigative	configs/known_adc_assets.yaml	
+Sacituzumab govitecan	DRG0EKTUN	sacituzumab_govitecan	EXACT_NAME	high	GS-0132; IMMU-132; IMMU0132; TROP-2-SN38; hRS7-SN38 antibody drug conjugate; Isactuzumab govitecan	Sacituzumab govitecan	Tumor-associated calcium signal transducer 2 (TROP2)	Immunomedics, Inc; Gilead Sciences, Inc; BSP Pharmaceuticals SpA; Everest Medicines (Singapore) Pte. Ltd	Approved	configs/known_adc_assets.yaml	
+Tusamitamab ravtansine	DRG0ELYWP		NO_MATCH		AR408701; IBI-126; Maytansin-loaded anti-CEACAM5 mAb; SAR 408701; SAR-408701; SAR408701; Tusamitamab ravtansine		Carcinoembryonic antigen-related cell adhesion molecule 5 (CEACAM5)	ImmunoGen, Inc; Sanofi; Innovent Biologics, Inc	Phase 3	configs/known_adc_assets.yaml	
+SYD-1875	DRG0EMQPK		NO_MATCH		Anti-5T4 antibody drug conjugate; SYD 1875; SYD-1875; SYD18 75; SYD1875		Trophoblast glycoprotein (TPBG)	Synthon BV; Byondis BV	Phase 1	configs/known_adc_assets.yaml	
+Cotinine-duocarmycin	DRG0ENSWF		NO_MATCH		Cotinine duocarmycin		Epidermal growth factor receptor (EGFR)		Investigative	configs/known_adc_assets.yaml	
+DB-1303	DRG0ENYRQ		NO_MATCH		BNT323; DB 1303; DB-1303; DB1303		Receptor tyrosine-protein kinase erbB-2 (HER2)	Duality Biologics; BioNTech SE	Phase 3	configs/known_adc_assets.yaml	
+MRG-002	DRG0ENYXZ		NO_MATCH		MRG 002; MRG-002; MRG002		Receptor tyrosine-protein kinase erbB-2 (HER2)	Shanghai Miracogen Inc; Lepu Biopharma Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+HDM2017	DRG0EOBLX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+PD-L1 ISA	DRG0EOFTU		NO_MATCH		Boltbody ISAC PD-L1 (Bolt Bio)		Programmed cell death 1 ligand 1 (CD274)	Bolt Biotherapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+BL-M02D1	DRG0EOMCN		NO_MATCH		BL M02D1; BL-M02D1; BLM02D1		Tumor-associated calcium signal transducer 2 (TROP2)	Sichuan Baili Pharmaceutical Co., Ltd; Systimmune, Inc; Chengdu Bailidote Biological Pharmaceutical Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+KSI-501	DRG0EOWOQ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Anetumab ravtansine	DRG0EPHMC		NO_MATCH		Anetumab ravtansine; Anti-mesothelin antibody-drug conjugate BAY 94-9343; Anti-mesothelin-ADC-BAY-94-9343; BAY 94-9343; BAY-94-9343; BAY-94-9343-SPDB-DM4; BAY94-9343		Mesothelin (MSLN)	MorphoSys AG; Bayer AG	Phase 2	configs/known_adc_assets.yaml	
+B-003	DRG0EPORB		NO_MATCH		Anti-HER2 monoclonal antibody-MCC-DM1 conjugate; B 003; B-003; B003		Receptor tyrosine-protein kinase erbB-2 (HER2)	Shanghai Jiaolian Drug Development Co. Ltd; Shanghai Pharmaceuticals Holding Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+SAR-428926	DRG0EPYFC		NO_MATCH		SAR 428926; SAR-428926; SAR42 8926; SAR428926		Lysosome-associated membrane glycoprotein 1 (LAMP1)	ImmunoGen, Inc; Sanofi	Phase 1	configs/known_adc_assets.yaml	
+CBT-3112	DRG0EQEVI		NO_MATCH		DCLK1 targeting paclitaxel based ADC (Coare Biotechnology); CBT3112; CBT 3112		Serine/threonine-protein kinase DCLK1 (DCLK1)	COARE Biotechnology Inc	Investigative	configs/known_adc_assets.yaml	
+MYK-3	DRG0EQGNV		NO_MATCH		MYK 3		Epidermal growth factor receptor (EGFR)	Shanghai Miracogen Inc	Investigative	configs/known_adc_assets.yaml	
+Trastuzumab deruxtecan	DRG0ERKBH	trastuzumab_deruxtecan	EXACT_NAME	high	DS-8201; DS-8201a; fam-trastuzumab deruxtecan-nxki; DS 8201; DS 8201a; Fam-trastuzumab deruxtecan; T-DXd; Trastuzumab Deruxtecan	Trastuzumab deruxtecan	Receptor tyrosine-protein kinase erbB-2 (HER2)	Daiichi Sankyo Inc; AstraZeneca PLC; Baxter Oncology GmbH	Approved	configs/known_adc_assets.yaml	
+SGN-B7H4V	DRG0ERYUF		NO_MATCH		PF-08046048; SGN-B7H4V; SGNB 7H4V; SGNB7H4V		V-set domain-containing T-cell activation inhibitor 1 (VTCN1)	Seagen Inc	Phase 1	configs/known_adc_assets.yaml	
+RG-7986	DRG0ESGFZ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ICAM1-DM1 ADC	DRG0EUGGJ		NO_MATCH		ICAM1-DM1 ADC (Boston Children's Hospital); anti-ICAM1-SMCC-DM1 (Boston Children's Hospital)		Intercellular adhesion molecule 1 (ICAM1)	Boston Children's Hospital	Investigative	configs/known_adc_assets.yaml	
+MBC-301	DRG0EUQQY		NO_MATCH		MBC 301; MBC301		Undisclosed	Medigen Biotechnology Corp	Investigative	configs/known_adc_assets.yaml	
+HLX-41	DRG0EWNZL		NO_MATCH		HLX41; HLX 41		Zinc transporter ZIP6 (SLC39A6)	Shanghai Henlius Biotech, Inc; Shanghai Fosun Pharmaceutical (Group) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Ozuriftamab vedotin	DRG0EWQKX		NO_MATCH		BA3021; Ba-3021; CAB Ror2-ADC; CAB-ADC; CAB-ROR2; CAB-ROR2-ADC; HTBA3021; Ozuriftamab vedotin		Tyrosine-protein kinase transmembrane receptor ROR2 (ROR2)	BioAtla, Inc; Kaibos (Shanghai) Biomedical Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+ADCE-B05	DRG0EWYVN		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BYON-4413	DRG0EZVZS		NO_MATCH		BYON 4413; BYON-4413; BYON4413		Interleukin-3 receptor subunit alpha (IL3RA)	Byondis BV	Phase 1	configs/known_adc_assets.yaml	
+JAB-X1800	DRG0EZYUP		NO_MATCH		JABX1800; JAB X1800		5'-nucleotidase (NT5E)	Jacobio Pharmaceuticals Group Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+AVP10	DRG0FAKKA		NO_MATCH		AVP 10; AVP-10; PV10-MMAF		Tumor necrosis factor receptor superfamily member 8 (TNFRSF8)	Avipep Pty Ltd	Investigative	configs/known_adc_assets.yaml	
+ABBV-3373	DRG0FBKIO		NO_MATCH		ABBV 3373; ABBV-3373; ABBV3773; anti-TNF-GRM-antibody-drug-conjugate; glucocorticoid receptor modulator (GRM) linked to adalimumab		Tumor necrosis factor receptor superfamily member 1A (TNFRSF1A)	AbbVie, Inc	Phase 2	configs/known_adc_assets.yaml	
+TGW-101	DRG0FBPCP		NO_MATCH		TGW101; TGW 101		Tumor-associated glycoprotein 72 (TAG-72)	Tagworks Pharmaceuticals BV	Investigative	configs/known_adc_assets.yaml	
+BMT-125961	DRG0FCYCB		NO_MATCH		BMT125961; BMT 125961		Undisclosed	Bristol Myers Squibb Co	Investigative	configs/known_adc_assets.yaml	
+RC-168	DRG0FGCQK		NO_MATCH		RC168; RC 168		Undisclosed	RemeGen Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+P38B-DM1	DRG0FGJBT		NO_MATCH		P38B DM1; P38B DBCO-HSA-DM-1		Podoplanin (PDPN)		Investigative	configs/known_adc_assets.yaml	
+ATG-022	DRG0FGLFW		NO_MATCH		ATG 022; ATG-022; ATG-022 ADC; ATG022		Claudin-18.2 (CLDN18.2)	Antengene Corporation Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+NBT-568	DRG0FIYMR		NO_MATCH		NBT 568; NBT568		Undisclosed	NewBio Therapeutics	Investigative	configs/known_adc_assets.yaml	
+MP-EV-20	DRG0FJYPL		NO_MATCH		MP-EV20; MP EV 20		Receptor tyrosine-protein kinase erbB-3 (HER3)	MediaPharma Srl	Investigative	configs/known_adc_assets.yaml	
+MP-ENDOS-ADC	DRG0FKHUJ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+LM-001	DRG0FKQPI		NO_MATCH		LM-001 (LaNova Medicines); LM001; LM 001		Undisclosed	LaNova Medicines Ltd	Investigative	configs/known_adc_assets.yaml	
+XNW-27011	DRG0FKZGF		NO_MATCH		XNW 27011; XNW-27011; XNW27011		Claudin-18.2 (CLDN18.2)	Suzhou Sinovent Pharmaceuticals Co.,Ltd; Shanghai Sinovent Biopharmaceutical Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+Omalizumab-amanitin 3	DRG0FLLMW		NO_MATCH		Omalizumab Amanitin3		High affinity immunoglobulin epsilon receptor subunit alpha (FCER1A)	Heidelberg Pharma AG	Investigative	configs/known_adc_assets.yaml	
+JSKN-003	DRG0FMCLF		NO_MATCH		JSKN 003; JSKN-003; JSKN003		Receptor tyrosine-protein kinase erbB-2 (HER2 ECD2); Receptor tyrosine-protein kinase erbB-2 (HER2 ECD4)	Alphamab Oncology; Alphamab Australia Co. Pty Ltd	Phase 3	configs/known_adc_assets.yaml	
+LCB-71	DRG0FOOJX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+XMT-1660	DRG0FPQOM		NO_MATCH		XMT 1660; XMT-1660; XMT1660		V-set domain-containing T-cell activation inhibitor 1 (VTCN1)	Mersana Therapeutics, Inc	Phase 1	configs/known_adc_assets.yaml	
+JSKN027	DRG0FQZSZ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+TAA-013	DRG0FRFEQ		NO_MATCH		Anti-HER2 ADC (TOT Biopharm); TAA 013; TAA-013; TAA013; Trastuzumab antibody drug conjugate (TOT Biopharm)		Receptor tyrosine-protein kinase erbB-2 (HER2)	Tot Biopharm Co. Ltd	Phase 3	configs/known_adc_assets.yaml	
+Indusatumab vedotin	DRG0FSHWJ		NO_MATCH		GCC antibody drug conjugate; Indusatumab vedotin; MLN 0264; MLN-0264; MLN0264; TAK 264; TAK-264; TAK-264, MLN02 64; TAK264		Guanylyl cyclase C (GUCY2C)	Millennium Pharmaceuticals, Inc; Takeda Pharmaceutical Co., Ltd; Seagen Inc	Phase 2	configs/known_adc_assets.yaml	
+LCB-73	DRG0FTDBR		NO_MATCH		LCB73; LCB 73		B-lymphocyte antigen CD19 (CD19)	LegoChem Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+BC5084	DRG0FUAVD		NO_MATCH		BC-50084; BC 50084		Undisclosed	Wuxi Biocity Biopharmaceutics Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Camidanlumab tesirine	DRG0FUFBP		NO_MATCH		ADCT-301; Cami; Camidanlumab tesirine; HuMax-TAC-ADC		Interleukin-2 receptor subunit alpha (IL2RA)	ADC Therapeutics SA	Phase 2	configs/known_adc_assets.yaml	
+YL202	DRG0FWMPN		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BG-C0979	DRG0FWSXF		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Zanidatamab zovodotin	DRG0FWYLZ		NO_MATCH		ZW 49; ZW-49; ZW49; Zanidatamab zovodotin; anti-HER2 x HER2 ADC		Receptor tyrosine-protein kinase erbB-2 (HER2 ECD2); Receptor tyrosine-protein kinase erbB-2 (HER2 ECD4)	Zymeworks BC, Inc; BeiGene Ltd	Phase 1	configs/known_adc_assets.yaml	
+SMD-5033	DRG0FZFYY		NO_MATCH		SMD 5033; SMD5033		Undisclosed	Sirenas Marine Discovery LLC	Investigative	configs/known_adc_assets.yaml	
+HLX48	DRG0FZNCB		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+SBO-154	DRG0GAYQK		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+<sup>131</sup>I-ImmuRAIT-HCG	DRG0GBXLR		NO_MATCH						Investigative	configs/known_adc_assets.yaml	
+LM-302	DRG0GCCJJ		NO_MATCH		BMS-986476; LM 302; LM-302; TPX-4589; TPX 4589; TPX4589		Claudin-18.2 (CLDN18.2)	LaNova Medicines Ltd; Turning Point Therapeutics, Inc	Phase 3	configs/known_adc_assets.yaml	
+PF-08046033	DRG0GCHQJ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Cymac-001	DRG0GCTYJ		NO_MATCH		Cymac001; Cymac 001; Anti-CD163-dexamethasone		Scavenger receptor cysteine-rich type 1 protein M130 (CD163)	Affinicon ApS	Investigative	configs/known_adc_assets.yaml	
+TT-01	DRG0GDKSW		NO_MATCH		Mtt-01; TT01; TT 01; TT-01 (Topmunnity therapeutics)		Undisclosed	Topmunnity Therapeutics	Investigative	configs/known_adc_assets.yaml	
+STI-6129	DRG0GDLEY		NO_MATCH		LNDS-1001; LNDS1001; STI 6129; STI-6129		ADP-ribosyl cyclase/cyclic ADP-ribose hydrolase 1 (CD38)	Sorrento Therapeutics, Inc; Zhejiang ACEA Pharmaceutical Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+NBT-508	DRG0GEOJG		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+DpADC	DRG0GGFRA		NO_MATCH		Trop-2 dp-ADC; dp ADC		Tumor-associated calcium signal transducer 2 (TROP2)	GeneQuantum Healthcare (Suzhou) Co. Ltd	Investigative	configs/known_adc_assets.yaml	
+NBE-002	DRG0GGKEV		NO_MATCH		BI-3702025; NBE 002; NBE-002; NBE-002; PNU-159682-anti-ROR1 antibody drug conjugate; huXBR1-402-PNU		Inactive tyrosine-protein kinase transmembrane receptor ROR1 (ROR1)	NBE-Therapeutics AG	Phase 2	configs/known_adc_assets.yaml	
+VLS-301	DRG0GHMKS		NO_MATCH		VLS 301; VLS301		Undisclosed	VelosBio, Inc; Merck & Co., Inc	Investigative	configs/known_adc_assets.yaml	
+ARC-02	DRG0GHMXV		NO_MATCH		Anti-CD79b-MMAE ADC; Anti-CD79b-MMAE ADC (Araris Biotech); ARC 02; ARC02		B-cell antigen receptor complex-associated protein beta chain (CD79B)	Araris Biotech AG	Investigative	configs/known_adc_assets.yaml	
+HS-20122	DRG0GJXHJ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Mirvetuximab soravtansine	DRG0GKOZH	mirvetuximab_soravtansine	EXACT_NAME	high	IMGN853; M9346A-sulfo-SPDB-DM4; Anti-FOLR1 monoclonal antibody-maytansinoid conjugate; MIRV; HDM2002; IMGN-853; M9346-Asulfo-SPDB-DM4; M9346A-sSPDB-DM4; M9346A-sulfo-SPDB-DM4; Anti-FOLR1-monoclonal-antibody-maytansinoid-conjugate-IMGN-853; Mirvetuximab soravtansine-gynx	Mirvetuximab soravtansine	Folate receptor alpha (FOLR1)	ImmunoGen, Inc; Hangzhou Zhongmeihuadong Pharmaceutical Co., Ltd	Approved	configs/known_adc_assets.yaml	
+WTX-231	DRG0GMNXB		NO_MATCH		WTX 231; WTX231		Undisclosed	Westlake Therapeutics (Hangzhou) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+BL-M24D1	DRG0GMWTW		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+LMB-7	DRG0GNFMC		NO_MATCH		B3 (Fv) PE 38; LMB 7; LMB-7; LMB7; NSC 658931		Poly [ADP-ribose] polymerase 1 (PARP1)	National Cancer Institute	Phase 1	configs/known_adc_assets.yaml	
+MRX-23	DRG0GONLK		NO_MATCH		MRX 23; MRX23		Undisclosed	Shanghai MicuRx Pharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+M7437	DRG0GQWJI		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Obexelimab-amanitin	DRG0GWFGY		NO_MATCH		Obexelimab amanitin		B-lymphocyte antigen CD19 (CD19)	LegoChem Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+GenSci139	DRG0GXGXB		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+XB-002	DRG0GYCJG		NO_MATCH		ICON-2; XB 002; XB- 002; XB-002; XB002; XB002 Tissue Factor ADC		Tissue factor (F3)	Iconic Therapeutics, Inc; Exelixis, Inc; Exelis, Inc	Phase 1	configs/known_adc_assets.yaml	
+FDA022-BB05	DRG0GYGUI		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ESG406	DRG0GYMEE		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+XMT-1522	DRG0GYNBS		NO_MATCH		TAK 522; TAK-522; TAK522; XMT 1522; XMT-1522; XMT-1522, TAK-522; XMT1522		Receptor tyrosine-protein kinase erbB-2 (HER2)	Mersana Therapeutics, Inc; Adimab LLC; Takeda Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+SAR-566658	DRG0GZGHN		NO_MATCH		Anti-CA6-DM4-immunoconjugate-SAR566658; Anti-CA6-antibody-drug-conjugate; HuDS6-DM4; SAR 566658; SAR-566658; SAR56 6658; SAR566658; huDS6-DM4		Carbonic anhydrase 6 (CA6)	Sanofi; ImmunoGen, Inc	Phase 2	configs/known_adc_assets.yaml	
+JY-023	DRG0GZPSF		NO_MATCH		JY 023; JY023		Undisclosed	Beijing Eastern Biotech Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+LNL-008	DRG0HBGGX		NO_MATCH		LNL008; LNL 008		Claudin-18.2 (CLDN18.2)	L&L Biopharma Co., LTD	Investigative	configs/known_adc_assets.yaml	
+ATRC-301	DRG0HCDAC		NO_MATCH		ATRC301; ATRC 301		Ephrin type-A receptor 2 (EPHA2)	Atreca, Inc	Investigative	configs/known_adc_assets.yaml	
+BAT-8010	DRG0HDUGB		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+DB-1202	DRG0HEAGN		NO_MATCH		DB 1202; DB-1202; DB1202		Undisclosed	Duality Biologics	Phase 2	configs/known_adc_assets.yaml	
+SC-011	DRG0HEJWD		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+MHB088C	DRG0HGHXE		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+AR081	DRG0HHXRF		NO_MATCH		AR 081; AR081		Undisclosed	YBiologics, Inc	Investigative	configs/known_adc_assets.yaml	
+ANT-045	DRG0HKEBI		NO_MATCH		ANT045; ANT 045		Insulin-like growth factor 1 receptor (IGF1R)	Antikor Biopharma Ltd	Investigative	configs/known_adc_assets.yaml	
+KTN0182A	DRG0HMQMZ		NO_MATCH		KTN-0182A; KTN 0182A		Mast/stem cell growth factor receptor Kit (KIT)	Kolltan Pharmaceuticals, Inc; Celldex Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+OMTX-705	DRG0HOBUN		NO_MATCH		MTX5-CYT; OMTX 705; OMTX-705; OMTX705		Prolyl endopeptidase FAP (FAP)	Oncomatryx Biopharma SL; Inxmed (Nanjing) Co., Ltd; InxMed (Hong Kong) Limited	Phase 1	configs/known_adc_assets.yaml	
+BL-B029A1	DRG0HPEHO		NO_MATCH		BL-B029; BLB029; BL B029		Undisclosed	Systimmune, Inc; Sichuan Baili Pharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Farletuzumab ecteribulin	DRG0HPUIL		NO_MATCH		ER-001159569; Eribulin/farletuzumab antibody drug conjugate; Farletuzumab ecteribulin; Farletuzumab/eribulin ADC; MORAb 202; MORAb-202; VCP-Eribulin		Folate receptor alpha (FOLR1)	Eisai Co., Ltd; Bristol Myers Squibb Co	Phase 2	configs/known_adc_assets.yaml	
+TORL-3-600	DRG0HQVXQ		NO_MATCH		TORL-3-600; TORL-3-600 ADC; TORL-3-600-ADC		Cadherin-17 (CDH17)	TORL Biotherapeutics LLC; Translational Research In Oncology US, Inc	Phase 1	configs/known_adc_assets.yaml	
+TQB2103	DRG0HTJXN		NO_MATCH		TQB 2103; TQB-2103; TQB2103		Claudin-18.2 (CLDN18.2)	Nanjing Shunxin Pharmaceutical Co., Ltd; Sino Biopharmaceutical Ltd	Phase 1	configs/known_adc_assets.yaml	
+BDC-1001	DRG0HVSBG		NO_MATCH		BDC 1001; BDC-1001; Boltbody ISAC BDC-1001		Receptor tyrosine-protein kinase erbB-2 (HER2)	Bolt Biotherapeutics, Inc	Phase 2	configs/known_adc_assets.yaml	
+Zapadcine-1	DRG0HWAWD		NO_MATCH		Zapadcine 1; DR5 mAb-Py-VC-PAB-MMAD		Tumor necrosis factor receptor superfamily member 10B (TNFRSF10B)		Investigative	configs/known_adc_assets.yaml	
+T320-ADC	DRG0HWLAE		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+MBK-101	DRG0HXUZU		NO_MATCH		MBK 101; MBK101		Undisclosed	Mablink Bioscience	Investigative	configs/known_adc_assets.yaml	
+BAY-1862864	DRG0HYRZD		NO_MATCH		BAY 1862864; BAY-1862864; BAY1862864; CD22-Thorium-conjugate; Epratuzumab Th-227 conjugate; epratuzumab-227Th-conjugate; epratuzumab-Th227-conjugate		B-cell receptor CD22 (CD22)	Bayer AG	Phase 1	configs/known_adc_assets.yaml	
+IOG-101	DRG0IBMMG		NO_MATCH		Fusion proteins (ioGenetics); IOG101; IOG 101		Undisclosed	Iogenetics LLC	Investigative	configs/known_adc_assets.yaml	
+Elatatug vedotin	DRG0ICCWP		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Oportuzumab monatox	DRG0ICRYT		NO_MATCH		4D5MOCB-ETA; Anti-ECAM exotoxin A fusion protein; B-4845; Oportuzumab monatox; Proxinium; VB-4847; VB-845; VB4-845; Vicineum; Vicinium; Vysyneum; oportuzumab monatox-qqrs		Epithelial cell adhesion molecule (EPCAM)	Sesen Bio; Qilu Pharmaceutical Co., Ltd; Baxter Oncology GmbH; Viventia Bio, Inc	Phase 3	configs/known_adc_assets.yaml	
+CHB-111	DRG0ICSRW		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+MK-6204	DRG0IDOUS		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+LCB-67	DRG0IDRYV		NO_MATCH		Anti-DLK1 ADC; MMAE-anti-DLK1; PYX 202; DLK1-MMAE; LCB67; LCB 67; PAY-202; PAY202		Protein delta homolog 1 (DLK1)	LegoChem Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+EX107	DRG0IITIR		NO_MATCH		EX 107; EX-107		T-cell surface glycoprotein CD3 delta chain (CD3D); Programmed cell death protein 1 (PDCD1)	Excelmab Inc	Investigative	configs/known_adc_assets.yaml	
+MG2106E	DRG0IJSIT		NO_MATCH		MG2106E (Shanghai MabGen Biotech); MG-2106E; MG 2106E		Undisclosed	Shanghai MabGen Biotech Ltd; Shanghai Meijing Science & Technology Co. Ltd	Investigative	configs/known_adc_assets.yaml	
+Mecbotamab vedotin	DRG0IMAKZ		NO_MATCH		BA 3011; BA3011; CAB-AXL-ADC; CAB-Axl antibody-drug conjugates; HTBA-3011; HTBA3011; Mecbotamab Vedotin; Mecbotamab vedotin		Tyrosine-protein kinase receptor UFO (AXL)	BioAtla, Inc	Phase 2	configs/known_adc_assets.yaml	
+DXC-003	DRG0INCQV		NO_MATCH		DXC003; DXC 003		Tumor-associated calcium signal transducer 2 (TROP2)	Hangzhou DAC Biotech Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+BCMA-077	DRG0INYKO		NO_MATCH		BCMA 077; BCMA077		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	Sorrento Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+JNJ-89862175	DRG0IOMGE		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+PLB-002	DRG0IOSTB		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+TAK-164	DRG0IPCHO		NO_MATCH		TAK 164; TAK-164; TAK164		Guanylyl cyclase C (GUCY2C)	ImmunoGen, Inc; Takeda Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+CON-4619	DRG0IQKOR		NO_MATCH		Aurixim; CON-4619; Rituximab conjugate (BioIntegrator LLC)		B-lymphocyte antigen CD20 (MS4A1)	BioIntegrator LLC	Phase 1	configs/known_adc_assets.yaml	
+PRO-1102	DRG0IQNVH		NO_MATCH		PRO 1102; PRO1102		Receptor tyrosine-protein kinase erbB-2 (HER2)	ProfoundBio (Suzhou) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Glembatumumab vedotin	DRG0IRZIB		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+AB-160	DRG0IRZPG		NO_MATCH		AB 160; AB-160; AB160; nab-paclitaxel/bevacizumab complex		Vascular endothelial growth factor A (VEGFA)	Mayo Clinic	Phase 1	configs/known_adc_assets.yaml	
+Anti-B7-2-gelonin immunotoxin	DRG0ISFPP		NO_MATCH		AntiB72 monoclonal antibodygelonin immunotoxin conjugate; B72 targeted immunotoxin		T-lymphocyte activation antigen CD86 (CD86)	Bologna University	Investigative	configs/known_adc_assets.yaml	
+HD-101	DRG0ITBMZ		NO_MATCH		Amanitin-CD269 antibody drug conjugate; CD269-ATAC; anti-CD269-30.1699; anti-CD269-30.2115; anti-CD269-Thiomab-30.1699; anti-CD269-Thiomab-30.2115		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	Heidelberg Pharma AG	Investigative	configs/known_adc_assets.yaml	
+ABBV-324	DRG0IUXVP		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+TQB2102	DRG0IVDIV		NO_MATCH		TQB 2102; TQB-2102; TQB2102		Receptor tyrosine-protein kinase erbB-2 (HER2 ECD2); Receptor tyrosine-protein kinase erbB-2 (HER2 ECD4)	Nanjing Shunxin Pharmaceutical Co., Ltd; Sino Biopharmaceutical Ltd	Phase 2	configs/known_adc_assets.yaml	
+DXC-014	DRG0IWQWQ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ADCT-602	DRG0IYBRT		NO_MATCH		ADCT-602; Epratuzumab-cys-SG3249; Epratuzumab-cys-tesirine; hLL2-cys-PBD; hLL2-cys-SG3249		B-cell receptor CD22 (CD22)	ADC Therapeutics SA	Phase 2	configs/known_adc_assets.yaml	
+Labetuzumab govitecan	DRG0JBKMD		NO_MATCH		Anti-CEA monoclonal antibody; Anti-carcinoembryonic antigen monoclonal antibody; HMN-14-SN38; IMMU-130; IMMU-130, hMN14-SN38; Labetuzumab govitecan; Labetuzumab-SN38 conjugate; SN38-labetuzumab conjugate; anti-CEACAM5-SN38; hMN-14-SN38 antibody-drug conjugate		Carcinoembryonic antigen-related cell adhesion molecule 5 (CEACAM5)	Immunomedics, Inc; IBC Pharmaceuticals, Inc; Gilead Sciences, Inc	Phase 2	configs/known_adc_assets.yaml	
+ABBV-291	DRG0JCGJZ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+TRPH-222	DRG0JCWGF		NO_MATCH		CAT-02-106; CD22 ADC; CD22 antibody drug conjugate; CD22-4AP; TRPH 222; TRPH-222; TRPH222		B-cell receptor CD22 (CD22)	Catalent, Inc; Triphase Accelerator Corp; Triphase Research and Development III Corp	Phase 1	configs/known_adc_assets.yaml	
+GF-2014	DRG0JDDLS		NO_MATCH		GF 2014; GF2014		Undisclosed	GenFleet Therapeutics (Shanghai) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+YH-013	DRG0JEJPW		NO_MATCH		YH 013; YH013		Epidermal growth factor receptor (EGFR); Hepatocyte growth factor receptor (MET)	Biocytogen Pharmaceuticals (Beijing) Co., Ltd; Eucure (Beijing) Biopharma Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Sacituzumab-Deruxtecan	DRG0JEUPG		NO_MATCH		WO2022068878A1		Tumor-associated calcium signal transducer 2 (TROP2)	Duality Biologics	Investigative	configs/known_adc_assets.yaml	
+Disitamab vedotin	DRG0JEVIM	disitamab_vedotin	EXACT_NAME	high	RC48; RC 48-ADC; RC-48; RC-48-ADC; RC48-ADC; Aidixi; Recombinant Humanized anti-HER2 Monoclonal Antibody-MMAE Conjugate	Disitamab vedotin	Receptor tyrosine-protein kinase erbB-2 (HER2)	RemeGen Co., Ltd; RemeGen Co., Ltd; Merck Sharp & Dohme LLC	Approved	configs/known_adc_assets.yaml	
+KK2845	DRG0JFYCH		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+HBM9033	DRG0JGJDN		NO_MATCH		HBM 9033; HBM-9033; HBM9033; PF-08052666; PF 08052666; PF08052666; SGN-MesoC2		Mesothelin (MSLN)	Harbour Biomed Therapeutics Ltd	Phase 1	configs/known_adc_assets.yaml	
+Aprutumab ixadotin	DRG0JJEUT		NO_MATCH		Aprutumab ixadotin; BAY 1187982; BAY-1187982; BAY1187982; FGFR2-ADC		Fibroblast growth factor receptor 2 (FGFR2)	Bayer AG	Phase 1	configs/known_adc_assets.yaml	
+HS-20124	DRG0JJONS		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+HB0052	DRG0JKQOU		NO_MATCH		HB 0052; HB-0052		5'-nucleotidase (NT5E)	Huabo Biopharm Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+SIBP-A13	DRG0JLDZY		NO_MATCH		SIBP A13; SIBPA13		Receptor tyrosine-protein kinase erbB-3 (HER3)	Sino Biopharmaceutical Ltd	Investigative	configs/known_adc_assets.yaml	
+CD38 ADC	DRG0JLIZJ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ONC-784	DRG0JMVCQ		NO_MATCH		ONC 784; ONC784		Signal transducer CD24 (CD24)	Oncoc4 Inc; Oncoimmune-Guangzhou	Investigative	configs/known_adc_assets.yaml	
+HDM2012	DRG0JMXQX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+YL217	DRG0JNCVK		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+SIBP-A17	DRG0JNMAT		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+XMT-1592	DRG0JNXDB		NO_MATCH		XMT 1592; XMT1592; XMT-1592		Sodium-dependent phosphate transport protein 2B (SLC34A2)	Mersana Therapeutics, Inc	Phase 1	configs/known_adc_assets.yaml	
+PCA-062	DRG0JNZLF		NO_MATCH		NOV-10; PCA 062; PCA-062; PCA-pCAD; PCA06 2, NOV-10; PCA062		Cadherin-3 (CDH3)	MorphoSys AG; Novartis AG	Phase 1	configs/known_adc_assets.yaml	
+Gemtuzumab ozogamicin	DRG0JOHND	gemtuzumab_ozogamicin	EXACT_NAME	high	CDP-771; CL-555201; CMA-676; WAY-CMA-676; Anti-CD33-monoclonal-antibody-calicheamicin; Anti-CD33-monoclonal-antibody-p67-6-calicheamicin-conjugate; HP67-6-N-acetyl-gamma-dimethyl-acbut; hP67.6-calicheamicin; Human-anti-CD33-monoclonal-antibody-P67-6-calicheamicin-conjugate	Gemtuzumab ozogamicin	Myeloid cell surface antigen CD33 (CD33)	Pfizer Inc; Wyeth Pharmaceuticals LLC	Approved	configs/known_adc_assets.yaml	
+NC18	DRG0JOMGD		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+RN927C	DRG0JPJDT		NO_MATCH		RN-927C; RN 927C		Tumor-associated calcium signal transducer 2 (TROP2)	Rinat Neuroscience Corp	Investigative	configs/known_adc_assets.yaml	
+MGTA-117	DRG0JQAJB		NO_MATCH		Anti-CD117 amanitin ADC; Anti-CD117 amanitin antibody drug conjugate; CD117-amanitin antibody drug conjugate; MGTA 117; MGTA-117; anti-CD117 (c-KIT)-amanitin antibody-drug conjugate; CD117-ADC		Mast/stem cell growth factor receptor Kit (KIT)	Heidelberg Pharma AG	Phase 1	configs/known_adc_assets.yaml	
+AGX101	DRG0JQHJW		NO_MATCH		AGX 101; AGX-101; AGX101; Anti-TM4SF1 ADC (Angiex)		Transmembrane 4 L6 family member 1 (TM4SF1)	Angiex, Inc	Phase 1	configs/known_adc_assets.yaml	
+BG-C137	DRG0JQWJI		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ZL-1310	DRG0JSPJR		NO_MATCH		YL 212; YL-212; YL212; ZL-1310; ZL 1310; ZL1310		Delta-like protein 3 (DLL3)	Zai Lab Ltd	Phase 1	configs/known_adc_assets.yaml	
+FS-1502	DRG0JTQDR		NO_MATCH		FS-1502; Herceptin-LC-LBG-MMAF; IKS 014; IKS-014; IKS014; LCB14; LCB14-0110; Trastuzumab-LC-LBG-MMAF		Receptor tyrosine-protein kinase erbB-2 (HER2)	Iksuda Therapeutics; Shanghai Fosun Pharmaceutical	Phase 1	configs/known_adc_assets.yaml	
+MHB036C	DRG0JUOJJ		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+MDX-1203	DRG0JUOLN		NO_MATCH		BMS 936561; BMS-936561; BMS-936561, MDX-1203; BMS936561; MDX 1203; MDX-1203; MDX1203		CD70 antigen (CD70)	Medarex, Inc; Bristol Myers Squibb Co	Phase 1	configs/known_adc_assets.yaml	
+Rosopatamab tetraxetan	DRG0JVAJA		NO_MATCH		DOTA-HUJ-591-GS; DOTA-HUJ-591; HuJ591-DOTA; Rosopatamab Y-90 conjugation		Glutamate carboxypeptidase 2 (FOLH1)	Weill Cornell Medical Center	Investigative	configs/known_adc_assets.yaml	
+AG 02 saporin conjugate	DRG0JVDPQ		NO_MATCH		AG02; AG02 saporin; AG02-saporin; AG02-ADC; AG02 ADC		Cell surface protein 1 (CSP-1)	A&G Pharmaceutical, Inc	Investigative	configs/known_adc_assets.yaml	
+Brentuximab vedotin	DRG0JWBNH	brentuximab_vedotin	EXACT_NAME	high	CAC10-vcMMAE; cAC-10. SGD-1010; SGN-30; SGN-35; cAC10-Val-Cit-MMAE; Moab chimeric SGN-30 to CD30 antigen	Brentuximab vedotin	Tumor necrosis factor receptor superfamily member 8 (TNFRSF8)	Seagen Inc; BSP Pharmaceuticals SpA; Takeda Pharmaceutical Co., Ltd	Approved	configs/known_adc_assets.yaml	
+DS-9606	DRG0JXYIZ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ZPC-21	DRG0JYFQF		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BSI-712	DRG0JYKFE		NO_MATCH		BSI 712; BSI712		Zinc transporter ZIP6 (SLC39A6)	Biosion, Inc; ImmunoGen, Inc	Investigative	configs/known_adc_assets.yaml	
+CX-2029	DRG0JYNCF		NO_MATCH		ABBV-2029; ABBV-2029,CX-2029; CD71 probody drug conjugate; CX 2029; CX-2029		Transferrin receptor protein 1 (TFRC)	CytomX Therapeutics, Inc; AbbVie, Inc	Phase 2	configs/known_adc_assets.yaml	
+PLBA-001	DRG0KAGOH		NO_MATCH		PLBA 001; PLBA001		Undisclosed	PrimeLink BioTherapeutics (Suzhou) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+M3554	DRG0KBCEN		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+F0002-ADC	DRG0KDTFA		NO_MATCH		Anti-CD30-MCC-DM1; CD30-MCC-DM1; F-0002-ADC; F0002 ADC; F0002-ADC; F0002-ADC, Anti-CD30-MCC-DM1		Tumor necrosis factor receptor superfamily member 8 (TNFRSF8)	Shanghai Fudan Zhangjiang Bio Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+DXC-009	DRG0KFMAB		NO_MATCH		DXC 009; DXC-009; DXC009		Undisclosed	Hangzhou DAC Biotech Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+Zt/g4-Maytansinoid	DRG0KGFDM		NO_MATCH						Investigative	configs/known_adc_assets.yaml	
+BAT-8007	DRG0KHDFE		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+PF-06263507	DRG0KHFFZ		NO_MATCH		A1-mafodotin; A1-mcMMAF; MMAF ADC; PF 6263507; PF-06263507; PF-06263507, A1mc MMAF; PF06263507		Trophoblast glycoprotein (TPBG)	Oxford Biomedica Plc; Pfizer Inc	Phase 1	configs/known_adc_assets.yaml	
+IMGN-779	DRG0KJHHN		NO_MATCH		IMGN 779; IMGN-779; IMGN7 79; IMGN779		Myeloid cell surface antigen CD33 (CD33)	ImmunoGen, Inc	Phase 1	configs/known_adc_assets.yaml	
+SHR-A2102	DRG0KKATK		NO_MATCH		SHR A2102; SHR-A2102; SHRA2102		Nectin-4 (NECTIN4)	Shanghai Hengrui Pharmaceutical Co., Ltd	Phase 3	configs/known_adc_assets.yaml	
+BBT-001	DRG0KKBKT		NO_MATCH		BBT 001; BBT001; long-acting GCSF-IgG-Fc immunofusion protein		Granulocyte colony-stimulating factor receptor (CSF3R)	Bolder BioTechnology, Inc	Investigative	configs/known_adc_assets.yaml	
+SRB19	DRG0KKQDW		NO_MATCH		SRB-19; SRB 19		Epidermal growth factor receptor (EGFR); Receptor tyrosine-protein kinase erbB-3 (HER3)	Sunrock Biopharma SL	Investigative	configs/known_adc_assets.yaml	
+TRS-005	DRG0KMHHU		NO_MATCH		TRS-005; TRS005		B-lymphocyte antigen CD20 (MS4A1)	Zhejiang Teruisi Pharmaceutical Inc	Phase 1	configs/known_adc_assets.yaml	
+BL-M14D1	DRG0KNAHQ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+QBK249-G	DRG0KNAKC		NO_MATCH		QBK249G; QBK249 G		Receptor tyrosine-protein kinase erbB-2 (HER2)	Quadira Biosciences AG	Investigative	configs/known_adc_assets.yaml	
+IKS-012	DRG0KRSBQ		NO_MATCH		IKS 012; IKS012		Folate receptor alpha (FOLR1)	Iksuda Therapeutics Ltd	Investigative	configs/known_adc_assets.yaml	
+EP-400	DRG0KSBCU		NO_MATCH		EP 400; EP400		Undisclosed	Esperance Pharmaceuticals, Inc	Investigative	configs/known_adc_assets.yaml	
+CLR-180099	DRG0KSTYX		NO_MATCH		CLR 180099; CLR180099		Lipid rafts (LR)	Cellectar Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+PF-06664178	DRG0KTRKE		NO_MATCH		PF 6664178; PF-06664178; PF06664178; PF6664178		Tumor-associated calcium signal transducer 2 (TROP2)	Pfizer Inc	Phase 1	configs/known_adc_assets.yaml	
+XMT-2056	DRG0KTTFS		NO_MATCH		XMT 2056; XMT-2056; XMT2056		Receptor tyrosine-protein kinase erbB-2 (HER2)	Mersana Therapeutics, Inc	Phase 1	configs/known_adc_assets.yaml	
+IMMU-140	DRG0KWGRK		NO_MATCH		IMMU140; IMMU 140		HLA class II histocompatibility antigen, DR alpha chain (HLA-DRA)	Immunomedics, Inc; Gilead Sciences, Inc	Investigative	configs/known_adc_assets.yaml	
+DX126-262	DRG0KWKQC		NO_MATCH		DAC-001; DX126 262; DX126-262; Recombinant anti-HER2 antibody-Tub 114		Receptor tyrosine-protein kinase erbB-2 (HER2)	Hangzhou DAC Biotech Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+MK-6837	DRG0KXLGG		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+CMB-401	DRG0KYHQN		NO_MATCH		Anti-PEM monoclonal antibody calicheamicin; CDP 671; CDP-671; CMB 401; CMB-401; LLE 33288; hCTMO1-calicheamicin; hcT.MO1 calicheamicin		Mucin-1 (MUC1)	Celltech Oy	Phase 2	configs/known_adc_assets.yaml	
+TORL-1-23	DRG0KYOBC		NO_MATCH		TORL 1 23; TORL 1-23; TORL-1-23; TORL1-23		Claudin-6 (CLDN6)	TORL Biotherapeutics LLC	Phase 1	configs/known_adc_assets.yaml	
+PA-368A	DRG0LBQXO		NO_MATCH		PA368A; PA 368A		Cadherin-17 (CDH17)	Protein Alternatives SL	Investigative	configs/known_adc_assets.yaml	
+MRG-004A	DRG0LCOWD		NO_MATCH		MRG 004A; MRG-004A; MRG004A		Tissue factor (F3)	Shanghai Miracogen Inc; Lepu Biopharma Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+ITC-6146RO	DRG0LDEJY		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ALK202	DRG0LFBZI		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+HTI-1511	DRG0LFGHB		NO_MATCH		HTI 1511; HTI1511		Epidermal growth factor receptor (EGFR)	Halozyme Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+ABBV-319	DRG0LFZFX		NO_MATCH		ABBV 319; ABBV-319; ABBV319		B-lymphocyte antigen CD19 (CD19)	AbbVie, Inc	Phase 1	configs/known_adc_assets.yaml	
+Ispectamab tazide	DRG0LGBME		NO_MATCH		Ispectamab tazide		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)		Investigative	configs/known_adc_assets.yaml	
+LR-DM1	DRG0LHLWT		NO_MATCH		LR DM1		Epidermal growth factor receptor (EGFR)	Chinese Academy of Medical Science and Peking Union Medical College	Investigative	configs/known_adc_assets.yaml	
+ASN-004	DRG0LHZWB		NO_MATCH		ASN 004; ASN-004; ASN004		Trophoblast glycoprotein (TPBG)	Asana BioSciences LLC	Phase 1	configs/known_adc_assets.yaml	
+GL-231	DRG0LIPUK		NO_MATCH		GL231; GL 231		Undisclosed	Genisphere LLC	Investigative	configs/known_adc_assets.yaml	
+IBI3028	DRG0LJGJX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Sacituzumab-SN-38	DRG0LJSQF		NO_MATCH		Smab-SN-38		Tumor-associated calcium signal transducer 2 (TROP2)		Investigative	configs/known_adc_assets.yaml	
+CS-5002	DRG0LKZJZ		NO_MATCH		CS5002; CS 5002		Undisclosed	CStone Pharmaceuticals Co. Ltd	Investigative	configs/known_adc_assets.yaml	
+9MW-2921	DRG0LLSDP		NO_MATCH		9MW 2921; 9MW-2921; 9MW2921		Tumor-associated calcium signal transducer 2 (TROP2)	Mabwell (Shanghai) Bioscience Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+MEDI-0641	DRG0LNARP		NO_MATCH		MEDI0641; MEDI 0641; 5T4-PBD		Trophoblast glycoprotein (TPBG)	MedImmune LLC; AstraZeneca PLC	Investigative	configs/known_adc_assets.yaml	
+PHN-012	DRG0LNBQO		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ARX-788	DRG0LNVKG		NO_MATCH		ARX 788; ARX-788; ARX788		Receptor tyrosine-protein kinase erbB-2 (HER2)	Ambrx, Inc; Zhejiang Medicine Co., Ltd; Novocodex Biopharmaceuticals Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+Naratuximab emtansine	DRG0LQZSE		NO_MATCH		DEBIO 1562; Debio 1562, K7153 A, IMGN5 29; IMGN 529; IMGN-529; IMGN529; K7153A-SMCC-DM1; Naratuximab emtansine		Leukocyte antigen CD37 (CD37)	ImmunoGen, Inc; Debiopharm International SA	Phase 2	configs/known_adc_assets.yaml	
+HS630	DRG0LRYYB		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+PF-06888667	DRG0LSAKO		NO_MATCH		PF 06888667; PF06888667		Receptor tyrosine-protein kinase erbB-2 (HER2)		Investigative	configs/known_adc_assets.yaml	
+JS107	DRG0LSXKR		NO_MATCH		JS 107; JS-107; JS107		Claudin-18.2 (CLDN18.2)	Shanghai Junshi Biosciences Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+GBM-12401	DRG0LTMPJ		NO_MATCH		Gbm 12401; Gbm12401		Undisclosed	Great Novel Therapeutics Biotech & Medicals Corp	Investigative	configs/known_adc_assets.yaml	
+YBL-015	DRG0LTXQB		NO_MATCH		YBL 015; YBL015		CD276 antigen (CD276)	YBiologics, Inc	Investigative	configs/known_adc_assets.yaml	
+RG-7861	DRG0LUQSH		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ELN-11	DRG0LUTMF		NO_MATCH		ELN 11; ELN11; ADP-c165		Inactive tyrosine-protein kinase transmembrane receptor ROR1 (ROR1)	Elasmogen Ltd; Almac Discovery Ltd	Investigative	configs/known_adc_assets.yaml	
+PCG-N003	DRG0LVUGT		NO_MATCH		PCG N003; PCG N003		Undisclosed	Epinogen Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+DEC006	DRG0LVYMB		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+SY-0625	DRG0LWEMD		NO_MATCH		SY0625; SY 0625		Undisclosed	Shanghai Symray Biopharma Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Inebilizumab-amanitin	DRG0LYIPC		NO_MATCH		Inebilizumab amanitin		B-lymphocyte antigen CD19 (CD19)	LegoChem Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+Anti-CD22-SN36248	DRG0MBBBD		NO_MATCH		Thio-hu antiCD22- (LC:K149C)-SN36248		B-cell receptor CD22 (CD22)		Investigative	configs/known_adc_assets.yaml	
+SIM-005A	DRG0MCPAF		NO_MATCH		SIM-005A; SIM 005A		Undisclosed	Systimmune, Inc; Sichuan Baili Pharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Enapotamab vedotin	DRG0MCWQA		NO_MATCH		AXL-107-MMAE; Enapotamab vedotin; HuMax-AXL; HuMax-AXL-ADC; HuMax-Axl-ADC, AXL-107-MMAE; Humax axl adc		Tyrosine-protein kinase receptor UFO (AXL)	Seagen Inc; Genmab A/S	Phase 2	configs/known_adc_assets.yaml	
+BC2027	DRG0MELRN		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+CD38-077	DRG0MGBXM		NO_MATCH		CD38 077; CD38077		ADP-ribosyl cyclase/cyclic ADP-ribose hydrolase 1 (CD38)	Concortis Biosystems Corp	Investigative	configs/known_adc_assets.yaml	
+FDA-022	DRG0MGUUX		NO_MATCH		FDA 022; FDA-022; FDA022		Receptor tyrosine-protein kinase erbB-2 (HER2)	Shanghai Fudan Zhangjiang Bio Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+Coltuximab ravtansine	DRG0MHAHZ		NO_MATCH		Anti-CD19 humanized monoclonal antibody conjugated to DM4; Anti-CD19-DM4 immunoconjugate; Coltuximab ravtansine; HUB4-DM4, SAR34 19; HuB4-DM4; Maytansin-loaded anti-CD19 mAb; SAR-3419; SAR3419		B-lymphocyte antigen CD19 (CD19)	ImmunoGen, Inc; Sanofi	Phase 2	configs/known_adc_assets.yaml	
+SIM0505	DRG0MKREW		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+CRB-2107	DRG0MKSMI		NO_MATCH		CRB2107; CRB 2107		Undisclosed	China Resources Biopharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+A1801	DRG0MKVBS		NO_MATCH		A 1801; A-1801		Transmembrane glycoprotein NMB (GPNMB)	Protheragen, Inc	Investigative	configs/known_adc_assets.yaml	
+NI-2201	DRG0MLOQN		NO_MATCH		NI 2201; NI2201		B-lymphocyte antigen CD19 (CD19)	Novimmune SA; LegoChem Biosciences, Inc; Berta Holding AG; Iksuda Therapeutics Ltd	Investigative	configs/known_adc_assets.yaml	
+DAN-222	DRG0MMRSA		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Anvatabart pactil	DRG0MOGWD		NO_MATCH		Anvatabart pactil		Receptor tyrosine-protein kinase erbB-2 (HER2)		Investigative	configs/known_adc_assets.yaml	
+ABBV-154	DRG0MPDIB		NO_MATCH		ABBV 154; ABBV-154; ABBV154		Tumor necrosis factor (TNF)	AbbVie, Inc	Phase 2	configs/known_adc_assets.yaml	
+Trastuzumab-amanitin 1	DRG0MPTSO		NO_MATCH		Trastuzumab Amanitin1		Receptor tyrosine-protein kinase erbB-2 (HER2)	Heidelberg Pharma AG	Investigative	configs/known_adc_assets.yaml	
+REGN5093-M114	DRG0MRJEG		NO_MATCH		METxMET ADC - Regeneron Pharmaceuticals; REGN 5093 M114; REGN5093- M114; REGN5093-M114; REGN5093M114		Hepatocyte growth factor receptor (MET)	Regeneron Pharmaceuticals, Inc	Phase 2	configs/known_adc_assets.yaml	
+IKS-04	DRG0MRYEL		NO_MATCH		IKS 04; IKS04		Undisclosed	Iksuda Therapeutics Ltd	Investigative	configs/known_adc_assets.yaml	
+KH815	DRG0MSOOX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BB-1709	DRG0MSZBZ		NO_MATCH		BB 1709; BB-1709; BB1709		5'-nucleotidase (NT5E)	Baili Sikang Biomedicine (Hangzhou) Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+SHR-3792	DRG0MSZNJ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+M-1231	DRG0MTMQA		NO_MATCH		M 1231; M-1231; M1231		Epidermal growth factor receptor (EGFR); Mucin-1 (MUC1)	EMD Serono Research & Development Institute, Inc; The University of Texas MD Anderson Cancer Center; Sutro Biopharma, Inc	Phase 1	configs/known_adc_assets.yaml	
+CytSCA208	DRG0MTUPD		NO_MATCH		Monoclonal antibody CA208-cytorhodin-S conjugate		Pregnancy-specific beta-1-glycoprotein 2 (PSG2)	Aventis SA; Sanofi	Investigative	configs/known_adc_assets.yaml	
+LFD-200	DRG0MUIQK		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+NN-3201	DRG0MWSEV		NO_MATCH		NN 3201; NN-3201; NN3201		Mast/stem cell growth factor receptor Kit (KIT)	Novelty Nobility, Inc	Phase 1	configs/known_adc_assets.yaml	
+MYX2449	DRG0MXUQM		NO_MATCH		MYX 2449; MYX2449		Receptor tyrosine-protein kinase erbB-2 (HER2)	Myricx Pharma Ltd	Investigative	configs/known_adc_assets.yaml	
+Thio-Tmab-BMPEO-DM1	DRG0MYSHH		NO_MATCH		Thio-Tmab BMPEO DM1		Receptor tyrosine-protein kinase erbB-2 (HER2)	Genentech, Inc	Investigative	configs/known_adc_assets.yaml	
+Telimomab aritox	DRG0MZYPU		NO_MATCH		T101-RTA; T101RTA; T101 RTA		T-cell surface glycoprotein CD5 (CD5)		Investigative	configs/known_adc_assets.yaml	
+LP-A18	DRG0NATHY		NO_MATCH		Antibody drug conjugate Lantern Pharma; LPA18; LP A18		Undisclosed	Lantern Pharma, Inc	Investigative	configs/known_adc_assets.yaml	
+OXS-1650	DRG0NDFLP		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+DYNE-301	DRG0NDSLT		NO_MATCH		DYNE301; DYNE 301; Facioscapulohumeral muscular dystrophy therapy-Dyne Therapeutics; FORCE-FM10		Double homeobox protein 4 (DUX4)	Dyne Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+Belantamab mafodotin	DRG0NDXRU	belantamab_mafodotin	EXACT_NAME	high	GSK-2857916; GSK'916; GSK2857916; J6M0-mcMMAF; anti-BCMA-ADC; Belamaf; belantamab mafodotin-blmf	Belantamab mafodotin	Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	GSK Plc; GlaxoSmithKline (Ireland) Ltd; Glaxosmithkline Intellectual Property Development Ltd	Approved	configs/known_adc_assets.yaml	
+<sup>111</sup>In-DTPA-D2B-DAR4-MMAE	DRG0NELLD		NO_MATCH						Investigative	configs/known_adc_assets.yaml	
+Losatuxizumab vedotin	DRG0NEMOV		NO_MATCH		ABBV 224; ABBV-221; ABBV221; Losatuxizumab vedotin		Epidermal growth factor receptor (EGFR)	AbbVie, Inc	Phase 1	configs/known_adc_assets.yaml	
+APN-959038	DRG0NFTVD		NO_MATCH		APN959038; APN 959038		Transmembrane protein (novel epitope)	Atreca, Inc	Investigative	configs/known_adc_assets.yaml	
+SKB445	DRG0NGDCM		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+JS114	DRG0NKUQA		NO_MATCH		JS 114; JS-114		Nectin-4 (NECTIN4)	Shanghai Junshi Biosciences Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Tra-IR700	DRG0NLEYN		NO_MATCH		Trastuzumab-IR700		Receptor tyrosine-protein kinase erbB-2 (HER2)	Rakuten Medical, Inc	Investigative	configs/known_adc_assets.yaml	
+ZV0203	DRG0NMCNK		NO_MATCH		Recombinant anti-EGFR monoclonal antibody- DUO5 conjugate; ZV 0201; ZV 0203; ZV-0201; ZV-0203; ZV0201; ZV0203; ZV0203-ADC; ADC-2122; ADC 2122; ADC2122		Receptor tyrosine-protein kinase erbB-2 (HER2)	Zhejiang Hisun Pharmaceutical Co., Ltd; Zhejiang Zova Biotherapeutics Inc	Phase 1	configs/known_adc_assets.yaml	
+SGN-CD48A	DRG0NMCNN		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+KSI-601	DRG0NMRNE		NO_MATCH		KSI 601; KSI601		Vascular endothelial growth factor A (VEGFA)	Kodiak Sciences, Inc	Investigative	configs/known_adc_assets.yaml	
+Ifinatamab deruxtecan	DRG0NNKAQ		NO_MATCH		DS 7300; DS-7300; DS-7300a; DS7300; Ifinatamab deruxtecan; I-DXd		CD276 antigen (CD276)	Daiichi Sankyo Co., Ltd	Phase 3	configs/known_adc_assets.yaml	
+EX108	DRG0NNNWR		NO_MATCH		EX 108; EX-108		Undisclosed	Excelmab Inc	Investigative	configs/known_adc_assets.yaml	
+BB-1712	DRG0NOFEI		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+NW-001	DRG0NOYME		NO_MATCH		NW001; NW 001		Undisclosed	Shenzhen Chipscreen Biosciences Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+MEDI-3726	DRG0NTFBR		NO_MATCH		ADCT 401; ADCT-401; MEDI 3726; MEDI-3726; MEDI3 726 (forme rly ADCT-401); MEDI3726		Glutamate carboxypeptidase 2 (FOLH1)	MedImmune LLC; AstraZeneca PLC	Phase 1	configs/known_adc_assets.yaml	
+HY-0001	DRG0NWBIQ		NO_MATCH		HY 0001; HY0001		Undisclosed	Sichuan Huiyu Pharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+PNU-159682-P1C1TM	DRG0NXVNX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+WTX-212	DRG0NZUKF		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+CX-2051	DRG0NZUZJ		NO_MATCH		CX 2051; CX2051		Epithelial cell adhesion molecule (EPCAM)	CytomX Therapeutics, Inc	Phase 1	configs/known_adc_assets.yaml	
+SHR-A1403	DRG0OAWRK		NO_MATCH		HTI 1066; HTI-1066; SHR A1403; SHR-A1403; SHR-A1403, HTI-1066; SHRA1403		Hepatocyte growth factor receptor (MET)	Jiangsu Hengrui Pharmaceuticals Co., Ltd; Shanghai Hengrui Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+EGFR-EDV-RRM1	DRG0ODFEJ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Mirzotamab clezutoclax	DRG0OGZEE		NO_MATCH		ABBV-155; ABBV 155; ABBV155		CD276 antigen (CD276)	AbbVie, Inc	Phase 1	configs/known_adc_assets.yaml	
+AVID-100	DRG0OJHEN		NO_MATCH		AVID 100; AVID-100; AVID100		Epidermal growth factor receptor (EGFR)	Bristol Myers Squibb Co; Formation Biologics	Phase 2	configs/known_adc_assets.yaml	
+BA1301	DRG0OMIWX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+FZ-AD004	DRG0OMORU		NO_MATCH		FZ AD004; FZ-AD004; FZAD004		Tumor-associated calcium signal transducer 2 (TROP2)	Shanghai Fudan Zhangjiang Bio Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+Azintuxizumab vedotin	DRG0OMVBK		NO_MATCH		ABBV 838; ABBV-838; ABBV838; Azintuxizumab vedotin		SLAM family member 7 (SLAMF7)	AbbVie, Inc	Phase 1	configs/known_adc_assets.yaml	
+BRY811	DRG0ONAEP		NO_MATCH		BRY-811; BRY 811		Undisclosed	BioRay Biopharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+PSM-101	DRG0ONNVN		NO_MATCH		PSM 101; PSM101		Undisclosed	PrecisemAb Biotech Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Basiliximab sarotalocan	DRG0OOMJM		NO_MATCH		Basiliximab sarotalocan		Interferon-stimulated gene 20 kDa protein (ISG20)		Investigative	configs/known_adc_assets.yaml	
+XNW-28012	DRG0OOXRC		NO_MATCH		XNW 28012; XNW28012		Undisclosed	Suzhou Sinovent Pharmaceuticals Co.,Ltd; Shanghai Sinovent Biopharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Samrotamab vedotin	DRG0OPFVY		NO_MATCH		ABBV 085; ABBV-085; ABBV085; PR-1498487-MMAE; Samrotamab vedotin		Leucine-rich repeat-containing protein 15 (LRRC15)	AbbVie, Inc	Phase 1	configs/known_adc_assets.yaml	
+Recombinant chimeric anti-CD30 mAb-MCC-DM1	DRG0OPGMW		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+LIN-002	DRG0ORDYU		NO_MATCH		AF-Lx-trastuzumab; Auristatin-F-Lx-trastuzumab; trastuzumab-Lx-AF; LIN 002; LIN002		Receptor tyrosine-protein kinase erbB-2 (HER2)	LinXis B.V	Investigative	configs/known_adc_assets.yaml	
+IKS-03	DRG0OTOJV		NO_MATCH		IKS 03; IKS-03; IKS03; LCB-73; LCB 73; LCB73; NI-2201; NI 2201; NI2201		B-lymphocyte antigen CD19 (CD19)	Iksuda Therapeutics Ltd	Phase 1	configs/known_adc_assets.yaml	
+Rolinsatamab talirine	DRG0OUXWT		NO_MATCH		ABBV 176; ABBV-176; ABV176; DC-1630993; Rolinsatamab talirine; h16f		Prolactin receptor (PRLR)	AbbVie, Inc	Phase 1	configs/known_adc_assets.yaml	
+PRN 222	DRG0OVMJM		NO_MATCH		PRN-222; PRN222		Epidermal growth factor receptor (EGFR); Receptor tyrosine-protein kinase erbB-3 (HER3)	ProEn Therapeutics Inc	Investigative	configs/known_adc_assets.yaml	
+HDM2024	DRG0OVQWP		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+<sup>89</sup>Zr-DFO-T-DM1	DRG0OWHOL		NO_MATCH						Investigative	configs/known_adc_assets.yaml	
+KIVU-107	DRG0OYGNU		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Upifitamab rilsodotin	DRG0OZSZX		NO_MATCH		UpRi; Upifitamab rilsodotin; XMT 1536; XMT-1536; XMT1536		Sodium-dependent phosphate transport protein 2B (SLC34A2)	Mersana Therapeutics, Inc	Phase 3	configs/known_adc_assets.yaml	
+LY4175408	DRG0PCDHO		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+hu5B1-TCO	DRG0PCGKN		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+3-NAntC	DRG0PDZSX		NO_MATCH		3-NAnTc-sdAb; 3 NAntC; 3NAntC		Undisclosed		Investigative	configs/known_adc_assets.yaml	
+FDA-018	DRG0PEVVH		NO_MATCH		FDA-018; FDA018; FDA018 Antibody Drug Cojugate; F0024		Tumor-associated calcium signal transducer 2 (TROP2)	Shanghai Fudan Zhangjiang Bio Pharmaceutical Co., Ltd	Phase 3	configs/known_adc_assets.yaml	
+Pinatuzumab vedotin	DRG0PFKFR		NO_MATCH		ACD22-VCMMAE; Anti-CD22-ADC; Anti-CD22-MCC-DM1; DCDT 2980S ADC; DCDT 2980S antibody-drug conjugate; DCDT-2980S; DCDT2980S; FCU-2703; Pinatuzumab vedotin; RG-7593; RG7593, DCDT2 980S; RO-5541072; RO-5541072-000		B-cell receptor CD22 (CD22)	Genentech, Inc	Phase 1	configs/known_adc_assets.yaml	
+EDC-2	DRG0PFQKN		NO_MATCH		EDC2; EDC 2; extracellular drug conjugate-2; extracellular drug conjugate-2 (Centrose)		Basigin (BSG)	Centrose LLC	Investigative	configs/known_adc_assets.yaml	
+BCG-011	DRG0PGRFM		NO_MATCH		BCG011; BCG 011		Tumor-associated calcium signal transducer 2 (TROP2); Epidermal growth factor receptor (EGFR)	Biocytogen Pharmaceuticals (Beijing) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+IPH43	DRG0PGYJL		NO_MATCH		IPH-43; IPH 43		MHC class I polypeptide-related sequence A (MICA)	Innate Pharma SA; AstraZeneca PLC	Investigative	configs/known_adc_assets.yaml	
+TORL-4-500	DRG0PHKMG		NO_MATCH		TORL-4-500; TORL 4 500; TORL4500		Protein delta homolog 1 (DLK1)	TORL Biotherapeutics LLC	Phase 1	configs/known_adc_assets.yaml	
+N01-OX2	DRG0PKYBF		NO_MATCH		N01 OX2; N01OX2; IN-N01-OX2; IN N01 OX2		Melatonin receptor type 1A (MTNR1A)	Intellect Neurosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+SGN-ALPV	DRG0PLPNX		NO_MATCH		SGN-ALPV; SGN ALPV; SGNALPV		Alkaline phosphatase, germ cell type (ALPG); Alkaline phosphatase, placental type (ALPP)	Seagen Inc	Phase 1	configs/known_adc_assets.yaml	
+Tisotumab vedotin	DRG0PNJIT	tisotumab_vedotin	EXACT_NAME	high	HuMax-TF-ADC; Tisotumab vedotin; GCT1015-04; IGG1-1015-011-1006; TF-011-MMAE; WHO 10148; Humax TF ADC; HuMax-TF; HuMax-TF-ADC	Tisotumab vedotin	Tissue factor (F3)	Seagen Inc; Genmab A/S; Zai Lab Ltd; Rps Medical Technology (Beijing) Co., Ltd	Approved	configs/known_adc_assets.yaml	
+Y-TR1 SPDP	DRG0PPLJW		NO_MATCH		Y-TR1-SPDP		Dipeptidyl peptidase 4 (DPP4)		Investigative	configs/known_adc_assets.yaml	
+GENA-111-AF	DRG0PPLRQ		NO_MATCH		GENA-111 AF; GENA-111AF; GENA-111-ADC; GENA-111 ADC		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	Genome & Co	Investigative	configs/known_adc_assets.yaml	
+MEDI-2228	DRG0PQJDH		NO_MATCH		MEDI 2228; MEDI-2228; MEDI2 228; MEDI2228		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	MedImmune LLC; AstraZeneca PLC	Phase 1	configs/known_adc_assets.yaml	
+VL-DAB31-SN38	DRG0PRKPN		NO_MATCH		VL DAB31 SN38		Undisclosed		Investigative	configs/known_adc_assets.yaml	
+SIBP-A18	DRG0PSWNN		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+YL201	DRG0PULZQ		NO_MATCH						Phase 3	configs/known_adc_assets.yaml	
+SGN-CD228A	DRG0PWAOJ		NO_MATCH		Anti-CD228-MMAE; SGN CD228A; SGN-CD228A; anti-CD228 antibody-drug conjugate		Melanotransferrin (MELTF)	Seagen Inc	Phase 1	configs/known_adc_assets.yaml	
+RC68-PY-Val-Cit-PABC-MMAE	DRG0PXBVI		NO_MATCH		RC68 PY VC PAB MMAE		Epidermal growth factor receptor (EGFR)	RemeGen Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Depatuxizumab mafodotin	DRG0PXQWR		NO_MATCH		ABT-414; ABT-414/806; Depatux-M; Depatuxizumab mafodotin		Epidermal growth factor receptor (EGFR)	AbbVie, Inc	Phase 2	configs/known_adc_assets.yaml	
+DS3610	DRG0QAHFT		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+EBC-129	DRG0QBQKB		NO_MATCH		EBC 129; EBC-129; EBC129		Carcinoembryonic antigen-related cell adhesion molecule 5 (CEACAM5); Carcinoembryonic antigen-related cell adhesion molecule 6 (CEACAM6)	Experimental Drug Development Centre, PAREXEL International Corp	Phase 1	configs/known_adc_assets.yaml	
+KM501	DRG0QCCTW		NO_MATCH		KM 501; KM-501; KM501; Recombinant anti-HER2 domain II and domain IV bispecific antibody-MMAE conjugate (Xuanzhu); XZP-KM501		Receptor tyrosine-protein kinase erbB-2 (HER2 ECD2); Receptor tyrosine-protein kinase erbB-2 (HER2 ECD4)	Xuanzhu Biopharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+PRO-1160	DRG0QDCHN		NO_MATCH		PRO 1160; PRO-1160; PRO1160		CD70 antigen (CD70)	ProfoundBio (Suzhou) Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+RG7787	DRG0QEAUM		NO_MATCH		RG 7787; RG-7787		Mesothelin (MSLN)		Investigative	configs/known_adc_assets.yaml	
+BSC-4201	DRG0QEUVQ		NO_MATCH		BSC4201; BSC 4201		Undisclosed	BiSiChem Co. Ltd	Investigative	configs/known_adc_assets.yaml	
+RAD-502	DRG0QFDKM		NO_MATCH		RAD 502; RAD502; Lutetium-177 labeled humanized monoclonal antibody targeting leucine rich repeat containing 15 (LRRC15)		Leucine-rich repeat-containing protein 15 (LRRC15)	Radiopharm Theranostics Ltd	Investigative	configs/known_adc_assets.yaml	
+IMB-201	DRG0QIJRR		NO_MATCH		Antibody-drug conjugates (ImmunoBiochem); IMB 201; IMB201		HLA class I histocompatibility antigen, alpha chain G (HLA-G)	ImmunoBiochem Corp	Investigative	configs/known_adc_assets.yaml	
+FOR-46	DRG0QMIBK		NO_MATCH		Anti-CD46 antibody drug conjugate; FOR 46; FOR-46; FOR46; FG-3246; FG 3246; FG3246		Membrane cofactor protein (CD46)	University of California San Diego; Fortis Therapeutics, Inc	Phase 2	configs/known_adc_assets.yaml	
+CBP-1609	DRG0QNWFH		NO_MATCH		CBP1609; CBP 1609		Undisclosed	Coherent Biopharma Suzhou Co. Ltd	Investigative	configs/known_adc_assets.yaml	
+16A5-MCC-DM1	DRG0QODVX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+NV101	DRG0QOWCK		NO_MATCH		BV101; NV 101; anti-CD99-doxorubicin ADC (Nanovalent); Dox-anti-CD99; NV-101		CD99 antigen (CD99)	NanoValent Pharmaceuticals, Inc	Investigative	configs/known_adc_assets.yaml	
+BDB-101	DRG0QQETS		NO_MATCH		BDB101; BDB 101		Programmed cell death 1 ligand 1 (CD274)	Seven And Eight Biopharmaceuticals Inc	Investigative	configs/known_adc_assets.yaml	
+SGN-PDL1V	DRG0QQSDO		NO_MATCH		PF-08046054; SGN PDL1V; SGN-PDL1V; SGNPDL1V		Programmed cell death 1 ligand 1 (CD274)	Seagen Inc	Phase 3	configs/known_adc_assets.yaml	
+SMP-656	DRG0QQUXG		NO_MATCH		SMP 656; SMP-656; SMP656		Receptor tyrosine-protein kinase erbB-2 (HER2)	Xiling Lab Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+AGS-16C3F	DRG0QRDUT		NO_MATCH		AGS 16C3F; AGS-16C3F; AGS-16F; AGS-16M8F; AGS16C3F; Anti-ENPP3-MMAF		Ectonucleotide pyrophosphatase/phosphodiesterase family member 3 (ENPP3)	Agensys, Inc; Astellas Pharma, Inc	Phase 2	configs/known_adc_assets.yaml	
+LCB17-0877	DRG0QRLPU		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BioLink018	DRG0QRTNX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BSA01	DRG0QTTET		NO_MATCH		BSA 01; BSA-01		Epidermal growth factor receptor (EGFR); Mucin-1 (MUC1)	Biocytogen Pharmaceuticals (Beijing) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Praluzatamab ravtansine	DRG0QTTWI		NO_MATCH		Anti-CD166-DM4-CX-2009; Anti-cd166 probody-drug conjugate cx-2009; CD166 Probody Drug Conjugate; CD166 probody drug conjugate; CX-2009; Praluzatamab ravtansine		CD166 antigen (ALCAM)	ImmunoGen, Inc; CytomX Therapeutics, Inc	Phase 2	configs/known_adc_assets.yaml	
+Polatuzumab vedotin	DRG0QWZIT	polatuzumab_vedotin	EXACT_NAME	high	Polatuzumab vedotin-piic; DCDS4501A; DCDS4501S; FCU-2711; RG-7596; RO-5541077-000; RO5541077; 1313206-42-6; anti-CD79b-VC-MMAE	Polatuzumab vedotin	B-cell antigen receptor complex-associated protein beta chain (CD79B)	Genentech, Inc; Chugai Pharmaceutical Co., Ltd; F. Hoffmann-La Roche Ltd; Roche Holding AG	Approved	configs/known_adc_assets.yaml	
+VAL-0620	DRG0QWZSI		NO_MATCH		VAL 0620; VAL0620		Myotubularin (MTM1)	Valerion Therapeutics LLC	Investigative	configs/known_adc_assets.yaml	
+R4702	DRG0QXDTN		NO_MATCH		R 4702; R-4702		Tumor-associated calcium signal transducer 2 (TROP2)	OBI Pharma, Inc	Investigative	configs/known_adc_assets.yaml	
+IN30728	DRG0QYTLQ		NO_MATCH		IN-30728; IN 30728		Undisclosed	Inxmed (Nanjing) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+MI-130004	DRG0QYUVZ		NO_MATCH		MI130004; MI 130004		Receptor tyrosine-protein kinase erbB-2 (HER2)	Pharma Mar SA	Investigative	configs/known_adc_assets.yaml	
+Sirtratumab vedotin	DRG0QZHYU		NO_MATCH		AGS-15E; AGS15CSGD-1006; ASG 15E; ASG 15ME; ASG-15ME; Ha15-10ac.1vcMMAE; Ha15-10ac12vcMMAE; Sirtratumab vedotin; sirtratumab vedotin		SLIT and NTRK-like protein 6 (SLITRK6)	Agensys, Inc; Astellas Pharma Global Development, Inc; Seagen Inc	Phase 1	configs/known_adc_assets.yaml	
+MEN-1309	DRG0RARRJ		NO_MATCH		MEN 1309; MEN-1309; MEN1309; MEN1309, OBT076; MEN1309/OBT076; OBT 076; OBT-076; OBT076		Lymphocyte antigen 75 (LY75)	Oxford BioTherapeutics Ltd; A. Menarini Industrie Farmaceutiche Riunite SRL	Phase 1	configs/known_adc_assets.yaml	
+MHB118C	DRG0RBGQK		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BL-M11D1	DRG0RCFPY		NO_MATCH		BL M11D1; BL-M11D1; BLM11D1		Myeloid cell surface antigen CD33 (CD33)	Sichuan Baili Pharmaceutical Co., Ltd; Chengdu Bailidote Biological Pharmaceutical Co., Ltd; Sichuan Biokin Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+SKB-315	DRG0RCHSE		NO_MATCH		A315; SKB 315; SKB-315; SKB315		Claudin-18.2 (CLDN18.2)	KLUS Pharma, Inc; Sichuan Kelun-Biotech Biopharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+SAB-Y27	DRG0RDZIH		NO_MATCH		SAB Y27; SABY27		Phosphatidylserine synthase 1 (PTDSS1)	Syntab Therapeutics GmbH	Investigative	configs/known_adc_assets.yaml	
+ADRX-0706	DRG0RFWQY		NO_MATCH		ADRX 0706; ADRX-0706; ADRX0706		Nectin-4 (NECTIN4)	Adcentrx Therapeutics, Inc	Phase 1	configs/known_adc_assets.yaml	
+Ladiratuzumab vedotin	DRG0RHAZG		NO_MATCH		Ladiratuzumab vedotin; MK-6440; SGN-LIV1A; SGN-LIV1A, MK-6440		Zinc transporter ZIP6 (SLC39A6)	Seagen Inc; F. Hoffmann-La Roche Ltd; Merck Sharp & Dohme Corp	Phase 2	configs/known_adc_assets.yaml	
+Becotatug vedotin	DRG0RIPVI		NO_MATCH		MRG 003; MRG-003; MRG003		Epidermal growth factor receptor (EGFR)	Shanghai Miracogen Inc; Lepu Biopharma Co., Ltd	Approved	configs/known_adc_assets.yaml	
+STRO-001	DRG0RJKWE		NO_MATCH		BN301; SP-7219; SP-7675; SP-7676; STRO 001; STRO- 001; STRO-001		HLA class II histocompatibility antigen gamma chain (CD74)	Sutro Biopharma, Inc; BioNova Pharmaceuticals (Shanghai) Ltd; Piramal Pharma Solutions, Inc	Phase 2	configs/known_adc_assets.yaml	
+IBI343	DRG0RLKMU		NO_MATCH						Phase 3	configs/known_adc_assets.yaml	
+IMGC-936	DRG0RMBUN		NO_MATCH		AEX6003 (S442C)-DGN549; IMGC 936; IMGC-936; IMGC936		Disintegrin and metalloproteinase domain-containing protein 9 (ADAM9)	ImmunoGen, Inc; MacroGenics, Inc	Phase 2	configs/known_adc_assets.yaml	
+SOT-102	DRG0RMWCH		NO_MATCH		SO- N102; SO-N102; SOT 102; SOT-102; SOT102; SOT102, SO- N102		Claudin-18.2 (CLDN18.2)	SCTbio as	Phase 2	configs/known_adc_assets.yaml	
+BIO104	DRG0RNICE		NO_MATCH		BIO 104; BIO-104		Undisclosed	Boostimmune, Inc	Investigative	configs/known_adc_assets.yaml	
+SIM0609	DRG0RONXP		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Luveltamab tazevibulin	DRG0RRDEF		NO_MATCH		DBCO-Alexa647-conjugated SP7219; Luveltamab Tazevibulin; Luveltamab tazevibulin; STRO 002; STRO-002; anti-FolRa ADC STRO-002; luvelta		Folate receptor alpha (FOLR1)	Sutro Biopharma, Inc; Tasly Biopharmaceuticals Co., Ltd	Phase 3	configs/known_adc_assets.yaml	
+AK138D1	DRG0RRORA		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Sofituzumab vedotin	DRG0RSBMJ		NO_MATCH		Anti-MUC16 ADC MMAE; Anti-MUC16 MMAE ADC; Anti-MUC16 mAb MMAE; Anti-MUC16 monoclonal antibody MMAE; Anti-MUC16 monoclonal antibody monomethyl auristatin E conjugate; Anti-MUC16 monoclonal antibody vedotin; DMUC-5754A; DMUC5754A; MMAE anti-MUC16; MMAE anti-MUC16 mAb; RG-7458; RG7458, DMUC 5754A; Sofituzumab vedotin		Mucin-16 (MUC16)	Genentech, Inc; Roche Holding AG	Phase 1	configs/known_adc_assets.yaml	
+DS001	DRG0RUAXZ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+J58-PE24	DRG0RVNRW		NO_MATCH		J58 PE24; J58PE24		Glypican-3 (GPC3)		Investigative	configs/known_adc_assets.yaml	
+GenSci140	DRG0RVOYG		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+SG3-Val-Cit-MMAF8	DRG0RWFIB		NO_MATCH		SG3 vcMMAF8		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	Seagen Inc	Investigative	configs/known_adc_assets.yaml	
+V-DOS47	DRG0RWVUF		NO_MATCH		V DOS47; VDOS47		Vascular endothelial growth factor receptor 2 (KDR)	Helix BioPharma Corp	Investigative	configs/known_adc_assets.yaml	
+SHR-A1201	DRG0RYBMQ		NO_MATCH		SHR A1201; SHR-A1201; SHRA1201		Receptor tyrosine-protein kinase erbB-2 (HER2)	Jiangsu Hengrui Pharmaceuticals Co., Ltd; Shanghai Hengrui Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+Tamrintamab pamozirine	DRG0RZJIL		NO_MATCH		SC 003; SC-003; SC003; Tamrintamab pamozirine		Dipeptidase 3 (DPEP3)	AbbVie, Inc; Stemcentrx, Inc	Phase 1	configs/known_adc_assets.yaml	
+BB-1705	DRG0SACUI		NO_MATCH		BB-1705; BB 1705; BB1705		Epidermal growth factor receptor (EGFR)	Baili Sikang Biomedicine (Hangzhou) Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+SHR-7782	DRG0SALIN		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+HDM2020	DRG0SARIF		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+IN30705	DRG0SAXJE		NO_MATCH		IN 30705; IN-30705		Prolyl endopeptidase FAP (FAP)	Inxmed (Nanjing) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+GR1017	DRG0SBFHC		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Blinatumomab-amanitin	DRG0SBYGM		NO_MATCH		Blinatumomab amanitin		B-lymphocyte antigen CD19 (CD19); T-cell surface glycoprotein CD3 delta chain (CD3D)	LegoChem Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+GB-251	DRG0SCLSY		NO_MATCH		GB 251; GB-251; NBT 828; NBT-828; NBT828		Receptor tyrosine-protein kinase erbB-2 (HER2)	NewBio Therapeutics	Phase 1	configs/known_adc_assets.yaml	
+C6vcMMAD	DRG0SDGDV		NO_MATCH		C6-vc-MMAD		Tumor-associated calcium signal transducer 2 (TROP2)	Pfizer Inc	Investigative	configs/known_adc_assets.yaml	
+Lorvotuzumab mertansine	DRG0SDZSF		NO_MATCH		BB-10901; IMGN-901; IMGN-901, N901-DM1, BB-10901; IMGN-901-TAP; IMGN901 TAP; Lorvotuzumab mertansine; Monoclonal antibody huN901-DM1 conjugate; huN-901-DM1; huN-901-SPP-DM1; huN901-DM1; huN901-DM1 antibody; huN901-SPP-DM1		Neural cell adhesion molecule 1 (NCAM1)	ImmunoGen, Inc	Phase 2	configs/known_adc_assets.yaml	
+PYX-201	DRG0SEAFV		NO_MATCH		PYX 201; PYX-201; PYX201		Fibronectin (FN1)	Pfizer Inc; Pyxis Oncology, Inc	Phase 1	configs/known_adc_assets.yaml	
+DhuVHH6-PE38	DRG0SEZFV		NO_MATCH		Anti-CD7 nanobody based immunotoxins; Anti-CD7 nanobody based immunotoxins (Soochow University/PersonGen Biomedicine)		T-cell antigen CD7 (CD7)	Medical College of Soochow University; PersonGen Biomedicine (Suzhou) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+BG-C477	DRG0SGCAF		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Ispectamab debotansine	DRG0SGUGL		NO_MATCH		Anti-BCMA antibody drug conjugate; BMS-986352; BMS-986352, CC-99712, SP8919; CC 99712; CC-99712; Ispectamab debotansine; SP8919		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	Sutro Biopharma, Inc; Celgene Corp; Bristol Myers Squibb Co	Phase 1	configs/known_adc_assets.yaml	
+huHEA125-amanitin4	DRG0SGXZO		NO_MATCH		huHEA125 Amanitin4		Epithelial cell adhesion molecule (EPCAM)	Heidelberg Pharma AG	Investigative	configs/known_adc_assets.yaml	
+PF-06647263	DRG0SHGPV		NO_MATCH		Anti-EFNA4-ADC; Anti-EFNA4-monoclonal-antibody-calicheamicin-conjugate; PF 6647263; PF-06647263; PF06647263; PF-0667263; PF 0667263; PF0667263		Ephrin-A4 (EFNA4)	Pfizer Inc	Phase 1	configs/known_adc_assets.yaml	
+BCG034	DRG0SHZAQ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ESG-401	DRG0SIMLV		NO_MATCH		ESG 401; ESG-401; Humanized anti-Trop2-SN38 antibody conjugate; Humanized mAb anti-TROP-2 program; STI- 3258; STI-3258		Tumor-associated calcium signal transducer 2 (TROP2)	Shanghai Escugen Biotechnology	Phase 3	configs/known_adc_assets.yaml	
+CPO-204	DRG0SIURJ		NO_MATCH		CPO 204; CPO-204; CPO204		Undisclosed	CSPC Pharmaceutical Group Ltd	Phase 1	configs/known_adc_assets.yaml	
+<sup>111</sup>In-DTPA-D2B-DAR2-MMAE	DRG0SJVKP		NO_MATCH						Investigative	configs/known_adc_assets.yaml	
+BCG022	DRG0SLLFJ		NO_MATCH		BCG 022; BCG-022		Receptor tyrosine-protein kinase erbB-3 (ERBB3); Hepatocyte growth factor receptor (MET)	Biocytogen Pharmaceuticals (Beijing) Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+PF-08052667	DRG0SMAPS		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+MG2002A	DRG0SMTQN		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+PBX-001	DRG0SNPYJ		NO_MATCH		PBX 001; PBX001		Tumor-associated calcium signal transducer 2 (TROP2)	Pinotbio	Investigative	configs/known_adc_assets.yaml	
+OBI-999	DRG0SNURI		NO_MATCH		Globo H ADC; OBI 999; OBI-999; OBI999		Globo H (globotriaosylceramide)	OBI Pharma, Inc	Phase 2	configs/known_adc_assets.yaml	
+TST013	DRG0SPYZJ		NO_MATCH		TST 013; TST-013		Undisclosed	TST-013 Mabspace Biosciences Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Septuximab vedotin	DRG0SQAHG		NO_MATCH		Septuximab vedotin		Frizzled-7 (FZD7)	University of California San Diego	Investigative	configs/known_adc_assets.yaml	
+AMB-101	DRG0SQAQX		NO_MATCH		AMB101; AMB 101; AMB-101 (AmMax Bio)		Undisclosed	AmMax Bio, Inc	Investigative	configs/known_adc_assets.yaml	
+ARX-517	DRG0SQXAL		NO_MATCH		ARX 517; ARX-517; ARX517		Glutamate carboxypeptidase 2 (FOLH1)	Ambrx, Inc	Phase 1	configs/known_adc_assets.yaml	
+DM001	DRG0SSFSR		NO_MATCH		DM 001; DM-001; DM001		Tumor-associated calcium signal transducer 2 (TROP2); Epidermal growth factor receptor (EGFR)	Xadcera Biopharmaceutical (Suzhou) Co., Ltd; Biocytogen Pharmaceuticals (Beijing) Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+HS-20108	DRG0SSTBB		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+OX-002	DRG0STCNY		NO_MATCH		OX 002; OX002		Lymphocyte antigen 75 (LY75)	Oxford BioTherapeutics Ltd	Investigative	configs/known_adc_assets.yaml	
+PF-08046031	DRG0SURHR		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+G-100	DRG0SUYIT		NO_MATCH						Investigative	configs/known_adc_assets.yaml	
+RC-188	DRG0SVXYY		NO_MATCH		RC188; RC 188		Undisclosed	RemeGen Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+ADC2122	DRG0SWCOG		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Inotuzumab ozogamicin	DRG0SXFSY	inotuzumab_ozogamicin	EXACT_NAME	high	CMC-544; PF-05208773; PF-5208773; WAY-207294; INO	Inotuzumab ozogamicin	B-cell receptor CD22 (CD22)	Pfizer Inc; Wyeth Pharmaceuticals LLC	Approved	configs/known_adc_assets.yaml	
+B7H3-MMAE	DRG0SYLKC		NO_MATCH		B7H3MMAE; B7H3 MMAE		CD276 antigen (CD276)	Anwita Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+Lonigutamab ugodotin	DRG0SZERO		NO_MATCH		F50085-hz208F2-4-F556311; Lonigutamab ugodotin; W 0101; W-0101; W0101		Insulin-like growth factor 1 receptor (IGF1R)	Pierre Fabre SA,	Phase 2	configs/known_adc_assets.yaml	
+BYON-3521	DRG0SZKXH		NO_MATCH		BYON 3521; BYON-3521; BYON3521		Hepatocyte growth factor receptor (MET)	Syntarga BV; Byondis BV	Phase 1	configs/known_adc_assets.yaml	
+PF-08046032	DRG0SZXVK		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+LY203725	DRG0TAOLW		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+HS-20093	DRG0TBCEQ		NO_MATCH		HS 20093; HS-20093; HS20093		CD276 antigen (CD276)	Shanghai Hansoh Biomedical Co. Ltd	Phase 3	configs/known_adc_assets.yaml	
+Hertuzumab vedotin	DRG0TCBEP		NO_MATCH		Hertuzumab-vc-MMAE		Receptor tyrosine-protein kinase erbB-2 (HER2)	Rongchang Pharmaceuticals Ltd	Investigative	configs/known_adc_assets.yaml	
+XMT-2175	DRG0TCKKR		NO_MATCH		XMT2175; XMT 2175		Undisclosed	Mersana Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+Epratuzumab-SN38	DRG0TDXML		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+MP-LGS-ADC	DRG0TEQRI		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+CM-09	DRG0TEQTA		NO_MATCH		CM-09 (Curemeta); CM09; CM 09		Undisclosed	Curemetrix, Inc	Investigative	configs/known_adc_assets.yaml	
+ANG-101	DRG0TEUSB		NO_MATCH		ANG101; ANG 101		Undisclosed	Angiex, Inc	Investigative	configs/known_adc_assets.yaml	
+AMT-151	DRG0TGZKY		NO_MATCH		AMT 151; AMT-151; AMT151		Folate receptor alpha (FOLR1)	Multitude Therapeutics, Inc	Phase 1	configs/known_adc_assets.yaml	
+Trastuzumab duocarmazine	DRG0THGAW		NO_MATCH		(vic-)trastuzumab-duocarmazine; Anti-HER2 ADC (Byondis); SYD 985; SYD-985; SYD985; Trastuzumab duocarmazine; Trastuzumab vc-seco-DUBA; Trastuzumab-SYD980; humanized monoclonal antibody conjugated to the pro-drug seco-duocarmycinhydroxyb		Receptor tyrosine-protein kinase erbB-2 (HER2)	Synthon BV; Byondis BV	Phase 3	configs/known_adc_assets.yaml	
+Trastuzumab botidotin	DRG0TIZXC		NO_MATCH		A 166; A-166; A166; KL-A166		Receptor tyrosine-protein kinase erbB-2 (HER2)	Sichuan Kelun Pharmaceutical Co., Ltd; Fudan University; KLUS Pharma, Inc; Levena Biopharma US, Inc	Approved	configs/known_adc_assets.yaml	
+ORM-6151	DRG0TJYIW		NO_MATCH		ORM 6151; ORM6151		Myeloid cell surface antigen CD33 (CD33)	Orum Therapeutics, Inc	Phase 3	configs/known_adc_assets.yaml	
+Loncastuximab tesirine	DRG0TKVCB	loncastuximab_tesirine	EXACT_NAME	high	ADCT 402; ADCT-402; MT-2111; Anti-CD19-PBD-conjugate-ADC; Immunoglobulin g1-kappa; Lonca; Lonca-T; loncastuximab tesirine-lpyl	Loncastuximab tesirine	B-lymphocyte antigen CD19 (CD19)	ADC Therapeutics SA; BSP Pharmaceuticals SpA; Overland Pharmaceutical (Shanghai) Co., Ltd	Approved	configs/known_adc_assets.yaml	
+AMT-754	DRG0TMDEU		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+AOC 1044	DRG0TMDKY		NO_MATCH		Antibody-targeted exon-skipping siRNA (Avidity Biosciences); Antibody-targeted exon-skipping siRNA (Avidity Biosciences)		Dystrophin (DMD)	Avidity Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+PHN-010	DRG0TMPMK		NO_MATCH		PHN 010; PHN-010; PHN010		Undisclosed	Pheon Therapeutics Ltd	Phase 1	configs/known_adc_assets.yaml	
+DXC1002	DRG0TNQTB		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+GB7008-01-Val-Cit-MMAE	DRG0TOMLD		NO_MATCH		Anti-CLDN6 antibody drug conjugate (cancer); GB-7008-01 vcMMAE		Claudin-6 (CLDN6)	Shanghai Genechem Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+9MW-2821	DRG0TPQUN		NO_MATCH		9MW 2821; 9MW-2821; 9MW2821		Nectin-4 (NECTIN4)	Jiangsu Maiweikang New Drug R & D Co., Ltd; Mabwell (Shanghai) Bioscience Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+SHR-A1921	DRG0TSLDF		NO_MATCH		SHR A1921; SHR-A1921; SHRA1921; SHR-1921; SHR 1921; SHR1921		Tumor-associated calcium signal transducer 2 (TROP2)	Suzhou Suncadia Biopharmaceuticals Co., Ltd; Shanghai Hengrui Pharmaceutical Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+SHR-A2009	DRG0TTTUA		NO_MATCH		SHR A2009; SHR-A2009; SHRA2009		Receptor tyrosine-protein kinase erbB-3 (HER3)	Suzhou Suncadia Biopharmaceuticals Co., Ltd	Phase 3	configs/known_adc_assets.yaml	
+PRO-1184	DRG0TUKTY		NO_MATCH						Phase 3	configs/known_adc_assets.yaml	
+SBT-6290	DRG0TWLXC		NO_MATCH		SBT 6290; SBT-6290; SBT6290		Nectin-4 (NECTIN4)	Silverback Therapeutics, Inc; ARS Pharmaceuticals, Inc	Phase 2	configs/known_adc_assets.yaml	
+SYS6040	DRG0TZVTS		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Mipasetamab uzoptirine	DRG0TZZNJ		NO_MATCH		ADCT 601; ADCT-601; ADCT601; BGB 601; BGB-601; BGB601; Mipasetamab uzoptirine		Tyrosine-protein kinase receptor UFO (AXL)	ADC Therapeutics SA; Overland Pharmaceutical (Shanghai) Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+SIM0610	DRG0UBSWW		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+RG-7600	DRG0UCTSX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+33B7-Saporin	DRG0UEGSE		NO_MATCH		Anti-PTGFRN antibody-drug conjugate (A&G Pharmaceutical); Anti-PTGFRN antibody-drug conjugate		Prostaglandin F2 receptor negative regulator (PTGFRN)	A&G Pharmaceutical, Inc	Investigative	configs/known_adc_assets.yaml	
+TGW101	DRG0UEVLW		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+SBE303	DRG0UFAIG		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+NBE-001	DRG0UFZLI		NO_MATCH		NBE 001; NBE001		Undisclosed	NBE-Therapeutics AG	Investigative	configs/known_adc_assets.yaml	
+Enlimomab pegol	DRG0UGQRX		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+HS-20089	DRG0UHEOR		NO_MATCH		HS 20089; HS-20089; HS20089		V-set domain-containing T-cell activation inhibitor 1 (VTCN1)	Shanghai Hansoh Biomedical Co. Ltd	Phase 3	configs/known_adc_assets.yaml	
+IBI-354	DRG0UHUMZ		NO_MATCH		IBI 354; IBI-354; IBI354		Receptor tyrosine-protein kinase erbB-2 (HER2)	Innovent Biologics (Suzhou) Co. Ltd	Phase 3	configs/known_adc_assets.yaml	
+SYS6041	DRG0UHXQK		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+NJH-395	DRG0UIDCY		NO_MATCH		Immune stimulator antibody conjugate; NJH 395; NJH-395; NJH395		Receptor tyrosine-protein kinase erbB-2 (HER2)	Novartis Pharma AG	Phase 1	configs/known_adc_assets.yaml	
+XB3-001	DRG0UIZFH		NO_MATCH		Melanotransferrin-trastuzumab conjugate (biOasis); MTf-TZM; MTfp-TZM; p97-trastuzumab conjugate (T)		Receptor tyrosine-protein kinase erbB-2 (HER2)	Bioasis Technologies, Inc	Investigative	configs/known_adc_assets.yaml	
+MSLN MMAE	DRG0UJALJ		NO_MATCH		MSLNMMAE; MSLN MMAE (Anwita Biosciences); MSLN-MMAE		Mesothelin (MSLN)	Anwita Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+BA-1302	DRG0UJMPA		NO_MATCH		BA 1302; BA-1302; BA1302		Melanotransferrin (MELTF)	Shandong Boan Biotechnology Co., Ltd; Luye Pharma Group Ltd	Phase 1	configs/known_adc_assets.yaml	
+GQ-1007	DRG0UJUZQ		NO_MATCH		GQ 1007; GQ-1007; GQ1007		Receptor tyrosine-protein kinase erbB-2 (HER2)	GeneQuantum Healthcare (Suzhou) Co. Ltd; Borui Biomedical Technology (Suzhou) Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+Rovalpituzumab tesirine	DRG0ULCEQ		NO_MATCH		P256HB60FF; Rova-T; Rovalpituzumab tesirine; SC-0002; SC0001-SCX; SC0001SCX; SC16LD6.5		Delta-like protein 3 (DLL3)	AbbVie, Inc	Phase 3	configs/known_adc_assets.yaml	
+OBT207	DRG0ULJQN		NO_MATCH		OBT-207; OBT 207		Undisclosed	Oxford BioTherapeutics Ltd	Investigative	configs/known_adc_assets.yaml	
+MGC026	DRG0UPZCS		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Lifastuzumab vedotin	DRG0UQTJG		NO_MATCH		Anti-NaPi2b ADC; DNIB-0600A; DNIB0600A; LIFA; Lifastuzumab vedotin; NaPi2b-ADC; NaPi3b; RG-7599; RG7599, DNIB-0600A; RO-5541081		Sodium-dependent phosphate transport protein 2B (SLC34A2)	Genentech, Inc; Roche Holding AG; Roche Holding AG	Phase 2	configs/known_adc_assets.yaml	
+BI-CON-02	DRG0UQXWB		NO_MATCH		BI-CON-02; BI CON 02; BICON02		Receptor tyrosine-protein kinase erbB-2 (HER2)	BioIntegrator LLC	Phase 1	configs/known_adc_assets.yaml	
+DXC004	DRG0USADY		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+DA-3501	DRG0USIEY		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+TAC-001	DRG0USILO		NO_MATCH		CD22 targeting TRAAC-Tallac Therapeutics; TAAC-001; TAC 001; TAC-001		B-cell receptor CD22 (CD22)	Tallac Therapeutics, Inc	Phase 2	configs/known_adc_assets.yaml	
+<sup>124</sup>I-scFvD2B	DRG0UTRTT		NO_MATCH						Investigative	configs/known_adc_assets.yaml	
+Trastuzumab-deBouganin	DRG0UTYGF		NO_MATCH		Anti-HER2 single-chain Fv dimer-deBouganin ADC (Sesen Bio/AviPep); T-deB		Receptor tyrosine-protein kinase erbB-2 (HER2)	Viventia Bio, Inc; Avipep Pty Ltd; Sesen Bio, Inc	Investigative	configs/known_adc_assets.yaml	
+SC-002	DRG0UUEEH		NO_MATCH		SC 002; SC-002; SC002		Delta-like protein 3 (DLL3)	Stemcentrx, Inc; AbbVie, Inc	Phase 1	configs/known_adc_assets.yaml	
+SYD998	DRG0UUFIR		NO_MATCH		WO2015177360A1_ADC-wt; SYD 998; SYD-998		Glutamate carboxypeptidase 2 (FOLH1)	Byodes Private Ltd	Investigative	configs/known_adc_assets.yaml	
+TORL-2-307-ADC	DRG0UUOGO		NO_MATCH		TORL-2-307 ADC; TORL-2-307- ADC; TORL-2-307- ADC, TORL-2-307-MAB; TORL-2-307-ADC; TORL-2-307-MAB		Claudin-18.2 (CLDN18.2)	TORL Biotherapeutics LLC	Phase 1	configs/known_adc_assets.yaml	
+SYS6005	DRG0UVYLY		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ALTA-002	DRG0UWYXJ		NO_MATCH		ALTA 002; ALTA-002; Anti-SIRPa antibody conjugated toll-like receptor 9 agonists-ALX Oncology/Tallac Therapeutics; TAC002		Leukocyte surface antigen CD47 (CD47)	ALX Oncology, Inc; Tallac Therapeutics, Inc	Phase 1	configs/known_adc_assets.yaml	
+YL-212	DRG0UYIOG		NO_MATCH		YL212; YL 212		Delta-like protein 3 (DLL3)	Suzhou Medilink Therapeutics Ltd; Zai Lab Ltd	Investigative	configs/known_adc_assets.yaml	
+NOV0712-DXd	DRG0UZQBB		NO_MATCH		NOV0712 DXd		Cadherin-6 (CDH6)	Daiichi Sankyo Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+AMG-224	DRG0VFBIW		NO_MATCH		AMG 224; AMG-224; AMG22 4; AMG224		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	Amgen, Inc	Phase 1	configs/known_adc_assets.yaml	
+BR111	DRG0VFEIE		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+LY256787	DRG0VFTUI		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+CD4-BFFI	DRG0VGXGH		NO_MATCH		AntiCD mAb 6314+T561; CD4 BFFI; CD4BFFI		T-cell surface glycoprotein CD4 (CD4)	Roche Holding AG	Investigative	configs/known_adc_assets.yaml	
+OBI-998	DRG0VHHWJ		NO_MATCH		OBI 998; OBI998		Stage-specific embryonic antigen-4 (SSEA-4)	OBI Pharma, Inc	Investigative	configs/known_adc_assets.yaml	
+RC-88	DRG0VHRBL		NO_MATCH		RC 88; RC-88; RC-88 ADC; RC88		Mesothelin (MSLN)	RemeGen Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+TUB-030	DRG0VHVOA		NO_MATCH		TUB 030; TUB-030; TUB030		Trophoblast glycoprotein (TPBG)	Tubulis GmbH	Phase 2	configs/known_adc_assets.yaml	
+GQ-1005	DRG0VHXYA		NO_MATCH		GQ 1005; GQ-1005; GQ1005		Receptor tyrosine-protein kinase erbB-2 (HER2)	GeneQuantum Healthcare (Suzhou) Co. Ltd	Phase 3	configs/known_adc_assets.yaml	
+ALX2004	DRG0VIMVV		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+M-9140	DRG0VIUMF		NO_MATCH		M 9140; M-9140; M9140		Carcinoembryonic antigen-related cell adhesion molecule 5 (CEACAM5)	Merck KGaA; EMD Serono Research & Development Institute, Inc	Phase 2	configs/known_adc_assets.yaml	
+Moxetumomab pasudotox	DRG0VJOET		NO_MATCH		HA22; CAT- 8015; GCR-8015; R490A		B-cell receptor CD22 (CD22)	AstraZeneca PLC	Approved	configs/known_adc_assets.yaml	
+SGN-B6A	DRG0VJROY		NO_MATCH		PF-08046047; SGN-B6A; SGNB6A; Sigvotatug Vedotin; humanized IgG1 beta-6 monoclonal antibody conjugated to monomethyl auristatin E		Integrin beta-6 (ITGB6)	Seagen Inc	Phase 3	configs/known_adc_assets.yaml	
+BL-M005	DRG0VKEZC		NO_MATCH		BLM005; BL M005		Undisclosed	Sichuan Biokin Pharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+PF-06688992	DRG0VNZZZ		NO_MATCH		GD3 ADC; PF 06688992; PF-06688992; PF06688992		Ganglioside GD3	Pfizer Inc; Memorial Sloan-Kettering Cancer Center	Phase 1	configs/known_adc_assets.yaml	
+BSI-709	DRG0VOIMW		NO_MATCH		BSI 709; BSI709		Cadherin-6 (CDH6)	Biosion, Inc; ImmunoGen, Inc	Investigative	configs/known_adc_assets.yaml	
+MG2001	DRG0VSEXE		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BRKB-28	DRG0VSGFV		NO_MATCH		BRKB28; BRKB 28		Undisclosed	Brickbio, Inc	Investigative	configs/known_adc_assets.yaml	
+TQB2101	DRG0VULUJ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+NC-6201	DRG0VURPQ		NO_MATCH		E-7974+NCAB-001 (Nanocarrier); E-7974/NCAB-001 (Nanocarrier); NC6201; NC 6201		Epidermal growth factor receptor (EGFR)	NanoCarrier Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+FZ-AD005	DRG0VVKYV		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BIO-201	DRG0VWNGX		NO_MATCH		BIO201; BIO 201; BIO-201 (BiOneCure Therapeutics)		Undisclosed	BiOneCure Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+Anetumab corixetan	DRG0VWODF		NO_MATCH		BAY 2287409; BAY-2287409; BAY2287409		Mesothelin (MSLN)	Bayer AG	Investigative	configs/known_adc_assets.yaml	
+BIO105	DRG0VXXXS		NO_MATCH		BIO-105; BIO 105		Undisclosed	Boostimmune, Inc	Investigative	configs/known_adc_assets.yaml	
+Araris ADC	DRG0VYGBA		NO_MATCH		Anti-Nectin-4 ADC(Araris Biotech); ArarisADC; Araris-ADC		Nectin-4 (NECTIN4)	Araris Biotech AG	Investigative	configs/known_adc_assets.yaml	
+BMS-986148	DRG0VYGGK		NO_MATCH		BMS 986148; BMS-986148; Mesothelin-ADC		Mesothelin (MSLN)	Bristol Myers Squibb Co	Phase 2	configs/known_adc_assets.yaml	
+LM-305	DRG0VYKSA		NO_MATCH		LM 305; LM-305; LM305; AZD-0305; AZD 0305; AZD0305		G-protein coupled receptor family C group 5 member D (GPRC5D)	LaNova Medicines Ltd; AstraZeneca PLC	Phase 2	configs/known_adc_assets.yaml	
+Vas-201	DRG0WBCEJ		NO_MATCH		Vas 201; Vas201		Undisclosed	VasGene Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+Cirmtuzumab vedotin	DRG0WCBFK		NO_MATCH		UC-961ADC3		Inactive tyrosine-protein kinase transmembrane receptor ROR1 (ROR1)	University of California; Oncternal Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+Pivekimab sunirine	DRG0WCTHL		NO_MATCH		IMGN 632; IMGN-632; IMGN632; Pivekimab sunirine		Interleukin-3 receptor subunit alpha (IL3RA)	ImmunoGen, Inc	Phase 2	configs/known_adc_assets.yaml	
+Lupartumab amadotin	DRG0WCYUM		NO_MATCH		Anti-C4.4a antibody-drug conjugates; Anti-LY6-PLAUR domain containing 3 antibody-drug conjugates; Anti-LYPD3 antibody-drug conjugates; BAY 1129980; BAY-1129980; BAY1129980; LYPD3 protein-directed antibody-drug conjugates; Lupartumab amadotin		Ly6/PLAUR domain-containing protein 3 (LYPD3)	Bayer AG	Phase 1	configs/known_adc_assets.yaml	
+AT-03	DRG0WEEMU		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+MGTA-C100	DRG0WEGRW		NO_MATCH		MGTAC100; MGTA C100; Anti-CD45 antibody-drug conjugate (Magenta Therapeutics); anti-CD45 antibody-drug conjugate (Magenta Therapeutics)		Receptor-type tyrosine-protein phosphatase C (PTPRC)	Magenta Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+BAT-8009	DRG0WFJHW		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+FS-1502	DRG0WGVKF		NO_MATCH		FS-1502; Herceptin-LC-LBG-MMAF; IKS 014; IKS-014; IKS014; LCB14; LCB14-0110; Trastuzumab-LC-LBG-MMAF		Receptor tyrosine-protein kinase erbB-2 (HER2)	Iksuda Therapeutics; Shanghai Fosun Pharmaceutical	Phase 3	configs/known_adc_assets.yaml	
+HDP-101	DRG0WIBDT		NO_MATCH		HDP 101; HDP-101; HDP101		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	Heidelberg Pharma AG; Huadong Medicine Co., Ltd; Hangzhou Zhongmeihuadong Pharmaceutical Co., Ltd; Heidelberg Pharma Research GmbH	Phase 2	configs/known_adc_assets.yaml	
+SYD1035	DRG0WIVJB		NO_MATCH		WO2015177360A1_ADC-HC120; SYD 1035; SYD-1035		Glutamate carboxypeptidase 2 (FOLH1)	Byodes Private Ltd	Investigative	configs/known_adc_assets.yaml	
+DS-6157a	DRG0WJKRI		NO_MATCH		DS 6157a; DS-6157; DS-6157a; DS6157a		G-protein coupled receptor 20 (GPR20)	Daiichi Sankyo Inc	Phase 1	configs/known_adc_assets.yaml	
+AGS-67E	DRG0WJWEG		NO_MATCH		AGS 67E; AGS-67E; AGS67E		Leukocyte antigen CD37 (CD37)	Agensys, Inc	Phase 1	configs/known_adc_assets.yaml	
+MLN2704	DRG0WLYOR		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+<sup>111</sup>In-DOTA-5D3	DRG0WMPDO		NO_MATCH						Investigative	configs/known_adc_assets.yaml	
+IMB-213I	DRG0WNUZE		NO_MATCH		IMB 213I; IMB213I		Undisclosed	ImmunoBiochem Corp	Investigative	configs/known_adc_assets.yaml	
+ICP-B794	DRG0WNVBV		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+DS-3939	DRG0WOBTH		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+BB-1701	DRG0WOJVL		NO_MATCH		BB 1701; BB-1701; BB1701		Receptor tyrosine-protein kinase erbB-2 (HER2 exon 20)	Baili Sikang Biomedicine (Hangzhou) Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+RG-7841	DRG0WOUMV		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+BSI-04702	DRG0WPYAS		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+PF-06650808	DRG0WRFYU		NO_MATCH		PF 6650808; PF-06650808; PF-6650808		Neurogenic locus notch homolog protein 3 (NOTCH3)	Pfizer Inc	Phase 1	configs/known_adc_assets.yaml	
+DK-410	DRG0WVXVY		NO_MATCH		DK410; DK 410		Mucosal vascular addressin cell adhesion molecule 1 (MADCAM1)	Deka Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+BC3195	DRG0WWBVZ		NO_MATCH		BC-3195; BC 3195; BC3195		Cadherin-3 (CDH3)	Wuxi Biocity Biopharmaceutics Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+SYS6010	DRG0WWZAS		NO_MATCH		SYS 6010; SYS-6010; SYS6010; CPO 301; CPO-301; CPO301		Epidermal growth factor receptor (EGFR)	CSPC Pharmaceutical Group Ltd	Phase 3	configs/known_adc_assets.yaml	
+JBH-492	DRG0WXNKG		NO_MATCH		Anti-CCR7 antibody-drug conjugate - Novartis Pharmaceuticals; JBH 492; JBH-492; JBH492		C-C chemokine receptor type 7 (CCR7)	Novartis Pharmaceuticals Corp	Phase 1	configs/known_adc_assets.yaml	
+Vadastuximab talirine	DRG0WXQJL		NO_MATCH		33-A; 33A; Anti-CD33A targeted ADC; SGN CD33A; SGN-CD33A; Vadastuximab talirine		Myeloid cell surface antigen CD33 (CD33)	Seagen Inc	Phase 3	configs/known_adc_assets.yaml	
+APEC-1	DRG0WXTQM		NO_MATCH		APEC1; APEC 1		B-lymphocyte antigen CD20 (MS4A1)	Revitope Oncology, Inc	Investigative	configs/known_adc_assets.yaml	
+RC-178	DRG0WYSHT		NO_MATCH		RC178; RC 178		Undisclosed	RemeGen Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+LY-3076226	DRG0XBJHU		NO_MATCH		Anti-FGFR3 Ab IMC-D11; LY 3076226; LY-3076226; LY3076 226; LY3076226		Fibroblast growth factor receptor 3 (FGFR3)	Eli Lilly & Co	Phase 1	configs/known_adc_assets.yaml	
+ST8176AA1	DRG0XCSOA		NO_MATCH		ST 8176AA1; Trastuzumab-HDACi ADC		Receptor tyrosine-protein kinase erbB-2 (HER2)	Alfasigma SpA	Investigative	configs/known_adc_assets.yaml	
+Cantuzumab ravtansine	DRG0XCWMD		NO_MATCH		C-242 DM4; C242 DM4 immunoconjugate; C242 maytansinoid-4 conjugate; Cantuzumab ravtansine; IMGN-242; Maytasinoid DM4-conjugated humanised monoclonal antibody huC242; Monoclonal antibody C-242 DM4 conjugate; huC242-DM4		Mucin-1 (MUC1)	ImmunoGen, Inc	Phase 2	configs/known_adc_assets.yaml	
+SGN-STNV	DRG0XEXPT		NO_MATCH		SGN STNV; SGN-STNV; SGNSTNV		Onco-foetal sialyl-Tn	Seagen Inc	Phase 1	configs/known_adc_assets.yaml	
+SYSA-1801	DRG0XFQVE		NO_MATCH		CPO 102; CPO-102; CPO102; Claudin 18.2-MMAE ADC; SYSA1801; EO 3021; EO-3021; EO3021		Claudin-18.2 (CLDN18.2)	CSPC Pharmaceutical Group Ltd; Elevation Oncology, Inc	Phase 1	configs/known_adc_assets.yaml	
+Bevacizumab vedotin	DRG0XFTRM		NO_MATCH		Bevacizumab-Val-Cit-PABC-MMAE; Bevacizumab Val Cit PABC MMAE		Vascular endothelial growth factor A (VEGFA)		Investigative	configs/known_adc_assets.yaml	
+NOV0712-DM4	DRG0XGLSR		NO_MATCH		NOV0712 DM4		Cadherin-6 (CDH6)	Daiichi Sankyo Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+C6vc0101	DRG0XHLKM		NO_MATCH		C6-vc0101		Tumor-associated calcium signal transducer 2 (TROP2)	Pfizer Inc	Investigative	configs/known_adc_assets.yaml	
+Cofetuzumab pelidotin	DRG0XHZLG		NO_MATCH		ABBV-647; Cofetuzumab pelidotin; PF-06523435; PF-06647020; PF-06647020, PTK7-ADC, ABBV-647, PTK7-Aur0101; PF-6647020; PF-7020; PTK7-ADC; PTK7-Aur0101; hu-24		Inactive tyrosine-protein kinase 7 (PTK7)	AbbVie, Inc; Stemcentrx, Inc; Pfizer Inc	Phase 1	configs/known_adc_assets.yaml	
+P-1000	DRG0XIERX		NO_MATCH		P1000; P 1000		Undisclosed	German Cancer Research Center (Deutsches Krebsforschungszentrum, DKFZ)	Investigative	configs/known_adc_assets.yaml	
+JNJ-95298177	DRG0XJLTL		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+SYS6002	DRG0XKMVA		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+AZD-8205	DRG0XKZBO		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+IMGN-388	DRG0XLJJW		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+IKS-01	DRG0XLKYQ		NO_MATCH		IKS01; IKS 01		Folate receptor alpha (FOLR1)	Iontas, Inc; Iksuda Therapeutics Ltd; Femtogenix Ltd	Investigative	configs/known_adc_assets.yaml	
+SC-006	DRG0XLSWN		NO_MATCH		SC 006; SC-006; SC006		E3 ubiquitin-protein ligase RNF43 (RNF43)	AbbVie, Inc	Phase 1	configs/known_adc_assets.yaml	
+SDV-1001	DRG0XOUNW		NO_MATCH		SDV 1001; SDV1001		Undisclosed	Syndivia SAS	Investigative	configs/known_adc_assets.yaml	
+SIB-029A	DRG0XOZXZ		NO_MATCH		SIB-029A; SIB 029A		Epidermal growth factor receptor (EGFR); Receptor tyrosine-protein kinase erbB-3 (HER3)	Systimmune, Inc; Sichuan Baili Pharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Vorsetuzumab mafodotin	DRG0XPPOZ		NO_MATCH		SGN 75; SGN-75; SGN75; Vorsetuzumab mafodotin		CD70 antigen (CD70)	Seagen Inc	Phase 1	configs/known_adc_assets.yaml	
+LOP-628	DRG0XRAON		NO_MATCH		Anti-c-kit humanised IgG1 kappa antibody-maitansine conjugate (Novartis Pharma AG); Anti-c-kit humanised IgG1 kappa antibody-maytansine conjugate; Anti-c-kit humanised IgG1kappa antibody-maitansine conjugate; Anti-proto-oncogene protein; Anti-proto-oncogene protein c-kit IgG1 kappa antibody-maitansine conjugate; LOP 628; LOP-628; LOP62 8; LOP628		Mast/stem cell growth factor receptor Kit (KIT)	Novartis Pharma AG; Novartis AG	Phase 1	configs/known_adc_assets.yaml	
+DAN-405	DRG0XRBCK		NO_MATCH		DAN405; DAN 405		Glutamate carboxypeptidase 2 (FOLH1)	Dantari	Investigative	configs/known_adc_assets.yaml	
+S3F-CL-MMAE	DRG0XRDLA		NO_MATCH		SIA-01; SIA-101; SIA-102; SIA-103; SIA-104; Anti-SialylTn mAbs (Siamab Therapeutics)		Onco-foetal sialyl-Tn	Siamab Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+PF-08046876	DRG0XSBGL		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+STRO-004	DRG0XTOSR		NO_MATCH		STRO 004; STRO004		Tissue factor (F3)	Sutro Biopharma, Inc	Investigative	configs/known_adc_assets.yaml	
+CBT-005	DRG0XUVMS		NO_MATCH		CBT005; CBT 005		Vascular endothelial growth factor A (VEGFA)	Cloudbreak Therapeutics LLC	Investigative	configs/known_adc_assets.yaml	
+LM-306	DRG0XVPES		NO_MATCH		LM 306; LM306		Interleukin-13 receptor subunit alpha-2 (IL13RA2)	LaNova Medicines Ltd	Investigative	configs/known_adc_assets.yaml	
+AK0406	DRG0XWNPK		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+DXC-005	DRG0XWTYJ		NO_MATCH		DXC 005; DXC-005; DXC005; DAC 005; DAC-005; DAC005; Recombinant humanized anti-Muc1 antibody conjugated to Tub201; Recombinant humanized anti-Muc1 antibody conjugated to Tub201(Hangzhou DAC Biotechnology)		Mucin-1 (MUC1)	Hangzhou DAC Biotech Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+ABL-202	DRG0XXDCJ		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+TGM-005	DRG0YAEPQ		NO_MATCH		TGM 005; TGM005		Undisclosed	Targetome NV	Investigative	configs/known_adc_assets.yaml	
+BL-B01D1	DRG0YANSF		NO_MATCH		BL B01D1; BL-B01D1; BLB01D1		Receptor tyrosine-protein kinase erbB-3 (HER3); Epidermal growth factor receptor (EGFR)	Sichuan Baili Pharmaceutical Co., Ltd; Systimmune, Inc; Chengdu Bailidote Biological Pharmaceutical Co., Ltd	Phase 3	configs/known_adc_assets.yaml	
+RM-1995	DRG0YAZBQ		NO_MATCH		RM 1995; RM-1995; RM1995		Interleukin-2 receptor subunit alpha (IL2RA)	Rakuten Medical, Inc	Phase 1	configs/known_adc_assets.yaml	
+GQ-1003	DRG0YBNRC		NO_MATCH		GQ 1003; GQ1003		Tumor-associated calcium signal transducer 2 (TROP2)	GeneQuantum Healthcare (Suzhou) Co. Ltd; SAMSUNG BIOLOGICS Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+AK146D1	DRG0YBSML		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+SHR-4602	DRG0YDBZU		NO_MATCH		SHR 4602; SHR-4602; SHR4602		Receptor tyrosine-protein kinase erbB-2 (HER2)	Jiangsu Hengrui Pharmaceuticals Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+SGN-35C	DRG0YFOJD		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ST1	DRG0YFVYF		NO_MATCH		ST-1; ST 1		Onco-foetal sialyl-Tn	Siamab Therapeutics, Inc	Investigative	configs/known_adc_assets.yaml	
+CPO-102	DRG0YGXLF		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+N501-SN38	DRG0YHHWC		NO_MATCH		N501 SN38		Trophoblast glycoprotein (TPBG)		Investigative	configs/known_adc_assets.yaml	
+RC-108	DRG0YHPUE		NO_MATCH		RC 108; RC-108; RC108		Hepatocyte growth factor receptor (MET)	RemeGen Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+RGX-019	DRG0YHPYG		NO_MATCH		RGX019; RGX 019		Tyrosine-protein kinase Mer (MERTK)	The Rockefeller University; Inspirna, Inc	Investigative	configs/known_adc_assets.yaml	
+BP-A102	DRG0YHRUZ		NO_MATCH		BPA102; BP A102		Undisclosed	Tinfa Biopharmaceuticals Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+AbGn-107	DRG0YKHCA		NO_MATCH		AbGn 107; AbGn-107; AbGn-107, Ab1-18Hr1; AbGn107		AG7	AbGenomics International, Inc	Phase 1	configs/known_adc_assets.yaml	
+OXS-1750	DRG0YKTME		NO_MATCH		Antibody-drug conjugate containing OXS-4235; OXS 1750; OXS1750		Sequestosome-1 (SQSTM1)	OXIS Biotech, Inc; GT Biopharma, Inc; MultiCell Technologies, Inc	Investigative	configs/known_adc_assets.yaml	
+cHD37-amanitin	DRG0YKZGZ		NO_MATCH		cHD37 amanitin		B-lymphocyte antigen CD19 (CD19)	LegoChem Biosciences, Inc	Investigative	configs/known_adc_assets.yaml	
+BRY-812	DRG0YLNPN		NO_MATCH		BRY 812; BRY-812; BRY812		Zinc transporter ZIP6 (SLC39A6)	BioRay Biopharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+JSKN016	DRG0YMRIE		NO_MATCH		JSKN-016; JSKN 016; JSKN016		Receptor tyrosine-protein kinase erbB-3 (HER3); Tumor-associated calcium signal transducer 2 (TROP2)	Suzhou Alphamab Co. Ltd	Phase 2	configs/known_adc_assets.yaml	
+XB371	DRG0YNUEK		NO_MATCH		XB-371; XB 371		Tissue factor (F3)	Exelixis, Inc	Investigative	configs/known_adc_assets.yaml	
+BIO-106	DRG0YODKD		NO_MATCH		BIO 106; BIO-106; BIO106		Tumor-associated calcium signal transducer 2 (TROP2)	BiOneCure Therapeutics, Inc	Phase 2	configs/known_adc_assets.yaml	
+Pertuzumab zuvotolimod	DRG0YPVKH		NO_MATCH		Pertuzumab zuvotolimod; SBT6050; pertuzumab zuvotolimod		Receptor tyrosine-protein kinase erbB-2 (HER2)	Silverback Therapeutics, Inc; ARS Pharmaceuticals, Inc	Phase 1	configs/known_adc_assets.yaml	
+SHR-A1904	DRG0YQAIX		NO_MATCH		SHR A1904; SHR-A1904; SHRA1904		Claudin-18.2 (CLDN18.2)	Jiangsu Hengrui Pharmaceuticals Co., Ltd; Shanghai Hengrui Pharmaceutical Co., Ltd	Phase 3	configs/known_adc_assets.yaml	
+ALT-P7	DRG0YRJDY		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Xl-250	DRG0YSIDA		NO_MATCH		Xl 250; xl250		Receptor tyrosine-protein kinase erbB-2 (HER2)	XL-protein GmbH; Heidelberg Pharma AG	Investigative	configs/known_adc_assets.yaml	
+APH-0912	DRG0YTJTJ		NO_MATCH		APH0912; APH 0912; 10-alpha-GAG-DT		Undisclosed	Sanofi	Investigative	configs/known_adc_assets.yaml	
+VIS-705	DRG0YTMFF		NO_MATCH		VIS 705; VIS705		Undisclosed	Visterra, Inc	Investigative	configs/known_adc_assets.yaml	
+Vandortuzumab vedotin	DRG0YTRFZ		NO_MATCH		89Zr-DFO-MSTP2 109A (diagno stic); Anti-STEAP1-vc-MMAE; DSTP-3086S; DSTP3086S; RG-7450; RG7450, DSTP3 086S; Vandortuzumab vedotin		Metalloreductase STEAP1 (STEAP1)	Genentech, Inc; Roche Holding AG; Agensys, Inc; Astellas Pharma, Inc	Phase 1	configs/known_adc_assets.yaml	
+BL-M08D1	DRG0YUCNA		NO_MATCH		BL M19D1; BL-M08D1; BL-M19D1; BLM19D1		Tumor-associated calcium signal transducer 2 (TROP2)	Sichuan Baili Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+REGN-3124-PBD	DRG0YVBCV		NO_MATCH		REGN 3124 PBD; REGN3124-PBD		Epidermal growth factor receptor variant III (EGFRvIII)	Regeneron Pharmaceuticals, Inc	Investigative	configs/known_adc_assets.yaml	
+DS-6000	DRG0YWAHM		NO_MATCH		DS 6000; DS-6000; DS-6000a; DS6000; Raludotatug deruxtecan		Cadherin-6 (CDH6)	Daiichi Sankyo Co., Ltd	Phase 3	configs/known_adc_assets.yaml	
+TARG-9	DRG0YWPJC		NO_MATCH		Alpha10antibody drug conjugate Targinta; TARG9; TARG 9		Integrin alpha-10 (ITGA10)	Targinta AB; Xintela AB	Investigative	configs/known_adc_assets.yaml	
+IMGN151	DRG0YWYJJ		NO_MATCH		IMGN 151; IMGN-151; IMGN151; Opugotamig olatansine		Folate receptor alpha (FOLR1)	ImmunoGen, Inc	Phase 1	configs/known_adc_assets.yaml	
+SHR-A1912	DRG0YXBEH		NO_MATCH		SHR A1912; SHR-A1912; SHRA1912		B-cell antigen receptor complex-associated protein beta chain (CD79B)	Jiangsu Hengrui Pharmaceuticals Co., Ltd; Shanghai Hengrui Pharmaceutical Co., Ltd	Phase 1	configs/known_adc_assets.yaml	
+Veltuzumab-CL2E-SN-38	DRG0YXJPS		NO_MATCH		Vmab-CL2E-SN-38		B-lymphocyte antigen CD20 (MS4A1)		Investigative	configs/known_adc_assets.yaml	
+SGN-15	DRG0YXZQL		NO_MATCH		BMS-182248; BMS-182248-01; BR96-DAPDOX; BR96-DOX; CBR96-Doxorubicin Immunoconjugate; SGN 15; SGN-15; SGN15; hBR96		Lewis Y	Seagen Inc; Bristol Myers Squibb Co	Phase 2	configs/known_adc_assets.yaml	
+MT-5111	DRG0YZEVV		NO_MATCH		MT 5111; MT-5111; MT5111		Receptor tyrosine-protein kinase erbB-2 (HER2)	Molecular Templates, Inc	Phase 1	configs/known_adc_assets.yaml	
+CDX-014	DRG0YZGPN		NO_MATCH		CDX 014; CDX-014; CR 014-vcMMAE		Hepatitis A virus cellular receptor 1 (HAVCR1)	CuraGen Corp; Celldex Therapeutics, Inc; Amgen, Inc	Phase 1	configs/known_adc_assets.yaml	
+SGN-CD352A	DRG0YZPWM		NO_MATCH		SGN CD352A; SGN-CD352 A; SGN-CD352A; SGNCD352A		SLAM family member 6 (SLAMF6)	Seagen Inc; Ligand Pharmaceuticals, Inc	Phase 1	configs/known_adc_assets.yaml	
+AGS-16M8F	DRG0ZAECD		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+IBI129	DRG0ZAFBL		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+BL-M09D1	DRG0ZAJGM		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+MGC028	DRG0ZBCCA		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+TJ101	DRG0ZBXTV		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+JY201	DRG0ZGWBV		NO_MATCH		JY-201; JY 201		Receptor tyrosine-protein kinase erbB-2 (HER2 ECD2); Receptor tyrosine-protein kinase erbB-2 (HER2 ECD4)	Shenzhen Enduring Biotech, Ltd	Investigative	configs/known_adc_assets.yaml	
+XB010	DRG0ZGWEK		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+GenSci143	DRG0ZIFBH		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+Milatuzumab doxorubicin	DRG0ZIJNR		NO_MATCH						Phase 2	configs/known_adc_assets.yaml	
+SKB-410	DRG0ZLJPV		NO_MATCH		SKB 410; SKB-410; SKB410		Nectin-4 (NECTIN4)	Sichuan Kelun-Biotech Biopharmaceutical Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+HMBD-501	DRG0ZMRYF		NO_MATCH		HMBD 501; HMBD501		Receptor tyrosine-protein kinase erbB-3 (HER3)	Hummingbird Bioscience Pte Ltd	Investigative	configs/known_adc_assets.yaml	
+Zilovertamab vedotin	DRG0ZMZUD		NO_MATCH		MK 2140; MK- 2140; MK-2140; VLS-101; Zilovertamab vedotin		Inactive tyrosine-protein kinase transmembrane receptor ROR1 (ROR1)	Merck & Co., Inc	Phase 2	configs/known_adc_assets.yaml	
+SHR-A1307	DRG0ZNAID		NO_MATCH		SHR A1307; SHRA1307		Epidermal growth factor receptor (EGFR)	Jiangsu Hengrui Pharmaceuticals Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+Pab-001-MMAE	DRG0ZNUYD		NO_MATCH		PAb001-ADC		Mucin-1 (MUC1)	Peptron; Qilu Pharmaceutical Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+M-DGN549	DRG0ZODWK		NO_MATCH		M DGN549		Folate receptor alpha (FOLR1)	ImmunoGen, Inc	Investigative	configs/known_adc_assets.yaml	
+OMTX-505	DRG0ZOMIJ		NO_MATCH		OMTX 505; OMTX505		Prolyl endopeptidase FAP (FAP)	Oncomatryx Biopharma SL	Investigative	configs/known_adc_assets.yaml	
+Datopotamab deruxtecan	DRG0ZOYQV	datopotamab_deruxtecan	EXACT_NAME	high	DS 1062a; DS-1062; DS-1062, Dato-DXd; DS-1062a; Dato-DXd; Datopotamab deruxtecan	Datopotamab deruxtecan	Tumor-associated calcium signal transducer 2 (TROP2)	Daiichi Sankyo Co., Ltd; AstraZeneca PLC; Baxter Oncology GmbH	Approved	configs/known_adc_assets.yaml	
+MRG-001	DRG0ZQBSG		NO_MATCH		MRG 001; MRG-001; MRG001		B-lymphocyte antigen CD20 (MS4A1)	Shanghai Miracogen Inc; Lepu Biopharma Co., Ltd	Phase 2	configs/known_adc_assets.yaml	
+TR1801-ADC	DRG0ZQLZD		NO_MATCH		MT-8633; TR 1801 ADC; TR1801-ADC; TR1801-ADC, MT-8633; TR1801-antibody drug conjugate		Hepatocyte growth factor receptor (MET)	Tanabe Research Laboratories U.S.A., Inc	Phase 1	configs/known_adc_assets.yaml	
+DEC008	DRG0ZQORV		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+KGX201	DRG0ZSNLV		NO_MATCH		KGX-201; KGX 201		Undisclosed	KangaBio Co., Ltd	Investigative	configs/known_adc_assets.yaml	
+<sup>111</sup>In-1849	DRG0ZSVBZ		NO_MATCH						Investigative	configs/known_adc_assets.yaml	
+BAY-943	DRG0ZTZMD		NO_MATCH		BAY 943; BAY943; VIP-943; IL3RA-KSPi-ADC		Interleukin-3 receptor subunit alpha (IL3RA)	Bayer AG	Investigative	configs/known_adc_assets.yaml	
+BAT-8001	DRG0ZUQNL		NO_MATCH						Phase 3	configs/known_adc_assets.yaml	
+SLV-154	DRG0ZXRLG		NO_MATCH						Phase 1	configs/known_adc_assets.yaml	
+ZW-33	DRG0ZYLBB		NO_MATCH		ZW 33; ZW33		Receptor tyrosine-protein kinase erbB-2 (HER2 ECD2); Receptor tyrosine-protein kinase erbB-2 (HER2 ECD4)	Zymeworks Biopharmaceuticals, Inc; Zymeworks BC, Inc	Investigative	configs/known_adc_assets.yaml	

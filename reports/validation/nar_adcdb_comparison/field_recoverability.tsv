@@ -1,0 +1,85 @@
+asset	field	nar_value	our_structured_value	raw_evidence_present	evidence_source	evidence_identifier	classification	notes
+gemtuzumab_ozogamicin	target	Myeloid cell surface antigen CD33 (CD33)		1	pubmed	10339474	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+gemtuzumab_ozogamicin	antibody	Gemtuzumab		1	pubmed	11410481	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+gemtuzumab_ozogamicin	payload	N-acetyl-gamma-calicheamicin		0			NO_EVIDENCE_FOUND	
+gemtuzumab_ozogamicin	linker	AcButDMH		0			NO_EVIDENCE_FOUND	
+gemtuzumab_ozogamicin	company	Pfizer Inc; Wyeth Pharmaceuticals LLC		1	sec	0000078003-00-000007	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+gemtuzumab_ozogamicin	status	Approved (FDA): Mar, 2000		0			NO_EVIDENCE_FOUND	
+brentuximab_vedotin	target	Tumor necrosis factor receptor superfamily member 8 (TNFRSF8)		1	pubmed	18477046	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+brentuximab_vedotin	antibody	Brentuximab		1	clinicaltrials	NCT01508312	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+brentuximab_vedotin	payload	Monomethyl auristatin E		1	pubmed	18477046	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+brentuximab_vedotin	linker	Mc-Val-Cit-PABC		0			NO_EVIDENCE_FOUND	
+brentuximab_vedotin	company	Seagen Inc; BSP Pharmaceuticals SpA; Takeda Pharmaceutical Co., Ltd		1	fda_applications	BLA761208	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+brentuximab_vedotin	status	Approved (FDA): Aug, 2011		0			NO_EVIDENCE_FOUND	
+trastuzumab_emtansine	target	Receptor tyrosine-protein kinase erbB-2 (HER2)		1	europe_pmc	AGR:IND607937225	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+trastuzumab_emtansine	antibody	Trastuzumab		1	europe_pmc	AGR:IND608908688	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+trastuzumab_emtansine	payload	Mertansine DM1		0			NO_EVIDENCE_FOUND	
+trastuzumab_emtansine	linker	Succinimidyl-4-(N-maleimidomethyl)cyclohexane-1-carboxylate (SMCC)		0			NO_EVIDENCE_FOUND	
+trastuzumab_emtansine	company	Genentech, Inc; Roche Holding AG; Chugai Pharmaceutical Co., Ltd; F. Hoffmann-La Roche Ltd		1	clinicaltrials	NCT00781612	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+trastuzumab_emtansine	status	Approved (FDA): Feb 22, 2013		0			NO_EVIDENCE_FOUND	
+inotuzumab_ozogamicin	target	B-cell receptor CD22 (CD22)		1	clinicaltrials	NCT01564784	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+inotuzumab_ozogamicin	antibody	Inotuzumab		1	clinicaltrials	NCT01564784	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+inotuzumab_ozogamicin	payload	N-acetyl-gamma-calicheamicin		0			NO_EVIDENCE_FOUND	
+inotuzumab_ozogamicin	linker	AcButDMH		0			NO_EVIDENCE_FOUND	
+inotuzumab_ozogamicin	company	Pfizer Inc; Wyeth Pharmaceuticals LLC		1	sec	0000078003-00-000007	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+inotuzumab_ozogamicin	status	Approved (FDA): Aug, 2017		0			NO_EVIDENCE_FOUND	
+polatuzumab_vedotin	target	B-cell antigen receptor complex-associated protein beta chain (CD79B)		1	patent_bioactivity_corpus	PATENTBIO_EP4523702A1_DESCRIPTION	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+polatuzumab_vedotin	antibody	Polatuzumab		1	clinicaltrials	NCT04970901	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+polatuzumab_vedotin	payload	Monomethyl auristatin E		1	pubmed	18477046	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+polatuzumab_vedotin	linker	Mc-Val-Cit-PABC		0			NO_EVIDENCE_FOUND	
+polatuzumab_vedotin	company	Genentech, Inc; Chugai Pharmaceutical Co., Ltd; F. Hoffmann-La Roche Ltd; Roche Holding AG		1	clinicaltrials	NCT00781612	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+polatuzumab_vedotin	status	Approved (FDA): Jun, 2019		0			NO_EVIDENCE_FOUND	
+enfortumab_vedotin	target	Nectin-4 (NECTIN4)		1	clinicaltrials	NCT01409135	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+enfortumab_vedotin	antibody	Enfortumab		1	clinicaltrials	NCT05097599	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+enfortumab_vedotin	payload	Monomethyl auristatin E		1	pubmed	18477046	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+enfortumab_vedotin	linker	Mc-Val-Cit-PABC		0			NO_EVIDENCE_FOUND	
+enfortumab_vedotin	company	Astellas Pharma, Inc; Seagen Inc; Baxter Oncology GmbH		1	fda_applications	BLA761208	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+enfortumab_vedotin	status	Approved (FDA): Dec, 2019		0			NO_EVIDENCE_FOUND	
+trastuzumab_deruxtecan	target	Receptor tyrosine-protein kinase erbB-2 (HER2)		1	europe_pmc	AGR:IND607937225	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+trastuzumab_deruxtecan	antibody	Trastuzumab		1	europe_pmc	AGR:IND608908688	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+trastuzumab_deruxtecan	payload	DX-8951 derivative (DXd)		0			NO_EVIDENCE_FOUND	
+trastuzumab_deruxtecan	linker	Mc-Gly-Gly-Phe-Gly		0			NO_EVIDENCE_FOUND	
+trastuzumab_deruxtecan	company	Daiichi Sankyo Inc; AstraZeneca PLC; Baxter Oncology GmbH		1	fda_applications	BLA761139	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+trastuzumab_deruxtecan	status	Approved (FDA): Dec 05, 2019		0			NO_EVIDENCE_FOUND	
+sacituzumab_govitecan	target	Tumor-associated calcium signal transducer 2 (TROP2)		1	clinicaltrials	NCT04940325	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+sacituzumab_govitecan	antibody	Sacituzumab		1	clinicaltrials	NCT05101096	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+sacituzumab_govitecan	payload	Active metabolite of irinotecan SN38		0			NO_EVIDENCE_FOUND	
+sacituzumab_govitecan	linker	CL2A		1	patent_bioactivity_corpus	PATENTBIO_WO2017139623A1_CLAIMS	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+sacituzumab_govitecan	company	Immunomedics, Inc; Gilead Sciences, Inc; BSP Pharmaceuticals SpA; Everest Medicines (Singapore) Pte. Ltd		1	ema	EMEA/H/C/005182	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+sacituzumab_govitecan	status	Approved (FDA): Apr, 2020		0			NO_EVIDENCE_FOUND	
+belantamab_mafodotin	target	Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)		1	clinicaltrials	NCT05117008	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+belantamab_mafodotin	antibody	Belantamab		1	clinicaltrials	NCT05064358	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+belantamab_mafodotin	payload	Monomethyl auristatin F		0			NO_EVIDENCE_FOUND	
+belantamab_mafodotin	linker	Maleimido-caproyl		0			NO_EVIDENCE_FOUND	
+belantamab_mafodotin	company	GSK Plc; GlaxoSmithKline (Ireland) Ltd; Glaxosmithkline Intellectual Property Development Ltd		0			NO_EVIDENCE_FOUND	
+belantamab_mafodotin	status	Approved (FDA): Aug, 2020		0			NO_EVIDENCE_FOUND	
+loncastuximab_tesirine	target	B-lymphocyte antigen CD19 (CD19)		1	pubmed	11762412	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+loncastuximab_tesirine	antibody	Loncastuximab		1	clinicaltrials	NCT05053659	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+loncastuximab_tesirine	payload	SG3199		0			NO_EVIDENCE_FOUND	
+loncastuximab_tesirine	linker	Mal-PEG8-Val-Ala-PABC		0			NO_EVIDENCE_FOUND	
+loncastuximab_tesirine	company	ADC Therapeutics SA; BSP Pharmaceuticals SpA; Overland Pharmaceutical (Shanghai) Co., Ltd		1	fda_applications	BLA761196	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+loncastuximab_tesirine	status	Approved (FDA):Apr, 2021		0			NO_EVIDENCE_FOUND	
+tisotumab_vedotin	target	Tissue factor (F3)		1	clinicaltrials	NCT02001623	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+tisotumab_vedotin	antibody	Tisotumab		1	clinicaltrials	NCT04697628	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+tisotumab_vedotin	payload	Monomethyl auristatin E		1	pubmed	18477046	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+tisotumab_vedotin	linker	Mc-Val-Cit-PABC		0			NO_EVIDENCE_FOUND	
+tisotumab_vedotin	company	Seagen Inc; Genmab A/S; Zai Lab Ltd; Rps Medical Technology (Beijing) Co., Ltd		1	ema	EMEA/H/C/005363	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+tisotumab_vedotin	status	Approved (FDA): Sep 22, 2021		0			NO_EVIDENCE_FOUND	
+mirvetuximab_soravtansine	target	Folate receptor alpha (FOLR1)		1	clinicaltrials	NCT06390995	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+mirvetuximab_soravtansine	antibody	Mirvetuximab		1	clinicaltrials	NCT05041257	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+mirvetuximab_soravtansine	payload	Mertansine DM4		0			NO_EVIDENCE_FOUND	
+mirvetuximab_soravtansine	linker	Sulfo-SPDB		1	patent_bioactivity_corpus	PATENTBIO_EP4772183A2_DESCRIPTION	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+mirvetuximab_soravtansine	company	ImmunoGen, Inc; Hangzhou Zhongmeihuadong Pharmaceutical Co., Ltd		1	pubmed	11762418	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+mirvetuximab_soravtansine	status	Approved (FDA): Nov, 2022		0			NO_EVIDENCE_FOUND	
+disitamab_vedotin	target	Receptor tyrosine-protein kinase erbB-2 (HER2)		1	europe_pmc	AGR:IND607937225	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+disitamab_vedotin	antibody	Hertuzumab		0			NO_EVIDENCE_FOUND	
+disitamab_vedotin	payload	Monomethyl auristatin E		1	pubmed	18477046	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+disitamab_vedotin	linker	Mc-Val-Cit-PABC		0			NO_EVIDENCE_FOUND	
+disitamab_vedotin	company	RemeGen Co., Ltd; RemeGen Co., Ltd; Merck Sharp & Dohme LLC		0			NO_EVIDENCE_FOUND	
+disitamab_vedotin	status	Approved (FDA): Jun, 2021		0			NO_EVIDENCE_FOUND	
+datopotamab_deruxtecan	target	Tumor-associated calcium signal transducer 2 (TROP2)		1	clinicaltrials	NCT04940325	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+datopotamab_deruxtecan	antibody	Datopotamab		1	clinicaltrials	NCT04940325	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+datopotamab_deruxtecan	payload	DX-8951 derivative (DXd)		0			NO_EVIDENCE_FOUND	
+datopotamab_deruxtecan	linker	Mc-Gly-Gly-Phe-Gly		0			NO_EVIDENCE_FOUND	
+datopotamab_deruxtecan	company	Daiichi Sankyo Co., Ltd; AstraZeneca PLC; Baxter Oncology GmbH		1	fda_applications	BLA761139	RAW_EVIDENCE_PRESENT_NOT_EXTRACTED	
+datopotamab_deruxtecan	status	Approved (FDA): Jan, 2025		0			NO_EVIDENCE_FOUND	

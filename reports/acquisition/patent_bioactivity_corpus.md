@@ -6,8 +6,8 @@ SECOND-PASS job — "should NOT search the entire patent universe again" (Prompt
 
 ## Per-authority coverage this run (empirical, not assumed)
 
-- **wipo**: 20 candidate publications this run — 0 success, 38 skipped_unchanged, 2 not_available, 0 failed
-- **epo**: 45 candidate publications this run — 0 success, 72 skipped_unchanged, 18 not_available, 0 failed
+- **wipo**: 51 candidate publications this run — 62 success, 38 skipped_unchanged, 2 not_available, 0 failed
+- **epo**: 51 candidate publications this run — 12 success, 72 skipped_unchanged, 18 not_available, 0 failed
 
 Round-1 fix: an earlier version of this job excluded WIPO candidates entirely, reasoning from a single 404'd WO publication that OPS full-text coverage was EP-only. EPO's own OPS documentation lists full-text availability for multiple authorities including WO — a single 404 only proves that one publication/artifact lacks full text, not that the whole authority is unsupported. WIPO candidates are now attempted exactly like EPO candidates; the numbers above are this run's actual, empirical result, not an assumption.
 
@@ -17,12 +17,24 @@ Round-1 fix: an earlier version of this job excluded WIPO candidates entirely, r
 
 ## Materialization this run
 
-65 candidate publications (wipo: 20, epo: 45), 130 candidate artifacts (2 per publication: description + claims). 0 never-attempted (fresh), 20 unresolved-retry (backlog, includes `not_available` 404s — retried every ordinary run, NOT treated as permanently terminal), 0 pending recovery (raw durable but ledger stale), 110 already successful and skipped with no request.
+102 candidate publications (wipo: 51, epo: 51), 204 candidate artifacts (2 per publication: description + claims). 74 never-attempted (fresh), 20 unresolved-retry (backlog, includes `not_available` 404s — retried every ordinary run, NOT treated as permanently terminal), 0 pending recovery (raw durable but ledger stale), 110 already successful and skipped with no request.
 
-**This run's outcomes:** 0 success (newly downloaded), 110 skipped_unchanged, 20 not_available, 0 failed — 130 total attempted/fast-skipped outcomes (must equal the sum of these four).
+**This run's outcomes:** 74 success (newly downloaded), 110 skipped_unchanged, 20 not_available, 0 failed — 204 total attempted/fast-skipped outcomes (must equal the sum of these four).
 
 ## Sample materialized artifacts
 
+- [epo] EP2687202A1 (claims, version 1)
+- [epo] EP2687202A1 (description, version 1)
+- [epo] EP2796424A1 (claims, version 1)
+- [epo] EP2796424A1 (description, version 1)
+- [epo] EP4227320A2 (claims, version 1)
+- [epo] EP4227320A2 (description, version 1)
+- [epo] EP4248989A2 (claims, version 1)
+- [epo] EP4248989A2 (description, version 1)
+- [epo] EP4523702A1 (claims, version 1)
+- [epo] EP4523702A1 (description, version 1)
+- [epo] EP4772183A2 (claims, version 1)
+- [epo] EP4772183A2 (description, version 1)
 - [wipo] WO0014537A2 (claims, version 1)
 - [wipo] WO0014537A2 (description, version 1)
 - [wipo] WO0064946A2 (claims, version 1)
@@ -31,18 +43,6 @@ Round-1 fix: an earlier version of this job excluded WIPO candidates entirely, r
 - [wipo] WO0124763A2 (description, version 1)
 - [wipo] WO02094315A2 (claims, version 1)
 - [wipo] WO02094315A2 (description, version 1)
-- [wipo] WO02096437A1 (claims, version 1)
-- [wipo] WO02096437A1 (description, version 1)
-- [wipo] WO02100326A2 (claims, version 1)
-- [wipo] WO02100326A2 (description, version 1)
-- [wipo] WO0217968A2 (claims, version 1)
-- [wipo] WO0217968A2 (description, version 1)
-- [wipo] WO0222629A1 (claims, version 1)
-- [wipo] WO0222629A1 (description, version 1)
-- [wipo] WO2004006847A2 (claims, version 1)
-- [wipo] WO2004006847A2 (description, version 1)
-- [wipo] WO2004006962A2 (claims, version 1)
-- [wipo] WO2004006962A2 (description, version 1)
 
 ## Failed downloads
 
