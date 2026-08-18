@@ -629,6 +629,46 @@ User-Agent hangs to a read timeout — distinct from AbbVie's fast
 Cloudflare 403 in Job 11) — recorded as a normal, logged failed attempt,
 not bypassed or silently dropped.
 
+## Running the patent bioactivity corpus job (Job 13)
+
+```bash
+python -m adc_acquisition patent_bioactivity_corpus --dry-run
+python -m adc_acquisition patent_bioactivity_corpus
+python -m adc_acquisition patent_bioactivity_corpus --refresh   # periodic re-verification, not for every run
+```
+
+A SECOND-PASS job — Prompt.md is explicit it "should NOT search the
+entire patent universe again." Candidates are read directly from Job 10
+(EPO)'s already-materialized `epo.parquet` manifest (latest version per
+`publication_number` only), not from a new OPS search. For each EP
+publication, two independent artifacts are fetched via EPO OPS's
+full-text endpoints: `description` (specification body text — where
+Prompt.md's target sections Examples/Experimental/IC50/etc. actually
+live) and `claims`, each its own independent content-version manifest
+entry (own checkpoint/version, `parent_record_id` pointing back to the
+EPO manifest's `publication_number`).
+
+**Live finding (2026-08-19):** EPO OPS's full-text retrieval is
+**EP-only** — a real WO publication (confirmed to exist via live search,
+its biblio fetch succeeds) returns HTTP 404 on
+`description`/`claims`/`fulltext`. This is a hard OPS data-coverage
+limitation, not a rate/access issue. **Job 08 (WIPO)'s WO-prefixed
+candidates are therefore NOT processed by this job** — a disclosed
+coverage gap, not silently narrowed. **Job 09 (USPTO) is also not
+duplicated here**: its already-acquired SPEC-type documents
+(`uspto_documents.parquet`) are the as-filed Specification PDF, already
+bundling description + claims + abstract for the original filing.
+
+Materialization mirrors Job 10 (EPO)'s fully-hardened design (own raw
+checkpoint namespace, resolved-status-AND-version-match skip decision,
+`--refresh`), applied proactively. A 404 (`not_available`, OPS confirms
+no full text exists for this specific artifact) is retried on every
+ordinary run — staying conservative about assuming any 404 is
+permanent, per the lesson from Job 05 (SEC)'s round-3 review. EPO's OPS
+free tier has a 4GB/month data quota across all OPS usage — full-text
+documents are far larger than biblio XML, so `result.notes` reports
+per-run downloaded bytes for monitoring.
+
 ## Tests
 
 ```bash
@@ -643,7 +683,7 @@ or used by the normal test suite.
 See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
 (Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), Job 05
 (SEC EDGAR), Job 06 (FDA), Job 07 (EMA), Job 08 (WIPO), Job 09 (USPTO),
-Job 10 (EPO), Job 11 (company pipeline pages), and Job 12 (company press
-releases) are implemented so far; every other source in `Prompt.md` is
-intentionally not started yet — sources are implemented and reviewed one
-at a time.
+Job 10 (EPO), Job 11 (company pipeline pages), Job 12 (company press
+releases), and Job 13 (patent bioactivity corpus) are implemented so
+far; every other source in `Prompt.md` is intentionally not started
+yet — sources are implemented and reviewed one at a time.
