@@ -315,18 +315,64 @@ patent_bioactivity_corpus:
 
 publication_bioactivity_corpus:
   source_type: derived
-  authority: null
-  official_url: null
-  api_docs_url: null
-  acquisition_method: null
-  authentication_required: false
-  rate_limit: null
-  license_or_access_note: Second-pass job; depends on pubmed/europe_pmc identifiers.
-  raw_formats: []
-  update_strategy: null
-  implementation_status: not_started
-  enabled: false
-  notes: Job 14 in Prompt.md, promoted to #14 in recommended execution order.
+  authority: primary
+  official_url: https://unpaywall.org/ (Unpaywall API, https://unpaywall.org/products/api)
+  api_docs_url: https://unpaywall.org/products/api
+  acquisition_method: api
+  authentication_required: "no API key -- just a real-looking contact email query param (UNPAYWALL_CONTACT_EMAIL); placeholder addresses like test@example.com are rejected with HTTP 422 (verified live)"
+  rate_limit: "documented 100,000 calls/day; no per-second limit documented, we use a conservative 2 req/s for the Unpaywall lookup itself, plus a separate 0.5 req/s limiter for the arbitrary publisher/repository hosts the actual content is fetched from"
+  license_or_access_note: "Second-pass job; candidates read from Job 01 (pubmed.parquet), Job 02 (europe_pmc.parquet), and Job 04 (crossref.parquet), NOT a new discovery search. Unpaywall-identified legal open-access copies (by doi) or direct Europe PMC full text (by pmcid) only -- publisher paywalls are never bypassed."
+  raw_formats: [html, pdf, xml]
+  update_strategy: "no discovery ledger (candidates come from already-materialized upstream manifests, same reasoning as Crossref/Job 13); materialization skips already-successful records by default (no request) -- `--refresh` re-verifies the full acquisition path; `not_available` (no OA copy / doi or pmid unknown to the relevant lookup) is retried on every ordinary run, NOT treated as permanently terminal."
+  implementation_status: implemented
+  enabled: true
+  notes: >
+    Job 14 in Prompt.md, promoted to #14 in recommended execution order.
+    Researched before coding (avoiding Job 13's "generalize from n=1"
+    mistake): Job 02 (Europe PMC) only fetches full text for records ITS
+    OWN queries discovered AND flagged is_open_access -- verified live
+    that this repo's real europe_pmc_fulltext.parquet has 0 rows, so
+    nothing has been acquired that way yet. Unpaywall's coverage is
+    empirically NOT a subset of Europe PMC's OA subset (covers DOIs
+    Job 02 never discovered, and DOIs where Europe PMC's own
+    is_open_access flag is false but a legal OA copy exists elsewhere).
+    Round-1 fix: the initial version only ever looked at each record's
+    doi field, silently dropping every PubMed/Europe PMC record with a
+    PMID/PMCID but no DOI -- verified live this was NOT a theoretical
+    edge case (8/20 PubMed and 6/20 Europe PMC real committed records
+    have no doi at all). Fixed with exact-identifier resolution
+    (doi > pmcid > pmid priority): a pmcid-only record is fetched
+    directly from Europe PMC's own fullTextXML endpoint; a pmid-only
+    record is resolved via NCBI's PMC ID Converter (exact lookup, not a
+    search) before falling back to not_available. "known ADC
+    aliases"-driven discovery stays deferred to Job 15 -- this job never
+    searches by alias. Also fixed: within one OA location, a blocked
+    url_for_pdf now falls back to that SAME location's
+    url_for_landing_page before moving to a different location (a
+    landing page can serve full text as HTML even when its PDF link
+    blocks a bot); not_available's recorded http_status is now truthful
+    (404 only for a genuine lookup-level 404, 200 with a distinct error
+    value when a lookup succeeded but confirmed no usable OA copy, no
+    fabricated status for an unresolvable pmid). Also self-caught live
+    (before any of this reached a PR): NCBI's ID Converter JSON response
+    encodes pmid as an int, not the string this job sent, which would
+    have silently made every successful resolution look unresolved --
+    fixed to key results by the response's own requested-id field.
+    Excludes pmcids Job 02 already has resolved full text for (checked
+    empirically every run, directly by pmcid), the same
+    don't-duplicate-an-existing-job's-work precedent as Job 13's USPTO
+    exclusion. DOIs are normalized (stripped + lowercased) before
+    becoming a candidate identity -- caught live against this repo's own
+    committed data that PubMed and Crossref can record the identical
+    work's DOI in different casing (DOIs are case-insensitive by spec),
+    which would otherwise fetch/store the same OA article twice. Live-
+    verified end-to-end against this repo's own real committed
+    pubmed.parquet/europe_pmc.parquet/crossref.parquet (58 upstream
+    mentions, 38 unique candidate records: 24 doi-addressable, 0
+    pmcid-addressable, 14 pmid-only -- all 14 confirmed unresolvable by
+    NCBI's own ID Converter for these older pre-DOI-era papers): 3
+    success, 34 not_available, 1 failed (a Wiley landing page 403),
+    stable skip-by-default confirmed on rerun.
 
 known_adc_asset_expansion:
   source_type: derived
