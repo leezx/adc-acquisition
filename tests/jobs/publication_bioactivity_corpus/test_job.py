@@ -8,13 +8,15 @@ from adc_acquisition.manifest import new_manifest_row, write_manifest
 from jobs.publication_bioactivity_corpus.job import PublicationBioactivityCorpusJob, _query_text
 
 UNPAYWALL_BASE = "https://api.unpaywall.org/v2"
+IDCONV_BASE = "https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/"
+EUROPEPMC_BASE = "https://www.ebi.ac.uk/europepmc/webservices/rest"
 
 PUBMED_EXTRA_FIELDS = ["pmid", "pmcid", "doi", "abstract", "authors", "journal", "publication_types", "mesh_terms"]
 EPMC_EXTRA_FIELDS = ["epmc_source", "epmc_id", "pmid", "pmcid", "doi", "abstract", "journal", "is_open_access", "license", "in_pmc"]
 CROSSREF_EXTRA_FIELDS = ["doi", "authors", "publisher", "container_title", "work_type", "published_date", "license_url", "references", "abstract"]
 
 
-def _pubmed_row(pmid, doi, pub_date="2026-01-01", version=1):
+def _pubmed_row(pmid, doi=None, pmcid=None, pub_date="2026-01-01", version=1):
     return new_manifest_row(
         extra_fields=PUBMED_EXTRA_FIELDS,
         source="pubmed", source_record_id=pmid, source_record_type="literature_record",
@@ -23,7 +25,7 @@ def _pubmed_row(pmid, doi, pub_date="2026-01-01", version=1):
         raw_file_path="/dev/null", raw_format="xml", content_hash="deadbeef",
         download_status="success", http_status=200, license_or_access_note="test",
         parent_record_id=None, version=version, notes=None,
-        pmid=pmid, pmcid=None, doi=doi, abstract=None, authors=[], journal=None,
+        pmid=pmid, pmcid=pmcid, doi=doi, abstract=None, authors=[], journal=None,
         publication_types=[], mesh_terms=[],
     )
 
@@ -115,6 +117,30 @@ def _mock_content(url, body=b"<html>full text</html>", status=200, content_type=
     responses.add(responses.GET, url, body=body, status=status, content_type=content_type)
 
 
+def _mock_idconv(records, status=200):
+    """records: [{"pmid": "555", "pmcid": "PMC1", "doi": "10.1/x"}] or
+    [{"pmid": "888", "status": "error", "errmsg": "..."}]. Builds NCBI's
+    REAL response shape (live-verified 2026-08-18): `pmid` comes back as
+    a JSON int, and `requested-id` echoes the original string we sent --
+    every test using this helper exercises the exact int/string mismatch
+    this job's client had to fix after a live run surfaced it."""
+    built = []
+    for r in records:
+        entry = {"pmid": int(r["pmid"]), "requested-id": r["pmid"]}
+        if r.get("status") == "error":
+            entry["status"] = "error"
+            entry["errmsg"] = r.get("errmsg", "not found")
+        else:
+            entry["pmcid"] = r.get("pmcid")
+            entry["doi"] = r.get("doi")
+        built.append(entry)
+    responses.add(responses.GET, IDCONV_BASE, json={"status": "ok", "records": built}, status=status)
+
+
+def _mock_europe_pmc_fulltext(pmcid, body=b"<article>full text</article>", status=200):
+    responses.add(responses.GET, f"{EUROPEPMC_BASE}/{pmcid}/fullTextXML", body=body, status=status, content_type="application/xml")
+
+
 def _manifest_df(tmp_path):
     return pd.read_parquet(tmp_path / "DATA" / "manifests" / "publication_bioactivity_corpus.parquet")
 
@@ -159,6 +185,10 @@ def test_full_run_writes_manifest_and_attempts(tmp_path, monkeypatch):
 
 @responses.activate
 def test_no_oa_location_is_not_available(tmp_path, monkeypatch):
+    """Round-1 fix: Unpaywall returning HTTP 200 with is_oa=false is a
+    KNOWN doi with a confirmed negative -- must NOT be recorded with a
+    fabricated http_status=404 (that never happened; the lookup itself
+    succeeded)."""
     _setup(tmp_path, monkeypatch, crossref_rows=[_crossref_row("10.1000/closed")])
     _mock_unpaywall("10.1000/closed", is_oa=False, oa_status="closed", locations=[])
 
@@ -168,10 +198,34 @@ def test_no_oa_location_is_not_available(tmp_path, monkeypatch):
     assert result.records_failed == 0
     attempts = _attempts_df(tmp_path)
     assert set(attempts["status"]) == {"not_available"}
+    row = attempts.iloc[0]
+    assert row["http_status"] == 200  # the Unpaywall lookup itself succeeded
+    assert row["error"] == "no_oa_copy"
+
+
+@responses.activate
+def test_oa_true_but_no_usable_location_is_not_available_with_truthful_status(tmp_path, monkeypatch):
+    """Round-1 fix: is_oa=true but zero usable location URLs is a
+    distinct not_available case from is_oa=false -- also http_status=200
+    (the lookup succeeded), with its own distinguishing error value."""
+    doi = "10.1000/nolocation"
+    _setup(tmp_path, monkeypatch, crossref_rows=[_crossref_row(doi)])
+    _mock_unpaywall(doi, is_oa=True, oa_status="green", locations=[])
+
+    result = PublicationBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 0
+    attempts = _attempts_df(tmp_path)
+    row = attempts.iloc[0]
+    assert row["status"] == "not_available"
+    assert row["http_status"] == 200
+    assert row["error"] == "no_usable_oa_location"
 
 
 @responses.activate
 def test_doi_unknown_to_unpaywall_is_not_available(tmp_path, monkeypatch):
+    """Round-1 fix: this is the ONLY not_available case where http_status
+    is truthfully 404 -- Unpaywall's own DOI endpoint returned 404."""
     _setup(tmp_path, monkeypatch, crossref_rows=[_crossref_row("10.1000/unknown")])
     _mock_unpaywall_404("10.1000/unknown")
 
@@ -180,6 +234,9 @@ def test_doi_unknown_to_unpaywall_is_not_available(tmp_path, monkeypatch):
     assert result.records_downloaded == 0
     attempts = _attempts_df(tmp_path)
     assert set(attempts["status"]) == {"not_available"}
+    row = attempts.iloc[0]
+    assert row["http_status"] == 404
+    assert row["error"] == "unpaywall_doi_not_found"
 
 
 @responses.activate
@@ -220,6 +277,33 @@ def test_falls_back_to_next_location_when_first_fetch_fails(tmp_path, monkeypatc
     df = _manifest_df(tmp_path)
     assert df.iloc[0]["source_location_url"] == "https://repo.example/mirror.pdf"
     assert df.iloc[0]["host_type"] == "repository"
+
+
+@responses.activate
+def test_location_landing_page_fallback_when_pdf_blocked(tmp_path, monkeypatch):
+    """Round-1 fix: within a SINGLE location, a blocked url_for_pdf must
+    fall back to that SAME location's url_for_landing_page before this
+    job moves on to a different location entirely -- Unpaywall's own data
+    format docs describe the landing page as a real full-text route, not
+    just a metadata pointer."""
+    doi = "10.1000/landingpage"
+    _setup(tmp_path, monkeypatch, crossref_rows=[_crossref_row(doi)])
+    locations = [{
+        "host_type": "publisher",
+        "url_for_pdf": "https://publisher.example/blocked.pdf",
+        "url_for_landing_page": "https://publisher.example/article.html",
+        "url": "https://publisher.example/blocked.pdf",
+    }]
+    _mock_unpaywall(doi, locations=locations)
+    responses.add(responses.GET, "https://publisher.example/blocked.pdf", status=403)
+    _mock_content("https://publisher.example/article.html", body=b"<html>full text article</html>")
+
+    result = PublicationBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1
+    df = _manifest_df(tmp_path)
+    assert df.iloc[0]["source_location_url"] == "https://publisher.example/article.html"
+    assert df.iloc[0]["host_type"] == "publisher"  # same location, not a fallback to a different one
 
 
 @responses.activate
@@ -399,4 +483,131 @@ def test_query_text_consistent_between_fast_skip_and_fetch(tmp_path, monkeypatch
     skipped = attempts_run2[attempts_run2["status"] == "skipped_unchanged"]
     query_text_run2 = skipped.set_index("source_record_id")["query_text"].to_dict()[doi]
 
-    assert query_text_run2 == query_text_run1 == _query_text(doi)
+    assert query_text_run2 == query_text_run1 == _query_text({"doi": doi})
+
+
+@responses.activate
+def test_pmcid_only_record_fetches_directly_from_europe_pmc(tmp_path, monkeypatch):
+    """Round-1 P1 fix: a PubMed record with a PMID and PMCID but NO DOI
+    must not be silently dropped -- it's fetched directly from Europe
+    PMC's own fullTextXML endpoint by pmcid, no Unpaywall lookup at all."""
+    _setup(tmp_path, monkeypatch, pubmed_rows=[_pubmed_row("PMID1", doi=None, pmcid="PMC999")])
+    _mock_europe_pmc_fulltext("PMC999", body=b"<article>full text</article>")
+
+    result = PublicationBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1
+    df = _manifest_df(tmp_path)
+    assert df.iloc[0]["source_record_id"] == "pmcid:PMC999"
+    assert df.iloc[0]["identifier_type"] == "pmcid"
+    assert df.iloc[0]["pmcid"] == "PMC999"
+    assert df.iloc[0]["doi"] is None
+    attempts = _attempts_df(tmp_path)
+    assert set(attempts["status"]) == {"success"}
+    assert not any("unpaywall.org" in call.request.url for call in responses.calls)
+
+
+@responses.activate
+def test_pmcid_fulltext_404_is_not_available_with_truthful_status(tmp_path, monkeypatch):
+    _setup(tmp_path, monkeypatch, pubmed_rows=[_pubmed_row("PMID2", doi=None, pmcid="PMC404")])
+    responses.add(responses.GET, f"{EUROPEPMC_BASE}/PMC404/fullTextXML", status=404)
+
+    result = PublicationBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 0
+    attempts = _attempts_df(tmp_path)
+    row = attempts.iloc[0]
+    assert row["status"] == "not_available"
+    assert row["http_status"] == 404
+    assert row["error"] == "europe_pmc_fulltext_not_found"
+
+
+@responses.activate
+def test_pmid_only_record_resolved_via_id_converter_routes_to_doi_path(tmp_path, monkeypatch):
+    """Round-1 P1 fix: a PMID-only record (no doi, no pmcid) is resolved
+    via NCBI's PMC ID Converter (exact-identifier reconciliation, not a
+    new search) BEFORE candidate identity is finalized; a resolved doi
+    routes it into the existing Unpaywall path."""
+    _setup(tmp_path, monkeypatch, pubmed_rows=[_pubmed_row("555", doi=None, pmcid=None)])
+    _mock_idconv([{"pmid": "555", "pmcid": None, "doi": "10.1000/resolved"}])
+    _mock_unpaywall("10.1000/resolved")
+    _mock_content("https://example.org/10.1000/resolved.pdf")
+
+    result = PublicationBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1
+    df = _manifest_df(tmp_path)
+    assert df.iloc[0]["source_record_id"] == "10.1000/resolved"
+    assert df.iloc[0]["identifier_type"] == "doi"
+    assert any("resolved via NCBI" in n for n in result.notes)
+
+
+@responses.activate
+def test_pmid_only_record_resolved_to_pmcid_routes_to_europe_pmc_path(tmp_path, monkeypatch):
+    _setup(tmp_path, monkeypatch, pubmed_rows=[_pubmed_row("777", doi=None, pmcid=None)])
+    _mock_idconv([{"pmid": "777", "pmcid": "PMC7777", "doi": None}])
+    _mock_europe_pmc_fulltext("PMC7777")
+
+    result = PublicationBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1
+    df = _manifest_df(tmp_path)
+    assert df.iloc[0]["identifier_type"] == "pmcid"
+    assert df.iloc[0]["pmcid"] == "PMC7777"
+
+
+@responses.activate
+def test_pmid_unresolvable_is_not_available_without_fake_http_status(tmp_path, monkeypatch):
+    """NCBI having no PMC/DOI mapping for a pmid is a genuine negative --
+    must not be recorded with a fabricated HTTP status of any kind."""
+    _setup(tmp_path, monkeypatch, pubmed_rows=[_pubmed_row("888", doi=None, pmcid=None)])
+    _mock_idconv([{"pmid": "888", "status": "error", "errmsg": "pmid not found"}])
+
+    result = PublicationBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 0
+    attempts = _attempts_df(tmp_path)
+    row = attempts.iloc[0]
+    assert row["status"] == "not_available"
+    assert pd.isna(row["http_status"])
+    assert row["error"] == "pmid_not_resolvable_to_doi_or_pmcid"
+
+
+@responses.activate
+def test_id_converter_failure_is_failed_not_not_available(tmp_path, monkeypatch):
+    """A transient failure of the ID Converter batch call itself (this
+    job couldn't even complete the lookup) must be `failed`, not
+    `not_available` -- not_available is reserved for a confirmed
+    negative, which this run never actually got to confirm."""
+    _setup(tmp_path, monkeypatch, pubmed_rows=[_pubmed_row("999", doi=None, pmcid=None)])
+    responses.add(responses.GET, IDCONV_BASE, status=500)
+
+    result = PublicationBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_failed == 1
+    attempts = _attempts_df(tmp_path)
+    row = attempts.iloc[0]
+    assert row["status"] == "failed"
+    assert row["error"] == "id_converter_lookup_failed_this_run"
+    assert any("PMC ID Converter lookup failed" in n for n in result.notes)
+
+
+@responses.activate
+def test_pmid_only_candidate_not_silently_dropped_from_candidate_universe(tmp_path, monkeypatch):
+    """Direct regression test for the round-1 blocker itself: mixing a
+    doi-addressable record with a pmid-only (no doi, no pmcid) record
+    must discover BOTH, not just the doi-addressable one."""
+    _setup(
+        tmp_path, monkeypatch,
+        pubmed_rows=[_pubmed_row("111", doi="10.1000/hasdoi"), _pubmed_row("222", doi=None, pmcid=None)],
+    )
+    _mock_unpaywall("10.1000/hasdoi")
+    _mock_content("https://example.org/10.1000/hasdoi.pdf")
+    _mock_idconv([{"pmid": "222", "status": "error", "errmsg": "pmid not found"}])
+
+    result = PublicationBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_discovered == 2
+    assert result.records_downloaded == 1
+    attempts = _attempts_df(tmp_path)
+    assert set(attempts["status"]) == {"success", "not_available"}
