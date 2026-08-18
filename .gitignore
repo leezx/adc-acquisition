@@ -16,3 +16,9 @@ DATA/checkpoints/
 !DATA/raw/.gitkeep
 !DATA/logs/.gitkeep
 !DATA/checkpoints/.gitkeep
+
+# Job 15's per-run generated query registries (regenerated identically from
+# configs/known_adc_assets.yaml + fixed templates every run — not
+# standalone evidence, same reasoning as raw/logs/checkpoints above).
+DATA/generated_queries/
+!DATA/generated_queries/.gitkeep

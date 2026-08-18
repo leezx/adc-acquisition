@@ -791,6 +791,114 @@ skip-by-default confirmed on rerun.
 at https://unpaywall.org/products/api, but Unpaywall rejects
 placeholder-looking addresses with HTTP 422.
 
+## Running the known-ADC asset expansion job (Job 15)
+
+```bash
+python -m adc_acquisition known_adc_asset_expansion --dry-run
+python -m adc_acquisition known_adc_asset_expansion
+python -m adc_acquisition known_adc_asset_expansion --sources pubmed,clinicaltrials  # subset of {pubmed,europe_pmc,wipo,epo,uspto,clinicaltrials}
+```
+
+The final job (Prompt.md section 19) — Jobs 01-14 together are the broad
+DISCOVERY PASS; this is the separate ASSET-CENTRIC EXPANSION PASS
+Prompt.md describes ("do not conflate the two passes"). Given a curated
+registry of known ADC assets (`configs/known_adc_assets.yaml` — name,
+aliases, dev codes, target, company — an INPUT to this job, not something
+it discovers itself; 14 active assets, since `moxetumomab_pasudotox` is
+set inactive: NCI classifies it as a recombinant immunotoxin, not a
+classic antibody-linker-payload conjugate), it generates Prompt.md's
+search templates ("&lt;name&gt;", "&lt;alias&gt;", "&lt;name&gt;
+patent/trial/activity/cytotoxicity/xenograft/IC50") translated into each
+source's own real query syntax, and executes them by calling Job 01
+(PubMed), Job 02 (Europe PMC), Job 03 (ClinicalTrials.gov), Job 08
+(WIPO), Job 09 (USPTO), and Job 10 (EPO) **in-process**.
+
+**Architecturally unique in this repo: no content-version manifest of
+its own.** Every discovered/materialized record lands in those 6 jobs'
+own manifests, tagged with its own asset-expansion `query_id` for
+provenance — building a separate acquisition pipeline here would
+duplicate the checkpointing/versioning/rate-limiting those jobs already
+have fully hardened, the same "don't re-acquire what an existing job
+already does" discipline Job 13 (USPTO's own SPEC documents) and Job 14
+(Europe PMC) already established. The 6 suffix templates
+(patent/trial/activity/cytotoxicity/xenograft/IC50) are generated for
+PubMed, Europe PMC, **and USPTO** — USPTO's own free-text search covers
+the full specification content of an application, not just
+title/abstract (verified live), so it's actually better-suited to those
+templates than WIPO/EPO. WIPO/EPO's OPS biblio search is restricted to
+title/abstract only — that experimental-data language lives in the full
+specification text Job 13 already acquires separately — so WIPO/EPO
+instead get every bare identifier (name + every alias + every dev code)
+with no suffix templates. ClinicalTrials.gov is driven entirely through
+its existing `--intervention` lookup (built during Job 03 specifically
+anticipating this job). Crossref (Job 04) is deliberately not a target —
+its own free-text search is unusable for precise discovery, already
+established live. `--sources` is validated against a fixed allowed set —
+a typo or stray value raises immediately rather than silently running a
+smaller subset while still reporting overall success.
+
+**Isolation from the broad-discovery pass, both self-caught before this
+job was ever run for real, exception-safe (a `finally` block, not just
+code that runs after a successful call):**
+- Jobs 01/02/03/08/09/10 each end their own run by unconditionally
+  writing their `--resume` cursor (`last_success_max_date`). Since this
+  job calls those SAME job classes (sharing their checkpoint files),
+  naively invoking them would silently advance the broad-discovery
+  pass's own resume cursor forward — corrupting a subsequent `--resume`
+  run of the underlying job.
+- Each of those jobs also unconditionally overwrites its own
+  `reports/acquisition/<name>.md` at the end of every run with whatever
+  ITS OWN run just did — an asset-expansion invocation would silently
+  clobber that report's account of the broad pass with an unrelated,
+  much narrower view. Prompt.md's "do not conflate the two passes"
+  applies to the reporting surface too, even though manifest/checkpoint
+  sharing is correct and intentional.
+
+Fixed: this job's own `--resume` is a no-op (always considers the full
+active registry), it never passes `resume=True` to a sub-job, and
+`_invoke_isolated()` snapshots and restores each sub-job's resume-cursor
+field AND its report.md after every call — in a `finally` block, so a
+sub-job exception still propagates but never skips restoration (per-record
+content-hash/version checkpoint state, and every content/discovery/attempts
+manifest, is left fully shared — a record found by both passes should
+still only be fetched/versioned once). Full per-record provenance for
+what THIS pass discovered lives in each source's own
+`*_discovery.parquet`/`*_attempts.parquet` instead (every row tagged with
+its own asset-expansion `query_id`) — that, not the human-readable
+report, is the real audit trail.
+
+**Query IDs are derived from a hash of the query's own text, not just
+(asset_id, identifier-or-suffix-name).** Prompt.md's own asset input is
+explicitly "canonical/temporary ADC name" — a name can legitimately be
+corrected or finalized later. Keying a suffix query's id only on a fixed
+label (e.g. `..._NAME_IC50`) would silently keep the SAME query_id after
+such a rename even though the query_text (which embeds canonical_name)
+had changed underneath it — a real violation of query provenance
+(Prompt.md section 20). Hashing the actual query_text fixes this and, as
+a bonus, eliminates any residual risk of two different identifiers
+colliding after slug normalization.
+
+**Also self-caught live** (a real run, not a mock, was the only thing
+that could have caught this): EPO OPS's search endpoint returns **HTTP
+404** for a query with genuinely zero hits, not an empty HTTP 200 — a
+case Job 08/10's own broad topic queries never hit (they always have
+hundreds+ of real matches), but common for this job's specific brand-name
+searches. Fixed in the shared `adc_acquisition/ops_client.py` (benefits
+Jobs 08/10 too, not just this job).
+
+Live-verified end-to-end against this repo's own real committed
+manifests using a 2-asset verification subset (trastuzumab deruxtecan,
+brentuximab vedotin — the real committed registry has 14 active assets;
+a full production run generates substantially more queries and was
+intentionally not run in full this round to bound OPS/API quota usage):
+78 queries across all 6 sources, 3353 records discovered, 5 newly
+downloaded (including 2 real new USPTO applications), 31 correctly
+recognized as already-materialized (`skipped_unchanged`, not re-fetched),
+0 failed. Confirmed via the real checkpoint files that every sub-job's
+`last_success_max_date` remained at its original date (not today), and
+via `git diff` against the pre-Job-15 commit that all 5 broad source
+reports are byte-identical to their state before this job ever ran.
+
 ## Tests
 
 ```bash
@@ -802,11 +910,11 @@ or used by the normal test suite.
 
 ## Status
 
-See `reports/acquisition/COVERAGE.md`. Only Job 01 (PubMed), Job 02
-(Europe PMC), Job 03 (ClinicalTrials.gov), Job 04 (Crossref), Job 05
-(SEC EDGAR), Job 06 (FDA), Job 07 (EMA), Job 08 (WIPO), Job 09 (USPTO),
-Job 10 (EPO), Job 11 (company pipeline pages), Job 12 (company press
-releases), Job 13 (patent bioactivity corpus), and Job 14 (publication
-bioactivity corpus) are implemented so far; only Job 15 (known-ADC asset
-expansion) remains — sources are implemented and reviewed one at a
-time.
+See `reports/acquisition/COVERAGE.md`. All 15 jobs from Prompt.md are now
+implemented: Job 01 (PubMed), Job 02 (Europe PMC), Job 03
+(ClinicalTrials.gov), Job 04 (Crossref), Job 05 (SEC EDGAR), Job 06
+(FDA), Job 07 (EMA), Job 08 (WIPO), Job 09 (USPTO), Job 10 (EPO), Job 11
+(company pipeline pages), Job 12 (company press releases), Job 13
+(patent bioactivity corpus), Job 14 (publication bioactivity corpus),
+and Job 15 (known-ADC asset expansion) — each implemented and reviewed
+one at a time.

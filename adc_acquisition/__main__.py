@@ -17,6 +17,7 @@ from jobs.ema.job import EMAJob
 from jobs.epo.job import EPOJob
 from jobs.europe_pmc.job import EuropePMCJob
 from jobs.fda.job import FDAJob
+from jobs.known_adc_asset_expansion.job import KnownADCAssetExpansionJob
 from jobs.patent_bioactivity_corpus.job import PatentBioactivityCorpusJob
 from jobs.publication_bioactivity_corpus.job import PublicationBioactivityCorpusJob
 from jobs.pubmed.job import PubMedJob
@@ -39,6 +40,7 @@ JOBS = {
     "company_press_release": CompanyPressReleaseJob,
     "patent_bioactivity_corpus": PatentBioactivityCorpusJob,
     "publication_bioactivity_corpus": PublicationBioactivityCorpusJob,
+    "known_adc_asset_expansion": KnownADCAssetExpansionJob,
 }
 
 

@@ -31,7 +31,9 @@ rejected with CLIENT.UnknownDateFormat). Range span is capped at 100 per
 request, and total-result-count access is capped at 2000 across all pages
 of one query (CLIENT.InvalidQuery beyond that) — confirmed live. Each
 registered query (WIPO's or EPO's) must be checked against this cap before
-being registered.
+being registered. A query with genuinely ZERO total results returns HTTP
+404 (SERVER.EntityNotFound), not HTTP 200 with an empty result set —
+see search()'s own docstring for how that's handled.
 
 Biblio fetch: GET
 .../rest-services/published-data/publication/docdb/{country}.{doc-number}.{kind}/biblio.
@@ -166,12 +168,27 @@ class OPSClient:
 
     def search(self, cql_query: str, range_begin: int, range_end: int) -> bytes:
         """Raw XML bytes for one page of search results. range_end - range_begin + 1
-        must be <= MAX_RANGE_SPAN, and range_end must be <= MAX_TOTAL_RESULTS."""
+        must be <= MAX_RANGE_SPAN, and range_end must be <= MAX_TOTAL_RESULTS.
+
+        Live-verified (2026-08-18, via Job 15's asset-name searches — the
+        first queries in this codebase specific enough to genuinely have
+        zero hits): OPS's search endpoint returns HTTP 404 with a
+        SERVER.EntityNotFound fault body for a query with ZERO total
+        results, not an HTTP 200 with an empty result set. Job 08/10's own
+        broad topic queries never exercised this path (they always have
+        hundreds+ of real hits). Returns a minimal parseable XML stub in
+        this case rather than raising — adc_acquisition/ops_parser.py's
+        parse_search_response() already treats a response with no
+        <biblio-search> element as total_count=0, hits=[], so the caller's
+        existing pagination loop (`if not page_hits: break`) handles it
+        exactly like a genuine empty page, no caller changes needed."""
         params = {"q": cql_query, "Range": f"{range_begin}-{range_end}"}
         attempt = 0
         while True:
             attempt += 1
             response = self._get(self.search_client, OPS_SEARCH_URL, params)
+            if response.status_code == 404 and b"EntityNotFound" in response.content:
+                return b'<ops:no-results xmlns:ops="http://ops.epo.org"/>'
             if response.status_code == 403 and "ThrottlingControlQuota" in response.headers.get("x-rejection-reason", ""):
                 if attempt >= SEARCH_THROTTLE_MAX_ATTEMPTS:
                     raise OPSThrottleError(
