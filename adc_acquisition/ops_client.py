@@ -39,6 +39,36 @@ A genuine "no such publication" is HTTP 404 with a structured
 SERVER.EntityNotFound fault body (verified live) — handled as a normal
 not-found outcome, not a fetch failure.
 
+Full text (Job 13/patent bioactivity corpus): GET
+.../rest-services/published-data/publication/docdb/{docdb_id}/description
+and .../claims. Live-verified 2026-08-18: a THIRD endpoint,
+.../fulltext, exists but is NOT the combined text -- it's a small
+"fulltext-inquiry" response (~1.5KB) listing which full-text
+formats/languages are available, not the specification/claim body text
+itself; `description`/`claims` are the real content endpoints (~15KB-
+100KB+ each for a real patent, numbered-paragraph specification text and
+claim text respectively). Per-publication availability is EMPIRICAL, not
+assumed by authority: a real WO publication tested live returned HTTP
+404 SERVER.EntityNotFound on description/claims (while its biblio
+succeeded), but EPO's own OPS Reference Guide documents full-text
+availability across multiple authorities INCLUDING WO, not just EP --
+job 13's round-1 review correctly caught that generalizing from that one
+404 to "OPS full text is EP-only" was an overreach, so Job 13 attempts
+BOTH WIPO (WO) and EPO (EP) candidates and records each individual
+publication/artifact's real availability as `success` or `not_available`
+rather than excluding an entire upstream source in code -- see
+jobs/patent_bioactivity_corpus/job.py's module docstring for the actual,
+empirical per-authority coverage this produces. `X-Throttling-Control` on
+description/claims fetches showed the SAME `retrieval` bucket biblio
+fetches use (no separate "fulltext" bucket observed) --
+fetch_description/fetch_claims below reuse the biblio_client
+accordingly. EPO's own OPS terms (developers.epo.org /
+epo.org/en/searching-for-patents/data/web-services/ops) state the
+free-tier data quota is 4GB **per week**, not per month -- full-text
+documents are far larger than biblio XML, so this is a real (if
+generous) constraint for Job 13 specifically; see that job's docstring
+for how usage is surfaced.
+
 Throttling — verified live on 2026-08-13, and materially different from
 every other source in this repo: OPS meters `search` and `retrieval`
 (biblio fetch) as SEPARATE quota buckets, reported live via the
@@ -158,6 +188,30 @@ class OPSClient:
         None on OPS's genuine "no such publication" 404
         (SERVER.EntityNotFound), not a fetch failure."""
         url = f"{OPS_BASE}/published-data/publication/docdb/{docdb_id}/biblio"
+        response = self._get(self.biblio_client, url, {})
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        return response.content
+
+    def fetch_description(self, docdb_id: str) -> bytes | None:
+        """Raw XML of a publication's specification/description text --
+        works for both WO- and EP-prefixed docdb_ids; per-publication
+        availability is empirical (see module docstring), not restricted
+        to one authority. None on OPS's genuine "no full text" 404
+        (SERVER.EntityNotFound)."""
+        url = f"{OPS_BASE}/published-data/publication/docdb/{docdb_id}/description"
+        response = self._get(self.biblio_client, url, {})
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        return response.content
+
+    def fetch_claims(self, docdb_id: str) -> bytes | None:
+        """Raw XML of a publication's claim text -- same both-authorities
+        coverage and 404-as-genuine-absence semantics as
+        fetch_description."""
+        url = f"{OPS_BASE}/published-data/publication/docdb/{docdb_id}/claims"
         response = self._get(self.biblio_client, url, {})
         if response.status_code == 404:
             return None

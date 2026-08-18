@@ -17,6 +17,7 @@ from jobs.ema.job import EMAJob
 from jobs.epo.job import EPOJob
 from jobs.europe_pmc.job import EuropePMCJob
 from jobs.fda.job import FDAJob
+from jobs.patent_bioactivity_corpus.job import PatentBioactivityCorpusJob
 from jobs.pubmed.job import PubMedJob
 from jobs.sec.job import SECJob
 from jobs.uspto.job import USPTOJob
@@ -35,6 +36,7 @@ JOBS = {
     "epo": EPOJob,
     "company_pipeline": CompanyPipelineJob,
     "company_press_release": CompanyPressReleaseJob,
+    "patent_bioactivity_corpus": PatentBioactivityCorpusJob,
 }
 
 

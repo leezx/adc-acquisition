@@ -285,18 +285,33 @@ company_press_release:
 
 patent_bioactivity_corpus:
   source_type: derived
-  authority: null
-  official_url: null
-  api_docs_url: null
-  acquisition_method: null
-  authentication_required: false
-  rate_limit: null
-  license_or_access_note: Second-pass job; depends on patents_wipo/uspto/epo identifiers.
-  raw_formats: []
-  update_strategy: null
-  implementation_status: not_started
-  enabled: false
-  notes: Job 13 in Prompt.md, promoted to #13 in recommended execution order.
+  authority: primary
+  official_url: https://ops.epo.org/ (same EPO OPS account Jobs 08/10 use, description/claims endpoints)
+  api_docs_url: https://developers.epo.org/ops-v3-2/documentation
+  acquisition_method: api
+  authentication_required: "yes — OAuth2 client-credentials (OPS_CONSUMER_KEY/OPS_CONSUMER_SECRET), same free-registration account Jobs 08/10 use"
+  rate_limit: "shares the `retrieval` bucket with biblio fetches (verified live, no separate fulltext bucket); EPO's OPS free tier separately caps at 4GB/WEEK of data across ALL OPS usage -- full-text documents are far larger than biblio XML, see result.notes for per-run byte totals"
+  license_or_access_note: "Second-pass job; candidates read from Job 08 (WIPO)'s wipo.parquet AND Job 10 (EPO)'s epo.parquet, NOT a new discovery search. EPO OPS full-text data (description/claims); WIPO and EPO publications both attempted, per-authority coverage is empirical (see report)."
+  raw_formats: [xml]
+  update_strategy: "no discovery ledger (candidates come from already-materialized upstream manifests, not a live query, same reasoning as Crossref/SEC's CIK level); materialization skips already-successful artifacts by default (no request) as an efficiency default, same OPS/WIPO/EPO-derived design -- `--refresh` re-verifies already-successful artifacts; a 404 (`not_available`, OPS confirms no full text exists) is retried on every ordinary run, NOT treated as permanently terminal."
+  implementation_status: implemented
+  enabled: true
+  notes: >
+    Job 13 in Prompt.md, promoted to #13 in recommended execution order.
+    "Should NOT search the entire patent universe again" (Prompt.md) --
+    reads publication_number candidates directly from Job 08's
+    wipo.parquet AND Job 10's epo.parquet. ROUND-1 FIX (2026-08-18): the
+    initial version excluded WIPO entirely, generalizing from one 404'd
+    WO publication to "OPS full text is EP-only" -- EPO's own OPS
+    documentation lists full-text availability across multiple
+    authorities including WO, so that was an overreach from n=1. WIPO
+    candidates are now attempted exactly like EPO candidates; per-
+    authority coverage (success/not_available per upstream_source) is
+    now an empirical result of this job's own attempts, reported
+    separately per authority, not an assumption baked into which
+    manifests get read. USPTO (Job 09) is still not duplicated here:
+    its already-acquired SPEC-type documents already bundle
+    description + claims + abstract for the original filing.
 
 publication_bioactivity_corpus:
   source_type: derived
