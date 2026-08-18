@@ -49,20 +49,59 @@ def _epo_row(publication_number, application_number="APP123", pub_date="2026-01-
     )
 
 
+def _wipo_row(publication_number, application_number="APP123", pub_date="2026-01-01", version=1):
+    return new_manifest_row(
+        extra_fields=EPO_EXTRA_FIELDS,  # WIPO's manifest uses the identical PUBLICATION_EXTRA_FIELDS shape as EPO's
+        source="wipo",
+        source_record_id=publication_number,
+        source_record_type="wipo_publication",
+        title=f"Title for {publication_number}",
+        url=None,
+        publication_or_release_date=pub_date,
+        retrieved_at="2026-01-01T00:00:00+00:00",
+        query_id="WIPO_TEST_QUERY",
+        query_text="pn=WO",
+        raw_file_path="/dev/null",
+        raw_format="xml",
+        content_hash="deadbeef",
+        download_status="success",
+        http_status=200,
+        license_or_access_note="test",
+        parent_record_id=None,
+        version=version,
+        notes=None,
+        publication_number=publication_number,
+        family_id="FAM1",
+        application_number=application_number,
+        filing_date="2025-01-01",
+        priority_date="2025-01-01",
+        applicants=[],
+        inventors=[],
+        ipc_classes=[],
+        cpc_classes=[],
+    )
+
+
 def _write_epo_manifest(path, rows):
+    write_manifest(rows, path, extra_fields=EPO_EXTRA_FIELDS)
+
+
+def _write_wipo_manifest(path, rows):
     write_manifest(rows, path, extra_fields=EPO_EXTRA_FIELDS)
 
 
 def _base_args(tmp_path, **overrides):
     defaults = dict(
         dry_run=False, limit=None, resume=False, since=None, until=None, refresh=False,
-        output=str(tmp_path / "DATA"), epo_manifest=str(tmp_path / "DATA" / "manifests" / "epo.parquet"),
+        output=str(tmp_path / "DATA"),
+        epo_manifest=str(tmp_path / "DATA" / "manifests" / "epo.parquet"),
+        wipo_manifest=str(tmp_path / "DATA" / "manifests" / "wipo.parquet"),
     )
     defaults.update(overrides)
     return argparse.Namespace(**defaults)
 
 
-def _setup(tmp_path, monkeypatch, epo_rows):
+def _setup(tmp_path, monkeypatch, epo_rows, wipo_rows=None):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("OPS_CONSUMER_KEY", "test-key")
     monkeypatch.setenv("OPS_CONSUMER_SECRET", "test-secret")
@@ -74,6 +113,8 @@ def _setup(tmp_path, monkeypatch, epo_rows):
     monkeypatch.setattr(job_module, "SEARCH_RATE_LIMIT", 1000)
     monkeypatch.setattr(job_module, "BIBLIO_RATE_LIMIT", 1000)
     _write_epo_manifest(tmp_path / "DATA" / "manifests" / "epo.parquet", epo_rows)
+    if wipo_rows:
+        _write_wipo_manifest(tmp_path / "DATA" / "manifests" / "wipo.parquet", wipo_rows)
 
 
 def _mock_auth():
@@ -369,3 +410,98 @@ def test_query_id_deterministic_and_stable(tmp_path, monkeypatch):
 
     attempts = _attempts_df(tmp_path)
     assert set(attempts["query_id"]) == {"PATENTBIO_EP1000000A1_DESCRIPTION", "PATENTBIO_EP1000000A1_CLAIMS"}
+
+
+@responses.activate
+def test_wipo_candidate_success_and_not_available_does_not_exclude_publication(tmp_path, monkeypatch):
+    """Round-1 fix: WIPO (WO-prefixed) candidates must be attempted
+    exactly like EPO candidates, not globally excluded. A WO publication
+    whose description succeeds but whose claims 404 must still produce a
+    materialized description artifact -- the publication as a whole is
+    NOT dropped just because one artifact is genuinely unavailable."""
+    _setup(tmp_path, monkeypatch, epo_rows=[], wipo_rows=[_wipo_row("WO2020000001A1")])
+    _mock_auth()
+    _mock_artifact("WO.2020000001.A1", "description", body=b"<xml>WO description body</xml>")
+    _mock_artifact("WO.2020000001.A1", "claims", status=404, body=b"")
+
+    result = PatentBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1  # description succeeded
+    df = _manifest_df(tmp_path)
+    assert set(df["publication_number"]) == {"WO2020000001A1"}
+    assert set(df["upstream_source"]) == {"wipo"}
+    assert set(df["artifact_type"]) == {"description"}  # claims not_available, not in manifest
+
+    attempts = _attempts_df(tmp_path)
+    latest = attempts.set_index("source_record_id")["status"].to_dict()
+    assert latest["PATENTBIO_WO2020000001A1_DESCRIPTION"] == "success"
+    assert latest["PATENTBIO_WO2020000001A1_CLAIMS"] == "not_available"
+
+
+@responses.activate
+def test_both_wipo_and_epo_candidates_processed_together(tmp_path, monkeypatch):
+    _setup(
+        tmp_path, monkeypatch,
+        epo_rows=[_epo_row("EP1000000A1")],
+        wipo_rows=[_wipo_row("WO2020000001A1")],
+    )
+    _mock_auth()
+    _mock_artifact("EP.1000000.A1", "description")
+    _mock_artifact("EP.1000000.A1", "claims")
+    _mock_artifact("WO.2020000001.A1", "description")
+    _mock_artifact("WO.2020000001.A1", "claims")
+
+    result = PatentBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.queries_run == 2  # 1 EP + 1 WO candidate publication
+    assert result.records_downloaded == 4  # 2 artifacts each
+    df = _manifest_df(tmp_path)
+    assert set(df["upstream_source"]) == {"epo", "wipo"}
+
+
+@responses.activate
+def test_not_available_this_run_reported_in_notes(tmp_path, monkeypatch):
+    """Round-1 fix: not_available outcomes this run must be explicitly
+    counted and surfaced (not silently absorbed into "0 failed, N
+    downloaded" with no trace of how many were genuinely unavailable)."""
+    _setup(tmp_path, monkeypatch, [_epo_row("EP1000000A1"), _epo_row("EP2000000A1")])
+    _mock_auth()
+    _mock_artifact("EP.1000000.A1", "description", status=404, body=b"")
+    _mock_artifact("EP.1000000.A1", "claims", status=404, body=b"")
+    _mock_artifact("EP.2000000.A1", "description", body=b"<xml>ok</xml>")
+    _mock_artifact("EP.2000000.A1", "claims", body=b"<xml>ok</xml>")
+
+    result = PatentBioactivityCorpusJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 2
+    assert result.records_failed == 0
+    assert any("2 not_available" in n for n in result.notes)
+    # the this-run outcome accounting invariant: attempted/fast-skipped
+    # outcomes must sum to success + skipped_unchanged + not_available + failed
+    assert any("4 total attempted/fast-skipped outcomes" in n for n in result.notes)
+
+
+@responses.activate
+def test_query_text_consistent_between_fast_skip_and_fetch(tmp_path, monkeypatch):
+    """Round-1 fix: the same query_id (a deterministic per-artifact id)
+    must resolve to the SAME query_text whether the row came from a real
+    fetch or a fast-skip -- the exact provenance bug Job 12's round-1
+    review caught, recurring here between two code paths in the same
+    job."""
+    _setup(tmp_path, monkeypatch, [_epo_row("EP1000000A1")])
+    _mock_auth()
+    _mock_artifact("EP.1000000.A1", "description", body=b"<xml>v1</xml>")
+    _mock_artifact("EP.1000000.A1", "claims", body=b"<xml>v1 claims</xml>")
+    PatentBioactivityCorpusJob().run(_base_args(tmp_path))
+    attempts_run1 = _attempts_df(tmp_path)
+    query_text_by_id_run1 = attempts_run1.set_index("source_record_id")["query_text"].to_dict()
+
+    responses.reset()
+    _mock_auth()
+    # Ordinary rerun -- fast-skip path, no HTTP fetch at all.
+    PatentBioactivityCorpusJob().run(_base_args(tmp_path))
+    attempts_run2 = _attempts_df(tmp_path)
+    query_text_by_id_run2 = attempts_run2[attempts_run2["status"] == "skipped_unchanged"].set_index("source_record_id")["query_text"].to_dict()
+
+    for source_record_id, query_text in query_text_by_id_run2.items():
+        assert query_text == query_text_by_id_run1[source_record_id]

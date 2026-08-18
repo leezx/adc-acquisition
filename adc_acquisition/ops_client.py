@@ -41,28 +41,33 @@ not-found outcome, not a fetch failure.
 
 Full text (Job 13/patent bioactivity corpus): GET
 .../rest-services/published-data/publication/docdb/{docdb_id}/description
-and .../claims. Live-verified 2026-08-19: a THIRD endpoint,
+and .../claims. Live-verified 2026-08-18: a THIRD endpoint,
 .../fulltext, exists but is NOT the combined text -- it's a small
 "fulltext-inquiry" response (~1.5KB) listing which full-text
 formats/languages are available, not the specification/claim body text
 itself; `description`/`claims` are the real content endpoints (~15KB-
-100KB+ each for a real EP patent, numbered-paragraph specification text
-and claim text respectively). CRITICAL LIMITATION, live-verified: full
-text coverage is EP-ONLY. A real WO publication confirmed to exist via
-live search (biblio succeeds, HTTP 200) returns HTTP 404
-SERVER.EntityNotFound on description/claims/fulltext -- this is a hard
-OPS data-coverage limitation (WO/PCT publications that never entered EP
-regional phase have no full text in OPS), not a rate/access/auth issue.
-Job 08 (WIPO)'s WO-prefixed candidates are therefore NOT processed by
-Job 13 at all -- see jobs/patent_bioactivity_corpus/job.py's module
-docstring. `X-Throttling-Control` on description/claims fetches showed
-the SAME `retrieval` bucket biblio fetches use (no separate "fulltext"
-bucket observed) -- fetch_description/fetch_claims below reuse the
-biblio_client accordingly. EPO's own "Terms and Conditions for use of
-OPS" impose a 4GB/month free-tier data quota -- full-text documents are
-far larger than biblio XML, so this is a real (if generous) constraint
-for Job 13 specifically; see that job's docstring for how usage is
-surfaced.
+100KB+ each for a real patent, numbered-paragraph specification text and
+claim text respectively). Per-publication availability is EMPIRICAL, not
+assumed by authority: a real WO publication tested live returned HTTP
+404 SERVER.EntityNotFound on description/claims (while its biblio
+succeeded), but EPO's own OPS Reference Guide documents full-text
+availability across multiple authorities INCLUDING WO, not just EP --
+job 13's round-1 review correctly caught that generalizing from that one
+404 to "OPS full text is EP-only" was an overreach, so Job 13 attempts
+BOTH WIPO (WO) and EPO (EP) candidates and records each individual
+publication/artifact's real availability as `success` or `not_available`
+rather than excluding an entire upstream source in code -- see
+jobs/patent_bioactivity_corpus/job.py's module docstring for the actual,
+empirical per-authority coverage this produces. `X-Throttling-Control` on
+description/claims fetches showed the SAME `retrieval` bucket biblio
+fetches use (no separate "fulltext" bucket observed) --
+fetch_description/fetch_claims below reuse the biblio_client
+accordingly. EPO's own OPS terms (developers.epo.org /
+epo.org/en/searching-for-patents/data/web-services/ops) state the
+free-tier data quota is 4GB **per week**, not per month -- full-text
+documents are far larger than biblio XML, so this is a real (if
+generous) constraint for Job 13 specifically; see that job's docstring
+for how usage is surfaced.
 
 Throttling — verified live on 2026-08-13, and materially different from
 every other source in this repo: OPS meters `search` and `retrieval`

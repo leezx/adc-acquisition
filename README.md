@@ -638,26 +638,38 @@ python -m adc_acquisition patent_bioactivity_corpus --refresh   # periodic re-ve
 ```
 
 A SECOND-PASS job — Prompt.md is explicit it "should NOT search the
-entire patent universe again." Candidates are read directly from Job 10
-(EPO)'s already-materialized `epo.parquet` manifest (latest version per
-`publication_number` only), not from a new OPS search. For each EP
-publication, two independent artifacts are fetched via EPO OPS's
-full-text endpoints: `description` (specification body text — where
-Prompt.md's target sections Examples/Experimental/IC50/etc. actually
-live) and `claims`, each its own independent content-version manifest
-entry (own checkpoint/version, `parent_record_id` pointing back to the
-EPO manifest's `publication_number`).
+entire patent universe again." Candidates are read directly from Job 08
+(WIPO)'s `wipo.parquet` AND Job 10 (EPO)'s `epo.parquet` manifests
+(latest version per `publication_number` only), not from a new OPS
+search. For each candidate publication, two independent artifacts are
+fetched via EPO OPS's full-text endpoints: `description` (specification
+body text — where Prompt.md's target sections
+Examples/Experimental/IC50/etc. actually live) and `claims`, each its
+own independent content-version manifest entry (own checkpoint/version,
+`parent_record_id` pointing back to the upstream manifest's
+`publication_number`, `upstream_source` recording which of WIPO/EPO it
+came from).
 
-**Live finding (2026-08-19):** EPO OPS's full-text retrieval is
-**EP-only** — a real WO publication (confirmed to exist via live search,
-its biblio fetch succeeds) returns HTTP 404 on
-`description`/`claims`/`fulltext`. This is a hard OPS data-coverage
-limitation, not a rate/access issue. **Job 08 (WIPO)'s WO-prefixed
-candidates are therefore NOT processed by this job** — a disclosed
-coverage gap, not silently narrowed. **Job 09 (USPTO) is also not
-duplicated here**: its already-acquired SPEC-type documents
-(`uspto_documents.parquet`) are the as-filed Specification PDF, already
-bundling description + claims + abstract for the original filing.
+**Round-1 fix (2026-08-18):** the initial version of this job read ONLY
+`epo.parquet`, reasoning from a single live-tested WO publication (whose
+description/claims 404'd while its biblio succeeded) that OPS full-text
+coverage was a hard EP-only limitation and excluding WIPO entirely. This
+was an overreach from n=1 — EPO's own OPS Reference Guide documents
+full-text availability across multiple authorities including WO, not
+just EP. WIPO candidates are now attempted exactly like EPO candidates;
+a 404 is recorded per (publication, artifact) as `not_available` — the
+already-correct mechanism for "OPS confirms this one thing isn't there"
+— rather than excluding an entire upstream source in code. Real
+per-authority coverage (WIPO vs. EPO) is reported separately in the
+written report, as an empirical result of this job's own attempts — a
+live run against this repo's own real WIPO/EPO manifests found WIPO
+publications actually have SUBSTANTIAL full-text coverage (38/40
+artifacts, 95%), comparable to EPO's own (72/90, 80%), directly
+disproving the original "EP-only" assumption.
+**Job 09 (USPTO) is still not duplicated here**: its already-acquired
+SPEC-type documents (`uspto_documents.parquet`) are the as-filed
+Specification PDF, already bundling description + claims + abstract for
+the original filing.
 
 Materialization mirrors Job 10 (EPO)'s fully-hardened design (own raw
 checkpoint namespace, resolved-status-AND-version-match skip decision,
@@ -665,7 +677,7 @@ checkpoint namespace, resolved-status-AND-version-match skip decision,
 no full text exists for this specific artifact) is retried on every
 ordinary run — staying conservative about assuming any 404 is
 permanent, per the lesson from Job 05 (SEC)'s round-3 review. EPO's OPS
-free tier has a 4GB/month data quota across all OPS usage — full-text
+free tier has a 4GB/WEEK data quota across all OPS usage — full-text
 documents are far larger than biblio XML, so `result.notes` reports
 per-run downloaded bytes for monitoring.
 
