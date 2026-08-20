@@ -21,36 +21,36 @@ since=(no lower bound), until=(no upper bound) (filtered via `FIRST_PDATE:[...]`
 
 ## Records discovered
 
-780 query-hits across 4 active queries; 541 unique records.
+1180 query-hits across 4 active queries; 835 unique records.
 
 ## Records downloaded
 
-0 new/changed metadata snapshots, 20 skipped as unchanged (matched checkpoint content hash).
+580 new/changed metadata snapshots, 20 skipped as unchanged (matched checkpoint content hash).
 
 ## Duplicates
 
-202 records were discovered by more than one query. As with PubMed, the content manifest attributes one primary query_id per record; the full multi-query history lives in `europe_pmc_discovery.parquet` (append-only, one row per (record, query, run)).
+307 records were discovered by more than one query. As with PubMed, the content manifest attributes one primary query_id per record; the full multi-query history lives in `europe_pmc_discovery.parquet` (append-only, one row per (record, query, run)).
 
 ### Records per query
 
-- EPMC_ADC_001: 200
+- EPMC_ADC_001: 600
 - EPMC_ADC_002: 200
 - EPMC_ADC_003: 200
 - EPMC_ADC_004: 180
 
 ## Missing fields
 
-- abstract missing in 1/20 records
-- doi missing in 8/20 records
-- journal missing in 2/20 records
+- abstract missing in 1/600 records
+- doi missing in 24/600 records
+- journal missing in 2/600 records
 
-- records with abstract: 19
-- records with DOI: 12
-- open access: 0
+- records with abstract: 599
+- records with DOI: 576
+- open access: 247
 
 ## Full text (independent artifact, see `europe_pmc_fulltext.parquet`)
 
-0 full-text fetches attempted this run (0 new/changed, 0 unchanged, 0 failed). Full text is tracked as its own content-version manifest, keyed by pmcid with `parent_record_id` pointing back to the metadata record — never as a field on the metadata row itself, so a full-text fetch failure or a later successful retry can never touch the metadata snapshot.
+247 full-text fetches attempted this run (247 new/changed, 0 unchanged, 0 failed). Full text is tracked as its own content-version manifest, keyed by pmcid with `parent_record_id` pointing back to the metadata record — never as a field on the metadata row itself, so a full-text fetch failure or a later successful retry can never touch the metadata snapshot.
 
 ## Failed downloads
 
@@ -74,5 +74,5 @@ No API key or authentication required. No officially published numeric rate limi
 ## Reproduction command
 
 ```bash
-python -m adc_acquisition europe_pmc --limit 541 --output DATA
+python -m adc_acquisition europe_pmc --limit 835 --output DATA
 ```
