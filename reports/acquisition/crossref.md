@@ -14,34 +14,34 @@ Crossref's `query.bibliographic`/`query.title` params are relevance-ranked full-
 
 ## Reconciliation sources used
 
-- CROSSREF_RECONCILE_EUROPE_PMC: 12
-- CROSSREF_RECONCILE_PUBMED: 12
+- CROSSREF_RECONCILE_EUROPE_PMC: 26
+- CROSSREF_RECONCILE_PUBMED: 37
 
 - all configured reconciliation sources had a manifest to read
 
 ## Records discovered
 
-24 DOI-source pairs across 2 reconciliation sources; 24 unique DOIs.
+63 DOI-source pairs across 2 reconciliation sources; 62 unique DOIs.
 
 ## Records downloaded
 
-0 new/changed snapshots, 20 skipped as unchanged (matched checkpoint content hash).
+41 new/changed snapshots, 20 skipped as unchanged (matched checkpoint content hash).
 
 ## Duplicates
 
-0 DOIs were contributed by more than one upstream source (e.g. a paper indexed by both PubMed and Europe PMC) — each is recorded once in the content manifest; the full multi-source history lives in `crossref_discovery.parquet`.
+1 DOIs were contributed by more than one upstream source (e.g. a paper indexed by both PubMed and Europe PMC) — each is recorded once in the content manifest; the full multi-source history lives in `crossref_discovery.parquet`.
 
 ## Missing fields
 
 - none observed in this run
 
-- records with authors: 20
-- records with abstract: 3
-- records with references: 14
+- records with authors: 61
+- records with abstract: 11
+- records with references: 42
 
 ## Failed downloads
 
-0 (none), of which 0 were DOIs Crossref itself doesn't have a record for (HTTP 404 — not an error, just not indexed there). Failed attempts never occupy a content-manifest version slot.
+1 (see DATA/logs/crossref_failures.log and crossref_attempts.parquet (status=failed)), of which 1 were DOIs Crossref itself doesn't have a record for (HTTP 404 — not an error, just not indexed there). Failed attempts never occupy a content-manifest version slot.
 
 ## Rate/access limitations
 
@@ -61,5 +61,5 @@ No API key required. Crossref returns a dynamic rate limit via response headers 
 ## Reproduction command
 
 ```bash
-python -m adc_acquisition crossref --limit 24 --output DATA
+python -m adc_acquisition crossref --limit 62 --output DATA
 ```

@@ -1,0 +1,15 @@
+asset_id	canonical_name	pubmed_materialized	europe_pmc_materialized	clinicaltrials_materialized	crossref_materialized	sec_materialized	fda_applications_materialized	fda_submissions_materialized	fda_documents_materialized	ema_materialized	ema_documents_materialized	wipo_materialized	epo_materialized	uspto_materialized	uspto_documents_materialized	company_pipeline_materialized	patent_bioactivity_corpus_materialized	publication_bioactivity_corpus_materialized	pubmed_discovered_count	europe_pmc_discovered_count	wipo_discovered_count	epo_discovered_count	uspto_discovered_count	clinicaltrials_discovered_count	total_matching_records
+gemtuzumab_ozogamicin	Gemtuzumab ozogamicin	1	1	1	1	0	1	0	0	1	0	0	0	0	0	0	0	0	544	570	4	0	0	102	137
+brentuximab_vedotin	Brentuximab vedotin	1	1	1	0	0	1	0	0	1	0	0	0	1	0	0	0	0	657	660	6	1	1	100	48
+trastuzumab_emtansine	Trastuzumab emtansine	0	1	1	0	0	1	0	0	1	0	1	1	1	0	0	0	0	798	829	15	4	11	101	66
+inotuzumab_ozogamicin	Inotuzumab ozogamicin	0	0	1	0	0	1	0	0	1	0	1	0	1	0	0	0	0	305	380	1	0	1	75	42
+polatuzumab_vedotin	Polatuzumab vedotin	1	1	1	1	0	1	0	0	1	0	0	0	1	0	0	0	0	319	333	5	1	32	101	95
+enfortumab_vedotin	Enfortumab vedotin	0	0	1	0	0	1	0	0	1	0	0	0	0	0	0	0	0	371	466	4	0	0	101	40
+trastuzumab_deruxtecan	Trastuzumab deruxtecan	0	1	1	0	0	1	0	0	1	0	0	0	1	0	0	0	0	717	775	4	0	1	201	129
+sacituzumab_govitecan	Sacituzumab govitecan	0	0	1	0	0	1	0	0	1	0	1	0	1	0	0	0	0	469	498	16	1	35	123	57
+belantamab_mafodotin	Belantamab mafodotin	0	0	1	0	0	1	0	0	1	0	0	0	0	0	0	0	0	248	268	5	0	2	78	68
+loncastuximab_tesirine	Loncastuximab tesirine	0	0	1	0	0	1	0	0	1	0	0	0	0	0	0	0	0	107	107	0	0	0	37	35
+tisotumab_vedotin	Tisotumab vedotin	0	0	1	0	0	1	0	0	1	0	0	0	0	0	0	0	0	130	132	7	0	0	14	21
+mirvetuximab_soravtansine	Mirvetuximab soravtansine	0	0	1	0	0	1	0	0	1	0	0	0	0	0	0	0	0	216	211	2	1	0	31	44
+disitamab_vedotin	Disitamab vedotin	1	1	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	215	218	1	0	0	138	90
+datopotamab_deruxtecan	Datopotamab deruxtecan	0	0	1	0	0	1	0	0	1	0	0	0	0	0	0	0	0	163	163	1	0	0	50	71

@@ -13,12 +13,31 @@
 # every query_id this job generates (Prompt.md section 20: query_ids must be
 # stable and traceable), so do not rename an asset_id once queries have been
 # run against it; add a new entry instead if a genuine rename is needed.
+#
+# ambiguous_identifiers (optional): identifiers that are ALSO a common
+# English word or a real person's surname, confirmed via a live external
+# benchmark audit (reports/validation/nar_adcdb_comparison.md section 11 --
+# "Polivy" collided with a real eating-behavior researcher's surname in
+# PubMed/Europe PMC abstract text AND a real USPTO inventor's surname,
+# producing 41 confirmed false-positive records across 3 sources from one
+# bare-identifier query). An identifier listed here is NEVER searched
+# standalone (see query_templates.py) -- it's always qualified with the
+# asset's own canonical_name to disambiguate.
+#
+# dev_codes/aliases below were cross-checked against the NAR ADCdb
+# benchmark's own Synonyms field (same audit) and extended with
+# high-literature-value forms NAR records that this registry was missing
+# -- NAR's own internal accession IDs (its "DRG0xxxxxxx" ADC IDs) and
+# overly generic/ambiguous short codes (e.g. bare "INO", "MIRV" -- both of
+# which are themselves common words/acronyms in unrelated fields) were
+# deliberately NOT added, to avoid introducing a second Polivy-class
+# collision.
 
 assets:
   - asset_id: gemtuzumab_ozogamicin
     canonical_name: Gemtuzumab ozogamicin
     aliases: [Mylotarg]
-    dev_codes: [CMA-676]
+    dev_codes: [CMA-676, WAY-CMA-676]
     target: CD33
     company: Pfizer
     active: true
@@ -26,7 +45,7 @@ assets:
   - asset_id: brentuximab_vedotin
     canonical_name: Brentuximab vedotin
     aliases: [Adcetris]
-    dev_codes: [SGN-35]
+    dev_codes: [SGN-35, SGN-30, cAC10-vcMMAE]
     target: CD30
     company: Seagen
     active: true
@@ -34,7 +53,7 @@ assets:
   - asset_id: trastuzumab_emtansine
     canonical_name: Trastuzumab emtansine
     aliases: [Kadcyla]
-    dev_codes: [T-DM1]
+    dev_codes: [T-DM1, Trastuzumab-DM1, Herceptin-DM1]
     target: HER2
     company: Genentech
     active: true
@@ -42,7 +61,7 @@ assets:
   - asset_id: inotuzumab_ozogamicin
     canonical_name: Inotuzumab ozogamicin
     aliases: [Besponsa]
-    dev_codes: [CMC-544]
+    dev_codes: [CMC-544, PF-05208773]
     target: CD22
     company: Pfizer
     active: true
@@ -66,15 +85,21 @@ assets:
   - asset_id: polatuzumab_vedotin
     canonical_name: Polatuzumab vedotin
     aliases: [Polivy]
-    dev_codes: [DCDS4501A, RG7596]
+    dev_codes: [DCDS4501A, DCDS4501S, RG7596]
     target: CD79b
     company: Genentech
+    # "Polivy" is ALSO the surname of a real, prolific researcher (Janet
+    # Polivy, eating-behavior/restraint-scale research) and a real named
+    # inventor on unrelated USPTO patents (Daniel J. Polivy, Microsoft) --
+    # both confirmed live via this repo's NAR ADCdb benchmark audit. See
+    # module header comment above.
+    ambiguous_identifiers: [Polivy]
     active: true
 
   - asset_id: enfortumab_vedotin
     canonical_name: Enfortumab vedotin
     aliases: [Padcev]
-    dev_codes: [ASG-22ME]
+    dev_codes: [ASG-22ME, AGS-22ME]
     target: Nectin-4
     company: Seagen
     active: true
@@ -82,7 +107,7 @@ assets:
   - asset_id: trastuzumab_deruxtecan
     canonical_name: Trastuzumab deruxtecan
     aliases: [Enhertu]
-    dev_codes: [DS-8201, T-DXd]
+    dev_codes: [DS-8201, DS-8201a, T-DXd]
     target: HER2
     company: Daiichi Sankyo
     active: true
@@ -97,7 +122,7 @@ assets:
 
   - asset_id: belantamab_mafodotin
     canonical_name: Belantamab mafodotin
-    aliases: [Blenrep]
+    aliases: [Blenrep, Belamaf]
     dev_codes: [GSK2857916]
     target: BCMA
     company: GSK
@@ -106,7 +131,7 @@ assets:
   - asset_id: loncastuximab_tesirine
     canonical_name: Loncastuximab tesirine
     aliases: [Zynlonta]
-    dev_codes: [ADCT-402]
+    dev_codes: [ADCT-402, Lonca-T]
     target: CD19
     company: ADC Therapeutics
     active: true
@@ -114,7 +139,7 @@ assets:
   - asset_id: tisotumab_vedotin
     canonical_name: Tisotumab vedotin
     aliases: [Tivdak]
-    dev_codes: [HuMax-TF-ADC]
+    dev_codes: [HuMax-TF-ADC, HuMax-TF]
     target: Tissue Factor
     company: Genmab
     active: true
@@ -130,7 +155,7 @@ assets:
   - asset_id: disitamab_vedotin
     canonical_name: Disitamab vedotin
     aliases: [Aidixi]
-    dev_codes: [RC48]
+    dev_codes: [RC48, RC48-ADC]
     target: HER2
     company: RemeGen
     active: true
@@ -138,7 +163,7 @@ assets:
   - asset_id: datopotamab_deruxtecan
     canonical_name: Datopotamab deruxtecan
     aliases: [Datroway]
-    dev_codes: [DS-1062, Dato-DXd]
+    dev_codes: [DS-1062, DS-1062a, Dato-DXd]
     target: Trop-2
     company: Daiichi Sankyo
     active: true

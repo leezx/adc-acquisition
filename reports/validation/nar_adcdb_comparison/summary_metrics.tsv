@@ -1,0 +1,19 @@
+metric	value
+N_NAR_benchmark_assets_phase_tagged	702
+N_NAR_assets_approved_subset	21
+N_our_active_known_assets	14
+N_shared_strict_asset_match	14
+asset_strict_recall_vs_702	0.0199
+N_known_assets_with_materialized_evidence_any_source	14
+N_known_assets_with_discovered_evidence_any_source	14
+NCT_overlap_shared	85
+NCT_overlap_nar_total	535
+DOI_overlap_shared	0
+DOI_overlap_nar_total	64
+PMID_overlap_computable	NO -- NAR exposes no PMID field per-ADC (see report section 3)
+patent_identifier_overlap_computable	NO -- 0/6235 NAR ADC pages mention patents at all (see report section 3)
+field_recoverability_evidence_recoverable_pairs	46
+field_recoverability_no_evidence_pairs	38
+field_recoverability_total_pairs	84
+ours_only_NCT_evidence_for_known_assets	574
+ours_only_NCT_post_NAR_cutoff	66
