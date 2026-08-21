@@ -22,6 +22,18 @@ present among our own 14 active known assets' canonical names. This list
 is NOT claimed to be exhaustive; newer/rarer stems will be missed by
 design in this phase (a Phase 5 concern, not this one).
 
+ROUND-1 FIX: raw CT.gov intervention strings are not clean single-drug
+names -- they can be combination-regimen labels ("Pembrolizumab +
+Enfortumab Vedotin"), trial-arm labels ("Arm A: Belantamab Mafodotin"), or
+radiolabeled-tracer variants ("89Zr-Patritumab deruxtecan"). Matching a
+suffix against the WHOLE raw string, and deduplicating on the whole raw
+string, both overcounted: known assets slipped through as spurious "new"
+candidates, and a radiolabeled variant of a genuinely new candidate could
+end up as its own separate, duplicate entity. `extract_adc_generic_name()`
+now extracts the canonical two-word generic name FIRST, and every
+downstream step (known-asset suppression, suffix lookup, dedup key)
+operates on that extracted name, not the raw string.
+
 Usage:
     python3 tools/breadth/candidate_queue.py \
         --known-assets-file configs/known_adc_assets.yaml \
@@ -123,10 +135,46 @@ def find_suffix_matches(name: str) -> str | None:
     return None
 
 
+_ALNUM_TOKEN_RE = re.compile(r"[A-Za-z0-9]+")
+
+
+def extract_adc_generic_name(raw_name: str) -> str | None:
+    """Extract the two-word ADC generic name (antibody-stem word + the
+    payload/linker-suffix word) from a raw CT.gov intervention string,
+    discarding combination-regimen partners, trial-arm labels, and
+    radiolabel/isotope prefixes -- e.g.:
+
+      "Pembrolizumab + Enfortumab Vedotin"  -> "Enfortumab Vedotin"
+      "Arm A: Ladiratuzumab vedotin"        -> "Ladiratuzumab vedotin"
+      "89Zr-Patritumab deruxtecan"          -> "Patritumab deruxtecan"
+
+    Works by tokenizing on any non-alphanumeric character (so "+", "-",
+    ":", "," all act as separators) and taking the LAST adjacent token
+    pair where the second token ends in a documented ADC suffix -- an
+    isotope-label token (e.g. "89Zr") is never adjacent to the suffix
+    token itself, so it is dropped without any separate isotope-specific
+    stripping logic. Returns None if no such pair exists (e.g. a bare
+    suffix word with nothing preceding it, or no suffix at all) -- a raw
+    string with no extractable generic name is not a usable candidate."""
+    tokens = _ALNUM_TOKEN_RE.findall(raw_name)
+    match = None
+    for i in range(len(tokens) - 1):
+        second = tokens[i + 1]
+        if any(second.lower().endswith(suffix) for suffix in ADC_SUFFIX_PAYLOAD_CLASS):
+            match = f"{tokens[i]} {tokens[i + 1]}"
+    return match
+
+
 def build_ctgov_suffix_candidates(ct_manifest: pd.DataFrame, known_ids: set[str]) -> dict[str, dict]:
-    """One aggregated candidate per distinct intervention name (across all
-    trials that mention it), keyed by normalized name -- never split into
-    fuzzy near-duplicates, never merged across genuinely different names."""
+    """One aggregated candidate per distinct EXTRACTED generic name (across
+    all trials that mention it), keyed by normalized extracted name --
+    never split into fuzzy near-duplicates, never merged across genuinely
+    different names. Matching against `known_ids` and the suffix lookup
+    both operate on the extracted name, not the raw intervention string,
+    so a combination-regimen/arm-label/radiolabel wrapper around an
+    already-known asset is correctly suppressed, and a radiolabeled
+    variant of a NEW candidate correctly merges into that same candidate
+    rather than becoming a separate, spurious entity."""
     candidates: dict[str, dict] = {}
     for _, row in ct_manifest.iterrows():
         names = row.get("intervention_names")
@@ -135,14 +183,17 @@ def build_ctgov_suffix_candidates(ct_manifest: pd.DataFrame, known_ids: set[str]
         for raw_name in names:
             if not raw_name or raw_name.lower().strip() in NON_DRUG_INTERVENTION_TERMS:
                 continue
-            if mentions_known_asset(raw_name, known_ids):
+            extracted = extract_adc_generic_name(raw_name)
+            if not extracted:
                 continue
-            suffix = find_suffix_matches(raw_name)
+            if mentions_known_asset(extracted, known_ids):
+                continue
+            suffix = find_suffix_matches(extracted)
             if not suffix:
                 continue
-            key = normalize_name(raw_name)
+            key = normalize_name(extracted)
             entry = candidates.setdefault(key, dict(
-                label=raw_name, suffix=suffix, nct_ids=set(), phases=set(),
+                label=extracted, suffix=suffix, nct_ids=set(), phases=set(),
                 first_seen=None, contexts=set(),
             ))
             entry["nct_ids"].add(row["nct_id"])

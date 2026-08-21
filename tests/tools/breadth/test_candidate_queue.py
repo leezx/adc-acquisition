@@ -1,4 +1,5 @@
 from tools.breadth.candidate_queue import (
+    extract_adc_generic_name,
     find_suffix_matches,
     known_identifier_set,
     mentions_known_asset,
@@ -31,3 +32,28 @@ def test_mentions_known_asset_false_for_genuinely_new_name():
 
 def test_normalize_name_strips_punctuation_and_case():
     assert normalize_name("Trastuzumab-Emtansine") == normalize_name("trastuzumab emtansine")
+
+
+def test_extract_adc_generic_name_strips_combination_regimen_partner():
+    assert extract_adc_generic_name("Pembrolizumab + Ladiratuzumab vedotin") == "Ladiratuzumab vedotin"
+
+
+def test_extract_adc_generic_name_strips_trial_arm_label():
+    assert extract_adc_generic_name("Arm A: Ladiratuzumab vedotin") == "Ladiratuzumab vedotin"
+
+
+def test_extract_adc_generic_name_strips_radiolabel_prefix():
+    assert extract_adc_generic_name("89Zr-Patritumab deruxtecan") == "Patritumab deruxtecan"
+
+
+def test_extract_adc_generic_name_strips_trailing_parenthetical_abbreviation():
+    """A real case found in clinicaltrials.parquet: the naive whole-string
+    endswith() check missed these entirely because the suffix word isn't
+    at the very end of the raw string."""
+    assert extract_adc_generic_name("Labetuzumab Govitecan (LG)") == "Labetuzumab Govitecan"
+    assert extract_adc_generic_name("Enapotamab vedotin (HuMax-AXL-ADC)") == "Enapotamab vedotin"
+
+
+def test_extract_adc_generic_name_returns_none_for_bare_suffix_or_no_suffix():
+    assert extract_adc_generic_name("Vedotin") is None
+    assert extract_adc_generic_name("Pembrolizumab") is None
