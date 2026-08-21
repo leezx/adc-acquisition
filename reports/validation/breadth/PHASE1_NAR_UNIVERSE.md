@@ -57,9 +57,25 @@ were re-run directly to deepen materialization:
 This is still **not exhaustive** — WIPO and USPTO in particular still have a
 large undownloaded broad-query backlog (2,511 and 2,735 unique discovered
 publications respectively, vs. ~180-200 materialized). This is disclosed
-explicitly, not hidden: a `NOT_DISCOVERED` verdict below means "not found in
-currently materialized broad evidence," not "provably absent." Closing this
-further is Phase 2/6 work, not claimed as done here.
+explicitly, not hidden: a `NOT_CONFIRMED_BROAD` verdict below means "not
+found in currently observable broad evidence," not "provably absent."
+Closing this further is Phase 2/6 work, not claimed as done here.
+
+There is a second, independent text-coverage gap on top of materialization
+depth: WIPO/EPO's production broad queries search **title+abstract**, but
+the materialized manifest (`wipo.parquet`/`epo.parquet`) has no `abstract`
+column at all — only `title`/`applicants`/`inventors`. Matching therefore
+also greps each broad-discovered record's raw OPS XML response directly
+(`find_raw_text_matches`), not just the manifest's structured columns, so
+abstract text is actually searched. **USPTO's broad query searches full
+specification text**, but Job 09's own `report.md` already discloses that
+USPTO's Specification document is stored only as a raw PDF with no text
+extraction implemented anywhere in this repo (`patent_bioactivity_corpus`,
+Job 13, covers WIPO/EPO full text only) — this is a pre-existing, already-
+disclosed capability gap, not something new. USPTO matching in this
+analysis therefore remains metadata-only (title/applicants/inventors/
+assignees), and its negative results are additionally censored by this gap
+on top of materialization depth.
 
 ## 3. Broad-discovery recall — locked provenance definition
 
@@ -78,12 +94,17 @@ consequence of only reading the production broad-query configs — not by
 pattern-matching them out.
 
 Matches are downgraded from `BROAD_DISCOVERED` to `AMBIGUOUS` when every
-matching identifier is shorter than 6 characters (the exact class of
-generic dev-code token that produced the confirmed "Polivy" false-positive
-collision in the prior audit, e.g. `JK-06`, `XB-002`, `KH815`) — flagged for
-human review rather than counted as clean recall, per Rule M3/M10 (don't
-equate a fuzzy/short-token match with a true shared asset; don't optimize
-the number to look good).
+matching identifier is shorter than 6 characters — a conservative heuristic
+**inspired by**, not equivalent to, the confirmed "Polivy" false-positive
+collision in the prior audit (Polivy itself is 6 characters, so this rule
+would not have caught it; it is a general collision-risk guard for
+short/generic-looking tokens like `JK-06`, `XB-002`, `KH815`, not a
+verified classification of the same failure mode). A long, generic phrase
+can be just as ambiguous, and a short but highly specific dev code can be
+perfectly safe — `AMBIGUOUS` here means "needs a human look before being
+counted as clean recall," per Rule M3/M10 (don't equate a fuzzy/short-token
+match with a true shared asset; don't optimize the number to look good),
+not "confirmed false positive."
 
 ## 4. Headline results
 
@@ -91,22 +112,22 @@ the number to look good).
 
 | Status | Count | % of 702 |
 |---|---|---|
-| BROAD_DISCOVERED | 176 | 25.1% |
-| AMBIGUOUS | 17 | 2.4% |
+| BROAD_DISCOVERED | 181 | 25.8% |
+| AMBIGUOUS | 18 | 2.6% |
 | TARGETED_ONLY | 0 | 0% |
-| NOT_DISCOVERED | 509 | 72.5% |
+| NOT_CONFIRMED_BROAD | 503 | 71.7% |
 
 **By phase bucket** (the load-bearing breakdown — recall declines sharply
-and monotonically from mature to early-stage assets, exactly matching the
-"breadth is the real bottleneck for early-stage/repurposing work"
-hypothesis this phase exists to test):
+and monotonically from mature to early-stage assets, matching the "breadth
+is the real bottleneck for early-stage/repurposing work" hypothesis this
+phase exists to test):
 
-| Bucket | N | BROAD_DISCOVERED | AMBIGUOUS | NOT_DISCOVERED |
+| Bucket | N | BROAD_DISCOVERED | AMBIGUOUS | NOT_CONFIRMED_BROAD |
 |---|---|---|---|---|
 | Approved | 21 | 19 (90.5%) | 1 | 1 |
 | Phase 3 | 37 | 28 (75.7%) | 1 | 8 |
-| Phase 2 | 84 | 48 (57.1%) | 6 | 30 |
-| Phase 1 | 297 | 74 (24.9%) | 6 | 217 |
+| Phase 2 | 84 | 50 (59.5%) | 6 | 28 |
+| Phase 1 | 297 | 77 (25.9%) | 7 | 213 |
 | Investigative | 263 | 7 (2.7%) | 3 | 253 |
 
 `TARGETED_ONLY` = 0 is a genuine finding, not a bug: all 14 of our currently
@@ -118,27 +139,45 @@ records this per-asset (`in_known_registry` / `targeted_recoverable`).
 
 **Gate 1 metric** (BROAD_DISCOVERED or TARGETED_RECOVERABLE, reported here
 for transparency — formal gate evaluation is Phase 7's job, not this one):
-176/702 = **25.1%**, far below the plan's 95% target. This is expected and
+181/702 = **25.8%**, far below the plan's 95% target. This is expected and
 correct at the end of Phase 1 alone; it is not a regression to fix in this
 PR.
 
 One Approved asset, **Cetuximab sarotalocan** (a Japan-approved
-photoimmunotherapy conjugate), is `NOT_DISCOVERED` — plausible given the
-still-shallow literature materialization (647/852 pubmed, 628/837 europe_pmc)
-rather than evidence of a query defect; a candidate for Phase 2's root-cause
-review, not patched here.
+photoimmunotherapy conjugate), is `NOT_CONFIRMED_BROAD` — plausible given
+the still-shallow literature materialization (647/852 pubmed, 628/837
+europe_pmc) and the disclosed patent text-coverage gaps above, rather than
+evidence of a query defect; a candidate for Phase 2's root-cause review,
+not patched here.
 
 ## 5. What this does and does not establish
 
-This confirms the hypothesis motivating the whole breadth-layer directive:
-our acquisition mechanism finds mature/approved ADCs easily via generic
-queries (90.5% for Approved), but recall collapses for early-stage assets
-(2.7% for Investigative) — exactly where conference/preclinical/company-
-disclosure evidence (Phases 4-5) is expected to matter most, and exactly
-what a repurposing use case needs most. It does **not** yet root-cause the
-509 NOT_DISCOVERED assets (Phase 2), build any feasibility entity model
-(Phase 3), add conference ingestion (Phase 4), or evaluate any freeze gate
-(Phase 7).
+**Only `BROAD_DISCOVERED` (181/702) is a positive, confirmed fact.**
+`NOT_CONFIRMED_BROAD` (503/702) is a censored negative, not a proven
+absence — it reflects the current, disclosed limits of materialization
+depth (§2) and patent text-observability (§3, particularly USPTO), not a
+verified claim that broad acquisition cannot find these assets. The correct
+summary of this phase is therefore:
+
+> At least 181/702 (25.8%) of NAR's phase-tagged benchmark assets have been
+> **confirmed** discoverable by generic, name-agnostic ADC acquisition
+> queries, with confirmed recall declining sharply and monotonically from
+> mature to early-stage assets (90.5% Approved -> 2.7% Investigative). The
+> remaining 503 are **unresolved**, not confirmed misses — materialization/
+> text-observability censoring means the true broad-discovery recall is
+> unknown but at least 25.8%, i.e. this is a **conservative lower bound**,
+> not a final precision figure.
+
+This still supports the hypothesis motivating the whole breadth-layer
+directive (confirmed recall for mature/approved assets is far higher than
+for early-stage ones), just without overclaiming the magnitude of the
+gradient the earlier, uncorrected 90.5% -> 2.7% framing implied. It does
+**not** yet root-cause the 503 unresolved assets (Phase 2 — which must
+start from "503 unresolved negatives," not "503 confirmed query misses",
+and split them into categories such as `BROAD_BACKLOG_UNRESOLVED` /
+`PATENT_TEXT_NOT_OBSERVABLE` / `TRUE_CANDIDATE_MISS` / `SOURCE_GAP` before
+any query is patched), build any feasibility entity model (Phase 3), add
+conference ingestion (Phase 4), or evaluate any freeze gate (Phase 7).
 
 ## Reproduction
 

@@ -88,7 +88,13 @@ def build_asset_rows(assets: list[NARAsset]) -> list[dict]:
             # marker distinguishing a development code from any other
             # synonym form -- left blank rather than guessed/fabricated.
             development_codes="",
-            antigen_name=a.antigen_name_md or a.antibody_name_inv or "",
+            # NEVER fall back to antibody_name_inv here: that's an
+            # ADC_ANTIBODY value, not an ADC_TARGET (antigen) value, and
+            # falling back to it would silently violate the ADC_TARGET !=
+            # ADC_ANTIBODY ontology split locked in BREADTH_PLAN.md Phase 1.
+            # Leave blank rather than guess when the markdown table's own
+            # "Antigen Name" field wasn't parsed.
+            antigen_name=a.antigen_name_md or "",
             payload_moa_target=a.therapeutic_target_md or "",
             antibody_name=a.antibody_name_md or a.antibody_name_inv or "",
             payload_name=a.payload_name_md or a.payload_name_inv or "",

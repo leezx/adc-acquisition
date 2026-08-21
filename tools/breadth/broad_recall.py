@@ -31,9 +31,29 @@ ledger itself carries no title/abstract/applicant text, only
 (source_record_id, query_id) provenance. Materialization of the broad-query
 backlog was substantially deepened for this analysis (see the accompanying
 report for exact before/after counts per source), but is not, and is not
-claimed to be, exhaustive -- a NOT_DISCOVERED verdict here means "not
-found in currently materialized broad evidence," not "provably absent from
-our discovery ledgers." Closing this gap further is explicit Phase 2/6 work.
+claimed to be, exhaustive.
+
+Text coverage is also uneven across sources relative to what the PRODUCTION
+broad query itself actually searches: WIPO/EPO's broad queries search
+title+abstract, so matching also greps each broad-discovered record's raw
+OPS XML directly (find_raw_text_matches below), not just the structured
+title/applicants/inventors manifest columns. USPTO's broad query searches
+full specification text, but Job 09's own report.md already discloses that
+USPTO's Specification document is stored as a raw PDF with NO text
+extraction implemented anywhere in this repo (patent_bioactivity_corpus,
+Job 13, covers WIPO/EPO full text only) -- this is a PRE-EXISTING, already-
+disclosed capability gap, not something newly introduced or silently
+worked around here, and USPTO matching in this script remains
+metadata-only (title/applicants/inventors/assignees) as a result.
+
+Given both the materialization-depth gap and this text-coverage asymmetry,
+a record NOT confirmed by broad evidence is labeled `NOT_CONFIRMED_BROAD`,
+not `NOT_DISCOVERED` -- the negative side of this measurement is CENSORED
+by what has been materialized and what text is observable, not a proven
+absence. Only `BROAD_DISCOVERED` is a positive, confirmed fact. Closing
+these gaps further (deeper materialization, USPTO text extraction, and
+properly root-causing NOT_CONFIRMED_BROAD into real sub-categories) is
+explicit Phase 2/6 work, not this script's job.
 
 Usage:
     python3 tools/breadth/broad_recall.py \
@@ -46,6 +66,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -77,10 +98,15 @@ BROAD_QUERY_CONFIGS = {
     "clinicaltrials": "configs/clinicaltrials_queries.yaml",
 }
 
-# NAR asset identifiers below this length are exactly the class of bare
-# short/generic token that produced the confirmed "Polivy" false-positive
-# collision in the prior audit -- a hit on one alone is downgraded to
-# AMBIGUOUS rather than counted as clean BROAD_DISCOVERED recall.
+# Conservative, heuristic collision-risk guard INSPIRED BY the confirmed
+# "Polivy" false-positive failure mode from the prior audit (a bare-token
+# brand-name match against unrelated authors/inventors) -- NOT a claim that
+# every match below this length is that same, verified collision class, and
+# not a claim that every match at or above it is safe either (a long
+# generic phrase can just as easily be ambiguous, and a short but highly
+# specific dev code can be perfectly safe). It only says: a match resting
+# solely on a short/generic-looking token needs a human look before being
+# counted as clean recall, rather than being asserted as verified.
 SHORT_IDENTIFIER_THRESHOLD = 6
 
 
@@ -114,6 +140,53 @@ def build_broad_manifests(
     return broad_manifests
 
 
+# Sources whose broad-query search scope (per each source's own query
+# config/job docstring) extends beyond the manifest's structured text
+# columns -- WIPO/EPO's broad queries search title+abstract via OPS CQL,
+# but the materialized manifest has no "abstract" column at all (confirmed
+# by direct inspection of wipo.parquet/epo.parquet's schema); the abstract
+# text only exists in each record's raw OPS XML response. USPTO is
+# deliberately excluded here: see module docstring for why (PDF-only
+# Specification, no text extraction implemented anywhere in this repo).
+RAW_TEXT_SEARCHABLE_SOURCES = {"wipo", "epo"}
+
+
+def build_raw_text_cache(broad_manifests: dict[str, pd.DataFrame], sources: set[str]) -> dict[str, dict[str, str]]:
+    """Read each raw OPS XML file from disk exactly ONCE (not once per NAR
+    asset) -- 702 assets re-reading the same ~364 files each would be
+    ~250k redundant file opens, confirmed too slow in practice."""
+    cache: dict[str, dict[str, str]] = {}
+    for source in sources:
+        df = broad_manifests.get(source)
+        texts: dict[str, str] = {}
+        if df is not None and not df.empty and "raw_file_path" in df.columns:
+            for _, row in df.iterrows():
+                raw_path = Path(row["raw_file_path"])
+                if not raw_path.exists():
+                    continue
+                try:
+                    texts[row["source_record_id"]] = raw_path.read_text(encoding="utf-8", errors="ignore")
+                except OSError:
+                    continue
+        cache[source] = texts
+    return cache
+
+
+def find_raw_text_matches(raw_text_cache: dict[str, str], source: str, identifiers: list[str]) -> list[dict]:
+    """Grep each cached raw OPS XML response -- covers whatever text is
+    actually in that response (title AND abstract), not just the subset of
+    fields the manifest happens to have parsed into columns."""
+    hits = []
+    patterns = [(i, re.compile(re.escape(i), re.IGNORECASE)) for i in identifiers if len(i) >= 4]
+    if not patterns:
+        return hits
+    for record_id, text in raw_text_cache.items():
+        for ident, pattern in patterns:
+            if pattern.search(text):
+                hits.append(dict(source=source, source_record_id=record_id, matched_identifier=ident, query_id=None))
+    return hits
+
+
 def _match_basis_and_confidence(nar: NARAsset, matched_identifier: str) -> tuple[str, str]:
     def norm(s: str) -> str:
         return "".join(c for c in s.lower() if c.isalnum())
@@ -131,11 +204,25 @@ def _match_basis_and_confidence(nar: NARAsset, matched_identifier: str) -> tuple
     return basis, confidence
 
 
-def classify_broad_discovery(nar: NARAsset, broad_manifests: dict[str, pd.DataFrame]) -> dict:
+def classify_broad_discovery(
+    nar: NARAsset, broad_manifests: dict[str, pd.DataFrame], raw_text_cache: dict[str, dict[str, str]],
+) -> dict:
     identifiers = nar.all_identifiers()
     hits = find_manifest_matches(broad_manifests, identifiers)
+    for source in RAW_TEXT_SEARCHABLE_SOURCES:
+        if source in raw_text_cache:
+            hits.extend(find_raw_text_matches(raw_text_cache[source], source, identifiers))
+    seen = set()
+    deduped_hits = []
+    for h in hits:
+        key = (h["source"], h["source_record_id"], h["matched_identifier"])
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped_hits.append(h)
+    hits = deduped_hits
     if not hits:
-        return dict(status="NOT_DISCOVERED", broad_sources="", matching_evidence_ids="", match_basis="", confidence="")
+        return dict(status="NOT_CONFIRMED_BROAD", broad_sources="", matching_evidence_ids="", match_basis="", confidence="")
 
     bases_confidences = [_match_basis_and_confidence(nar, h["matched_identifier"]) for h in hits]
     all_low_confidence = all(c == "low" for _, c in bases_confidences)
@@ -186,6 +273,11 @@ def main() -> int:
             file=sys.stderr,
         )
 
+    print("Caching raw OPS XML text for WIPO/EPO (title+abstract search coverage)...", file=sys.stderr)
+    raw_text_cache = build_raw_text_cache(broad_manifests, RAW_TEXT_SEARCHABLE_SOURCES)
+    for source, texts in raw_text_cache.items():
+        print(f"  {source}: {len(texts)} raw files cached in memory", file=sys.stderr)
+
     known_assets_raw = load_known_adc_assets(Path(args.known_assets_file))
     known_assets = build_known_asset_index(known_assets_raw)
     active_known = [k for k in known_assets if k.active]
@@ -198,12 +290,12 @@ def main() -> int:
         bucket = phase_bucket(nar.status)
         phase_counts.setdefault(bucket, Counter())
 
-        broad = classify_broad_discovery(nar, broad_manifests)
+        broad = classify_broad_discovery(nar, broad_manifests, raw_text_cache)
         match_type, _, ka = match_nar_to_known_assets(nar, active_known)
         in_registry = ka is not None
 
         status = broad["status"]
-        if status == "NOT_DISCOVERED" and in_registry:
+        if status == "NOT_CONFIRMED_BROAD" and in_registry:
             # Targeted evidence for our 14/15 curated assets was already
             # deeply verified by the prior NAR benchmark audit (PR #17,
             # asset_source_coverage.tsv) -- re-confirm membership only,
@@ -211,7 +303,7 @@ def main() -> int:
             status = "TARGETED_ONLY"
 
         root_cause = ""
-        if status in ("NOT_DISCOVERED", "AMBIGUOUS"):
+        if status in ("NOT_CONFIRMED_BROAD", "AMBIGUOUS"):
             root_cause = "UNKNOWN_PENDING_DEEPER_MATERIALIZATION_OR_PHASE2_TAXONOMY"
 
         phase_counts[bucket][status] += 1
@@ -262,7 +354,7 @@ def main() -> int:
           f"({overall['BROAD_DISCOVERED']/total:.1%}), "
           f"TARGETED_ONLY {overall['TARGETED_ONLY']}/{total}, "
           f"AMBIGUOUS {overall['AMBIGUOUS']}/{total}, "
-          f"NOT_DISCOVERED {overall['NOT_DISCOVERED']}/{total}", file=sys.stderr)
+          f"NOT_CONFIRMED_BROAD {overall['NOT_CONFIRMED_BROAD']}/{total}", file=sys.stderr)
     combined = overall["BROAD_DISCOVERED"] + overall["TARGETED_ONLY"]
     print(f"BROAD_DISCOVERED or TARGETED_RECOVERABLE (Gate 1 metric, reported separately per BREADTH_PLAN.md): "
           f"{combined}/{total} ({combined/total:.1%})", file=sys.stderr)
@@ -275,7 +367,7 @@ def main() -> int:
         print(
             f"  {bucket}: n={bucket_total}, BROAD_DISCOVERED={c['BROAD_DISCOVERED']} "
             f"({c['BROAD_DISCOVERED']/bucket_total:.1%}), TARGETED_ONLY={c['TARGETED_ONLY']}, "
-            f"AMBIGUOUS={c['AMBIGUOUS']}, NOT_DISCOVERED={c['NOT_DISCOVERED']}",
+            f"AMBIGUOUS={c['AMBIGUOUS']}, NOT_CONFIRMED_BROAD={c['NOT_CONFIRMED_BROAD']}",
             file=sys.stderr,
         )
 
