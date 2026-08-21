@@ -1,0 +1,872 @@
+indication	n_adc_candidates
+Breast Cancer	12
+Lymphoma	6
+Upper Tract Urothelial Carcinoma	6
+Metastatic Breast Cancer	6
+Breast Neoplasms	5
+Triple Negative Breast Neoplasms	5
+Advanced Solid Tumor	5
+Bladder Cancer	5
+Carcinoma, Non-Small-Cell Lung	5
+Lymphoma, Large B-Cell, Diffuse	4
+Anatomic Stage IV Breast Cancer AJCC v8	4
+Breast Cancer Female	4
+Gastric Cancer	4
+HER2 Positive Breast Neoplasms	4
+HER2-negative Breast Cancer	4
+HER2-positive Breast Cancer	4
+HER2-positive Gastric Cancer	4
+Melanoma	4
+Recurrent Breast Carcinoma	4
+Diffuse Large B-Cell Lymphoma	4
+Urothelial Carcinoma	4
+Solid Tumor	4
+Triple Negative Breast Cancer	4
+Cervical Cancer	4
+Endometrial Cancer	4
+Ovarian Cancer	4
+Chronic Lymphocytic Leukemia	3
+Lymphoma, B-Cell	3
+Lymphoma, Non-Hodgkin	3
+Non-Hodgkin Lymphoma	3
+Solid Tumors	3
+Anatomic Stage III Breast Cancer AJCC v8	3
+Breast Cancer Metastatic	3
+HER2-positive	3
+Metastatic	3
+Breast Tumors	3
+Early-stage Breast Cancer	3
+Endometrial Carcinoma	3
+HER2 Mutations Breast Neoplasms	3
+HER2 Positive Breast Carcinoma	3
+Hematopoietic and Lymphoid Cell Neoplasm	3
+Her 2 Positive Breast Cancer	3
+Hormone Receptor Negative Tumor	3
+Hormone Receptor Positive Breast Neoplasms	3
+Hormone Receptor Positive Tumor	3
+Locally Advanced Breast Cancer	3
+Metastatic Colorectal Cancer	3
+Metastatic Malignant Neoplasm in the Brain	3
+Multiple Myeloma	3
+Neoplasm Metastasis	3
+Prognostic Stage IV Breast Cancer AJCC v8	3
+Recurrent Multiple Myeloma	3
+Recurrent Ovarian Carcinoma	3
+Refractory Multiple Myeloma	3
+Refractory Non-Hodgkin Lymphoma	3
+Stage III Breast Cancer	3
+Stage IIIA Breast Cancer	3
+Stage IIIB Breast Cancer	3
+Stage IIIC Breast Cancer	3
+Stage IV Breast Cancer	3
+High Grade B-Cell Lymphoma With MYC and BCL2 and/or BCL6 Rearrangements	3
+Lymphoma, Follicular	3
+Burkitt Lymphoma	3
+Diffuse Large B-cell Lymphoma	3
+Follicular Lymphoma	3
+Cancer	3
+Lung Cancer	3
+Metastatic Castration-resistant Prostate Cancer	3
+Urothelial Cancer	3
+Advanced Breast Cancer	3
+Non-Small Cell Lung Cancer	3
+Solid Tumor, Adult	3
+Small Cell Lung Cancer	3
+Acute Myelogenous Leukemia	2
+Acute Myeloid Leukemia	2
+Leukemia	2
+Ann Arbor Stage III Hodgkin Lymphoma	2
+Ann Arbor Stage IV Hodgkin Lymphoma	2
+Hodgkin Lymphoma	2
+Lymphoma, B-cell	2
+Recurrent Follicular Lymphoma	2
+Recurrent Hodgkin Lymphoma	2
+Refractory Follicular Lymphoma	2
+Refractory Hodgkin Lymphoma	2
+Advanced Breast Carcinoma	2
+Advanced Lymphoma	2
+Advanced Malignant Solid Neoplasm	2
+Advanced Ovarian Carcinoma	2
+Advanced Pancreatic Carcinoma	2
+Advanced Prostate Carcinoma	2
+Advanced Sarcoma	2
+Bladder Carcinoma	2
+Blast Phase Chronic Myelogenous Leukemia, BCR-ABL1 Positive	2
+Bone Metastases	2
+Breast Adenocarcinoma	2
+Breast Cancer Early Stage Breast Cancer (Stage 1-3)	2
+Breast Carcinoma	2
+Breast Neoplasm	2
+Cervical Carcinoma	2
+Colon Carcinoma	2
+Colorectal Carcinoma	2
+Esophageal Carcinoma	2
+Estrogen Receptor-positive Breast Cancer	2
+Exocrine Pancreas Carcinoma	2
+Gastric Carcinoma	2
+Glioma	2
+HER2 Amplification	2
+HER2 Gene Mutation	2
+HER2 Mutant Non-small Cell Lung Cancer	2
+HER2-expressing Non-small Cell Lung Cancer	2
+HER2-positive Colorectal Cancer	2
+HER2-positive Early Breast Cancer	2
+HER2-positive Metastatic Breast Cancer	2
+Head and Neck Carcinoma	2
+Kidney Carcinoma	2
+Liver Carcinoma	2
+Liver Metastases	2
+Lung Carcinoma	2
+Lung Metastases	2
+Malignant Uterine Corpus Neoplasm	2
+Malignant Uterine Neoplasm	2
+Metastatic Breast Carcinoma	2
+Metastatic Malignant Solid Neoplasm	2
+Metastatic Pancreatic Adenocarcinoma	2
+Metastatic Salivary Gland Carcinoma	2
+Ovarian Carcinoma	2
+Pregnancy	2
+Prostate Carcinoma	2
+Rectal Carcinoma	2
+Recurrent Acute Lymphoblastic Leukemia	2
+Recurrent Adult Soft Tissue Sarcoma	2
+Recurrent Bladder Carcinoma	2
+Recurrent Breast Cancer	2
+Recurrent Cervical Carcinoma	2
+Recurrent Chronic Myelogenous Leukemia, BCR-ABL1 Positive	2
+Recurrent Colon Carcinoma	2
+Recurrent Colorectal Carcinoma	2
+Recurrent Esophageal Carcinoma	2
+Recurrent Gastric Carcinoma	2
+Recurrent Glioma	2
+Recurrent Head and Neck Carcinoma	2
+Recurrent Liver Carcinoma	2
+Recurrent Lung Carcinoma	2
+Recurrent Lymphoma	2
+Recurrent Malignant Solid Neoplasm	2
+Recurrent Malignant Uterine Corpus Neoplasm	2
+Recurrent Melanoma	2
+Recurrent Pancreatic Carcinoma	2
+Recurrent Plasma Cell Myeloma	2
+Recurrent Prostate Carcinoma	2
+Recurrent Rectal Carcinoma	2
+Recurrent Salivary Gland Carcinoma	2
+Recurrent Skin Carcinoma	2
+Recurrent Small Lymphocytic Lymphoma	2
+Recurrent Thyroid Gland Carcinoma	2
+Refractory Acute Lymphoblastic Leukemia	2
+Refractory Chronic Myelogenous Leukemia, BCR-ABL1 Positive	2
+Refractory Lymphoma	2
+Refractory Malignant Solid Neoplasm	2
+Refractory Plasma Cell Myeloma	2
+Refractory Small Lymphocytic Lymphoma	2
+Skin Carcinoma	2
+Soft Tissue Metastases	2
+Stage II Breast Cancer AJCC v6 and v7	2
+Stage II Pancreatic Cancer AJCC v8	2
+Stage IIA Breast Cancer AJCC v6 and v7	2
+Stage IIB Breast Cancer AJCC v6 and v7	2
+Stage III Breast Cancer AJCC v7	2
+Stage III Major Salivary Gland Cancer AJCC v8	2
+Stage III Ovarian Cancer AJCC v8	2
+Stage III Pancreatic Cancer AJCC v8	2
+Stage IIIA Breast Cancer AJCC v7	2
+Stage IIIB Breast Cancer AJCC v7	2
+Stage IIIC Breast Cancer AJCC v7	2
+Stage IV Major Salivary Gland Cancer AJCC v8	2
+Stage IV Ovarian Cancer AJCC v8	2
+Stage IV Pancreatic Cancer AJCC v8	2
+Thyroid Gland Carcinoma	2
+Triple-Negative Breast Cancer (TNBC)	2
+Unresectable Pancreatic Adenocarcinoma	2
+Unresectable Salivary Gland Carcinoma	2
+Acute Lymphoblastic Leukemia	2
+B-Cell Lymphoma	2
+Diffuse Large B Cell Lymphoma	2
+High Grade B-Cell Lymphoma, Not Otherwise Specified	2
+B-Cell Non-Hodgkin Lymphoma	2
+B-cell Lymphoma	2
+Diffuse, Large B-Cell, Lymphoma	2
+High Grade B-Cell Lymphoma With MYC and BCL2 or BCL6 Rearrangements	2
+High Grade B-Cell Lymphoma With MYC, BCL2, and BCL6 Rearrangements	2
+High-grade B-cell Lymphoma	2
+Large B-cell Lymphoma	2
+Lymphoma, Mantle-Cell	2
+Mantle Cell Lymphoma	2
+Marginal Zone Lymphoma	2
+Recurrent B-Cell Non-Hodgkin Lymphoma	2
+Recurrent Diffuse Large B-Cell Lymphoma	2
+Recurrent Mantle Cell Lymphoma	2
+Refractory B-Cell Non-Hodgkin Lymphoma	2
+Refractory Diffuse Large B-Cell Lymphoma	2
+Refractory Mantle Cell Lymphoma	2
+Relapsed B-Cell Non-Hodgkin Lymphoma	2
+Relapsed Non Hodgkin Lymphoma	2
+Hepatocellular Carcinoma	2
+Locally Advanced Urothelial Carcinoma	2
+Metastatic Bladder Urothelial Carcinoma	2
+Metastatic Urothelial Cancer	2
+Metastatic Urothelial Carcinoma	2
+Metastatic Urothelial Carcinoma of the Renal Pelvis and Ureter	2
+NMIBC	2
+Non-muscle Invasive Bladder Cancer	2
+Stage IV Bladder Cancer AJCC v8	2
+Unresectable Urothelial Carcinoma	2
+Urinary Bladder Neoplasms	2
+Advanced Gastroesophageal Junction Adenocarcinoma	2
+Advanced Solid Malignancies	2
+Advanced Solid Tumors	2
+Brain Metastases	2
+Breast Cancer Stage IV	2
+Chemotherapy-induced Alopecia	2
+ER Positive Breast Cancer	2
+Esophageal Cancer	2
+Gastric Adenocarcinoma	2
+Gastroesophageal Junction Adenocarcinoma	2
+HER-2 Protein Overexpression	2
+HER2-low Breast Cancer	2
+Invasive Breast Cancer	2
+Metastatic Cancer	2
+Recurrent Osteosarcoma	2
+Unresectable Breast Carcinoma	2
+Glioblastoma Multiforme	2
+Metastatic Triple-Negative Breast Carcinoma	2
+Non-small Cell Lung Cancer	2
+Pancreatic Cancer	2
+Squamous Cell Carcinoma of Head and Neck	2
+Triple-Negative Breast Carcinoma	2
+Colorectal Neoplasms	2
+Fallopian Tube Cancer	2
+Ovary Cancer	2
+Peritoneal Cancer	2
+Prostate Cancer	2
+Ovarian Neoplasms	2
+Advanced Gastroesophageal Adenocarcinoma	2
+Biliary Tract Cancer	2
+Colorectal Cancer	2
+Non Small Cell Lung Cancer	2
+Leukemia, Myeloid	1
+Leukemia, Myeloid, Acute	1
+Myelodysplastic Syndrome	1
+Myelodysplastic Syndromes	1
+Novo Acute Myeloid Leukemia	1
+AIDS-Related Hodgkin Lymphoma	1
+Acute Lymphoid Leukemia	1
+Adult Lymphocyte Depletion Hodgkin Lymphoma	1
+Adult Lymphocyte Predominant Hodgkin Lymphoma	1
+Adult Mixed Cellularity Hodgkin Lymphoma	1
+Adult Nodular Sclerosis Hodgkin Lymphoma	1
+Adult T-Cell Leukemia/Lymphoma	1
+Adult T-cell Leukemia/Lymphoma	1
+Anaplastic Large Cell Lymphoma	1
+Anaplastic Large Cell Lymphoma, ALK-Negative	1
+Anaplastic Large Cell Lymphoma, ALK-Positive	1
+Anaplastic Large-Cell Lymphoma	1
+Anaplastic Large-cell Lymphoma	1
+Anemia, Refractory, With Excess of Blasts	1
+Angioimmunoblastic T-Cell Lymphoma	1
+Angioimmunoblastic T-cell Lymphoma	1
+Ann Arbor Stage I Hodgkin Lymphoma	1
+Ann Arbor Stage I Lymphocyte-Depleted Classic HL	1
+Ann Arbor Stage I Mixed Cellularity Classic Hodgkin Lymphoma	1
+Ann Arbor Stage I Nodular Sclerosis Classic Hodgkin Lymphoma	1
+Ann Arbor Stage I Primary Mediastinal (Thymic) Large B-Cell Lymphoma	1
+Ann Arbor Stage IA Hodgkin Lymphoma	1
+Ann Arbor Stage IB Hodgkin Lymphoma	1
+Ann Arbor Stage II Hodgkin Lymphoma	1
+Ann Arbor Stage II Lymphocyte-Depleted Classic HL	1
+Ann Arbor Stage II Mixed Cellularity Classic HL	1
+Ann Arbor Stage II Nodular Sclerosis Classic HL	1
+Ann Arbor Stage II Noncutaneous Anaplastic Large Cell Lymphoma	1
+Ann Arbor Stage II Noncutaneous Childhood Anaplastic Large Cell Lymphoma	1
+Ann Arbor Stage II Primary Mediastinal (Thymic) Large B-Cell Lymphoma	1
+Ann Arbor Stage IIA Hodgkin Lymphoma	1
+Ann Arbor Stage IIB Hodgkin Lymphoma	1
+Ann Arbor Stage III Lymphocyte-Depleted Classic Hodgkin Lymphoma	1
+Ann Arbor Stage III Mixed Cellularity Classic Hodgkin Lymphoma	1
+Ann Arbor Stage III Nodular Sclerosis Classic Hodgkin Lymphoma	1
+Ann Arbor Stage III Noncutaneous Anaplastic Large Cell Lymphoma	1
+Ann Arbor Stage III Noncutaneous Childhood Anaplastic Large Cell Lymphoma	1
+Ann Arbor Stage III Primary Mediastinal (Thymic) Large B-Cell Lymphoma	1
+Ann Arbor Stage IIIA Hodgkin Lymphoma	1
+Ann Arbor Stage IIIB Hodgkin Lymphoma	1
+Ann Arbor Stage IV Lymphocyte-Depleted Classic Hodgkin Lymphoma	1
+Ann Arbor Stage IV Mixed Cellularity Classic Hodgkin Lymphoma	1
+Ann Arbor Stage IV Nodular Sclerosis Classic Hodgkin Lymphoma	1
+Ann Arbor Stage IV Noncutaneous Anaplastic Large Cell Lymphoma	1
+Ann Arbor Stage IV Noncutaneous Childhood Anaplastic Large Cell Lymphoma	1
+Ann Arbor Stage IV Primary Mediastinal (Thymic) Large B-Cell Lymphoma	1
+Ann Arbor Stage IVA Hodgkin Lymphoma	1
+Ann Arbor Stage IVB Hodgkin Lymphoma	1
+CD30-Positive Neoplastic Cells Present	1
+CD30-positive Lymphoma	1
+CD30-positive Solid Tumor	1
+Classic Hodgkin Lymphoma	1
+Cutaneous Lymphoma	1
+Cutaneous T-Cell Lymphoma	1
+Cutaneous T-cell Lymphoma (CTCL)	1
+Diffuse Cutaneous Systemic Sclerosis	1
+Diffuse Large B-cell-lymphoma	1
+Disease, Hodgkin	1
+Enteropathy Associated T-cell Lymphoma	1
+Enteropathy-Associated T-Cell Lymphoma	1
+GVHD	1
+Germ Cell Cancer	1
+Graft Versus Host Disease	1
+Graft-vs-Host Disease	1
+HIV Infection	1
+Hematopoietic/Lymphoid Cancer	1
+Hepato-splenic T-cell Lymphoma	1
+Hepatosplenic T-Cell Lymphoma	1
+Hodgkin Disease	1
+Hodgkin Lymphoma, Adult	1
+Hodgkin's Lymphoma	1
+Lugano Classification Limited Stage Hodgkin Lymphoma AJCC v8	1
+Lymphocyte-Rich Classic Hodgkin Lymphoma	1
+Lymphoma, Large B-cell, Diffuse	1
+Lymphoma, Large-Cell, Anaplastic	1
+Lymphoma, NK-cell	1
+Lymphoma, T-Cell	1
+Lymphoma, T-Cell, Cutaneous	1
+Lymphoma, T-cell	1
+Malignant Mesothelioma	1
+Mature T-Cell and NK-Cell Non-Hodgkin Lymphoma	1
+Mycosis Fungoides	1
+NK T-cell Lymphoma	1
+Non-Hodgkin Lymphoma (NHL)	1
+Peripheral T Cell Lymphoma	1
+Peripheral T-Cell Lymphoma	1
+Peripheral T-Cell Lymphoma, Not Otherwise Specified	1
+Primary Cutaneous Anaplastic Large Cell Lymphoma	1
+Recurrent Angioimmunoblastic T-Cell Lymphoma	1
+Recurrent Classic Hodgkin Lymphoma	1
+Recurrent Enteropathy-Associated T-Cell Lymphoma	1
+Recurrent Follicular T-Cell Lymphoma	1
+Recurrent Hepatosplenic T-Cell Lymphoma	1
+Recurrent Nodal Peripheral T-Cell Lymphoma With TFH Phenotype	1
+Recurrent Peripheral T-Cell Lymphoma, Not Otherwise Specified	1
+Recurrent Subcutaneous Panniculitis-Like T-Cell Lymphoma	1
+Refractory Angioimmunoblastic T-Cell Lymphoma	1
+Refractory Classic Hodgkin Lymphoma	1
+Refractory Enteropathy-Associated T-Cell Lymphoma	1
+Refractory Follicular T-Cell Lymphoma	1
+Refractory Hepatosplenic T-Cell Lymphoma	1
+Refractory Nodal Peripheral T-Cell Lymphoma With TFH Phenotype	1
+Refractory Peripheral T-Cell Lymphoma, Not Otherwise Specified	1
+Refractory Subcutaneous Panniculitis-Like T-Cell Lymphoma	1
+Relapsed Classic Hodgkin Lymphoma	1
+Relapsed or Refractory Anaplastic Large-cell Lymphoma	1
+Relapsed or Refractory Hodgkin Lymphoma	1
+Sezary Syndrome	1
+Stage II Adult Hodgkin Lymphoma	1
+Stage II Childhood Hodgkin Lymphoma	1
+Stage III Adult Hodgkin Lymphoma	1
+Stage III Childhood Hodgkin Lymphoma	1
+Stage IV Adult Hodgkin Lymphoma	1
+Stage IV Childhood Hodgkin Lymphoma	1
+Systemic Anaplastic Large Cell Lymphoma	1
+Sézary Syndrome	1
+T-Cell Lymphoma	1
+T-cell Lymphoma	1
+Accelerated Phase Chronic Myelogenous Leukemia, BCR-ABL1 Positive	1
+Anemia	1
+Ann Arbor Stage III Non-Hodgkin Lymphoma	1
+Ann Arbor Stage IV Non-Hodgkin Lymphoma	1
+Atypical Chronic Myeloid Leukemia, BCR-ABL1 Negative	1
+Castration-Resistant Prostate Carcinoma	1
+Chronic Phase Chronic Myelogenous Leukemia, BCR-ABL1 Positive	1
+Hematopoietic and Lymphoid System Neoplasm	1
+Locally Advanced Pancreatic Adenocarcinoma	1
+Metastatic Breast Cancer, HER2 Negative Primary Tumor	1
+Myelodysplastic/Myeloproliferative Neoplasm With Ring Sideroblasts and Thrombocytosis	1
+Myelodysplastic/Myeloproliferative Neoplasm, Unclassifiable	1
+Primary Myelofibrosis	1
+Recurrent Acute Myeloid Leukemia	1
+Recurrent Chronic Lymphocytic Leukemia	1
+Recurrent Hematologic Malignancy	1
+Recurrent Myelodysplastic Syndrome	1
+Recurrent Myelodysplastic/Myeloproliferative Neoplasm	1
+Recurrent Myeloproliferative Neoplasm	1
+Recurrent Non-Hodgkin Lymphoma	1
+Refractory Acute Myeloid Leukemia	1
+Refractory Chronic Lymphocytic Leukemia	1
+Refractory Chronic Myelomonocytic Leukemia	1
+Refractory Hematologic Malignancy	1
+Refractory Myelodysplastic Syndrome	1
+Refractory Myelodysplastic/Myeloproliferative Neoplasm	1
+Refractory Primary Myelofibrosis	1
+Stage IV Prostate Cancer AJCC v8	1
+ACUTE LYMPHOBLASTIC LEUKEMIA	1
+Acute Leukemias of Ambiguous Lineage	1
+Acute Lymphocytic Leukemia	1
+Adult Relapsed/Refractory B Cell Acute Lymphoblastic Leukemia	1
+B Acute Lymphoblastic Leukemia	1
+B Acute Lymphoblastic Leukemia With t(9;22)(q34.1;q11.2)	1
+BCR-ABL1	1
+B Acute Lymphoblastic Leukemia, Philadelphia Chromosome Negative	1
+B Lymphoblastic Lymphoma	1
+B-cell Adult Acute Lymphoblastic Leukemia	1
+B-cell Lymphoma Refractory	1
+Blasts More Than 5 Percent of Bone Marrow Nucleated Cells	1
+Bone Marrow Transplant	1
+Burkitt-Like Lymphoma With 11q Aberration	1
+CD22 Positive	1
+Minimal Residual Disease	1
+Ph+ ALL	1
+Philadelphia Chromosome Positive Adult Precursor Acute Lymphoblastic Leukemia	1
+Philadelphia Chromosome Positive, BCR-ABL1 Positive Chronic Myelogenous Leukemia	1
+Precursor Cell Lymphoblastic Leukemia-Lymphoma	1
+Precursor b-Cell Lymphoblastic Leukemia-Lymphoma	1
+Recurrent Adult Acute Lymphoblastic Leukemia	1
+Recurrent Adult Burkitt Lymphoma	1
+Recurrent B Acute Lymphoblastic Leukemia	1
+Recurrent B Lymphoblastic Lymphoma	1
+Recurrent Burkitt Lymphoma	1
+Refractory B Acute Lymphoblastic Leukemia	1
+Refractory B Lymphoblastic Lymphoma	1
+Refractory Burkitt Lymphoma	1
+ALK-Positive Large B-Cell Lymphoma	1
+Aggressive Non-Hodgkin Lymphoma	1
+Ann Arbor Stage II Diffuse Large B-Cell Lymphoma	1
+Ann Arbor Stage II Follicular Lymphoma	1
+Ann Arbor Stage II Marginal Zone Lymphoma	1
+Ann Arbor Stage III Diffuse Large B-Cell Lymphoma	1
+Ann Arbor Stage III Follicular Lymphoma	1
+Ann Arbor Stage III Marginal Zone Lymphoma	1
+Ann Arbor Stage IV Diffuse Large B-Cell Lymphoma	1
+Ann Arbor Stage IV Follicular Lymphoma	1
+Ann Arbor Stage IV Marginal Zone Lymphoma	1
+B-cell Non-Hodgkin Lymphoma	1
+DLBCL	1
+Diffuse Large B Cell Lymphoma (DLBCL)	1
+Diffuse Large B-Cell Lymphoma (DLBCL)	1
+Diffuse Large B-Cell Lymphoma Unclassifiable	1
+Diffuse Large B-Cell Lymphoma, Not Otherwise Specified	1
+Double Expressor Lymphoma	1
+EBV-Positive Diffuse Large B-Cell Lymphoma, Not Otherwise Specified	1
+Grade 1 Follicular Lymphoma	1
+Grade 2 Follicular Lymphoma	1
+Grade 3a Follicular Lymphoma	1
+Grade 3b Follicular Lymphoma	1
+Gray-Zone Lymphoma	1
+High Grade B-Cell Lymphoma	1
+High Grade B-Cell Lymphoma w/MYC & BCL2 or BCL6 Rearrangements	1
+High Grade B-Cell Lymphoma w/MYC, BCL2 & BCL6 Rearrangements	1
+Indolent B-Cell Non-Hodgkin Lymphoma	1
+Indolent Non-Hodgkin Lymphoma	1
+Lymphoma, Non Hodgkin	1
+Non-Hodgkin's Lymphoma	1
+Non-Hodgkins Lymphoma	1
+Post-transplant Lymphoproliferative Disorder	1
+Primary Mediastinal (Thymic) Large B-Cell Lymphoma	1
+Primary Mediastinal Large B-Cell Lymphoma	1
+Recurrent Extranodal Marginal Zone Lymphoma of Mucosa-Associated Lymphoid Tissue	1
+Recurrent Grade 1 Follicular Lymphoma	1
+Recurrent Grade 2 Follicular Lymphoma	1
+Recurrent Grade 3a Follicular Lymphoma	1
+Recurrent Marginal Zone Lymphoma	1
+Recurrent Nodal Marginal Zone Lymphoma	1
+Recurrent Primary Mediastinal (Thymic) Large B-Cell Cell Lymphoma	1
+Recurrent Splenic Marginal Zone Lymphoma	1
+Recurrent Transformed B-Cell Non-Hodgkin Lymphoma	1
+Refractory Extranodal Marginal Zone Lymphoma of Mucosa-Associated Lymphoid Tissue	1
+Refractory Grade 1 Follicular Lymphoma	1
+Refractory Grade 2 Follicular Lymphoma	1
+Refractory Grade 3a Follicular Lymphoma	1
+Refractory Marginal Zone Lymphoma	1
+Refractory Nodal Marginal Zone Lymphoma	1
+Refractory Primary Mediastinal (Thymic) Large B-Cell Cell Lymphoma	1
+Refractory Splenic Marginal Zone Lymphoma	1
+Refractory Transformed B-Cell Non-Hodgkin Lymphoma	1
+Relapsed or Refractory Diffuse Large B-Cell Lymphoma	1
+Relapsed or Refractory Follicular Lymphoma, Relapsed or Refractory Diffuse Large B-Cell Lymphoma	1
+Richter Syndrome	1
+Richter's Transformation	1
+T-Cell/Histiocyte-Rich Large B-Cell Lymphoma	1
+Transformed Follic Lymph to Diff Large B-Cell Lymphoma	1
+Transformed Indolent B-Cell Non-Hodgkin Lymphoma to Diffuse Large B-Cell Lymphoma	1
+Transformed Marg Zone Lymph to Diff Large B-Cell Lymphoma	1
+Transformed Marginal Zone Lymphoma to Diffuse Large B-Cell Lymphoma	1
+Transformed Non-Hodgkin Lymphoma	1
+Advanced or Metastatic Solid Malignancies	1
+Androgen-Resistant Prostatic Neoplasms	1
+Bellini Carcinoma	1
+Bladder Adenocarcinoma	1
+Bladder Squamous Cell Carcinoma	1
+Carcinoma Transitional Cell	1
+Carcinoma in Situ	1
+Carcinoma, Transitional Cell	1
+Castration Resistant Prostatic Neoplasms	1
+Collecting Duct Carcinoma	1
+Gene Abnormality	1
+Gene Product Sequence Variation	1
+High Grade Urothelial Carcinoma	1
+Infiltrating Bladder Urothelial Carcinoma With Squamous Differentiation	1
+Locally Advanced Bladder Carcinoma	1
+Locally Advanced Bladder Urothelial Carcinoma	1
+Locally Advanced Renal Pelvis Urothelial Carcinoma	1
+Locally Advanced Renal Pelvis and Ureter Urothelial Carcinoma	1
+Locally Advanced Ureter Urothelial Carcinoma	1
+Locally Advanced Urethral Urothelial Carcinoma	1
+Locally Advanced or Metastatic Malignant Solid Tumors	1
+Locally Advanced or Metastatic Urothelial Carcinoma (UC)	1
+Malignant Renal Pelvis Neoplasm	1
+Malignant Ureter Neoplasm	1
+Malignant Urethral Neoplasm	1
+Metastatic Bladder Carcinoma	1
+Metastatic Penile Squamous Cell Carcinoma	1
+Metastatic Renal Pelvis Urothelial Carcinoma	1
+Metastatic Renal Pelvis and Ureter Urothelial Carcinoma	1
+Metastatic Ureter Urothelial Carcinoma	1
+Metastatic Urethral Urothelial Carcinoma	1
+Metastatic Urothelial Cancer and Other Malignant Solid Tumors	1
+Muscle Invasive Bladder Cancer	1
+Muscle-Invasive Bladder Carcinoma	1
+Pancreas Adenocarcinoma	1
+Pancreas Cancer	1
+Pancreatic Ductal Adenocarcinoma	1
+Penile Squamous Cell Carcinoma (PSCC)	1
+Prostatic Cancer, Castration-Resistant	1
+Prostatic Neoplasms, Castration-Resistant	1
+Recurrent Bladder Urothelial Carcinoma	1
+Recurrent Renal Pelvis Urothelial Carcinoma	1
+Recurrent Ureter Urothelial Carcinoma	1
+Recurrent Urethral Urothelial Carcinoma	1
+Recurrent Urothelial Carcinoma	1
+Renal Medullary Carcinoma	1
+Renal Pelvis Neoplasms	1
+Renal Pelvis and Ureter Urothelial Carcinoma	1
+Stage II Bladder Cancer AJCC v8	1
+Stage III Bladder Cancer AJCC v8	1
+Stage III Penile Cancer AJCC v8	1
+Stage IIIA Bladder Cancer AJCC v8	1
+Stage IIIB Bladder Cancer AJCC v8	1
+Stage IV Penile Cancer AJCC v8	1
+Stage IV Renal Pelvis Cancer AJCC v8	1
+Stage IV Renal Pelvis and Ureter Cancer AJCC v8	1
+Stage IV Ureter Cancer AJCC v8	1
+Stage IV Urethral Cancer AJCC v8	1
+Unresectable Bladder Carcinoma	1
+Unresectable Penile Squamous Cell Carcinoma	1
+Urachal Adenocarcinoma	1
+Ureteral Cancer	1
+Ureteral Neoplasms	1
+Urethral Neoplasms	1
+Urinary Bladder Cancer, Muscle-invasive	1
+Urologic Neoplasms	1
+Urothelial Carcinoma Bladder	1
+Urothelial Carcinoma Ureter	1
+Urothelial Carcinoma Urethra	1
+Urothelial Carcinoma of the Renal Pelvis and Ureter	1
+Urothelial Neoplasms	1
+Adenocarcinoma - GEJ	1
+Adenocarcinoma Gastric Stage IV With Metastases	1
+Adenocarcinoma, Gastric	1
+Advanced Colon Carcinoma	1
+Advanced Colorectal Carcinoma	1
+Advanced Endometrial Carcinoma	1
+Advanced Gastric Carcinoma	1
+Advanced Salivary Gland Carcinoma	1
+Advanced Solid Tumors With HER2 Mutation,eg:Colorectal,Urothelial,Gastric, Hepatobiliary,Endometrial,Melanoma,Ovarian,Cervical,Salivary Gland,Pancreatic,Breast	1
+Advanced or Metastatic Breast Cancer	1
+BREAST CANCER	1
+Breast Cancer With Brain Metastasis	1
+Clinical Stage III Gastric Cancer AJCC v8	1
+Clinical Stage III Gastroesophageal Junction Adenocarcinoma AJCC v8	1
+Clinical Stage IV Gastric Cancer AJCC v8	1
+Clinical Stage IV Gastroesophageal Junction Adenocarcinoma AJCC v8	1
+Colorectal Neoplasm	1
+Desmoplastic Small Round Cell Tumor	1
+Esophageal Adenocarcinoma	1
+Estrogen Receptor Positive Tumor	1
+Gastric Cancer, Adenocarcinoma	1
+Gastric or Gastroesophageal Junction (GEJ) Adenocarcinoma	1
+Gastroesophageal-junction Cancer	1
+Gastrooesophageal Cancer	1
+HER2 Low Breast Adenocarcinoma	1
+HER2 Low Breast Cancer	1
+HER2 Low Breast Carcinoma	1
+HER2 Mutation-Related Tumors	1
+HER2 Positive Breast Cancer	1
+HER2-Positive Breast Carcinoma	1
+HER2-Positive Primary Breast Cancer	1
+HER2-mutant Non-Small Cell Lung Cancer	1
+HR Positive	1
+Hormone Receptor Negative Breast Carcinoma	1
+Hormone Receptor Positive Breast Carcinoma	1
+Hormone Receptor-positive Breast Cancer	1
+Inflammatory Breast Cancer Stage III	1
+Leptomeningeal Metastasis	1
+Locally Advanced Gastric Carcinoma	1
+Locally Advanced Gastroesophageal Junction Adenocarcinoma	1
+Locally Advanced Lung Non-Small Cell Carcinoma	1
+Locally Advanced Malignant Solid Neoplasm	1
+Malignant Hepatobiliary Neoplasm	1
+Malignant Neoplasm of Breast	1
+Metastatic Colon Carcinoma	1
+Metastatic Colorectal Carcinoma	1
+Metastatic Endometrial Carcinoma	1
+Metastatic Gastric Carcinoma	1
+Metastatic Gastroesophageal Junction Adenocarcinoma	1
+Metastatic Lung Non-Small Cell Carcinoma	1
+Neoplasm, Breast	1
+Neoplasm, Gastrointestinal	1
+Non-small Cell Lung Carcinoma	1
+Osteosarcoma	1
+PR-positive Breast Cancer	1
+Part 1: Bladder, Biliary Tract, Cervical, Endometrial, Ovarian, Pancreatic Cancer, Rare Tumors, Any Tumor Type Excluding Breast, Gastric, Colorectal Cancer	1
+Part 2: HER2 Expressing/Amplified Solid Tumors Excluding Breast, Gastric, Colorectal Cancer	1
+Platinum-Resistant Ovarian High Grade Serous Adenocarcinoma	1
+Progesterone Receptor-positive Breast Cancer	1
+Recurrent Desmoplastic Small Round Cell Tumor	1
+Recurrent Kidney Wilms Tumor	1
+Refractory Desmoplastic Small Round Cell Tumor	1
+Refractory Wilms Tumor	1
+Residual Invasive Breast Cancer	1
+Solid Carcinoma	1
+Stage II Breast Cancer	1
+Stage IIA Breast Cancer	1
+Stage IIB Breast Cancer	1
+Stage III Colon Cancer AJCC v8	1
+Stage III Colorectal Cancer AJCC v8	1
+Stage III Lung Cancer AJCC v8	1
+Stage III Uterine Corpus Carcinoma or Carcinosarcoma AJCC v8	1
+Stage IV Colon Cancer AJCC v8	1
+Stage IV Colorectal Cancer AJCC v8	1
+Stage IV Lung Cancer AJCC v8	1
+Stage IV Uterine Corpus Carcinoma or Carcinosarcoma AJCC v8	1
+Unresectable Colon Carcinoma	1
+Unresectable Colorectal Carcinoma	1
+Unresectable Endometrial Carcinoma	1
+Unresectable Gastric Carcinoma	1
+Unresectable Gastroesophageal Junction Adenocarcinoma	1
+Unresectable Malignant Solid Neoplasm	1
+Wilms Tumor	1
+Advanced or Metastatic Solid Tumor	1
+Anaplastic Thyroid Cancer	1
+Carcinoma Breast Stage IV	1
+Circulating Tumor DNA	1
+Differentiated Thyroid Cancer	1
+HPV Positive Oropharyngeal Squamous Cell Carcinoma	1
+HR+/HER2- Metastatic Breast Cancer	1
+HR-Positive Breast Cancer	1
+HRD Cancer	1
+Head and Neck Cancers- Squamous Cell	1
+Hormone-receptor-positive Breast Cancer	1
+Hormone-refractory Prostate Cancer	1
+Human Epidermal Growth Factor 2 Low Breast Cancer	1
+Hypopharynx Cancer	1
+Hypopharynx Squamous Cell Carcinoma	1
+Invasive Breast Carcinoma	1
+Larynx Cancer	1
+Larynx Squamous Cell Carcinoma	1
+Liver Failure	1
+Locally Advanced Cholangiocarcinoma	1
+Locally Advanced or Metastatic Unresectable Urothelial Cancer	1
+Locally Advanced or Metastatic Urothelial Carcinoma	1
+Metastatic Cholangiocarcinoma	1
+Metastatic HER2 Negative Breast Carcinoma	1
+Metastatic Solid Tumors	1
+Metastatic Triple-Negative Breast Cancer	1
+Metastatic Triple-negative Breast Cancer	1
+Nasal Cavity Cancer	1
+Oral Cavity Cancer	1
+Oral Squamous Cell Carcinoma	1
+Oropharynx Cancer	1
+Oropharynx Squamous Cell Carcinoma	1
+Ovarian Epithelial Cancer	1
+PD-L1 Negative	1
+Recurrent Cholangiocarcinoma	1
+Refractory Bladder Urothelial Carcinoma	1
+Refractory Urothelial Carcinoma	1
+Renal Cell Cancer	1
+Residual Cancer	1
+SCLC	1
+Sinus Cancer	1
+Stage III Hilar Cholangiocarcinoma AJCC v8	1
+Stage III Intrahepatic Cholangiocarcinoma AJCC v8	1
+Stage IV Hilar Cholangiocarcinoma AJCC v8	1
+Stage IV Intrahepatic Cholangiocarcinoma AJCC v8	1
+Triple-Negative Breast Cancer	1
+AL Amyloidosis	1
+Anaplastic Lymphoma Kinase Positive Large B-Cell Lymphoma	1
+Multiple Myeloma, Refractory	1
+Myeloma	1
+Plasma Cell Myeloma	1
+Plasma Cell Myeloma Refractory	1
+RELAPSED AND/OR REFRACTORY MULTIPLE MYELOMA	1
+Refractory Plasmablastic Lymphoma	1
+Relapse Multiple Myeloma	1
+Relapsed Cancer	1
+Relapsed Plasmablastic Lymphoma	1
+Relapsed Refractory Multiple Myeloma	1
+Relapsed and/or Refractory Multiple Myeloma	1
+Relapsed/Refractory Multiple Myeloma	1
+B-Cell Lymphoma Treatment	1
+B-cell Non Hodgkin Lymphoma	1
+Burkitt's Lymphoma	1
+Diffuse Large B-Cell Lymphoma Refractory	1
+Diffuse Large B-cell Lymphoma Recurrent	1
+Double-Expressor Lymphoma	1
+High-grade B-cell Lymphoma (HGBCL)	1
+Lymphoma, Marginal Zone	1
+Primary Mediastinal B-cell Lymphoma	1
+Recurrent Diffuse Large B-Cell Lymphoma, Not Otherwise Specified	1
+Recurrent Grade 3b Follicular Lymphoma	1
+Recurrent High Grade B-Cell Lymphoma	1
+Recurrent High Grade B-Cell Lymphoma With MYC and BCL2 or BCL6 Rearrangements	1
+Recurrent Primary Mediastinal (Thymic) Large B-Cell Lymphoma	1
+Recurrent Transformed Chronic Lymphocytic Leukemia	1
+Recurrent Transformed Follicular Lymphoma to Diffuse Large B-Cell Lymphoma	1
+Recurrent Transformed Indolent B-Cell Non-Hodgkin Lymphoma to Diffuse Large B-Cell Lymphoma	1
+Refractory Diffuse Large B-Cell Lymphoma, Not Otherwise Specified	1
+Refractory Grade 3b Follicular Lymphoma	1
+Refractory High Grade B-Cell Lymphoma	1
+Refractory High Grade B-Cell Lymphoma With MYC and BCL2 or BCL6 Rearrangements	1
+Refractory Primary Mediastinal (Thymic) Large B-Cell Lymphoma	1
+Refractory Transformed Chronic Lymphocytic Leukemia	1
+Refractory Transformed Follicular Lymphoma to Diffuse Large B-Cell Lymphoma	1
+Refractory Transformed Indolent B-Cell Non-Hodgkin Lymphoma to Diffuse Large B-Cell Lymphoma	1
+Relapse	1
+Relapsed Diffuse Large B-Cell Lymphoma	1
+Relapsed Diffuse Large B-cell Lymphoma	1
+Relapsed Follicular Lymphoma	1
+Relapsed Mantle Cell Lymphoma	1
+Relapsed or Refractory Diffuse Large B-Cell Lymphoma (R/R DLBCL)	1
+Relapsed or Refractory Large B-cell Lymphoma	1
+Relapsed or Refractory Lymphoma	1
+Waldenstrom Macroglobulinemia	1
+Carcinoma, Squamous Cell of Head and Neck	1
+Cervix Cancer	1
+Endometrium Cancer	1
+Esophagus Cancer	1
+Exocrine Pancreatic Cancer	1
+Lung Cancer (NSCLC)	1
+Lung Cancer(NSCLC)	1
+Lung Cancer, Nonsmall Cell	1
+Prostate Cancer (CRPC)	1
+Recurrent or Metastatic Vulvar Cancer	1
+Solid Malignancies	1
+Squamous Cell Carcinoma Vulva	1
+Squamous Cell Carcinoma of the Head and Neck	1
+Squamous Cell Carcinoma of the Head and Neck (SCCHN)	1
+Vulvar Carcinoma	1
+Advanced High-Grade Epithelial Ovarian Cancer	1
+Anatomic Stage II Breast Cancer AJCC v8	1
+Anatomic Stage IIA Breast Cancer AJCC v8	1
+Anatomic Stage IIB Breast Cancer AJCC v8	1
+Anatomic Stage IIIA Breast Cancer AJCC v8	1
+Anatomic Stage IIIB Breast Cancer AJCC v8	1
+Anatomic Stage IIIC Breast Cancer AJCC v8	1
+BRCA1 Gene Mutation	1
+BRCA2 Gene Mutation	1
+Breast Cancer Triple Negative	1
+Endometrial Adenocarcinoma	1
+Endometrial Clear Cell Adenocarcinoma	1
+Endometrial Serous Adenocarcinoma	1
+Epithelial Ovarian Cancer	1
+Estrogen Receptor Negative	1
+Fallopian Tube	1
+Fallopian Tube Cancers	1
+Fallopian Tube Neoplasms	1
+Folate Receptor Alpha Positive	1
+Folate Receptor-Alpha Positive	1
+HER2/Neu Negative	1
+High Grade Ovarian Cancer	1
+Neoadjuvant	1
+Peritoneal Neoplasms	1
+Platinum Resistant Ovarian Cancer	1
+Primary Peritoneal Cancer	1
+Primary Peritoneal Carcinoma	1
+Progesterone Receptor Negative	1
+Prognostic Stage II Breast Cancer AJCC v8	1
+Prognostic Stage IIA Breast Cancer AJCC v8	1
+Prognostic Stage IIB Breast Cancer AJCC v8	1
+Prognostic Stage III Breast Cancer AJCC v8	1
+Prognostic Stage IIIA Breast Cancer AJCC v8	1
+Prognostic Stage IIIB Breast Cancer AJCC v8	1
+Prognostic Stage IIIC Breast Cancer AJCC v8	1
+Recurrent Epithelial Ovarian, Fallopian or Peritoneal Carcinoma	1
+Recurrent Fallopian Tube Carcinoma	1
+Recurrent Ovarian Cancer	1
+Recurrent Primary Peritoneal Carcinoma	1
+Recurrent Uterine Carcinosarcoma	1
+Recurrent Uterine Corpus Carcinoma	1
+Recurrent Uterine Serous Carcinoma	1
+Tumors	1
+Advanced Cancer	1
+Advanced Gastric Cancer	1
+Advanced Melanoma	1
+Biliary Carcinoma	1
+Breast Diseases	1
+Capecitabine	1
+Carcinoma	1
+Endometrial Neoplasms	1
+Gynecological Malignancy	1
+HER2	1
+HER2 + Breast Cancer	1
+HER2 Low Breast Neoplasms	1
+HER2 Overexpressing Gastric Carcinoma	1
+HER2-Positive Solid Tumors	1
+HER2-expressing	1
+HER2-positive Advanced Breast With Liver Metastases	1
+HR Positive/HER2 Low Expression Metastatic Breast Cancer	1
+Head and Neck Neoplasms	1
+Her2 Overexpressing High-Risk Non-Muscle Invasive Bladder Urothelial Carcinoma	1
+Melanoma, Stage II	1
+Metastatic Gastric Cancer	1
+Muscle Invasive Bladder Carcinoma	1
+Neoadjuvant Immunotherapy	1
+Neoadjuvant Treatment of Her2-positive Muscle-invasive Bladder Cance	1
+Radical Cystectomy	1
+Salivary Gland Tumors	1
+Stomach Neoplasms	1
+UTUC	1
+Uterine Cervical Neoplasms	1
+Additional Indications Below for Module 4 and 5	1
+Advanced Non Small Cell Lung Cancer	1
+Advanced Solid Tumors That Are MTAP Deficient	1
+Advanced or Metastatic NSCLC	1
+Angiosarcoma	1
+Biliary Cancer	1
+EGFRm Advanced Non-Small Cell Lung Cancer	1
+EGFRm Metastatic Non-Small Cell Lung Cancer	1
+ER-negative Breast Cancer	1
+HER2 Negative Breast Carcinoma	1
+Hormone Receptor Positive Breast Cancer	1
+Metastatic Lung Cancer	1
+Metastatic Non Small Cell Lung Cancer	1
+Metastatic Non-small Cell Lung Cancer	1
+NSCLC	1
+Small Cell Lung Cancer Only in Module 5	1
+Stomatitis	1
+TNBC - Triple-Negative Breast Cancer	1
+Unresectable Non-small Lung Cancer	1
+Colon Cancer	1
+Rectal Cancer	1
+Advanced Solid Tumors Cancer	1
+Glioblastoma	1
+Gliosarcoma	1
+Follicular Lymphoma, Grade 3b	1
+Lymphoma, Follicular, Grade 3b	1
+Transformed Lymphoma / DLBCL	1
+Small Cell Lung Carcinoma	1
+Advanced Non-Small Cell Squamous Lung Cancer	1
+EGFR Gene Mutation	1
+Malignant Neoplasm	1
+Non-Small Cell Lung Carcinoma	1
+Non Small Cell Lung Cancer (NSCLC)	1
+Sarcoma	1
+Thyroid Cancer	1
+Extensive Stage-small Cell Lung Cancer	1
+Extensive-stage Small-cell Lung Cancer	1
+Neuroendocrine Carcinoma	1
+Small-Cell Lung Cancer	1
+Head and Neck Cancer	1
+Metastatic Squamous Cell Carcinoma of the Head and Neck	1
+Recurrent Squamous Cell Carcinoma of the Head and Neck	1
+Carcinoma, Non-Small-Cell Lung (NSCLC)	1
+B-cell Acute Lymphoblastic Leukemia	1
+Ewing Sarcoma	1
+Neuroblastoma	1
+Ovarian Cancer Recurrent	1
