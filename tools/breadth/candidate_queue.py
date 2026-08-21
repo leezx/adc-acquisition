@@ -233,6 +233,40 @@ def extract_all_adc_generic_names_from_text(text: str) -> list[str]:
     return list(seen.values())
 
 
+def _clean_date_string(value) -> str | None:
+    """round-1 fix: a parquet column's missing value can be a float NaN,
+    not None or an empty string -- `if value:` treats NaN as TRUTHY
+    (`bool(float("nan"))` is `True` in Python), so the old `if date: ...
+    str(date)` pattern silently wrote the literal string "nan" as
+    first_seen for an undated record instead of leaving it blank.
+    Verified live: 3 real candidate_queue.tsv rows had first_seen="nan"
+    before this fix (all from AACR 2026's undated records)."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return None
+    text = str(value).strip()
+    return text or None
+
+
+def candidate_id_for_name(name: str) -> str:
+    """Source-independent, persistent candidate identity -- depends ONLY
+    on the canonical normalized name, NEVER on which source(s) discovered
+    it. round-1 fix: the previous scheme picked candidate_id's PREFIX
+    (CTGOV_SUFFIX_ vs CONFERENCE_SUFFIX_) based on whether clinicaltrials
+    evidence was present, so the SAME real candidate got a different id
+    depending on run-to-run source availability -- e.g. a name seen only
+    in a conference abstract first, then later also confirmed on CT.gov,
+    would appear to Phase 6's delta system as "old candidate disappeared,
+    new candidate appeared" instead of "same candidate, new evidence
+    source, status upgraded". This is the identity contract Phase 6's
+    twice-monthly delta depends on, fixed now (before Phase 6 exists) per
+    the reviewer's explicit call: an intentional, one-time migration of
+    the 16 existing CTGOV_SUFFIX_* ids to this scheme, not a compatibility
+    shim -- the hash portion is unchanged (still
+    sha256(normalize_name(name))[:12]), only the prefix text changes."""
+    key = normalize_name(name)
+    return f"ADC_SUFFIX_{sha256_bytes(key.encode('utf-8'))[:12]}"
+
+
 def build_ctgov_suffix_candidates(ct_manifest: pd.DataFrame, known_ids: set[str]) -> dict[str, dict]:
     """One aggregated candidate per distinct EXTRACTED generic name (across
     all trials that mention it), keyed by normalized extracted name --
@@ -270,9 +304,9 @@ def build_ctgov_suffix_candidates(ct_manifest: pd.DataFrame, known_ids: set[str]
                 for p in phases:
                     entry["phases"].add(p)
             entry["contexts"].add(str(row.get("brief_title", ""))[:150])
-            posted = row.get("study_first_post_date")
-            if posted and (entry["first_seen"] is None or str(posted) < entry["first_seen"]):
-                entry["first_seen"] = str(posted)
+            posted = _clean_date_string(row.get("study_first_post_date"))
+            if posted and (entry["first_seen"] is None or posted < entry["first_seen"]):
+                entry["first_seen"] = posted
     return candidates
 
 
@@ -304,10 +338,25 @@ def build_conference_suffix_candidates(conf_manifest: pd.DataFrame, known_ids: s
             ))
             entry["conference_ids"].add(row["source_record_id"])
             entry["contexts"].add(str(title)[:150])
-            date = row.get("publication_or_release_date")
-            if date and (entry["first_seen"] is None or str(date) < entry["first_seen"]):
-                entry["first_seen"] = str(date)
+            date = _clean_date_string(row.get("publication_or_release_date"))
+            if date and (entry["first_seen"] is None or date < entry["first_seen"]):
+                entry["first_seen"] = date
     return candidates
+
+
+def status_and_confidence_for_sources(sources: set[str]) -> tuple[str, str]:
+    """Decide validation_status/confidence purely from WHICH sources
+    contributed evidence for a suffix-matched candidate -- never from
+    which source happened to be discovered/processed first, so the SAME
+    candidate's status upgrades in place (NEEDS_REVIEW ->
+    AUTO_HIGH_CONFIDENCE) the instant clinicaltrials evidence appears,
+    rather than looking like two different candidates. Paired with
+    candidate_id_for_name()'s source-independent identity -- see that
+    docstring for why this stability matters for Phase 6's delta
+    system."""
+    if "clinicaltrials" in sources:
+        return "AUTO_HIGH_CONFIDENCE", "high"
+    return "NEEDS_REVIEW", "medium"
 
 
 def merge_suffix_candidates(*candidate_dicts: dict[str, dict]) -> dict[str, dict]:
@@ -390,19 +439,16 @@ def main() -> int:
         f"{overlap} found by both)",
         file=sys.stderr,
     )
-    for key, c in suffix_candidates.items():
+    for c in suffix_candidates.values():
         payload_class = ADC_SUFFIX_PAYLOAD_CLASS[c["suffix"]]
         evidence_ids = sorted(c["nct_ids"])[:10] + sorted(c["conference_ids"])[:10]
         example_context = sorted(c["contexts"])[0] if c["contexts"] else ""
-        has_ctgov = "clinicaltrials" in c["sources"]
-        if has_ctgov:
+        validation_status, confidence = status_and_confidence_for_sources(c["sources"])
+        if validation_status == "AUTO_HIGH_CONFIDENCE":
             # A structured, controlled intervention-name field confirms
             # this name -- same confidence basis as Phase 3, regardless
             # of whether conference text also mentions it.
-            confidence = "high"
-            validation_status = "AUTO_HIGH_CONFIDENCE"
             reason = f"generic drug name ends in the documented ADC USAN/INN payload-class stem '-{c['suffix']}'"
-            id_prefix = "CTGOV_SUFFIX"
         else:
             # ONLY found via free-text conference-abstract co-occurrence --
             # a categorically noisier signal than a structured field
@@ -410,8 +456,6 @@ def main() -> int:
             # already-known name all pass the same regex), so this is
             # NEVER auto-promoted -- Part 9's two-stage design exists
             # exactly for this case.
-            confidence = "medium"
-            validation_status = "NEEDS_REVIEW"
             reason = (
                 f"generic-looking name ends in the documented ADC USAN/INN payload-class stem '-{c['suffix']}', "
                 "but ONLY found via free-text conference-abstract title/abstract co-occurrence -- no structured "
@@ -420,9 +464,8 @@ def main() -> int:
                 "OCR/authoring typos of an already-known name's spelling are not caught by exact matching); "
                 "needs a human check before promotion, not auto-promoted."
             )
-            id_prefix = "CONFERENCE_SUFFIX"
         rows.append(dict(
-            candidate_id=f"{id_prefix}_{sha256_bytes(key.encode('utf-8'))[:12]}",
+            candidate_id=candidate_id_for_name(c["label"]),
             candidate_type="ADC_CANDIDATE",
             candidate_label=c["label"],
             source="; ".join(sorted(c["sources"])),

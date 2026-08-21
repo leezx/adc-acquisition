@@ -1,5 +1,49 @@
 # Phase 5a — Candidate Discovery From Conference Abstract Text
 
+## Round-1 fixes (2 issues from review)
+
+1. **Candidate identity was source-dependent -- would have broken Phase
+   6's delta system before it existed.** The first version picked
+   `candidate_id`'s PREFIX (`CTGOV_SUFFIX_`/`CONFERENCE_SUFFIX_`) based on
+   whether clinicaltrials evidence was present. A real early-seed
+   candidate first seen only in a conference abstract, then later also
+   confirmed on CT.gov, would get a DIFFERENT id on the second run --
+   looking to any future delta/diff logic like "old candidate disappeared,
+   new candidate appeared" instead of "same candidate, new evidence
+   source, status upgraded". Fixed with `candidate_id_for_name()`: identity
+   now depends ONLY on the canonical normalized name, never on source
+   composition. This is an intentional, one-time migration of the 16
+   existing `CTGOV_SUFFIX_*` ids (and the new `CONFERENCE_SUFFIX_*` ids
+   from this same PR) to a single `ADC_SUFFIX_*` scheme -- the hash portion
+   is unchanged (`sha256(normalize_name(name))[:12]`), only the prefix text
+   changes. Doing this now, before Phase 6's delta system exists, is the
+   last reasonable window to fix the identity contract without a real
+   migration against live delta history. Paired with a new
+   `status_and_confidence_for_sources()` helper so status upgrades
+   (`NEEDS_REVIEW` -> `AUTO_HIGH_CONFIDENCE`) happen in place for the same
+   id. Regression test:
+   `test_candidate_id_for_name_is_source_independent_and_stable_across_upgrade`
+   -- a candidate seen only in conference text, then also seen on CT.gov,
+   asserted to keep the same id and upgrade status in place.
+2. **`first_seen` could be the literal string `"nan"`.** An undated
+   conference record's `publication_or_release_date` is a pandas float
+   `NaN`, not `None` -- `if date:` treats `NaN` as truthy
+   (`bool(float("nan"))` is `True`), so `str(date)` produced the literal
+   string `"nan"` instead of leaving `first_seen` blank. Confirmed live: 3
+   real rows (`Trastuzumab vedotin`, `datopotumab deruxtecan`, `M100B
+   vedotin`) had `first_seen="nan"` before this fix. Fixed with a shared
+   `_clean_date_string()` helper (`pd.isna()`-aware), applied to BOTH the
+   conference-text path (where the reviewer found it) and the CT.gov path
+   (`study_first_post_date`, the same latent bug in a sibling function
+   this PR was already touching). Regression test:
+   `test_clean_date_string_never_produces_literal_nan`.
+
+Live-reverified after both fixes: same 39/53/30 counts as before (identity
+and first_seen are provenance fields, not counted quantities), 0 literal
+`"nan"` values, all 39 suffix-matched candidates now share the single
+`ADC_SUFFIX_*` id scheme. 445 tests passing (3 new this round).
+
+
 Per `reports/validation/BREADTH_PLAN.md` Phase 5 (Parts 4/9 continuation).
 BREADTH_PLAN.md's Phase 5 bundles several distinct pieces of work (ADC_PLATFORM
 taxonomy, company scientific-presentation source, patent-derived breadth
@@ -90,13 +134,12 @@ $ python3 tools/breadth/feasibility_entities.py ...
 NEEDS_REVIEW correctly excluded)
 ```
 
-`candidate_queue.tsv` grew from 30 rows (Phase 3) to 53: the 30 PROMOTED/
-AUTO_HIGH_CONFIDENCE rows are IDENTICAL in identity/candidate_id to Phase
-3/4 (14 known assets are unaffected; all 16 CT.gov-derived candidates keep
-their existing `CTGOV_SUFFIX_*` id, since presence of CT.gov evidence -- not
-processing order -- decides that prefix), plus 23 new `CONFERENCE_SUFFIX_*`
-rows, all `NEEDS_REVIEW`, visible for human review but not promoted to any
-`DATA/feasibility/*.tsv` entity table.
+`candidate_queue.tsv` grew from 30 rows (Phase 3) to 53: the 14 known-asset
+`KNOWN_*` rows are unaffected; the 16 CT.gov-derived candidates now carry a
+migrated `ADC_SUFFIX_*` id (round-1 fix -- see above; the id no longer
+depends on which source(s) discovered a name), plus 23 new `ADC_SUFFIX_*`
+rows for conference-only names, all `NEEDS_REVIEW`, visible for human
+review but not promoted to any `DATA/feasibility/*.tsv` entity table.
 
 ## 4. What the 23 NEEDS_REVIEW rows actually look like (disclosed, not hidden)
 

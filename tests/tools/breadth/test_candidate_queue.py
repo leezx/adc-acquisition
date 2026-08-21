@@ -1,7 +1,10 @@
+import numpy as np
 import pandas as pd
 
 from tools.breadth.candidate_queue import (
     build_conference_suffix_candidates,
+    build_ctgov_suffix_candidates,
+    candidate_id_for_name,
     extract_adc_generic_name,
     extract_all_adc_generic_names_from_text,
     find_suffix_matches,
@@ -9,6 +12,7 @@ from tools.breadth.candidate_queue import (
     mentions_known_asset,
     merge_suffix_candidates,
     normalize_name,
+    status_and_confidence_for_sources,
 )
 
 
@@ -128,3 +132,65 @@ def test_merge_suffix_candidates_keeps_distinct_names_separate():
                        phases=set(), first_seen=None, contexts=set(), sources={"conference_abstract_corpus"})}
     merged = merge_suffix_candidates(ct, conf)
     assert set(merged.keys()) == {"a", "b"}
+
+
+def test_status_and_confidence_for_sources():
+    assert status_and_confidence_for_sources({"clinicaltrials"}) == ("AUTO_HIGH_CONFIDENCE", "high")
+    assert status_and_confidence_for_sources({"clinicaltrials", "conference_abstract_corpus"}) == ("AUTO_HIGH_CONFIDENCE", "high")
+    assert status_and_confidence_for_sources({"conference_abstract_corpus"}) == ("NEEDS_REVIEW", "medium")
+
+
+def test_candidate_id_for_name_is_source_independent_and_stable_across_upgrade():
+    """Regression test for the round-1 fix: a candidate first seen ONLY in
+    a conference abstract, then later ALSO confirmed on CT.gov, must keep
+    the SAME candidate_id and upgrade status in place -- not disappear
+    under one id and reappear under a different one. This is the identity
+    contract Phase 6's twice-monthly delta system depends on."""
+    known = known_identifier_set([])
+
+    conf_manifest = pd.DataFrame([
+        dict(source_record_id="10.1/1", title="A study of Mecbotamab vedotin in AXL-positive tumors",
+             abstract=None, publication_or_release_date="2026-08-01"),
+    ])
+    conf_candidates = build_conference_suffix_candidates(conf_manifest, known)
+
+    # Run 1: only conference evidence exists yet.
+    run1 = merge_suffix_candidates(conf_candidates)
+    assert len(run1) == 1
+    entry1 = next(iter(run1.values()))
+    id1 = candidate_id_for_name(entry1["label"])
+    status1, _ = status_and_confidence_for_sources(entry1["sources"])
+    assert entry1["sources"] == {"conference_abstract_corpus"}
+    assert status1 == "NEEDS_REVIEW"
+
+    # Run 2: the SAME real candidate now also appears on CT.gov.
+    ct_manifest = pd.DataFrame([
+        dict(nct_id="NCT99999999", intervention_names=["Mecbotamab vedotin"], phases=["PHASE1"],
+             brief_title="A trial of mecbotamab vedotin", study_first_post_date="2026-08-15"),
+    ])
+    ct_candidates = build_ctgov_suffix_candidates(ct_manifest, known)
+    run2 = merge_suffix_candidates(ct_candidates, conf_candidates)
+    assert len(run2) == 1
+    entry2 = next(iter(run2.values()))
+    id2 = candidate_id_for_name(entry2["label"])
+    status2, _ = status_and_confidence_for_sources(entry2["sources"])
+
+    assert id2 == id1  # same identity, not a new one
+    assert entry2["sources"] == {"clinicaltrials", "conference_abstract_corpus"}
+    assert status2 == "AUTO_HIGH_CONFIDENCE"  # upgraded in place
+
+
+def test_clean_date_string_never_produces_literal_nan():
+    """Regression test: a conference record with no publication date has
+    pandas' float NaN for that column (not None), and `if value:` treats
+    NaN as truthy -- the round-1 bug wrote the literal string "nan" as
+    first_seen instead of leaving it blank."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="aacr:2026:1", title="A study of Mecbotamab vedotin",
+             abstract=None, publication_or_release_date=np.nan),
+    ])
+    candidates = build_conference_suffix_candidates(manifest, known)
+    entry = next(iter(candidates.values()))
+    assert entry["first_seen"] is None
+    assert entry["first_seen"] != "nan"
