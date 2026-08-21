@@ -113,6 +113,38 @@ TEXT_SCAN_STOPWORD_PREFIXES = {
     "vcmmae", "mmae", "mmaf", "dxd",
 }
 
+# ADC modality taxonomy (Phase 5b, reports/validation/BREADTH_PLAN.md Part
+# 5): documented, VERIFIED phrases identifying a conjugate drug class that
+# is related to but distinct from a classical antibody-drug conjugate --
+# see reports/validation/breadth/ADC_MODALITY_TAXONOMY.md for the full
+# taxonomy and why this is a positive-keyword-evidence check, never a
+# naming-pattern guess (a "the vehicle word ends in -mab" rule was
+# considered and rejected as unsafe -- checked against the real queue and
+# found 3 already-CT.gov-confirmed antibody ADCs whose vehicle word does
+# NOT end in -mab, which this project cannot verify live). Case-
+# insensitive substring match against a candidate's own evidence text
+# (CT.gov brief_title / conference title+abstract), NOT the candidate
+# name itself.
+ADJACENT_MODALITY_KEYWORDS = {
+    "bicycle toxin conjugate": "BICYCLE_TOXIN_CONJUGATE",
+    "bicycle drug conjugate": "BICYCLE_TOXIN_CONJUGATE",
+    "peptide-drug conjugate": "PEPTIDE_DRUG_CONJUGATE",
+    "peptide drug conjugate": "PEPTIDE_DRUG_CONJUGATE",
+    "small molecule drug conjugate": "SMALL_MOLECULE_DRUG_CONJUGATE",
+    "small-molecule drug conjugate": "SMALL_MOLECULE_DRUG_CONJUGATE",
+    "radioligand therapy": "RADIOCONJUGATE",
+    "radioconjugate": "RADIOCONJUGATE",
+    "degrader-antibody conjugate": "DEGRADER_ANTIBODY_CONJUGATE",
+}
+
+
+def detect_adjacent_modalities(text: str) -> set[str]:
+    """Case-insensitive scan of `text` for every ADJACENT_MODALITY_KEYWORDS
+    phrase present -- returns the set of matched modality labels (empty if
+    none), never a guess from the candidate name's own shape."""
+    lowered = text.lower()
+    return {label for phrase, label in ADJACENT_MODALITY_KEYWORDS.items() if phrase in lowered}
+
 
 def load_known_registry(path: Path) -> list[dict]:
     with path.open(encoding="utf-8") as f:
@@ -296,14 +328,16 @@ def build_ctgov_suffix_candidates(ct_manifest: pd.DataFrame, known_ids: set[str]
             key = normalize_name(extracted)
             entry = candidates.setdefault(key, dict(
                 label=extracted, suffix=suffix, nct_ids=set(), conference_ids=set(), phases=set(),
-                first_seen=None, contexts=set(), sources={"clinicaltrials"},
+                first_seen=None, contexts=set(), sources={"clinicaltrials"}, adjacent_modalities=set(),
             ))
             entry["nct_ids"].add(row["nct_id"])
             phases = row.get("phases")
             if phases is not None:
                 for p in phases:
                     entry["phases"].add(p)
-            entry["contexts"].add(str(row.get("brief_title", ""))[:150])
+            brief_title = str(row.get("brief_title") or "")
+            entry["contexts"].add(brief_title[:150])
+            entry["adjacent_modalities"] |= detect_adjacent_modalities(brief_title)
             posted = _clean_date_string(row.get("study_first_post_date"))
             if posted and (entry["first_seen"] is None or posted < entry["first_seen"]):
                 entry["first_seen"] = posted
@@ -334,10 +368,16 @@ def build_conference_suffix_candidates(conf_manifest: pd.DataFrame, known_ids: s
             key = normalize_name(extracted)
             entry = candidates.setdefault(key, dict(
                 label=extracted, suffix=suffix, nct_ids=set(), conference_ids=set(), phases=set(),
-                first_seen=None, contexts=set(), sources={"conference_abstract_corpus"},
+                first_seen=None, contexts=set(), sources={"conference_abstract_corpus"}, adjacent_modalities=set(),
             ))
             entry["conference_ids"].add(row["source_record_id"])
             entry["contexts"].add(str(title)[:150])
+            # Scan the FULL title+abstract text for adjacent-modality
+            # keywords, not just the 150-char truncated snippet kept in
+            # `contexts` for display -- a modality-identifying phrase
+            # (e.g. "Bicycle Toxin Conjugate") can appear anywhere in the
+            # abstract body, not only in the title.
+            entry["adjacent_modalities"] |= detect_adjacent_modalities(text)
             date = _clean_date_string(row.get("publication_or_release_date"))
             if date and (entry["first_seen"] is None or date < entry["first_seen"]):
                 entry["first_seen"] = date
@@ -371,13 +411,14 @@ def merge_suffix_candidates(*candidate_dicts: dict[str, dict]) -> dict[str, dict
         for key, c in candidates.items():
             entry = merged.setdefault(key, dict(
                 label=c["label"], suffix=c["suffix"], nct_ids=set(), conference_ids=set(),
-                phases=set(), contexts=set(), first_seen=None, sources=set(),
+                phases=set(), contexts=set(), first_seen=None, sources=set(), adjacent_modalities=set(),
             ))
             entry["sources"] |= c["sources"]
             entry["nct_ids"] |= c["nct_ids"]
             entry["conference_ids"] |= c["conference_ids"]
             entry["phases"] |= c["phases"]
             entry["contexts"] |= c["contexts"]
+            entry["adjacent_modalities"] |= c["adjacent_modalities"]
             if c["first_seen"] and (entry["first_seen"] is None or c["first_seen"] < entry["first_seen"]):
                 entry["first_seen"] = c["first_seen"]
     return merged
@@ -395,6 +436,7 @@ def write_tsv(path: Path, rows: list[dict], fieldnames: list[str]) -> None:
 CANDIDATE_QUEUE_FIELDS = [
     "candidate_id", "candidate_type", "candidate_label", "source", "evidence_id", "context",
     "first_seen", "confidence", "validation_status", "reason",
+    "modality_classification", "modality_detail",
 ]
 
 
@@ -423,6 +465,8 @@ def main() -> int:
             confidence="high",
             validation_status="PROMOTED",
             reason="pre-curated, independently verified known ADC asset",
+            modality_classification="STRICT_ADC",
+            modality_detail="",
         ))
 
     ct_path = Path(args.data_dir) / "manifests" / "clinicaltrials.parquet"
@@ -464,6 +508,19 @@ def main() -> int:
                 "OCR/authoring typos of an already-known name's spelling are not caught by exact matching); "
                 "needs a human check before promotion, not auto-promoted."
             )
+        if c["adjacent_modalities"]:
+            # Positive keyword evidence in the candidate's OWN text names
+            # a specific non-strict-ADC conjugate class (e.g. "Bicycle
+            # Toxin Conjugate") -- see ADC_MODALITY_TAXONOMY.md for why
+            # this is evidence-gated, never inferred from the name's shape.
+            modality_classification = "ADJACENT_CONJUGATE_MODALITY"
+            modality_detail = "; ".join(sorted(c["adjacent_modalities"]))
+        else:
+            # No adjacent-modality keyword found -- PRESUMED, not
+            # confirmed, to be a strict antibody ADC (censored-negative,
+            # same discipline as broad_recall.py's NOT_CONFIRMED_BROAD).
+            modality_classification = "PRESUMED_STRICT_ADC"
+            modality_detail = ""
         rows.append(dict(
             candidate_id=candidate_id_for_name(c["label"]),
             candidate_type="ADC_CANDIDATE",
@@ -475,15 +532,21 @@ def main() -> int:
             confidence=confidence,
             validation_status=validation_status,
             reason=reason,
+            modality_classification=modality_classification,
+            modality_detail=modality_detail,
         ))
 
     write_tsv(output_dir / "candidate_queue.tsv", rows, CANDIDATE_QUEUE_FIELDS)
     n_promoted = sum(1 for r in rows if r["validation_status"] == "PROMOTED")
     n_auto = sum(1 for r in rows if r["validation_status"] == "AUTO_HIGH_CONFIDENCE")
     n_review = sum(1 for r in rows if r["validation_status"] == "NEEDS_REVIEW")
+    n_adjacent = sum(1 for r in rows if r["modality_classification"] == "ADJACENT_CONJUGATE_MODALITY")
     print(f"candidate_queue.tsv: {len(rows)} total ({n_promoted} PROMOTED from known registry, "
           f"{n_auto} AUTO_HIGH_CONFIDENCE via a structured field, {n_review} NEEDS_REVIEW "
           "via free-text conference co-occurrence only)", file=sys.stderr)
+    print(f"modality_classification: {n_adjacent} ADJACENT_CONJUGATE_MODALITY (positive keyword evidence, "
+          "see ADC_MODALITY_TAXONOMY.md), rest STRICT_ADC (known registry) or PRESUMED_STRICT_ADC "
+          "(suffix-matched, no adjacent-modality evidence found)", file=sys.stderr)
     return 0
 
 

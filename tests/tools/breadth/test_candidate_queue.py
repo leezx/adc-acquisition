@@ -5,6 +5,7 @@ from tools.breadth.candidate_queue import (
     build_conference_suffix_candidates,
     build_ctgov_suffix_candidates,
     candidate_id_for_name,
+    detect_adjacent_modalities,
     extract_adc_generic_name,
     extract_all_adc_generic_names_from_text,
     find_suffix_matches,
@@ -112,10 +113,11 @@ def test_build_conference_suffix_candidates_surfaces_genuinely_new_name():
 def test_merge_suffix_candidates_combines_sources_for_same_name():
     ct = {"mecbotamabvedotin": dict(label="Mecbotamab vedotin", suffix="vedotin", nct_ids={"NCT1"},
                                      conference_ids=set(), phases=set(), first_seen="2021-01-01",
-                                     contexts={"a trial"}, sources={"clinicaltrials"})}
+                                     contexts={"a trial"}, sources={"clinicaltrials"}, adjacent_modalities=set())}
     conf = {"mecbotamabvedotin": dict(label="Mecbotamab vedotin", suffix="vedotin", nct_ids=set(),
                                        conference_ids={"10.1/1"}, phases=set(), first_seen="2020-01-01",
-                                       contexts={"an abstract"}, sources={"conference_abstract_corpus"})}
+                                       contexts={"an abstract"}, sources={"conference_abstract_corpus"},
+                                       adjacent_modalities={"BICYCLE_TOXIN_CONJUGATE"})}
     merged = merge_suffix_candidates(ct, conf)
     assert len(merged) == 1
     entry = merged["mecbotamabvedotin"]
@@ -123,13 +125,15 @@ def test_merge_suffix_candidates_combines_sources_for_same_name():
     assert entry["nct_ids"] == {"NCT1"}
     assert entry["conference_ids"] == {"10.1/1"}
     assert entry["first_seen"] == "2020-01-01"  # earliest of the two
+    assert entry["adjacent_modalities"] == {"BICYCLE_TOXIN_CONJUGATE"}
 
 
 def test_merge_suffix_candidates_keeps_distinct_names_separate():
     ct = {"a": dict(label="A vedotin", suffix="vedotin", nct_ids={"NCT1"}, conference_ids=set(),
-                     phases=set(), first_seen=None, contexts=set(), sources={"clinicaltrials"})}
+                     phases=set(), first_seen=None, contexts=set(), sources={"clinicaltrials"}, adjacent_modalities=set())}
     conf = {"b": dict(label="B vedotin", suffix="vedotin", nct_ids=set(), conference_ids={"10.1/2"},
-                       phases=set(), first_seen=None, contexts=set(), sources={"conference_abstract_corpus"})}
+                       phases=set(), first_seen=None, contexts=set(), sources={"conference_abstract_corpus"},
+                       adjacent_modalities=set())}
     merged = merge_suffix_candidates(ct, conf)
     assert set(merged.keys()) == {"a", "b"}
 
@@ -178,6 +182,47 @@ def test_candidate_id_for_name_is_source_independent_and_stable_across_upgrade()
     assert id2 == id1  # same identity, not a new one
     assert entry2["sources"] == {"clinicaltrials", "conference_abstract_corpus"}
     assert status2 == "AUTO_HIGH_CONFIDENCE"  # upgraded in place
+
+
+def test_detect_adjacent_modalities_finds_bicycle_toxin_conjugate():
+    text = ("Zelenectide pevedotin (zele; BT8009) is a Bicycle Toxin Conjugate (BTC), "
+            "comprising a highly selective bicyclic peptide targeting Nectin-4.")
+    assert detect_adjacent_modalities(text) == {"BICYCLE_TOXIN_CONJUGATE"}
+
+
+def test_detect_adjacent_modalities_empty_for_ordinary_adc_text():
+    text = "A phase 1 study of Trastuzumab deruxtecan in HER2-positive breast cancer."
+    assert detect_adjacent_modalities(text) == set()
+
+
+def test_build_conference_suffix_candidates_flags_adjacent_modality_from_full_abstract_text():
+    """The real zelenectide pevedotin case: the modality phrase appears in
+    the abstract BODY, not (necessarily) within the 150-char title
+    snippet stored in `contexts` -- the scan must cover the full text."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(
+            source_record_id="10.1200/jco.2025.43.16_suppl.tps4619",
+            title="A phase 2/3 study of zelenectide pevedotin targeting nectin-4",
+            abstract="Zelenectide pevedotin (BT8009) is a Bicycle Toxin Conjugate (BTC), "
+                     "comprising a bicyclic peptide linked to MMAE.",
+            publication_or_release_date="2025-06-01",
+        ),
+    ])
+    candidates = build_conference_suffix_candidates(manifest, known)
+    entry = next(iter(candidates.values()))
+    assert entry["adjacent_modalities"] == {"BICYCLE_TOXIN_CONJUGATE"}
+
+
+def test_build_ctgov_suffix_candidates_has_empty_adjacent_modalities_for_ordinary_candidate():
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(nct_id="NCT1", intervention_names=["Mecbotamab vedotin"], phases=["PHASE1"],
+             brief_title="A trial of mecbotamab vedotin", study_first_post_date="2021-01-01"),
+    ])
+    candidates = build_ctgov_suffix_candidates(manifest, known)
+    entry = next(iter(candidates.values()))
+    assert entry["adjacent_modalities"] == set()
 
 
 def test_clean_date_string_never_produces_literal_nan():
