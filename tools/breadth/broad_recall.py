@@ -2,6 +2,18 @@
 """Broad-discovery recall vs. targeted-recovery recall for the 702 NAR
 ADCdb benchmark assets (reports/validation/BREADTH_PLAN.md Phase 1 / Part 2).
 
+PHASE 2 ADDITION: a strong-identifier matching layer using NAR's own
+free-text NCT mentions, checked by exact NCT-number equality against the
+FULL clinicaltrials broad-query discovery ledger (see classify_broad_
+discovery's `broad_nct_ids` argument) -- this needs no materialized text
+at all, so it is not subject to the materialization-depth/text-observability
+caveats below, and confidently reclassifies some NOT_CONFIRMED_BROAD assets
+as BROAD_DISCOVERED (match_basis "STRONG_IDENTIFIER_NCT"). Found during
+Phase 2's investigation of the unresolved set (tools/breadth/
+miss_taxonomy.py); folded back into this Phase 1 tool rather than
+duplicated, since it is a genuine, safe enhancement to the same recall
+measurement, not a new metric.
+
 Answers two DIFFERENT questions, never conflated:
 
   A. BROAD DISCOVERY RECALL -- can our generic ADC-discovery queries find
@@ -205,13 +217,29 @@ def _match_basis_and_confidence(nar: NARAsset, matched_identifier: str) -> tuple
 
 
 def classify_broad_discovery(
-    nar: NARAsset, broad_manifests: dict[str, pd.DataFrame], raw_text_cache: dict[str, dict[str, str]],
+    nar: NARAsset,
+    broad_manifests: dict[str, pd.DataFrame],
+    raw_text_cache: dict[str, dict[str, str]],
+    broad_nct_ids: set[str] | None = None,
 ) -> dict:
     identifiers = nar.all_identifiers()
     hits = find_manifest_matches(broad_manifests, identifiers)
     for source in RAW_TEXT_SEARCHABLE_SOURCES:
         if source in raw_text_cache:
             hits.extend(find_raw_text_matches(raw_text_cache[source], source, identifiers))
+
+    # Strong-identifier layer (Phase 2 addition): NAR's own free-text NCT
+    # mentions (nar.nct_ids) checked directly against the FULL broad-query
+    # discovery-ledger id set -- exact NCT-number equality, no text/alias
+    # matching involved, so this needs no materialization at all and no
+    # AMBIGUOUS-style hedging. Kept as a clearly separate match_basis
+    # ("STRONG_IDENTIFIER_NCT") rather than folded into ALIAS_MATCH/etc.
+    strong_id_hits = []
+    if broad_nct_ids:
+        for nct in nar.nct_ids:
+            if nct in broad_nct_ids:
+                strong_id_hits.append(dict(source="clinicaltrials", source_record_id=nct, matched_identifier=nct))
+
     seen = set()
     deduped_hits = []
     for h in hits:
@@ -221,17 +249,27 @@ def classify_broad_discovery(
         seen.add(key)
         deduped_hits.append(h)
     hits = deduped_hits
-    if not hits:
+
+    if not hits and not strong_id_hits:
         return dict(status="NOT_CONFIRMED_BROAD", broad_sources="", matching_evidence_ids="", match_basis="", confidence="")
+
+    if not hits and strong_id_hits:
+        return dict(
+            status="BROAD_DISCOVERED", broad_sources="clinicaltrials",
+            matching_evidence_ids="; ".join(h["source_record_id"] for h in strong_id_hits),
+            match_basis="STRONG_IDENTIFIER_NCT", confidence="high",
+        )
 
     bases_confidences = [_match_basis_and_confidence(nar, h["matched_identifier"]) for h in hits]
     all_low_confidence = all(c == "low" for _, c in bases_confidences)
-    sources = sorted({h["source"] for h in hits})
-    evidence_ids = "; ".join(str(h["source_record_id"]) for h in hits[:10])
-    match_basis = "; ".join(sorted({b for b, _ in bases_confidences}))
-    best_confidence = "low" if all_low_confidence else ("high" if any(c == "high" for _, c in bases_confidences) else "medium")
+    sources = sorted({h["source"] for h in hits} | {h["source"] for h in strong_id_hits})
+    evidence_ids = "; ".join(str(h["source_record_id"]) for h in (hits + strong_id_hits)[:10])
+    match_basis = "; ".join(sorted({b for b, _ in bases_confidences} | ({"STRONG_IDENTIFIER_NCT"} if strong_id_hits else set())))
+    best_confidence = "low" if (all_low_confidence and not strong_id_hits) else (
+        "high" if (any(c == "high" for _, c in bases_confidences) or strong_id_hits) else "medium"
+    )
 
-    status = "AMBIGUOUS" if all_low_confidence else "BROAD_DISCOVERED"
+    status = "AMBIGUOUS" if (all_low_confidence and not strong_id_hits) else "BROAD_DISCOVERED"
     return dict(
         status=status, broad_sources="; ".join(sources), matching_evidence_ids=evidence_ids,
         match_basis=match_basis, confidence=best_confidence,
@@ -278,6 +316,17 @@ def main() -> int:
     for source, texts in raw_text_cache.items():
         print(f"  {source}: {len(texts)} raw files cached in memory", file=sys.stderr)
 
+    # Strong-identifier layer (Phase 2 addition): the FULL clinicaltrials
+    # discovery ledger's broad-query NCT ids, independent of materialization
+    # -- an exact NCT number match needs no downloaded text at all.
+    ct_disc = discovery.get("clinicaltrials")
+    broad_nct_ids: set[str] = set()
+    if ct_disc is not None and not ct_disc.empty:
+        allowed_ct = allowed_broad_query_ids.get("clinicaltrials", set())
+        broad_nct_ids = set(ct_disc.loc[ct_disc["query_id"].isin(allowed_ct), "source_record_id"])
+    print(f"  clinicaltrials: {len(broad_nct_ids)} broad-discovered NCT ids available for strong-identifier matching "
+          f"(independent of materialization depth)", file=sys.stderr)
+
     known_assets_raw = load_known_adc_assets(Path(args.known_assets_file))
     known_assets = build_known_asset_index(known_assets_raw)
     active_known = [k for k in known_assets if k.active]
@@ -290,7 +339,7 @@ def main() -> int:
         bucket = phase_bucket(nar.status)
         phase_counts.setdefault(bucket, Counter())
 
-        broad = classify_broad_discovery(nar, broad_manifests, raw_text_cache)
+        broad = classify_broad_discovery(nar, broad_manifests, raw_text_cache, broad_nct_ids)
         match_type, _, ka = match_nar_to_known_assets(nar, active_known)
         in_registry = ka is not None
 
