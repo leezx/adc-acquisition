@@ -7,6 +7,14 @@ queries find a NAR asset without knowing its name beforehand) as distinct
 from **targeted-recovery recall** (already largely proven for our 14
 curated assets by the prior benchmark, PR #17).
 
+**Updated during Phase 2** (`reports/validation/breadth/PHASE2_MISS_TAXONOMY.md`):
+`tools/breadth/broad_recall.py` gained a strong-identifier matching layer
+(exact NCT-number equality against the full discovery ledger, needing no
+materialized text at all), found while investigating the unresolved set.
+This is a genuine, safe enhancement to the same Phase 1 metric, not a new
+one, so the numbers below reflect the current, regenerated
+`nar702_broad_recall.tsv` rather than the figures originally reviewed.
+
 ## 1. NAR reference universe (`DATA/reference/nar_adcdb/`)
 
 Built by `tools/breadth/build_nar_reference_universe.py`, read-only against
@@ -112,10 +120,10 @@ not "confirmed false positive."
 
 | Status | Count | % of 702 |
 |---|---|---|
-| BROAD_DISCOVERED | 181 | 25.8% |
-| AMBIGUOUS | 18 | 2.6% |
+| BROAD_DISCOVERED | 198 | 28.2% |
+| AMBIGUOUS | 15 | 2.1% |
 | TARGETED_ONLY | 0 | 0% |
-| NOT_CONFIRMED_BROAD | 503 | 71.7% |
+| NOT_CONFIRMED_BROAD | 489 | 69.7% |
 
 **By phase bucket** (the load-bearing breakdown — recall declines sharply
 and monotonically from mature to early-stage assets, matching the "breadth
@@ -126,8 +134,8 @@ phase exists to test):
 |---|---|---|---|---|
 | Approved | 21 | 19 (90.5%) | 1 | 1 |
 | Phase 3 | 37 | 28 (75.7%) | 1 | 8 |
-| Phase 2 | 84 | 50 (59.5%) | 6 | 28 |
-| Phase 1 | 297 | 77 (25.9%) | 7 | 213 |
+| Phase 2 | 84 | 52 (61.9%) | 5 | 27 |
+| Phase 1 | 297 | 92 (31.0%) | 5 | 200 |
 | Investigative | 263 | 7 (2.7%) | 3 | 253 |
 
 `TARGETED_ONLY` = 0 is a genuine finding, not a bug: all 14 of our currently
@@ -139,45 +147,44 @@ records this per-asset (`in_known_registry` / `targeted_recoverable`).
 
 **Gate 1 metric** (BROAD_DISCOVERED or TARGETED_RECOVERABLE, reported here
 for transparency — formal gate evaluation is Phase 7's job, not this one):
-181/702 = **25.8%**, far below the plan's 95% target. This is expected and
-correct at the end of Phase 1 alone; it is not a regression to fix in this
-PR.
+198/702 = **28.2%**, far below the plan's 95% target. This is expected and
+correct at the end of Phase 1 (plus Phase 2's strong-identifier addition)
+alone; it is not a regression to fix in this PR.
 
 One Approved asset, **Cetuximab sarotalocan** (a Japan-approved
-photoimmunotherapy conjugate), is `NOT_CONFIRMED_BROAD` — plausible given
-the still-shallow literature materialization (647/852 pubmed, 628/837
-europe_pmc) and the disclosed patent text-coverage gaps above, rather than
-evidence of a query defect; a candidate for Phase 2's root-cause review,
-not patched here.
+photoimmunotherapy conjugate), remains `NOT_CONFIRMED_BROAD` even after the
+strong-identifier layer (it cites no NCT id in NAR's own free text) —
+plausible given the still-shallow literature materialization (647/852
+pubmed, 628/837 europe_pmc) and the disclosed patent text-coverage gaps
+above, rather than evidence of a query defect; investigated further in
+Phase 2 (`PHASE2_MISS_TAXONOMY.md`), not patched here.
 
 ## 5. What this does and does not establish
 
-**Only `BROAD_DISCOVERED` (181/702) is a positive, confirmed fact.**
-`NOT_CONFIRMED_BROAD` (503/702) is a censored negative, not a proven
+**Only `BROAD_DISCOVERED` (198/702) is a positive, confirmed fact.**
+`NOT_CONFIRMED_BROAD` (489/702) is a censored negative, not a proven
 absence — it reflects the current, disclosed limits of materialization
 depth (§2) and patent text-observability (§3, particularly USPTO), not a
 verified claim that broad acquisition cannot find these assets. The correct
 summary of this phase is therefore:
 
-> At least 181/702 (25.8%) of NAR's phase-tagged benchmark assets have been
+> At least 198/702 (28.2%) of NAR's phase-tagged benchmark assets have been
 > **confirmed** discoverable by generic, name-agnostic ADC acquisition
 > queries, with confirmed recall declining sharply and monotonically from
 > mature to early-stage assets (90.5% Approved -> 2.7% Investigative). The
-> remaining 503 are **unresolved**, not confirmed misses — materialization/
+> remaining 489 are **unresolved**, not confirmed misses — materialization/
 > text-observability censoring means the true broad-discovery recall is
-> unknown but at least 25.8%, i.e. this is a **conservative lower bound**,
+> unknown but at least 28.2%, i.e. this is a **conservative lower bound**,
 > not a final precision figure.
 
 This still supports the hypothesis motivating the whole breadth-layer
 directive (confirmed recall for mature/approved assets is far higher than
 for early-stage ones), just without overclaiming the magnitude of the
-gradient the earlier, uncorrected 90.5% -> 2.7% framing implied. It does
-**not** yet root-cause the 503 unresolved assets (Phase 2 — which must
-start from "503 unresolved negatives," not "503 confirmed query misses",
-and split them into categories such as `BROAD_BACKLOG_UNRESOLVED` /
-`PATENT_TEXT_NOT_OBSERVABLE` / `TRUE_CANDIDATE_MISS` / `SOURCE_GAP` before
-any query is patched), build any feasibility entity model (Phase 3), add
-conference ingestion (Phase 4), or evaluate any freeze gate (Phase 7).
+gradient the earlier, uncorrected 90.5% -> 2.7% framing implied. Phase 2
+(`PHASE2_MISS_TAXONOMY.md`) picks up from here, starting explicitly from
+"489 unresolved negatives," not "489 confirmed query misses." It does
+**not** build any feasibility entity model (Phase 3), add conference
+ingestion (Phase 4), or evaluate any freeze gate (Phase 7).
 
 ## Reproduction
 
