@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Phase 3 (reports/validation/BREADTH_PLAN.md Part 9): a high-recall
-DISCOVERY CANDIDATE queue, built entirely from evidence already in this
-repo (`configs/known_adc_assets.yaml` + `DATA/manifests/clinicaltrials.
-parquet`) -- no new acquisition sources in this phase.
+"""Phase 3 (reports/validation/BREADTH_PLAN.md Part 9), extended in Phase 5:
+a high-recall DISCOVERY CANDIDATE queue, built entirely from evidence
+already in this repo (`configs/known_adc_assets.yaml` +
+`DATA/manifests/clinicaltrials.parquet` + `DATA/manifests/
+conference_abstract_corpus.parquet`, the last added by Phase 4 and wired in
+here in Phase 5) -- still no NEW acquisition source added by this script
+itself.
 
 Two-stage design, per Part 9: DISCOVERY CANDIDATE -> VALIDATED FEASIBILITY
 ENTITY. This script builds the candidate queue only (`candidate_queue.tsv`);
@@ -10,17 +13,21 @@ ENTITY. This script builds the candidate queue only (`candidate_queue.tsv`);
 actually becomes a feasibility entity. Fuzzy-only promotion is explicitly
 avoided (Part 9): every candidate here is either (a) already independently
 curated/verified (`configs/known_adc_assets.yaml`, carried over from prior
-audits), or (b) matched via a documented USAN/INN naming-convention stem
-that is specific to ADC payload/linker chemistry -- not a free-text/fuzzy
-guess.
+audits), (b) matched via a documented USAN/INN naming-convention stem
+against CT.gov's clean, structured `intervention_names` field, or (c)
+matched via that SAME stem against conference-abstract free-text prose --
+category (c) is a strictly noisier signal than (b) (free text has far more
+incidental false-positive co-occurrences than a controlled field) and is
+therefore routed to `NEEDS_REVIEW`, never `AUTO_HIGH_CONFIDENCE`, unless a
+name is ALSO confirmed via (b).
 
 ADC_SUFFIX_PAYLOAD_CLASS below is public pharmaceutical-nomenclature
 knowledge (USAN/INN stems for antibody-drug-conjugate payload/linker
 classes), independent of and not copied from the NAR ADCdb benchmark used
 in Phases 1-2 -- confirmed empirically against all 8 distinct suffixes
 present among our own 14 active known assets' canonical names. This list
-is NOT claimed to be exhaustive; newer/rarer stems will be missed by
-design in this phase (a Phase 5 concern, not this one).
+is NOT claimed to be exhaustive; newer/rarer stems will still be missed by
+design.
 
 ROUND-1 FIX: raw CT.gov intervention strings are not clean single-drug
 names -- they can be combination-regimen labels ("Pembrolizumab +
@@ -85,6 +92,25 @@ NON_DRUG_INTERVENTION_TERMS = {
     "surgery", "radiation therapy", "radiotherapy", "chemotherapy", "placebo", "observation",
     "best supportive care", "biopsy procedure", "quality-of-life assessment", "questionnaire administration",
     "laboratory biomarker analysis", "conventional surgery", "standard of care",
+}
+
+# Empirically observed false-positive PREFIX words when scanning free-text
+# conference-abstract title+abstract for a "<word> <suffix>" bigram (Phase
+# 5: reports/validation/BREADTH_PLAN.md Part 4/9 continuation) -- derived
+# directly from a real scan of the 2,456-record conference_abstract_corpus
+# (jobs/conference_abstract_corpus), NOT a hypothetical/general English
+# stopword list, and NOT claimed exhaustive. This class of false positive
+# does not occur for CT.gov's clean intervention_names field (a controlled,
+# short field, not free prose) -- e.g. "novel vedotin", "the deruxtecan
+# arm", "payload tesirine" are common in abstract prose but never appear as
+# a CT.gov intervention_names entry.
+TEXT_SCAN_STOPWORD_PREFIXES = {
+    "and", "investigational", "to", "payload", "the", "novel", "of", "a", "as", "other",
+    "with", "than", "directed", "benchmarking", "free", "fab", "inhibitor", "agent", "drug",
+    "validated", "conventional", "established", "eliminate", "by", "included", "against",
+    "that", "where", "targeted", "or", "based", "for", "enables", "ev", "ado", "nontargeting",
+    "maleimide", "links", "cytotoxins", "control", "concept", "poison", "standard", "exatecan",
+    "vcmmae", "mmae", "mmaf", "dxd",
 }
 
 
@@ -165,6 +191,82 @@ def extract_adc_generic_name(raw_name: str) -> str | None:
     return match
 
 
+def extract_all_adc_generic_names_from_text(text: str) -> list[str]:
+    """Like extract_adc_generic_name(), but for free-text PROSE (a
+    conference abstract's title+abstract) that can genuinely mention
+    MULTIPLE distinct ADC generic names in one record -- returns EVERY
+    adjacent token pair whose second token ends in a documented ADC
+    suffix (deduplicated by normalized form, first-seen order), not just
+    the last one the way extract_adc_generic_name() does for a short
+    CT.gov intervention string.
+
+    The prefix token is dropped if:
+    - it's a documented TEXT_SCAN_STOPWORD_PREFIXES false positive
+      (case-insensitive) -- necessary here in a way it is NOT for
+      extract_adc_generic_name(), because free prose contains far more
+      incidental "<common word> <suffix>" co-occurrences than a
+      controlled, short intervention-name field does (verified
+      empirically against the real corpus: "novel vedotin", "the
+      deruxtecan arm", "payload tesirine", etc.);
+    - it IS ITSELF one of the documented ADC_SUFFIX_PAYLOAD_CLASS suffix
+      words (e.g. "emtansine deruxtecan", "exatecan deruxtecan" --
+      prose listing two payload/chemistry classes side by side, not an
+      antibody-stem name);
+    - it's purely numeric (e.g. "38 govitecan" -- a page/volume/dose
+      number the suffix word happens to follow, not a name); or
+    - it's shorter than 5 characters (every real USAN/INN antibody-stem
+      word in this corpus is well over that; short prefixes observed in
+      practice are abbreviation fragments like "E vedotin", "M
+      Deruxtecan", not full names)."""
+    tokens = _ALNUM_TOKEN_RE.findall(text)
+    seen: dict[str, str] = {}
+    for i in range(len(tokens) - 1):
+        first, second = tokens[i], tokens[i + 1]
+        first_lower = first.lower()
+        if first_lower in TEXT_SCAN_STOPWORD_PREFIXES or first_lower in ADC_SUFFIX_PAYLOAD_CLASS:
+            continue
+        if first.isdigit() or len(first) < 5:
+            continue
+        if any(second.lower().endswith(suffix) for suffix in ADC_SUFFIX_PAYLOAD_CLASS):
+            key = normalize_name(f"{first} {second}")
+            seen.setdefault(key, f"{first} {second}")
+    return list(seen.values())
+
+
+def _clean_date_string(value) -> str | None:
+    """round-1 fix: a parquet column's missing value can be a float NaN,
+    not None or an empty string -- `if value:` treats NaN as TRUTHY
+    (`bool(float("nan"))` is `True` in Python), so the old `if date: ...
+    str(date)` pattern silently wrote the literal string "nan" as
+    first_seen for an undated record instead of leaving it blank.
+    Verified live: 3 real candidate_queue.tsv rows had first_seen="nan"
+    before this fix (all from AACR 2026's undated records)."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return None
+    text = str(value).strip()
+    return text or None
+
+
+def candidate_id_for_name(name: str) -> str:
+    """Source-independent, persistent candidate identity -- depends ONLY
+    on the canonical normalized name, NEVER on which source(s) discovered
+    it. round-1 fix: the previous scheme picked candidate_id's PREFIX
+    (CTGOV_SUFFIX_ vs CONFERENCE_SUFFIX_) based on whether clinicaltrials
+    evidence was present, so the SAME real candidate got a different id
+    depending on run-to-run source availability -- e.g. a name seen only
+    in a conference abstract first, then later also confirmed on CT.gov,
+    would appear to Phase 6's delta system as "old candidate disappeared,
+    new candidate appeared" instead of "same candidate, new evidence
+    source, status upgraded". This is the identity contract Phase 6's
+    twice-monthly delta depends on, fixed now (before Phase 6 exists) per
+    the reviewer's explicit call: an intentional, one-time migration of
+    the 16 existing CTGOV_SUFFIX_* ids to this scheme, not a compatibility
+    shim -- the hash portion is unchanged (still
+    sha256(normalize_name(name))[:12]), only the prefix text changes."""
+    key = normalize_name(name)
+    return f"ADC_SUFFIX_{sha256_bytes(key.encode('utf-8'))[:12]}"
+
+
 def build_ctgov_suffix_candidates(ct_manifest: pd.DataFrame, known_ids: set[str]) -> dict[str, dict]:
     """One aggregated candidate per distinct EXTRACTED generic name (across
     all trials that mention it), keyed by normalized extracted name --
@@ -193,8 +295,8 @@ def build_ctgov_suffix_candidates(ct_manifest: pd.DataFrame, known_ids: set[str]
                 continue
             key = normalize_name(extracted)
             entry = candidates.setdefault(key, dict(
-                label=extracted, suffix=suffix, nct_ids=set(), phases=set(),
-                first_seen=None, contexts=set(),
+                label=extracted, suffix=suffix, nct_ids=set(), conference_ids=set(), phases=set(),
+                first_seen=None, contexts=set(), sources={"clinicaltrials"},
             ))
             entry["nct_ids"].add(row["nct_id"])
             phases = row.get("phases")
@@ -202,10 +304,83 @@ def build_ctgov_suffix_candidates(ct_manifest: pd.DataFrame, known_ids: set[str]
                 for p in phases:
                     entry["phases"].add(p)
             entry["contexts"].add(str(row.get("brief_title", ""))[:150])
-            posted = row.get("study_first_post_date")
-            if posted and (entry["first_seen"] is None or str(posted) < entry["first_seen"]):
-                entry["first_seen"] = str(posted)
+            posted = _clean_date_string(row.get("study_first_post_date"))
+            if posted and (entry["first_seen"] is None or posted < entry["first_seen"]):
+                entry["first_seen"] = posted
     return candidates
+
+
+def build_conference_suffix_candidates(conf_manifest: pd.DataFrame, known_ids: set[str]) -> dict[str, dict]:
+    """Same idea as build_ctgov_suffix_candidates(), but scanning
+    conference_abstract_corpus's title+abstract free text instead of
+    CT.gov's structured intervention_names field. Uses
+    extract_all_adc_generic_names_from_text() (every match in the
+    record, not just the last) since one abstract can genuinely discuss
+    more than one ADC. Returns the SAME dict shape (merged with CT.gov's
+    candidates by tools/breadth/candidate_queue.py's main(), keyed by
+    normalized extracted name) so a name found by BOTH sources becomes
+    one entity with combined evidence, not two."""
+    candidates: dict[str, dict] = {}
+    for _, row in conf_manifest.iterrows():
+        title = row.get("title") or ""
+        abstract = row.get("abstract") or ""
+        text = f"{title} {abstract}"
+        for extracted in extract_all_adc_generic_names_from_text(text):
+            if mentions_known_asset(extracted, known_ids):
+                continue
+            suffix = find_suffix_matches(extracted)
+            if not suffix:
+                continue
+            key = normalize_name(extracted)
+            entry = candidates.setdefault(key, dict(
+                label=extracted, suffix=suffix, nct_ids=set(), conference_ids=set(), phases=set(),
+                first_seen=None, contexts=set(), sources={"conference_abstract_corpus"},
+            ))
+            entry["conference_ids"].add(row["source_record_id"])
+            entry["contexts"].add(str(title)[:150])
+            date = _clean_date_string(row.get("publication_or_release_date"))
+            if date and (entry["first_seen"] is None or date < entry["first_seen"]):
+                entry["first_seen"] = date
+    return candidates
+
+
+def status_and_confidence_for_sources(sources: set[str]) -> tuple[str, str]:
+    """Decide validation_status/confidence purely from WHICH sources
+    contributed evidence for a suffix-matched candidate -- never from
+    which source happened to be discovered/processed first, so the SAME
+    candidate's status upgrades in place (NEEDS_REVIEW ->
+    AUTO_HIGH_CONFIDENCE) the instant clinicaltrials evidence appears,
+    rather than looking like two different candidates. Paired with
+    candidate_id_for_name()'s source-independent identity -- see that
+    docstring for why this stability matters for Phase 6's delta
+    system."""
+    if "clinicaltrials" in sources:
+        return "AUTO_HIGH_CONFIDENCE", "high"
+    return "NEEDS_REVIEW", "medium"
+
+
+def merge_suffix_candidates(*candidate_dicts: dict[str, dict]) -> dict[str, dict]:
+    """Union candidates found by different sources under the same
+    normalized-name key, combining evidence rather than creating a
+    duplicate entity per source -- e.g. a name found in BOTH
+    clinicaltrials.parquet and conference_abstract_corpus.parquet
+    becomes one merged entry with sources={"clinicaltrials",
+    "conference_abstract_corpus"}, not two separate candidates."""
+    merged: dict[str, dict] = {}
+    for candidates in candidate_dicts:
+        for key, c in candidates.items():
+            entry = merged.setdefault(key, dict(
+                label=c["label"], suffix=c["suffix"], nct_ids=set(), conference_ids=set(),
+                phases=set(), contexts=set(), first_seen=None, sources=set(),
+            ))
+            entry["sources"] |= c["sources"]
+            entry["nct_ids"] |= c["nct_ids"]
+            entry["conference_ids"] |= c["conference_ids"]
+            entry["phases"] |= c["phases"]
+            entry["contexts"] |= c["contexts"]
+            if c["first_seen"] and (entry["first_seen"] is None or c["first_seen"] < entry["first_seen"]):
+                entry["first_seen"] = c["first_seen"]
+    return merged
 
 
 def write_tsv(path: Path, rows: list[dict], fieldnames: list[str]) -> None:
@@ -251,33 +426,64 @@ def main() -> int:
         ))
 
     ct_path = Path(args.data_dir) / "manifests" / "clinicaltrials.parquet"
-    if ct_path.exists():
-        ct_manifest = pd.read_parquet(ct_path)
-        suffix_candidates = build_ctgov_suffix_candidates(ct_manifest, known_ids)
-        print(f"Found {len(suffix_candidates)} distinct new candidate interventions via ADC USAN/INN suffix match",
-              file=sys.stderr)
-        for key, c in suffix_candidates.items():
-            payload_class = ADC_SUFFIX_PAYLOAD_CLASS[c["suffix"]]
-            nct_list = sorted(c["nct_ids"])
-            rows.append(dict(
-                candidate_id=f"CTGOV_SUFFIX_{sha256_bytes(key.encode('utf-8'))[:12]}",
-                candidate_type="ADC_CANDIDATE",
-                candidate_label=c["label"],
-                source="clinicaltrials",
-                evidence_id="; ".join(nct_list[:10]),
-                context=f"generic name ends in '-{c['suffix']}' ({payload_class}); example trial: "
-                        f"{sorted(c['contexts'])[0] if c['contexts'] else ''}",
-                first_seen=c["first_seen"] or "",
-                confidence="high",
-                validation_status="AUTO_HIGH_CONFIDENCE",
-                reason=f"generic drug name ends in the documented ADC USAN/INN payload-class stem '-{c['suffix']}'",
-            ))
+    conf_path = Path(args.data_dir) / "manifests" / "conference_abstract_corpus.parquet"
+    ct_candidates = build_ctgov_suffix_candidates(pd.read_parquet(ct_path), known_ids) if ct_path.exists() else {}
+    conf_candidates = (
+        build_conference_suffix_candidates(pd.read_parquet(conf_path), known_ids) if conf_path.exists() else {}
+    )
+    suffix_candidates = merge_suffix_candidates(ct_candidates, conf_candidates)
+    overlap = len(set(ct_candidates) & set(conf_candidates))
+    print(
+        f"Found {len(suffix_candidates)} distinct new candidate names via ADC USAN/INN suffix match "
+        f"({len(ct_candidates)} from clinicaltrials, {len(conf_candidates)} from conference_abstract_corpus, "
+        f"{overlap} found by both)",
+        file=sys.stderr,
+    )
+    for c in suffix_candidates.values():
+        payload_class = ADC_SUFFIX_PAYLOAD_CLASS[c["suffix"]]
+        evidence_ids = sorted(c["nct_ids"])[:10] + sorted(c["conference_ids"])[:10]
+        example_context = sorted(c["contexts"])[0] if c["contexts"] else ""
+        validation_status, confidence = status_and_confidence_for_sources(c["sources"])
+        if validation_status == "AUTO_HIGH_CONFIDENCE":
+            # A structured, controlled intervention-name field confirms
+            # this name -- same confidence basis as Phase 3, regardless
+            # of whether conference text also mentions it.
+            reason = f"generic drug name ends in the documented ADC USAN/INN payload-class stem '-{c['suffix']}'"
+        else:
+            # ONLY found via free-text conference-abstract co-occurrence --
+            # a categorically noisier signal than a structured field
+            # (common-word/target-symbol prefixes, typo variants of an
+            # already-known name all pass the same regex), so this is
+            # NEVER auto-promoted -- Part 9's two-stage design exists
+            # exactly for this case.
+            reason = (
+                f"generic-looking name ends in the documented ADC USAN/INN payload-class stem '-{c['suffix']}', "
+                "but ONLY found via free-text conference-abstract title/abstract co-occurrence -- no structured "
+                "intervention-name field confirms it. Higher false-positive risk than the clinicaltrials path "
+                "(a common English word or a target/gene symbol can precede the suffix word in prose, and "
+                "OCR/authoring typos of an already-known name's spelling are not caught by exact matching); "
+                "needs a human check before promotion, not auto-promoted."
+            )
+        rows.append(dict(
+            candidate_id=candidate_id_for_name(c["label"]),
+            candidate_type="ADC_CANDIDATE",
+            candidate_label=c["label"],
+            source="; ".join(sorted(c["sources"])),
+            evidence_id="; ".join(evidence_ids),
+            context=f"generic name ends in '-{c['suffix']}' ({payload_class}); example: {example_context}",
+            first_seen=c["first_seen"] or "",
+            confidence=confidence,
+            validation_status=validation_status,
+            reason=reason,
+        ))
 
     write_tsv(output_dir / "candidate_queue.tsv", rows, CANDIDATE_QUEUE_FIELDS)
     n_promoted = sum(1 for r in rows if r["validation_status"] == "PROMOTED")
     n_auto = sum(1 for r in rows if r["validation_status"] == "AUTO_HIGH_CONFIDENCE")
+    n_review = sum(1 for r in rows if r["validation_status"] == "NEEDS_REVIEW")
     print(f"candidate_queue.tsv: {len(rows)} total ({n_promoted} PROMOTED from known registry, "
-          f"{n_auto} AUTO_HIGH_CONFIDENCE from CT.gov suffix match)", file=sys.stderr)
+          f"{n_auto} AUTO_HIGH_CONFIDENCE via a structured field, {n_review} NEEDS_REVIEW "
+          "via free-text conference co-occurrence only)", file=sys.stderr)
     return 0
 
 
