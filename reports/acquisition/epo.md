@@ -14,7 +14,7 @@ configs/epo_queries.yaml (5 queries, each verified live to stay under OPS's 2000
 
 ## Publications discovered
 
-559 unique EP publications matched across 5 queries this run.
+561 unique EP publications matched across 5 queries this run.
 
 - EP0222360A2: A method of producing a patient-specific cytotoxic reagent and composition. (family 25170824)
 - EP0271918A2: Stable formulations of ricin  toxin A chain and of RTA-immunoconjugates and stabilizer screening methods therefor. (family 25481236)
@@ -34,7 +34,7 @@ configs/epo_queries.yaml (5 queries, each verified live to stay under OPS's 2000
 
 ## Materialization this run
 
-519 never-attempted (fresh), 0 unresolved-retry (backlog), 40 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/epo/job.py docstring). 5 newly downloaded, 0 failed.
+514 never-attempted (fresh), 0 unresolved-retry (backlog), 47 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/epo/job.py docstring). 150 newly downloaded, 0 failed.
 
 ## Failed downloads
 

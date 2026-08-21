@@ -1,0 +1,703 @@
+nar_adc_id	canonical_name	phase_bucket	in_known_registry	known_asset_id	targeted_recoverable	evidence_sources	root_cause_if_missing	confidence
+DRG0AAJTS	ETX-22	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ADKKF	AbGn-108	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AHKIO	MTX-13	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AJCCS	BAT-8008	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AKFYV	Raludotatug deruxtecan	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ALCYL	NKTR-288	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AMZIS	DN-028	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ANRPC	JSKN021	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AQITP	RG-7636	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ARHOG	BIIB-015	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ARIWN	CMD-193	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ASYKZ	Izeltabart tapatansine	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ATULB	Laprituximab emtansine	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AUAOQ	ZL-6201	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AVEQT	SYD1091	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AVJCO	AOC-1020	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AWQJG	PF-06804103	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AWSBJ	HDP-104	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AWUIJ	Indatuximab ravtansine	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AXDIU	IIIA4-USAN	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AXGPR	BIL-03n	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AXWSD	BIO-112	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AYTGS	PF-08046037	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AZRNL	Iladatuzumab vedotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0AZUEZ	ZV-0203	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BBHPW	DXC-004A	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BBQSE	Enfortumab vedotin	Approved	True	enfortumab_vedotin	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0BBWPI	SYS6023	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BBYHA	Bivatuzumab mertansine	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BCSND	BSI-077	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BDOJD	BL-M005A2	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BFNMH	GQ-1001	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BGJNX	TAK-500	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BGQOD	ADCT-901	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BIQVN	AZD-5335	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BJYDH	LMB-12	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BKLSW	SLV-324	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BLINK	ALT-Q5	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BPIAV	7MW-3711	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BRHCV	KM254-ADC	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BSQPI	Sacituzumab tirumotecan	Approved	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BSWTQ	QLS5316	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BWCTV	ARX-305	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BWWWF	BL-M15D1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BXRDQ	Veltuzumab-SN-38	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BZCIJ	DAC-002	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0BZEMH	JAB-BX400	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CAEXH	RC-118	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CBHSI	MG1901	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CBLIJ	BGB-C354	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CCEQO	ABBV-400	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CCQWD	MM-310	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CDYJL	MYTX-011	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CECRA	Trastuzumab rezetecan	Approved	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CEJDT	DB-1317	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CESQS	Recombinant humanized anti-Trop2 antibody	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CHZRH	NEP1-40	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CIZWI	AMT-676	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CKSWS	CMG-901	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CKWNZ	BA-3181	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CLBRQ	NNAS-Mc-Val-Cit-PABC-MMAE	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CMPYD	ADCX-020	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CMUPE	BG-C0902	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CNJHC	JK-06	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CNWMR	ABBV-901	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0COMTY	Telisotuzumab vedotin	Approved	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CPNIE	DS6-DM1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CRDKL	HKT-288	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CRYVT	DP-303c	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CVTZD	MG2011C	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CWADI	AZD-9592	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CXFTH	Serclutamab talirine	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CXRVR	JSKN022	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CXSNU	SIBP-A19	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CYJSZ	OGD-204	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0CYMEB	Trastuzumab emtansine	Approved	True	trastuzumab_emtansine	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0DAKKB	Patritumab deruxtecan	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DCONA	SHR-7631	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DDMKC	A-410	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DDQHT	XYD-9668-198	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DDTZB	HLX-43	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DDWPP	CPO-301	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DEGEG	Vobramitamab duocarmazine	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DIWSF	Cantuzumab mertansine	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DJFNE	IMAB362-Val-Cit-MMAE	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DLKUH	DB-1305	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DLZVY	SC-007	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DNGPW	RN765C	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DOBID	GMA-305	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DOTIX	CUSP06	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DSMMR	IMGS-501	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DSOMP	LY3343544	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DVKJO	LCB14-15nm	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DWHZY	SIM 0686	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DXEAS	CAT-03-106	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0DXROV	Cetuximab sarotalocan	Approved	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EBFGG	IBI3009	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EDBXG	Lintuzumab Ac-225	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EEDEE	DXC-008	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EGQMP	BAT-8006	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EGTVL	DAC-005	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EGZQD	SBT-8230	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EHWIM	CME-548	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EJBII	BL-M07D1	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EJZGZ	SYN-101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EKTUN	Sacituzumab govitecan	Approved	True	sacituzumab_govitecan	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0ELYWP	Tusamitamab ravtansine	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EMQPK	SYD-1875	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ENSWF	Cotinine-duocarmycin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ENYRQ	DB-1303	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ENYXZ	MRG-002	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EOBLX	HDM2017	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EOFTU	PD-L1 ISA	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EOMCN	BL-M02D1	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EOWOQ	KSI-501	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EPHMC	Anetumab ravtansine	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EPORB	B-003	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EPYFC	SAR-428926	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EQEVI	CBT-3112	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EQGNV	MYK-3	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ERKBH	Trastuzumab deruxtecan	Approved	True	trastuzumab_deruxtecan	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0ERYUF	SGN-B7H4V	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ESGFZ	RG-7986	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EUGGJ	ICAM1-DM1 ADC	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EUQQY	MBC-301	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EWNZL	HLX-41	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EWQKX	Ozuriftamab vedotin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EWYVN	ADCE-B05	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EZVZS	BYON-4413	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0EZYUP	JAB-X1800	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FAKKA	AVP10	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FBKIO	ABBV-3373	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FBPCP	TGW-101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FCYCB	BMT-125961	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FGCQK	RC-168	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FGJBT	P38B-DM1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FGLFW	ATG-022	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FIYMR	NBT-568	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FJYPL	MP-EV-20	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FKHUJ	MP-ENDOS-ADC	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FKQPI	LM-001	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FKZGF	XNW-27011	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FLLMW	Omalizumab-amanitin 3	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FMCLF	JSKN-003	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FOOJX	LCB-71	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FPQOM	XMT-1660	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FQZSZ	JSKN027	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FRFEQ	TAA-013	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FSHWJ	Indusatumab vedotin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FTDBR	LCB-73	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FUAVD	BC5084	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FUFBP	Camidanlumab tesirine	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FWMPN	YL202	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FWSXF	BG-C0979	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FWYLZ	Zanidatamab zovodotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FZFYY	SMD-5033	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0FZNCB	HLX48	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GAYQK	SBO-154	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GBXLR	<sup>131</sup>I-ImmuRAIT-HCG	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GCCJJ	LM-302	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GCHQJ	PF-08046033	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GCTYJ	Cymac-001	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GDKSW	TT-01	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GDLEY	STI-6129	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GEOJG	NBT-508	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GGFRA	DpADC	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GGKEV	NBE-002	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GHMKS	VLS-301	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GHMXV	ARC-02	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GJXHJ	HS-20122	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GKOZH	Mirvetuximab soravtansine	Approved	True	mirvetuximab_soravtansine	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0GMNXB	WTX-231	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GMWTW	BL-M24D1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GNFMC	LMB-7	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GONLK	MRX-23	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GQWJI	M7437	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GWFGY	Obexelimab-amanitin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GXGXB	GenSci139	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GYCJG	XB-002	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GYGUI	FDA022-BB05	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GYMEE	ESG406	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GYNBS	XMT-1522	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GZGHN	SAR-566658	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0GZPSF	JY-023	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HBGGX	LNL-008	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HCDAC	ATRC-301	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HDUGB	BAT-8010	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HEAGN	DB-1202	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HEJWD	SC-011	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HGHXE	MHB088C	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HHXRF	AR081	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HKEBI	ANT-045	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HMQMZ	KTN0182A	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HOBUN	OMTX-705	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HPEHO	BL-B029A1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HPUIL	Farletuzumab ecteribulin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HQVXQ	TORL-3-600	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HTJXN	TQB2103	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HVSBG	BDC-1001	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HWAWD	Zapadcine-1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HWLAE	T320-ADC	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HXUZU	MBK-101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0HYRZD	BAY-1862864	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IBMMG	IOG-101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ICCWP	Elatatug vedotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ICRYT	Oportuzumab monatox	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ICSRW	CHB-111	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IDOUS	MK-6204	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IDRYV	LCB-67	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IITIR	EX107	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IJSIT	MG2106E	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IMAKZ	Mecbotamab vedotin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0INCQV	DXC-003	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0INYKO	BCMA-077	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IOMGE	JNJ-89862175	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IOSTB	PLB-002	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IPCHO	TAK-164	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IQKOR	CON-4619	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IQNVH	PRO-1102	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IRZIB	Glembatumumab vedotin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IRZPG	AB-160	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ISFPP	Anti-B7-2-gelonin immunotoxin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ITBMZ	HD-101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IUXVP	ABBV-324	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IVDIV	TQB2102	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IWQWQ	DXC-014	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0IYBRT	ADCT-602	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JBKMD	Labetuzumab govitecan	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JCGJZ	ABBV-291	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JCWGF	TRPH-222	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JDDLS	GF-2014	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JEJPW	YH-013	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JEUPG	Sacituzumab-Deruxtecan	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JEVIM	Disitamab vedotin	Approved	True	disitamab_vedotin	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0JFYCH	KK2845	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JGJDN	HBM9033	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JJEUT	Aprutumab ixadotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JJONS	HS-20124	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JKQOU	HB0052	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JLDZY	SIBP-A13	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JLIZJ	CD38 ADC	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JMVCQ	ONC-784	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JMXQX	HDM2012	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JNCVK	YL217	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JNMAT	SIBP-A17	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JNXDB	XMT-1592	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JNZLF	PCA-062	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JOHND	Gemtuzumab ozogamicin	Approved	True	gemtuzumab_ozogamicin	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0JOMGD	NC18	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JPJDT	RN927C	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JQAJB	MGTA-117	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JQHJW	AGX101	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JQWJI	BG-C137	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JSPJR	ZL-1310	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JTQDR	FS-1502	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JUOJJ	MHB036C	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JUOLN	MDX-1203	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JVAJA	Rosopatamab tetraxetan	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JVDPQ	AG 02 saporin conjugate	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JWBNH	Brentuximab vedotin	Approved	True	brentuximab_vedotin	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0JXYIZ	DS-9606	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JYFQF	ZPC-21	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JYKFE	BSI-712	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0JYNCF	CX-2029	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KAGOH	PLBA-001	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KBCEN	M3554	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KDTFA	F0002-ADC	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KFMAB	DXC-009	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KGFDM	Zt/g4-Maytansinoid	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KHDFE	BAT-8007	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KHFFZ	PF-06263507	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KJHHN	IMGN-779	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KKATK	SHR-A2102	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KKBKT	BBT-001	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KKQDW	SRB19	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KMHHU	TRS-005	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KNAHQ	BL-M14D1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KNAKC	QBK249-G	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KRSBQ	IKS-012	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KSBCU	EP-400	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KSTYX	CLR-180099	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KTRKE	PF-06664178	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KTTFS	XMT-2056	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KWGRK	IMMU-140	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KWKQC	DX126-262	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KXLGG	MK-6837	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KYHQN	CMB-401	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0KYOBC	TORL-1-23	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LBQXO	PA-368A	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LCOWD	MRG-004A	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LDEJY	ITC-6146RO	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LFBZI	ALK202	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LFGHB	HTI-1511	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LFZFX	ABBV-319	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LGBME	Ispectamab tazide	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LHLWT	LR-DM1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LHZWB	ASN-004	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LIPUK	GL-231	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LJGJX	IBI3028	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LJSQF	Sacituzumab-SN-38	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LKZJZ	CS-5002	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LLSDP	9MW-2921	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LNARP	MEDI-0641	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LNBQO	PHN-012	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LNVKG	ARX-788	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LQZSE	Naratuximab emtansine	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LRYYB	HS630	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LSAKO	PF-06888667	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LSXKR	JS107	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LTMPJ	GBM-12401	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LTXQB	YBL-015	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LUQSH	RG-7861	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LUTMF	ELN-11	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LVUGT	PCG-N003	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LVYMB	DEC006	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LWEMD	SY-0625	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0LYIPC	Inebilizumab-amanitin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MBBBD	Anti-CD22-SN36248	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MCPAF	SIM-005A	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MCWQA	Enapotamab vedotin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MELRN	BC2027	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MGBXM	CD38-077	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MGUUX	FDA-022	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MHAHZ	Coltuximab ravtansine	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MKREW	SIM0505	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MKSMI	CRB-2107	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MKVBS	A1801	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MLOQN	NI-2201	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MMRSA	DAN-222	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MOGWD	Anvatabart pactil	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MPDIB	ABBV-154	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MPTSO	Trastuzumab-amanitin 1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MRJEG	REGN5093-M114	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MRYEL	IKS-04	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MSOOX	KH815	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MSZBZ	BB-1709	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MSZNJ	SHR-3792	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MTMQA	M-1231	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MTUPD	CytSCA208	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MUIQK	LFD-200	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MWSEV	NN-3201	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MXUQM	MYX2449	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MYSHH	Thio-Tmab-BMPEO-DM1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0MZYPU	Telimomab aritox	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NATHY	LP-A18	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NDFLP	OXS-1650	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NDSLT	DYNE-301	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NDXRU	Belantamab mafodotin	Approved	True	belantamab_mafodotin	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0NELLD	<sup>111</sup>In-DTPA-D2B-DAR4-MMAE	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NEMOV	Losatuxizumab vedotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NFTVD	APN-959038	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NGDCM	SKB445	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NKUQA	JS114	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NLEYN	Tra-IR700	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NMCNK	ZV0203	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NMCNN	SGN-CD48A	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NMRNE	KSI-601	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NNKAQ	Ifinatamab deruxtecan	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NNNWR	EX108	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NOFEI	BB-1712	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NOYME	NW-001	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NTFBR	MEDI-3726	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NWBIQ	HY-0001	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NXVNX	PNU-159682-P1C1TM	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NZUKF	WTX-212	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0NZUZJ	CX-2051	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OAWRK	SHR-A1403	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ODFEJ	EGFR-EDV-RRM1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OGZEE	Mirzotamab clezutoclax	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OJHEN	AVID-100	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OMIWX	BA1301	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OMORU	FZ-AD004	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OMVBK	Azintuxizumab vedotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ONAEP	BRY811	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ONNVN	PSM-101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OOMJM	Basiliximab sarotalocan	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OOXRC	XNW-28012	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OPFVY	Samrotamab vedotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OPGMW	Recombinant chimeric anti-CD30 mAb-MCC-DM1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ORDYU	LIN-002	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OTOJV	IKS-03	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OUXWT	Rolinsatamab talirine	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OVMJM	PRN 222	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OVQWP	HDM2024	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OWHOL	<sup>89</sup>Zr-DFO-T-DM1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OYGNU	KIVU-107	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0OZSZX	Upifitamab rilsodotin	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PCDHO	LY4175408	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PCGKN	hu5B1-TCO	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PDZSX	3-NAntC	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PEVVH	FDA-018	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PFKFR	Pinatuzumab vedotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PFQKN	EDC-2	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PGRFM	BCG-011	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PGYJL	IPH43	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PHKMG	TORL-4-500	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PKYBF	N01-OX2	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PLPNX	SGN-ALPV	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PNJIT	Tisotumab vedotin	Approved	True	tisotumab_vedotin	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0PPLJW	Y-TR1 SPDP	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PPLRQ	GENA-111-AF	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PQJDH	MEDI-2228	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PRKPN	VL-DAB31-SN38	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PSWNN	SIBP-A18	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PULZQ	YL201	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PWAOJ	SGN-CD228A	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PXBVI	RC68-PY-Val-Cit-PABC-MMAE	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0PXQWR	Depatuxizumab mafodotin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QAHFT	DS3610	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QBQKB	EBC-129	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QCCTW	KM501	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QDCHN	PRO-1160	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QEAUM	RG7787	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QEUVQ	BSC-4201	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QFDKM	RAD-502	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QIJRR	IMB-201	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QMIBK	FOR-46	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QNWFH	CBP-1609	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QODVX	16A5-MCC-DM1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QOWCK	NV101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QQETS	BDB-101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QQSDO	SGN-PDL1V	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QQUXG	SMP-656	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QRDUT	AGS-16C3F	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QRLPU	LCB17-0877	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QRTNX	BioLink018	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QTTET	BSA01	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QTTWI	Praluzatamab ravtansine	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QWZIT	Polatuzumab vedotin	Approved	True	polatuzumab_vedotin	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0QWZSI	VAL-0620	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QXDTN	R4702	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QYTLQ	IN30728	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QYUVZ	MI-130004	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0QZHYU	Sirtratumab vedotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RARRJ	MEN-1309	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RBGQK	MHB118C	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RCFPY	BL-M11D1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RCHSE	SKB-315	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RDZIH	SAB-Y27	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RFWQY	ADRX-0706	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RHAZG	Ladiratuzumab vedotin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RIPVI	Becotatug vedotin	Approved	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RJKWE	STRO-001	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RLKMU	IBI343	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RMBUN	IMGC-936	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RMWCH	SOT-102	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RNICE	BIO104	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RONXP	SIM0609	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RRDEF	Luveltamab tazevibulin	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RRORA	AK138D1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RSBMJ	Sofituzumab vedotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RUAXZ	DS001	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RVNRW	J58-PE24	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RVOYG	GenSci140	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RWFIB	SG3-Val-Cit-MMAF8	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RWVUF	V-DOS47	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RYBMQ	SHR-A1201	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0RZJIL	Tamrintamab pamozirine	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SACUI	BB-1705	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SALIN	SHR-7782	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SARIF	HDM2020	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SAXJE	IN30705	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SBFHC	GR1017	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SBYGM	Blinatumomab-amanitin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SCLSY	GB-251	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SDGDV	C6vcMMAD	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SDZSF	Lorvotuzumab mertansine	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SEAFV	PYX-201	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SEZFV	DhuVHH6-PE38	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SGCAF	BG-C477	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SGUGL	Ispectamab debotansine	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SGXZO	huHEA125-amanitin4	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SHGPV	PF-06647263	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SHZAQ	BCG034	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SIMLV	ESG-401	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SIURJ	CPO-204	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SJVKP	<sup>111</sup>In-DTPA-D2B-DAR2-MMAE	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SLLFJ	BCG022	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SMAPS	PF-08052667	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SMTQN	MG2002A	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SNPYJ	PBX-001	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SNURI	OBI-999	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SPYZJ	TST013	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SQAHG	Septuximab vedotin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SQAQX	AMB-101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SQXAL	ARX-517	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SSFSR	DM001	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SSTBB	HS-20108	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0STCNY	OX-002	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SURHR	PF-08046031	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SUYIT	G-100	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SVXYY	RC-188	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SWCOG	ADC2122	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SXFSY	Inotuzumab ozogamicin	Approved	True	inotuzumab_ozogamicin	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0SYLKC	B7H3-MMAE	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SZERO	Lonigutamab ugodotin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SZKXH	BYON-3521	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0SZXVK	PF-08046032	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TAOLW	LY203725	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TBCEQ	HS-20093	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TCBEP	Hertuzumab vedotin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TCKKR	XMT-2175	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TDXML	Epratuzumab-SN38	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TEQRI	MP-LGS-ADC	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TEQTA	CM-09	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TEUSB	ANG-101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TGZKY	AMT-151	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0THGAW	Trastuzumab duocarmazine	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TIZXC	Trastuzumab botidotin	Approved	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TJYIW	ORM-6151	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TKVCB	Loncastuximab tesirine	Approved	True	loncastuximab_tesirine	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0TMDEU	AMT-754	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TMDKY	AOC 1044	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TMPMK	PHN-010	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TNQTB	DXC1002	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TOMLD	GB7008-01-Val-Cit-MMAE	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TPQUN	9MW-2821	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TSLDF	SHR-A1921	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TTTUA	SHR-A2009	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TUKTY	PRO-1184	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TWLXC	SBT-6290	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TZVTS	SYS6040	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0TZZNJ	Mipasetamab uzoptirine	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UBSWW	SIM0610	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UCTSX	RG-7600	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UEGSE	33B7-Saporin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UEVLW	TGW101	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UFAIG	SBE303	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UFZLI	NBE-001	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UGQRX	Enlimomab pegol	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UHEOR	HS-20089	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UHUMZ	IBI-354	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UHXQK	SYS6041	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UIDCY	NJH-395	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UIZFH	XB3-001	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UJALJ	MSLN MMAE	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UJMPA	BA-1302	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UJUZQ	GQ-1007	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ULCEQ	Rovalpituzumab tesirine	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ULJQN	OBT207	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UPZCS	MGC026	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UQTJG	Lifastuzumab vedotin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UQXWB	BI-CON-02	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0USADY	DXC004	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0USIEY	DA-3501	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0USILO	TAC-001	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UTRTT	<sup>124</sup>I-scFvD2B	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UTYGF	Trastuzumab-deBouganin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UUEEH	SC-002	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UUFIR	SYD998	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UUOGO	TORL-2-307-ADC	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UVYLY	SYS6005	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UWYXJ	ALTA-002	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UYIOG	YL-212	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0UZQBB	NOV0712-DXd	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VFBIW	AMG-224	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VFEIE	BR111	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VFTUI	LY256787	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VGXGH	CD4-BFFI	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VHHWJ	OBI-998	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VHRBL	RC-88	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VHVOA	TUB-030	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VHXYA	GQ-1005	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VIMVV	ALX2004	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VIUMF	M-9140	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VJOET	Moxetumomab pasudotox	Approved	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VJROY	SGN-B6A	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VKEZC	BL-M005	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VNZZZ	PF-06688992	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VOIMW	BSI-709	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VSEXE	MG2001	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VSGFV	BRKB-28	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VULUJ	TQB2101	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VURPQ	NC-6201	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VVKYV	FZ-AD005	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VWNGX	BIO-201	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VWODF	Anetumab corixetan	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VXXXS	BIO105	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VYGBA	Araris ADC	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VYGGK	BMS-986148	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0VYKSA	LM-305	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WBCEJ	Vas-201	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WCBFK	Cirmtuzumab vedotin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WCTHL	Pivekimab sunirine	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WCYUM	Lupartumab amadotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WEEMU	AT-03	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WEGRW	MGTA-C100	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WFJHW	BAT-8009	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WGVKF	FS-1502	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WIBDT	HDP-101	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WIVJB	SYD1035	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WJKRI	DS-6157a	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WJWEG	AGS-67E	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WLYOR	MLN2704	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WMPDO	<sup>111</sup>In-DOTA-5D3	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WNUZE	IMB-213I	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WNVBV	ICP-B794	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WOBTH	DS-3939	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WOJVL	BB-1701	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WOUMV	RG-7841	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WPYAS	BSI-04702	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WRFYU	PF-06650808	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WVXVY	DK-410	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WWBVZ	BC3195	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WWZAS	SYS6010	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WXNKG	JBH-492	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WXQJL	Vadastuximab talirine	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WXTQM	APEC-1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0WYSHT	RC-178	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XBJHU	LY-3076226	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XCSOA	ST8176AA1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XCWMD	Cantuzumab ravtansine	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XEXPT	SGN-STNV	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XFQVE	SYSA-1801	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XFTRM	Bevacizumab vedotin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XGLSR	NOV0712-DM4	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XHLKM	C6vc0101	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XHZLG	Cofetuzumab pelidotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XIERX	P-1000	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XJLTL	JNJ-95298177	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XKMVA	SYS6002	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XKZBO	AZD-8205	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XLJJW	IMGN-388	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XLKYQ	IKS-01	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XLSWN	SC-006	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XOUNW	SDV-1001	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XOZXZ	SIB-029A	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XPPOZ	Vorsetuzumab mafodotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XRAON	LOP-628	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XRBCK	DAN-405	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XRDLA	S3F-CL-MMAE	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XSBGL	PF-08046876	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XTOSR	STRO-004	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XUVMS	CBT-005	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XVPES	LM-306	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XWNPK	AK0406	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XWTYJ	DXC-005	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0XXDCJ	ABL-202	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YAEPQ	TGM-005	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YANSF	BL-B01D1	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YAZBQ	RM-1995	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YBNRC	GQ-1003	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YBSML	AK146D1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YDBZU	SHR-4602	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YFOJD	SGN-35C	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YFVYF	ST1	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YGXLF	CPO-102	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YHHWC	N501-SN38	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YHPUE	RC-108	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YHPYG	RGX-019	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YHRUZ	BP-A102	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YKHCA	AbGn-107	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YKTME	OXS-1750	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YKZGZ	cHD37-amanitin	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YLNPN	BRY-812	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YMRIE	JSKN016	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YNUEK	XB371	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YODKD	BIO-106	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YPVKH	Pertuzumab zuvotolimod	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YQAIX	SHR-A1904	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YRJDY	ALT-P7	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YSIDA	Xl-250	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YTJTJ	APH-0912	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YTMFF	VIS-705	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YTRFZ	Vandortuzumab vedotin	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YUCNA	BL-M08D1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YVBCV	REGN-3124-PBD	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YWAHM	DS-6000	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YWPJC	TARG-9	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YWYJJ	IMGN151	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YXBEH	SHR-A1912	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YXJPS	Veltuzumab-CL2E-SN-38	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YXZQL	SGN-15	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YZEVV	MT-5111	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YZGPN	CDX-014	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0YZPWM	SGN-CD352A	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZAECD	AGS-16M8F	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZAFBL	IBI129	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZAJGM	BL-M09D1	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZBCCA	MGC028	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZBXTV	TJ101	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZGWBV	JY201	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZGWEK	XB010	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZIFBH	GenSci143	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZIJNR	Milatuzumab doxorubicin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZLJPV	SKB-410	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZMRYF	HMBD-501	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZMZUD	Zilovertamab vedotin	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZNAID	SHR-A1307	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZNUYD	Pab-001-MMAE	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZODWK	M-DGN549	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZOMIJ	OMTX-505	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZOYQV	Datopotamab deruxtecan	Approved	True	datopotamab_deruxtecan	TRUE_PER_PRIOR_AUDIT	see reports/validation/nar_adcdb_comparison/asset_source_coverage.tsv		high
+DRG0ZQBSG	MRG-001	Phase2	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZQLZD	TR1801-ADC	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZQORV	DEC008	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZSNLV	KGX201	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZSVBZ	<sup>111</sup>In-1849	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZTZMD	BAY-943	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZUQNL	BAT-8001	Phase3	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZXRLG	SLV-154	Phase1	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	
+DRG0ZYLBB	ZW-33	Investigative	False		NOT_APPLICABLE_NOT_IN_REGISTRY		asset not in configs/known_adc_assets.yaml -- no targeted query was ever run for it	

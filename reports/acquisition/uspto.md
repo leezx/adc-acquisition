@@ -14,7 +14,7 @@ configs/uspto_queries.yaml (5 queries, same concepts as Job 08/WIPO): singular/p
 
 ## Applications discovered
 
-2726 unique applications matched across 5 queries this run.
+2735 unique applications matched across 5 queries this run.
 
 - 10250998: Sensitization of cancer cells to immunoconjugate-induced cell death by transfection with il -13 receptor alpha chain (status: Abandoned  --  Failure to Respond to an Office Action)
 - 10546304: ANTI-CD70 ANTIBODY-DRUG CONJUGATES AND THEIR USE FOR THE TREATMENT OF CANCER AND IMMUNE DISORDERS (status: Patented Case)
@@ -34,11 +34,11 @@ configs/uspto_queries.yaml (5 queries, same concepts as Job 08/WIPO): singular/p
 
 ## Materialization this run
 
-10 new/changed, 0 unchanged, 0 failed. Unlike Job 08 (WIPO), every discovered application is refetched and hash-compared every run (prosecution status/assignments/continuity data genuinely change over time) — 0 of this run's candidates were unresolved retries from a previous failure, 20 were already-resolved reverify candidates (scheduled strictly after fresh/backlog under a --limit budget, so they can never starve out a genuinely new application).
+150 new/changed, 0 unchanged, 0 failed. Unlike Job 08 (WIPO), every discovered application is refetched and hash-compared every run (prosecution status/assignments/continuity data genuinely change over time) — 0 of this run's candidates were unresolved retries from a previous failure, 32 were already-resolved reverify candidates (scheduled strictly after fresh/backlog under a --limit budget, so they can never starve out a genuinely new application).
 
 ## Documents (independent artifact, see `uspto_documents.parquet`)
 
-22 Specification-document candidates considered this run (22 newly fetched, 0 already resolved and skipped with NO HTTP request, 0 failed) — filtered to `documentCode == "SPEC"` (the actual filed claims/full-text document; other file wrapper document types — filing receipts, fee worksheets, notices, office actions, ... — are a separate, not-yet-acquired concern). Documents are processed for every application reconciled this run, independent try/except from the application's own outcome. Document versioning is IDENTITY-based, not hash-based: USPTO's `/download` endpoints dynamically re-render the PDF/XML on every request (verified live — different bytes on each of two immediately-successive fetches of the same document), so a document is skipped once its `documentIdentifier` has one successful attempt, rather than being refetched and hash-compared like every other document artifact in this repo.
+346 Specification-document candidates considered this run (192 newly fetched, 152 already resolved and skipped with NO HTTP request, 2 failed) — filtered to `documentCode == "SPEC"` (the actual filed claims/full-text document; other file wrapper document types — filing receipts, fee worksheets, notices, office actions, ... — are a separate, not-yet-acquired concern). Documents are processed for every application reconciled this run, independent try/except from the application's own outcome. Document versioning is IDENTITY-based, not hash-based: USPTO's `/download` endpoints dynamically re-render the PDF/XML on every request (verified live — different bytes on each of two immediately-successive fetches of the same document), so a document is skipped once its `documentIdentifier` has one successful attempt, rather than being refetched and hash-compared like every other document artifact in this repo.
 
 ## Failed downloads
 

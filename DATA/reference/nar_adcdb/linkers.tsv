@@ -1,0 +1,590 @@
+entity_id	canonical_name	entity_type	conjugate_type	n_adc_backlinks	adc_backlink_names	adc_backlink_ids	source_url
+LIN0DBDYG	1-Aza-24-crown-8-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Crown Ether ADC 5a		https://adcdb.idrblab.net/data/linker/details/LIN0DBDYG
+LIN0NOYLH	1-Aza-42-crown-14-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Crown Ether ADC 5b		https://adcdb.idrblab.net/data/linker/details/LIN0NOYLH
+LIN0BKTSN	2,3-disubstituted long side-chain hydrolysis-resistant linker	ADC_LINKER		1	DAC-002		https://adcdb.idrblab.net/data/linker/details/LIN0BKTSN
+LIN0JETYX	2-Aminobenzamide oxime	ADC_LINKER	Cleavable	3	HER2-gsADC-19; HER2-gsADC-2; HER2-gsADC-48		https://adcdb.idrblab.net/data/linker/details/LIN0JETYX
+LIN0IPRZR	2-Aminobenzamidoxime without core-fucosylation	ADC_LINKER	Cleavable	1	HER2-gsADC-50		https://adcdb.idrblab.net/data/linker/details/LIN0IPRZR
+LIN0WOCKQ	3-Amino-alpha-cyclodextrin-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Crown Ether ADC 4d		https://adcdb.idrblab.net/data/linker/details/LIN0WOCKQ
+LIN0JBFSR	3-Amino-beta-cyclodextrin-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Crown Ether ADC 4e		https://adcdb.idrblab.net/data/linker/details/LIN0JBFSR
+LIN0JJZNV	3-Amino-gama-cyclodextrin-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Crown Ether ADC 4f		https://adcdb.idrblab.net/data/linker/details/LIN0JJZNV
+LIN0ZIZGT	3-sulfo-Mal	ADC_LINKER		3	M9346A-sulfo-Mal-DM4; huMov19-3-sulfo-Mal-DM4 (DAR 3.7); huMov19-3-sulfo-Mal-DM4 (DAR 8.23)		https://adcdb.idrblab.net/data/linker/details/LIN0ZIZGT
+LIN0UKYNV	4-[N-maleimidomethyl] cyclohexane-1-carboxylate (MCC)	ADC_LINKER		1	AMG 224		https://adcdb.idrblab.net/data/linker/details/LIN0UKYNV
+LIN0MLEOW	6-(2,5-dioxopyrrol-1-yl)-N-Propylhexanamide	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0MLEOW
+LIN0ZJEIQ	6-Amino-alpha-cyclodextrin-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Crown Ether ADC 4a		https://adcdb.idrblab.net/data/linker/details/LIN0ZJEIQ
+LIN0EFKRS	6-Amino-beta-cyclodextrin-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Crown Ether ADC 4b		https://adcdb.idrblab.net/data/linker/details/LIN0EFKRS
+LIN0LXKMB	6-Amino-gama-cyclodextrin-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Crown Ether ADC 4c		https://adcdb.idrblab.net/data/linker/details/LIN0LXKMB
+LIN0DSBFC	6-Maleimidocaproic acid	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0DSBFC
+LIN0QBMVS	A cleavable but systemically stable linker	ADC_LINKER		1	BAT8007		https://adcdb.idrblab.net/data/linker/details/LIN0QBMVS
+LIN0FTRKS	A cleavable disulfide linker	ADC_LINKER		2	RG6109; RG6148		https://adcdb.idrblab.net/data/linker/details/LIN0FTRKS
+LIN0YQOGM	A cleavable ester linker	ADC_LINKER		1	Emiltatug ledadotin		https://adcdb.idrblab.net/data/linker/details/LIN0YQOGM
+LIN0NDOEN	A cleavable linker	ADC_LINKER		18	9MW-2921; ADRX-0405; BAT8006; BAT8009; BAT8010; BG-C9074; DB-2304; DS-9606a; Elatatug vedotin; FOR-46; HLX-42; ILB-3101; JBH-492; JSKN016; MHB-088C; PRO-1107; TQB2103; XYD-9668-198		https://adcdb.idrblab.net/data/linker/details/LIN0NDOEN
+LIN0LNLKT	A cleavable open-ring linker	ADC_LINKER		1	GQ1010		https://adcdb.idrblab.net/data/linker/details/LIN0LNLKT
+LIN0KETHD	A cleavable peptide linker	ADC_LINKER		2	DXC006; LY4052031		https://adcdb.idrblab.net/data/linker/details/LIN0KETHD
+LIN0ASDFG	A non-cleavable linker	ADC_LINKER		1	AGX101		https://adcdb.idrblab.net/data/linker/details/LIN0ASDFG
+LIN0RQPAU	A proprietary polysarcosine hydrophobicity linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0RQPAU
+LIN0CRGGD	A proprietary stable-cleavable linker	ADC_LINKER		1	ESG401		https://adcdb.idrblab.net/data/linker/details/LIN0CRGGD
+LIN0VZGOJ	A tetra-peptide based cleavable linker	ADC_LINKER		1	DB-1419		https://adcdb.idrblab.net/data/linker/details/LIN0VZGOJ
+LIN0YXEZS	ADC 1-1 linker	ADC_LINKER	Cleavable	1	ADC1-1		https://adcdb.idrblab.net/data/linker/details/LIN0YXEZS
+LIN0HPKKW	ADC 1-11 linker	ADC_LINKER	Cleavable	1	ADC1-11		https://adcdb.idrblab.net/data/linker/details/LIN0HPKKW
+LIN0KORZE	ADC 1-12 linker	ADC_LINKER	Cleavable	1	ADC1-12		https://adcdb.idrblab.net/data/linker/details/LIN0KORZE
+LIN0GHWPL	ADC 1-2 linker	ADC_LINKER	Cleavable	1	ADC1-2		https://adcdb.idrblab.net/data/linker/details/LIN0GHWPL
+LIN0JMVQP	ADC 1-4 linker	ADC_LINKER	Cleavable	1	ADC1-4		https://adcdb.idrblab.net/data/linker/details/LIN0JMVQP
+LIN0RNRLZ	ADC 2-10 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0RNRLZ
+LIN0PGDJO	ADC 2-11 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0PGDJO
+LIN0QOGXU	ADC 2-12 linker	ADC_LINKER	Cleavable	1	ADC2-12		https://adcdb.idrblab.net/data/linker/details/LIN0QOGXU
+LIN0LXTRL	ADC 2-2 linker	ADC_LINKER	Cleavable	1	ADC2-2		https://adcdb.idrblab.net/data/linker/details/LIN0LXTRL
+LIN0ABVUL	ADC 2-22 linker	ADC_LINKER	Cleavable	1	ADC2-22		https://adcdb.idrblab.net/data/linker/details/LIN0ABVUL
+LIN0KIXUL	ADC 2-23 linker	ADC_LINKER	Cleavable	1	ADC2-23		https://adcdb.idrblab.net/data/linker/details/LIN0KIXUL
+LIN0AMBMY	ADC 2-24 linker	ADC_LINKER	Cleavable	1	ADC2-24		https://adcdb.idrblab.net/data/linker/details/LIN0AMBMY
+LIN0BWWRB	ADC 2-25 linker	ADC_LINKER	Cleavable	1	ADC2-25		https://adcdb.idrblab.net/data/linker/details/LIN0BWWRB
+LIN0XLNKE	ADC 2-26 linker	ADC_LINKER	Cleavable	1	ADC2-26		https://adcdb.idrblab.net/data/linker/details/LIN0XLNKE
+LIN0FGIHL	ADC 2-27 linker	ADC_LINKER	Cleavable	1	ADC2-27		https://adcdb.idrblab.net/data/linker/details/LIN0FGIHL
+LIN0SPIXP	ADC 2-29 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0SPIXP
+LIN0FFFHQ	ADC 2-30 linker	ADC_LINKER	Cleavable	1	ADC2-30		https://adcdb.idrblab.net/data/linker/details/LIN0FFFHQ
+LIN0XDAGD	ADC 2-31 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0XDAGD
+LIN0OHMJO	ADC 2-32 linker	ADC_LINKER	Cleavable	1	ADC2-32		https://adcdb.idrblab.net/data/linker/details/LIN0OHMJO
+LIN0QKLED	ADC 2-33 linker	ADC_LINKER	Cleavable	1	ADC2-33		https://adcdb.idrblab.net/data/linker/details/LIN0QKLED
+LIN0UVDIG	ADC 2-34 linker	ADC_LINKER	Cleavable	1	ADC2-34		https://adcdb.idrblab.net/data/linker/details/LIN0UVDIG
+LIN0RCHFF	ADC 2-35 linker	ADC_LINKER	Cleavable	1	ADC2-35		https://adcdb.idrblab.net/data/linker/details/LIN0RCHFF
+LIN0OLUVL	ADC 2-36-1 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0OLUVL
+LIN0DNWGH	ADC 2-36-2 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0DNWGH
+LIN0QZHHE	ADC 2-37 linker	ADC_LINKER	Cleavable	1	ADC2-37		https://adcdb.idrblab.net/data/linker/details/LIN0QZHHE
+LIN0TRNXW	ADC 2-38 linker	ADC_LINKER	Cleavable	1	ADC2-38		https://adcdb.idrblab.net/data/linker/details/LIN0TRNXW
+LIN0OVOZL	ADC 2-39 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0OVOZL
+LIN0PNSTV	ADC 2-4 linker	ADC_LINKER	Cleavable	1	ADC2-4		https://adcdb.idrblab.net/data/linker/details/LIN0PNSTV
+LIN0LBXSA	ADC 2-40 linker	ADC_LINKER	Cleavable	1	ADC2-40		https://adcdb.idrblab.net/data/linker/details/LIN0LBXSA
+LIN0OSRFT	ADC 2-41 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0OSRFT
+LIN0CXMRZ	ADC 2-42 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0CXMRZ
+LIN0SLPBR	ADC 2-42-RO linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0SLPBR
+LIN0YDBPC	ADC 2-43 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YDBPC
+LIN0QPRCI	ADC 2-44 linker	ADC_LINKER	Cleavable	1	ADC2-44		https://adcdb.idrblab.net/data/linker/details/LIN0QPRCI
+LIN0MZMHB	ADC 2-45 linker	ADC_LINKER	Cleavable	1	ADC2-45		https://adcdb.idrblab.net/data/linker/details/LIN0MZMHB
+LIN0UNGSN	ADC 2-46 linker	ADC_LINKER	Cleavable	1	ADC2-46		https://adcdb.idrblab.net/data/linker/details/LIN0UNGSN
+LIN0XYYCV	ADC 2-47 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0XYYCV
+LIN0CZJTM	ADC 2-48 linker	ADC_LINKER	Cleavable	1	ADC2-48		https://adcdb.idrblab.net/data/linker/details/LIN0CZJTM
+LIN0YLKGZ	ADC 2-49 linker	ADC_LINKER	Cleavable	1	ADC2-49		https://adcdb.idrblab.net/data/linker/details/LIN0YLKGZ
+LIN0UDLOY	ADC 2-50 linker	ADC_LINKER	Cleavable	1	ADC2-50		https://adcdb.idrblab.net/data/linker/details/LIN0UDLOY
+LIN0VIWEG	ADC 2-51 linker	ADC_LINKER	Cleavable	1	ADC2-51		https://adcdb.idrblab.net/data/linker/details/LIN0VIWEG
+LIN0TFNYH	ADC 2-53 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0TFNYH
+LIN0WRVEQ	ADC 2-54 linker	ADC_LINKER	Cleavable	1	ADC2-54		https://adcdb.idrblab.net/data/linker/details/LIN0WRVEQ
+LIN0LQEZO	ADC 2-55 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0LQEZO
+LIN0AOECF	ADC 2-56 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0AOECF
+LIN0BIULU	ADC 2-57 linker	ADC_LINKER	Cleavable	1	ADC2-57		https://adcdb.idrblab.net/data/linker/details/LIN0BIULU
+LIN0MWMBX	ADC 2-58 linker	ADC_LINKER	Cleavable	1	ADC2-58		https://adcdb.idrblab.net/data/linker/details/LIN0MWMBX
+LIN0SSEJF	ADC 2-59 linker	ADC_LINKER	Cleavable	1	ADC2-59		https://adcdb.idrblab.net/data/linker/details/LIN0SSEJF
+LIN0XERIF	ADC 2-6-2 linker	ADC_LINKER	Cleavable	1	ADC2-6-2		https://adcdb.idrblab.net/data/linker/details/LIN0XERIF
+LIN0RHBZS	ADC 2-60 linker	ADC_LINKER	Cleavable	1	ADC2-60		https://adcdb.idrblab.net/data/linker/details/LIN0RHBZS
+LIN0CVSSH	ADC 2-61 linker	ADC_LINKER	Cleavable	1	ADC2-61		https://adcdb.idrblab.net/data/linker/details/LIN0CVSSH
+LIN0BEVEW	ADC 2-62-1 linker	ADC_LINKER	Cleavable	1	ADC-2-62-1		https://adcdb.idrblab.net/data/linker/details/LIN0BEVEW
+LIN0GKJFG	ADC 2-62-2 linker	ADC_LINKER	Cleavable	1	ADC-2-62-2		https://adcdb.idrblab.net/data/linker/details/LIN0GKJFG
+LIN0RCQWT	ADC 2-63-1 linker	ADC_LINKER	Cleavable	1	ADC-2-63-1		https://adcdb.idrblab.net/data/linker/details/LIN0RCQWT
+LIN0DOBMW	ADC 2-63-2 linker	ADC_LINKER	Cleavable	1	ADC-2-63-2		https://adcdb.idrblab.net/data/linker/details/LIN0DOBMW
+LIN0AZJIH	ADC 2-64-1 linker	ADC_LINKER	Cleavable	1	ADC-2-64-1		https://adcdb.idrblab.net/data/linker/details/LIN0AZJIH
+LIN0RQHDE	ADC 2-64-2 linker	ADC_LINKER	Cleavable	1	ADC-2-64-2		https://adcdb.idrblab.net/data/linker/details/LIN0RQHDE
+LIN0OUWBC	ADC 2-65-1 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0OUWBC
+LIN0AKZMS	ADC 2-65-2 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0AKZMS
+LIN0YTWLV	ADC 2-7-2 linker	ADC_LINKER	Cleavable	1	ADC2-7-2		https://adcdb.idrblab.net/data/linker/details/LIN0YTWLV
+LIN0IBEGX	ADC 2-9-1 linker	ADC_LINKER	Cleavable	1	ADC2-9-1		https://adcdb.idrblab.net/data/linker/details/LIN0IBEGX
+LIN0AYSXG	ADC 2-9-2 linker	ADC_LINKER	Cleavable	1	ADC2-9-2		https://adcdb.idrblab.net/data/linker/details/LIN0AYSXG
+LIN0JCABZ	ADC 2-A linker	ADC_LINKER	Cleavable	1	ADC2-A		https://adcdb.idrblab.net/data/linker/details/LIN0JCABZ
+LIN0HEHFZ	ADC 2-B linker	ADC_LINKER	Cleavable	1	ADC2-B		https://adcdb.idrblab.net/data/linker/details/LIN0HEHFZ
+LIN0MWLMY	ADC 3-1 linker	ADC_LINKER	Cleavable	1	ADC3-1		https://adcdb.idrblab.net/data/linker/details/LIN0MWLMY
+LIN0HYGRD	ADC 3-10 linker	ADC_LINKER	Cleavable	1	ADC3-10		https://adcdb.idrblab.net/data/linker/details/LIN0HYGRD
+LIN0AWBXJ	ADC 3-11 linker	ADC_LINKER	Cleavable	1	ADC3-11		https://adcdb.idrblab.net/data/linker/details/LIN0AWBXJ
+LIN0ITZKA	ADC 3-12 linker	ADC_LINKER	Cleavable	1	ADC3-12		https://adcdb.idrblab.net/data/linker/details/LIN0ITZKA
+LIN0LQPTC	ADC 3-13 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0LQPTC
+LIN0MQXRM	ADC 3-14 linker	ADC_LINKER	Cleavable	1	ADC3-14		https://adcdb.idrblab.net/data/linker/details/LIN0MQXRM
+LIN0HPFNZ	ADC 3-15 linker	ADC_LINKER	Cleavable	1	ADC3-15		https://adcdb.idrblab.net/data/linker/details/LIN0HPFNZ
+LIN0NGHLY	ADC 3-16 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0NGHLY
+LIN0YHOTC	ADC 3-17 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YHOTC
+LIN0TSVUX	ADC 3-18 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0TSVUX
+LIN0RWGRO	ADC 3-19 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0RWGRO
+LIN0SOMHS	ADC 3-2 linker	ADC_LINKER	Cleavable	1	ADC3-2		https://adcdb.idrblab.net/data/linker/details/LIN0SOMHS
+LIN0TMKPP	ADC 3-20 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0TMKPP
+LIN0TLYMO	ADC 3-3 linker	ADC_LINKER	Cleavable	1	ADC3-3		https://adcdb.idrblab.net/data/linker/details/LIN0TLYMO
+LIN0MWKOD	ADC 3-4 linker	ADC_LINKER	Cleavable	1	ADC3-4		https://adcdb.idrblab.net/data/linker/details/LIN0MWKOD
+LIN0GAPLW	ADC 3-5 linker	ADC_LINKER	Cleavable	1	ADC3-5		https://adcdb.idrblab.net/data/linker/details/LIN0GAPLW
+LIN0OERVS	ADC 3-6 linker	ADC_LINKER	Cleavable	1	ADC3-6		https://adcdb.idrblab.net/data/linker/details/LIN0OERVS
+LIN0FOKYU	ADC 3-7 linker	ADC_LINKER	Cleavable	1	ADC3-7		https://adcdb.idrblab.net/data/linker/details/LIN0FOKYU
+LIN0NVTZZ	ADC 3-8 linker	ADC_LINKER	Cleavable	1	ADC3-8		https://adcdb.idrblab.net/data/linker/details/LIN0NVTZZ
+LIN0ZGPBC	ADC 3-9 linker	ADC_LINKER	Cleavable	1	ADC3-9		https://adcdb.idrblab.net/data/linker/details/LIN0ZGPBC
+LIN0IAKJS	ADC-C1 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0IAKJS
+LIN0JQHMX	ADC-C2 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0JQHMX
+LIN0FDOUV	ADC-C3 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0FDOUV
+LIN0DGQUZ	ADC-C4 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0DGQUZ
+LIN0PKKHE	ADC-C5 linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0PKKHE
+LIN0NBUDP	AJICAP	ADC_LINKER		1	Trastuzumab-AJICAP-maytansinoid		https://adcdb.idrblab.net/data/linker/details/LIN0NBUDP
+LIN0WUDSA	APN-PEG5-Val-Cit-PABC	ADC_LINKER		1	INA03		https://adcdb.idrblab.net/data/linker/details/LIN0WUDSA
+LIN0GOHVE	APN-PEG5-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0GOHVE
+LIN0KWKDL	AcButDMH	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0KWKDL
+LIN0TTWZX	AcLys-Val-Cit-PABC-DMAE	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0TTWZX
+LIN0FSRSR	AcLys-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0FSRSR
+LIN0MTORH	Acetamide-PEG4-Val-Ala-PABA	ADC_LINKER	Cleavable	2	Engineered HER-SG3227; Trastuzumab-SG3227		https://adcdb.idrblab.net/data/linker/details/LIN0MTORH
+LIN0GIPCV	Acid-labile linker	ADC_LINKER		1	SGN-15		https://adcdb.idrblab.net/data/linker/details/LIN0GIPCV
+LIN0UYNPI	Acid-labile linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0UYNPI
+LIN0TYKTE	Adcentrx' proprietary linker	ADC_LINKER		1	ADRX-0706		https://adcdb.idrblab.net/data/linker/details/LIN0TYKTE
+LIN0KYSKB	Adipic acid-Val-Ala-PABC	ADC_LINKER	Cleavable	6	EGFR-ADC 13a; EGFR-ADC 13b; EGFR-ADC 13c; FOLR1-ADC 13a; FOLR1-ADC 13b; FOLR1-ADC 13c		https://adcdb.idrblab.net/data/linker/details/LIN0KYSKB
+LIN0UQZJV	Adipic acid-Val-CIt-PABC	ADC_LINKER	Cleavable	1	FOLR1-ADC 15		https://adcdb.idrblab.net/data/linker/details/LIN0UQZJV
+LIN0RELIP	Adizutecan linker	ADC_LINKER		1	telisotuzumab adizutecan		https://adcdb.idrblab.net/data/linker/details/LIN0RELIP
+LIN0IISSJ	Ala-Ala dipeptide	ADC_LINKER	Cleavable	2	Anti-EGFR-Ala-Ala-IGN; Anti-FOLR1-Ala-Ala-IGN		https://adcdb.idrblab.net/data/linker/details/LIN0IISSJ
+LIN0JQQRS	Alkoxyamine linker	ADC_LINKER		1	AGS62P1		https://adcdb.idrblab.net/data/linker/details/LIN0JQQRS
+LIN0DFWQG	Alkyl phosphoramide-PEG12-Val-Cit-PAB	ADC_LINKER	Cleavable	1	Brentuximab-7		https://adcdb.idrblab.net/data/linker/details/LIN0DFWQG
+LIN0MFHKQ	Alkyl phosphoramide-PEG24-Val-Cit-PAB	ADC_LINKER	Cleavable	1	Brentuximab-8		https://adcdb.idrblab.net/data/linker/details/LIN0MFHKQ
+LIN0EFZNV	Alternative linker without basic amines linker 25	ADC_LINKER	Cleavable	2	HuIgG1-25; hCD46-25		https://adcdb.idrblab.net/data/linker/details/LIN0EFZNV
+LIN0ARHSQ	AmPEG6C2	ADC_LINKER		10	Anti-CXCR4 ADC 510; Anti-CXCR4 ADC 513; Anti-CXCR4 ADC 669; Anti-CXCR4 ADC 670; Anti-CXCR4 ADC 671; Anti-CXCR4 ADC 672; Anti-CXCR4 ADC 711; Anti-CXCR4 ADC 712; Anti-CXCR4 ADC 713; Anti-CXCR4 ADC 714		https://adcdb.idrblab.net/data/linker/details/LIN0ARHSQ
+LIN0UQJNN	Amide-based linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0UQJNN
+LIN0UGIEB	An acid-cleavable linker	ADC_LINKER		1	FDA018		https://adcdb.idrblab.net/data/linker/details/LIN0UGIEB
+LIN0XODED	Asn-AlaGlu-Dpr-MDpr	ADC_LINKER	Cleavable	2	h1F6-17 MMAE; h1F6-17 MMAE DAR4		https://adcdb.idrblab.net/data/linker/details/LIN0XODED
+LIN0QWUCR	Asn-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-26 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0QWUCR
+LIN0YJVKJ	Asp-Ala-Lys-MDpr	ADC_LINKER	Cleavable	1	h1F6-14 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0YJVKJ
+LIN0GEJRG	Asp-AlaGlu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-19 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0GEJRG
+LIN0ZVWLW	Asp-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-27 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0ZVWLW
+LIN0NNRAU	Azadibenzocylooctyne-amine derivative 6d	ADC_LINKER	Cleavable	2	HER2-gsADC-49; HER2-gsADC-5		https://adcdb.idrblab.net/data/linker/details/LIN0NNRAU
+LIN0QZRKJ	Azide-alkyne based linker 10a	ADC_LINKER	Cleavable	1	HER2-azide-alkyne MMAE conjugate		https://adcdb.idrblab.net/data/linker/details/LIN0QZRKJ
+LIN0KYENH	Azide-modified dibenzocyclooctyne(DBCO)-albumin(HAS)	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0KYENH
+LIN0WLMUR	BCN-HydraSpace-Val-Ala-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0WLMUR
+LIN0LGSKX	BCN-HydraSpace-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Trastuzumab-SYNtansine		https://adcdb.idrblab.net/data/linker/details/LIN0LGSKX
+LIN0SXPBU	BG based linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0SXPBU
+LIN0LBSCH	BIMPRO	ADC_LINKER		2	H3L2-mpeoDM1; THL4-mpeoDM1		https://adcdb.idrblab.net/data/linker/details/LIN0LBSCH
+LIN0VKQGV	BVP-PEG3-carbamate-PEG4	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0VKQGV
+LIN0DEQBW	BVP-PEG3-carbamate	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0DEQBW
+LIN0BHCLX	BVP-PEG3-diamine	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0BHCLX
+LIN0ZNXVG	BiM-Val-Cit-PABC	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0ZNXVG
+LIN0GSQPQ	Bicyclo[6.1.0]nona-4-yne	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0GSQPQ
+LIN0PGEOO	Bicyclononyne carbamoyl sulfamide Val-Ala-PABC	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0PGEOO
+LIN0EDQAN	Bicyclononyne derivative 6e	ADC_LINKER	Cleavable	1	HER2-gsADC-41		https://adcdb.idrblab.net/data/linker/details/LIN0EDQAN
+LIN0YWETK	Bis-BCN-modified Val-Cit-PABC linker 10	ADC_LINKER	Cleavable	2	ADC Trast-10; ADC Trast-11		https://adcdb.idrblab.net/data/linker/details/LIN0YWETK
+LIN0DEHWL	Bis-Tolylsulfonyl-Propanoyl-Benzamide-Glu-NH-PEG(24u)-OMe-Val-Cit-PAB	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0DEHWL
+LIN0TTUBH	Bis-bromine linker-PEG2-VC-PAB	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0TTUBH
+LIN0LFPTO	Bis-bromine linker-PEG4-Asn-Ala-ethylenediamine	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0LFPTO
+LIN0YXWEC	Bis-bromine linker-mono-glycine-PEG12-PAB	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YXWEC
+LIN0ZTLCQ	Bis-sulfone-(PEG24)-Glu-Val-Cit-PAB	ADC_LINKER		1	NN3201		https://adcdb.idrblab.net/data/linker/details/LIN0ZTLCQ
+LIN0CROZJ	BrAc-Val-Ala	ADC_LINKER		2	ABBV-969; Turmetabart adizutecan		https://adcdb.idrblab.net/data/linker/details/LIN0CROZJ
+LIN0DZRRC	Bridged PEG4-valine-alanine	ADC_LINKER	Cleavable	1	Trastuzumab-L6		https://adcdb.idrblab.net/data/linker/details/LIN0DZRRC
+LIN0FCZCY	C-Lock-ANN tri-peptide	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0FCZCY
+LIN0RKXEB	CEN010-105	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0RKXEB
+LIN0ZGCUP	CL2A	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ZGCUP
+LIN0RTVRG	CL2E	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0RTVRG
+LIN0ZXIJW	Caproyl acid	ADC_LINKER		1	Aprutumab ixadotin		https://adcdb.idrblab.net/data/linker/details/LIN0ZXIJW
+LIN0IUSXC	Caproyl acid	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0IUSXC
+LIN0LIGJO	Cathepsin B cleavable linker	ADC_LINKER		1	BL-M02D1		https://adcdb.idrblab.net/data/linker/details/LIN0LIGJO
+LIN0UWNFJ	Cathepsin-cleavable peptidic linker with self-immolating spacer	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0UWNFJ
+LIN0OJOWG	Cleavable disulfide	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0OJOWG
+LIN0OVBRO	Cleavable ester linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0OVBRO
+LIN0EQKWD	Cleavable hydrophilic linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0EQKWD
+LIN0XMAZP	Clravable-TAMRA-acetal based linker 12	ADC_LINKER	Cleavable	1	HER2-acetal-ADC 12		https://adcdb.idrblab.net/data/linker/details/LIN0XMAZP
+LIN0SGAEB	Clravable-acetal based linker 11	ADC_LINKER	Cleavable	1	HER2-acetal-ADC 11		https://adcdb.idrblab.net/data/linker/details/LIN0SGAEB
+LIN0ESXOH	CrossConju linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0ESXOH
+LIN0KDFMD	Cxxx-Mal-CX	ADC_LINKER	Cleavable	4	M9346A-4a-Cxxx-Mal-CX-DM1; M9346A-4b-Cxxx-Mal-CX-DM1; M9346A-4c-Cxxx-Mal-CX-DM1; M9346A-4d-Cxxx-Mal-CX-DM1		https://adcdb.idrblab.net/data/linker/details/LIN0KDFMD
+LIN0JFIIY	Cyclopropene-tetrazine based linker 10b	ADC_LINKER	Cleavable	1	HER2-cyclopropene-tetrazine MMAE conjugate		https://adcdb.idrblab.net/data/linker/details/LIN0JFIIY
+LIN0WCLMP	Cys-11 ADC linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0WCLMP
+LIN0ZKOQW	Cys-12 ADC linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0ZKOQW
+LIN0WYMQF	Cys-13 ADC linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0WYMQF
+LIN0YPFHY	Cys-14 ADC linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YPFHY
+LIN0ZQCHH	Cysteine D2	ADC_LINKER	Cleavable	1	T-D2-1508		https://adcdb.idrblab.net/data/linker/details/LIN0ZQCHH
+LIN0PYLVI	Cysteine D4	ADC_LINKER	Cleavable	1	T-D4-1508		https://adcdb.idrblab.net/data/linker/details/LIN0PYLVI
+LIN0FVCSC	Cysteine D6	ADC_LINKER	Cleavable	1	T-D6-1508		https://adcdb.idrblab.net/data/linker/details/LIN0FVCSC
+LIN0BETDT	Cysteine D8	ADC_LINKER	Cleavable	1	T-D8-1508		https://adcdb.idrblab.net/data/linker/details/LIN0BETDT
+LIN0MVCFG	D07-Val-Cit-PABC	ADC_LINKER	Cleavable	1	RGCLN18.2-D07-Val-Cit-PAB-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0MVCFG
+LIN0WDHTF	DBCO-PEG-EVCit-PABC	ADC_LINKER	Cleavable	1	EVCit ADC 3c		https://adcdb.idrblab.net/data/linker/details/LIN0WDHTF
+LIN0QRLMU	DBCO-PEG-VCit-PABC	ADC_LINKER	Cleavable	1	VCit ADC 3a		https://adcdb.idrblab.net/data/linker/details/LIN0QRLMU
+LIN0TMCCF	DBCO-PEG3-Glu-Val-Cit-PABC	ADC_LINKER	Cleavable	3	ADC MMAE/F 2+2; ADC MMAE/F 2+4; ADC MMAE/F 4+2		https://adcdb.idrblab.net/data/linker/details/LIN0TMCCF
+LIN0LREZN	DBCO-PEG4-GGFG linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0LREZN
+LIN0WVXNJ	DBCO-PEG4-Mc-Gly-Gly-Phe-Gly	ADC_LINKER		1	Anbenitamab repodatecan		https://adcdb.idrblab.net/data/linker/details/LIN0WVXNJ
+LIN0TQVQE	DBCO-PEG4-Mc-Gly-Gly-Phe-Gly	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0TQVQE
+LIN0ZHZRH	DBCO-Val-Cit-PABA	ADC_LINKER		1	Luveltamab tazevibulin		https://adcdb.idrblab.net/data/linker/details/LIN0ZHZRH
+LIN0FHWSG	DBCO-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0FHWSG
+LIN0YYVHB	DIBAC-suc-PEG4-Val-Cit-PAB	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YYVHB
+LIN0EAPPJ	DMBA-SIL	ADC_LINKER	Cleavable	3	Alb-DMBA-SIL-DOX; Alb-DMBA-SIL-MMAE; MAb-DMBA-SIL-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0EAPPJ
+LIN0PWYIO	DOTA-P-toluene isothiocyanate	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0PWYIO
+LIN0IZDKS	DSPh-PEG12-Val-Ala-PABC	ADC_LINKER	Cleavable	1	TTZ-3-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0IZDKS
+LIN0MDTBJ	DSPh-PEG12-Val-Cit-PABC	ADC_LINKER	Cleavable	1	TTZ-4-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0MDTBJ
+LIN0EWPDB	DSPh-Val-Ala-PABC	ADC_LINKER	Cleavable	1	TTZ-1-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0EWPDB
+LIN0TJKEO	DSPh-Val-Cit-PABC	ADC_LINKER	Cleavable	1	TTZ-2-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0TJKEO
+LIN0EDTZS	DVD-PEG4-Triazol	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0EDTZS
+LIN0TUFGH	DVP-based linker 1f	ADC_LINKER	Cleavable	1	Trastuzumab-DVP-linker-MMAE 1		https://adcdb.idrblab.net/data/linker/details/LIN0TUFGH
+LIN0HCDIC	DVP-based linker 3	ADC_LINKER	Cleavable	1	Trastuzumab-DVP-linker-MMAE 3		https://adcdb.idrblab.net/data/linker/details/LIN0HCDIC
+LIN0HXNWN	DVP-based linker 4	ADC_LINKER	Cleavable	1	Trastuzumab-DVP-linker-MMAE 4		https://adcdb.idrblab.net/data/linker/details/LIN0HXNWN
+LIN0YWQKT	Dansylcadaverine deglycosylated-BCN based linker	ADC_LINKER	Cleavable	1	Trastuzumab deglycosylated WT-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0YWQKT
+LIN0MRUQL	Dansylcadaverine-BCN based linker	ADC_LINKER	Cleavable	1	Trastuzumab I253Q-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0MRUQL
+LIN0PCSYV	Dasatinib disulfide cleavable linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0PCSYV
+LIN0CRYDL	Dextran	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0CRYDL
+LIN0CQUIQ	Dibromomaleimide-PEG3	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0CQUIQ
+LIN0QOUGK	Dibromomaleimide-PEG4	ADC_LINKER		4	Anti-HER2 DVD-Fab-h38c2-K99C_MMAF; Anti-HER2 DVD-Fab_MMAF; Anti-HER2 DVD-IgG1-h38c2-K99C_MMAF; Anti-HER2 DVD-IgG1_MMAF		https://adcdb.idrblab.net/data/linker/details/LIN0QOUGK
+LIN0BYXTN	Dibromomethyl pyridine-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0BYXTN
+LIN0KREMZ	Dipeptide linker	ADC_LINKER		1	SGN-CD70A		https://adcdb.idrblab.net/data/linker/details/LIN0KREMZ
+LIN0XRXZL	Dipeptide-diBrPD (dibromopyridazinedione )	ADC_LINKER	Cleavable	1	LRG1-ADC 5		https://adcdb.idrblab.net/data/linker/details/LIN0XRXZL
+LIN0RBQMK	Dipeptide-p-amidobenzyl alcohol linker	ADC_LINKER		1	Anti-c-Met IgG-OXA		https://adcdb.idrblab.net/data/linker/details/LIN0RBQMK
+LIN0HZYCD	Diphenyltio-Mal-Cap	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0HZYCD
+LIN0IXARW	Disulfide bond linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0IXARW
+LIN0GFIYW	Disulfide cleavable linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0GFIYW
+LIN0WXPTP	Disulfide linker 8	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0WXPTP
+LIN0WAWEU	Divinylpyrimidine-PEG4-Val-Ala-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0WAWEU
+LIN0XKWFZ	Divinylpyrimidine-PEG4	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0XKWFZ
+LIN0SWMHT	Dolaflexin polymer	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0SWMHT
+LIN0GVDHS	Fleximer polymer	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0GVDHS
+LIN0CUUDJ	Formyl-Ala-Ala	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0CUUDJ
+LIN0OUTRX	Formyl-Gly-Glu	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0OUTRX
+LIN0BDMSC	Fur-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-28 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0BDMSC
+LIN0PCMIJ	Gal-beta-1,4-GlcNAc	ADC_LINKER	Cleavable	1	Trastuzumab-Gal-beta-1,4GlcNAc-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0PCMIJ
+LIN0QWPHO	Glc-beta-1,4GlcNAc	ADC_LINKER	Cleavable	1	Trastuzumab-Glc-beta-1,4GlcNAc-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0QWPHO
+LIN0KFZPW	Glu-Ala-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	3	h1F6-18 MMAE; h1F6-20 MMAE; h1F6-20 MMAE DAR4		https://adcdb.idrblab.net/data/linker/details/LIN0KFZPW
+LIN0KKYTC	Glu-Ala-Lys-MDpr	ADC_LINKER	Cleavable	1	h1F6-15 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0KKYTC
+LIN0NKEYA	Glu-Phe-Leu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-34 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0NKEYA
+LIN0PUJFR	Glu-Phe-Phe-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-37 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0PUJFR
+LIN0RYFWX	Glucuronide quaternary ammonium linker 7	ADC_LINKER	Cleavable	1	Alpha-CD30-7		https://adcdb.idrblab.net/data/linker/details/LIN0RYFWX
+LIN0NAIOB	Glucuronide quaternary ammonium linker 8	ADC_LINKER	Cleavable	1	Alpha-CD30-8		https://adcdb.idrblab.net/data/linker/details/LIN0NAIOB
+LIN0RGFAV	Glucuronide quaternary ammonium linker 9	ADC_LINKER	Cleavable	1	Alpha-CD30-9		https://adcdb.idrblab.net/data/linker/details/LIN0RGFAV
+LIN0LQUFZ	Glutaricacid-peptide-based linker	ADC_LINKER	Cleavable	1	TWEAKR-KSPi-ADC1		https://adcdb.idrblab.net/data/linker/details/LIN0LQUFZ
+LIN0AQXSY	Gly-Mal-Gly-Gly-Phe-Gly	ADC_LINKER		5	"ADC
+ Info; BL-M05D1; BL-M07D1; BL-M08D1; BL-M11D1"		https://adcdb.idrblab.net/data/linker/details/LIN0AQXSY
+LIN0NFAFY	Gly-Mal-Gly-Gly-Phe-Gly	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0NFAFY
+LIN0FCNGM	Gly3-Val-Cit-PABC	ADC_LINKER	Cleavable	6	C-Fab-MMAE; C-IgG-Val-Cit-MMAE; Fcab-1-MMAE; Fcab-2-MMAE; Fcab-3-MMAE; HuFc-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0FCNGM
+LIN0JDOYH	Gly3-vcPAB	ADC_LINKER	Cleavable	1	Tras-Gly3-Vakl-Cit-PAB-PNU-159682		https://adcdb.idrblab.net/data/linker/details/LIN0JDOYH
+LIN0GWUBC	Gly5-EDA	ADC_LINKER		3	Tras-Gly5-EDA-Dox; Tras-Gly5-EDA-Nemo; Tras-Gly5-EDA-Pnu		https://adcdb.idrblab.net/data/linker/details/LIN0GWUBC
+LIN0RMVIS	Gly5-FITC	ADC_LINKER		1	HuXBR1-402-G5-PNU		https://adcdb.idrblab.net/data/linker/details/LIN0RMVIS
+LIN0EXGPX	Gly5	ADC_LINKER		3	CAC10-Gly5-MAY; CAC10-Gly5-PNU; Tras-Gly5-May		https://adcdb.idrblab.net/data/linker/details/LIN0EXGPX
+LIN0JNFEK	Glycosyl PEGylation linker 6o	ADC_LINKER	Cleavable	1	HER2-gsADC-30		https://adcdb.idrblab.net/data/linker/details/LIN0JNFEK
+LIN0BKGXU	Glycosyl PEGylation linker 6p	ADC_LINKER	Cleavable	1	HER2-gsADC-31		https://adcdb.idrblab.net/data/linker/details/LIN0BKGXU
+LIN0WBFEG	Glycosyl PEGylation linker 6q	ADC_LINKER	Cleavable	1	HER2-gsADC-32		https://adcdb.idrblab.net/data/linker/details/LIN0WBFEG
+LIN0AUGVW	Glycosyl PEGylation linker 6r	ADC_LINKER	Cleavable	1	HER2-gsADC-33		https://adcdb.idrblab.net/data/linker/details/LIN0AUGVW
+LIN0LJYEO	H-disulfide linker	ADC_LINKER	Cleavable	2	HER2-HC-H-SS-PBD; HER2-LC-H-SS-PBD		https://adcdb.idrblab.net/data/linker/details/LIN0LJYEO
+LIN0TCZUM	HIPS-4AP	ADC_LINKER		1	TRPH-222		https://adcdb.idrblab.net/data/linker/details/LIN0TCZUM
+LIN0RJLTB	HIPS-4AP	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0RJLTB
+LIN0SMWAK	Hexapeptide linker ASTKGP	ADC_LINKER		1	Trastuzumab DVD-ADC		https://adcdb.idrblab.net/data/linker/details/LIN0SMWAK
+LIN0KEDWL	Highly stable yet cleavable linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0KEDWL
+LIN0FINGX	Hydrolysable linker	ADC_LINKER		1	AMT-116		https://adcdb.idrblab.net/data/linker/details/LIN0FINGX
+LIN0UDDIN	Hydrophilic cleavable linker 19	ADC_LINKER	Cleavable	2	HuIgG1-19; hCD46-19		https://adcdb.idrblab.net/data/linker/details/LIN0UDDIN
+LIN0WJROS	Hydrophilic linker containing sugar molecules	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0WJROS
+LIN0TUSQC	Hydrophilic linker of XMT-2056	ADC_LINKER		1	XMT-2056		https://adcdb.idrblab.net/data/linker/details/LIN0TUSQC
+LIN0DRYEV	Hydrophilic linker of XMT-2056	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0DRYEV
+LIN0VDTEI	Hydrophilic, protease-cleavable linker	ADC_LINKER		3	DM001; DM002; DM005		https://adcdb.idrblab.net/data/linker/details/LIN0VDTEI
+LIN0LOOGK	Hydroxylamine derivative 6c	ADC_LINKER	Cleavable	3	HER2-gsADC-20; HER2-gsADC-3; HER2-gsADC-47		https://adcdb.idrblab.net/data/linker/details/LIN0LOOGK
+LIN0NUXKO	Hydroxylamine-PEG4	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0NUXKO
+LIN0BRLKM	IDM-Val-Cit-PBCA	ADC_LINKER		1	Bulumtatug fuvedotin		https://adcdb.idrblab.net/data/linker/details/LIN0BRLKM
+LIN0OFOHH	IDM-Val-Cit-PBCA	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0OFOHH
+LIN0AJTIR	Iodoacetamide-PEG4-Val-Ala-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0AJTIR
+LIN0CEFEK	Iso-PEG5-beta-glucuronide	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0CEFEK
+LIN0SKVMK	Isoprene-PEG3,3,3-beta-Glu-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0SKVMK
+LIN0CRNLZ	Isoprene-PEG3-beta-Glu-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0CRNLZ
+LIN0SZZUJ	K'-MCC'	ADC_LINKER		1	GQ1001		https://adcdb.idrblab.net/data/linker/details/LIN0SZZUJ
+LIN0EBCCY	K-lock-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0EBCCY
+LIN0JPRJS	Kinesin spindle protein inhibitor (KSPi)-ADC linker 1	ADC_LINKER	Cleavable	2	HER2 KSP-ADC 1.1; TWEAKR-KSP-ADC 1.1		https://adcdb.idrblab.net/data/linker/details/LIN0JPRJS
+LIN0RQBPW	Kinesin spindle protein inhibitor (KSPi)-ADC linker 2	ADC_LINKER	Cleavable	2	HER2 KSP-ADC 1.2; TWEAKR-KSP-ADC 1.2		https://adcdb.idrblab.net/data/linker/details/LIN0RQBPW
+LIN0CARBZ	Kinesin spindle protein inhibitor (KSPi)-ADC linker 3	ADC_LINKER	Cleavable	2	HER2 KSP-ADC 1.3; TWEAKR-KSP-ADC 1.3		https://adcdb.idrblab.net/data/linker/details/LIN0CARBZ
+LIN0KVWBQ	Kinesin spindle protein inhibitor (KSPi)-ADC linker 4	ADC_LINKER	Cleavable	2	HER2 KSP-ADC 1.4; TWEAKR-KSP-ADC 1.4		https://adcdb.idrblab.net/data/linker/details/LIN0KVWBQ
+LIN0ITMAF	Kinesin spindle protein inhibitor (KSPi)-ADC linker 5	ADC_LINKER	Cleavable	2	HER2 KSP-ADC 2.1; TWEAKR-KSP-ADC 2.1		https://adcdb.idrblab.net/data/linker/details/LIN0ITMAF
+LIN0EXXDU	Kinesin spindle protein inhibitor (KSPi)-ADC linker 6	ADC_LINKER	Cleavable	2	HER2 KSP-ADC 2.2; TWEAKR-KSP-ADC 2.2		https://adcdb.idrblab.net/data/linker/details/LIN0EXXDU
+LIN0OUECW	Kthiol (pyrimidine-thiol) oligopeptide linker	ADC_LINKER		1	SKB315		https://adcdb.idrblab.net/data/linker/details/LIN0OUECW
+LIN0ORTBP	L-ala-ala-ala (TAL)	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0ORTBP
+LIN0IHRSU	L2-MC	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0IHRSU
+LIN0MCOGM	LPETG-Gly5-EDA	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0MCOGM
+LIN0KIZQG	Linear alkyl/alkoxy linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0KIZQG
+LIN0OAQUP	Linear alkyne 6f	ADC_LINKER	Cleavable	3	HER2-gsADC-22; HER2-gsADC-34; HER2-gsADC-9		https://adcdb.idrblab.net/data/linker/details/LIN0OAQUP
+LIN0AYJFZ	Lodoacetamido-caproyl	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0AYJFZ
+LIN0DOIOO	Lysine-linked legumain-cleavable linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0DOIOO
+LIN0NARMD	Lysine-linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0NARMD
+LIN0ROPNF	Lysosomal cleavable linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ROPNF
+LIN0ZABBP	MBT	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0ZABBP
+LIN0GUBTS	MC-β-Ala-(glucuronide)-PABC	ADC_LINKER		1	BA1302		https://adcdb.idrblab.net/data/linker/details/LIN0GUBTS
+LIN0JWFUO	MCC-Gly6-Thr-Glu3-Pro-Leu-Ala3-Leu	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0JWFUO
+LIN0XEKLS	MHT-71	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0XEKLS
+LIN0ZYKKZ	MP-Ala-Ala	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ZYKKZ
+LIN0XWQWM	MPEO	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0XWQWM
+LIN0FLKXL	MS-PODA	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0FLKXL
+LIN0VKRVZ	Mal PEG12 based β-glucuronide linker	ADC_LINKER		1	SGN-CD228A		https://adcdb.idrblab.net/data/linker/details/LIN0VKRVZ
+LIN0KDYHM	Mal based β-glucuronide linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0KDYHM
+LIN0VMJDS	Mal-Asn-D-Lys	ADC_LINKER	Cleavable	3	1F6-Asn- (D)Lys-AM; 1F6-Asn- (D)Lys-AW; 1F6-Asn- (D)Lys-MMAF		https://adcdb.idrblab.net/data/linker/details/LIN0VMJDS
+LIN0TJOHH	Mal-Asn-Lys	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0TJOHH
+LIN0BPCGI	Mal-Asp-Val	ADC_LINKER	Cleavable	1	1F6-Asp-Val-AF		https://adcdb.idrblab.net/data/linker/details/LIN0BPCGI
+LIN0HNYKN	Mal-Cyc-PEG3-DAB	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0HNYKN
+LIN0MWQZQ	Mal-DBCO-PEG3	ADC_LINKER		1	Homo-Ang2-Cys5.5 conjugate DAR 4		https://adcdb.idrblab.net/data/linker/details/LIN0MWQZQ
+LIN0CUBTI	Mal-EBE-Mal	ADC_LINKER		1	Glypican 3 ADC		https://adcdb.idrblab.net/data/linker/details/LIN0CUBTI
+LIN0ATYUQ	Mal-EBE-Mal	ADC_LINKER		5	3A5-55 ADC; 3A5-56 ADC; Glypican 3 ADC; MUC16-55 ADC; MUC16-56 ADC		https://adcdb.idrblab.net/data/linker/details/LIN0ATYUQ
+LIN0JSHIT	Mal-Exa-PSAR0	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0JSHIT
+LIN0IUNOO	Mal-Exa-PSAR10	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0IUNOO
+LIN0BIILI	Mal-His-Val	ADC_LINKER	Cleavable	1	1F6-His-Val-AF		https://adcdb.idrblab.net/data/linker/details/LIN0BIILI
+LIN0VPGPE	Mal-Ile-Pro	ADC_LINKER	Cleavable	1	1F6-Ile-Pro-AF		https://adcdb.idrblab.net/data/linker/details/LIN0VPGPE
+LIN0EUGTC	Mal-Ile-Val	ADC_LINKER	Cleavable	1	1F6-Ile-Val-AF		https://adcdb.idrblab.net/data/linker/details/LIN0EUGTC
+LIN0WIIKN	Mal-Me3Lys-Pro	ADC_LINKER	Cleavable	1	1F6-Me3-Lys-Pro-AF		https://adcdb.idrblab.net/data/linker/details/LIN0WIIKN
+LIN0JWXZZ	Mal-Met-D-Lys	ADC_LINKER	Cleavable	4	1F6-Met- (D)Lys-AF; 1F6-Met- (D)Lys-AM; 1F6-Met- (D)Lys-AW; 1F6-Met- (D)Lys-MMAF		https://adcdb.idrblab.net/data/linker/details/LIN0JWXZZ
+LIN0KRIDC	Mal-Met-Lys	ADC_LINKER	Cleavable	1	1F6-Met-Lys-AF		https://adcdb.idrblab.net/data/linker/details/LIN0KRIDC
+LIN0AQEFU	Mal-NorVal-D-Asp	ADC_LINKER	Cleavable	1	1F6-NorVal- (D)Asp-AF		https://adcdb.idrblab.net/data/linker/details/LIN0AQEFU
+LIN0GANWW	Mal-PEG-Val-Cit-PABC	ADC_LINKER	Cleavable	1	FOLR1-Mal-PEG-Val-Cit-PABC-Cryptophycin		https://adcdb.idrblab.net/data/linker/details/LIN0GANWW
+LIN0UANLR	Mal-PEG10 based linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0UANLR
+LIN0SIYIS	Mal-PEG10-Ala-Ala-linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0SIYIS
+LIN0NGTMH	Mal-PEG12-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0NGTMH
+LIN0ETGCH	Mal-PEG12-carbamate-PEG27	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0ETGCH
+LIN0WYUXC	Mal-PEG2-Ala-Ala-Asn-PABC	ADC_LINKER	Cleavable	2	FOLR1-Mal-PEG2-Ala-Ala-Asn-PABC-Eribulin; MSLN-Mal-PEG2-Ala-Ala-Asn-PABC-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0WYUXC
+LIN0SRKOA	Mal-PEG2-Val-Ala-PABC	ADC_LINKER	Cleavable	1	Mil40-6		https://adcdb.idrblab.net/data/linker/details/LIN0SRKOA
+LIN0HGTZQ	Mal-PEG2-Val-Cit-PABA-Cyclization Spacer	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0HGTZQ
+LIN0BXULN	Mal-PEG2-Val-Cit-PABC	ADC_LINKER	Cleavable	2	FOLR1-Mal-PEG2-Val-Cit-PABC-Eribulin; MSLN-Mal-PEG2-Val-Cit-PABC-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0BXULN
+LIN0KDOJZ	Mal-PEG2	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0KDOJZ
+LIN0NJVJL	Mal-PEG24-Val-Ala-PABC	ADC_LINKER		1	OBI-992		https://adcdb.idrblab.net/data/linker/details/LIN0NJVJL
+LIN0ISKBI	Mal-PEG24-Val-Ala-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ISKBI
+LIN0KCWDR	Mal-PEG2Val-Cit-PAB-OH	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0KCWDR
+LIN0ICRWO	Mal-PEG3	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ICRWO
+LIN0GRWTB	Mal-PEG4-Ala	ADC_LINKER	Cleavable	1	cot-APTEDB-SN38		https://adcdb.idrblab.net/data/linker/details/LIN0GRWTB
+LIN0IAVKF	Mal-PEG4-DBCO-Ala-Val	ADC_LINKER	Cleavable	2	Milatuzumab-RSL3-NH2; Trastuzumab-RSL3-NH2		https://adcdb.idrblab.net/data/linker/details/LIN0IAVKF
+LIN0VUIUT	Mal-PEG4-Triazol-Cyanine cage	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0VUIUT
+LIN0NFUXE	Mal-PEG4-Val-Ala-PABC	ADC_LINKER	Cleavable	1	Mil40-7		https://adcdb.idrblab.net/data/linker/details/LIN0NFUXE
+LIN0AWGHM	Mal-PEG4-Val-Cit-PABC-DMAE	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0AWGHM
+LIN0JLFQA	Mal-PEG4-Val-Cit-PABC	ADC_LINKER	Cleavable	1	DAB4-DuoDM		https://adcdb.idrblab.net/data/linker/details/LIN0JLFQA
+LIN0IOHNQ	Mal-PEG4-triazole-PEG3-Disulfidyl-dimethyl-PABC	ADC_LINKER	Cleavable	2	FOLR1-Mal-PEG4-tria-PEG3-Dis-dim-PABC-Eribulin; MSLN-Mal-PEG4-tria-PEG3-Dis-dim-PABC-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0IOHNQ
+LIN0PZFMV	Mal-PEG4-triazole-PEG3-Sulfonamide	ADC_LINKER		2	FOLR1-Mal-PEG4-tria-PEG3-Sulfo-Eribulin; MSLN-Mal-PEG4-tria-PEG3-Sulfo-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0PZFMV
+LIN0WTVJH	Mal-PEG4	ADC_LINKER		3	FOLR1-Mal-PEG4-Eribulin; MSLN-Mal-PEG4-Eribulin; Tb085-SG3376		https://adcdb.idrblab.net/data/linker/details/LIN0WTVJH
+LIN0YRUBS	Mal-PEG8-Val-Ala-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YRUBS
+LIN0KDRVI	Mal-PEG8-Val-Ala	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0KDRVI
+LIN0DLSZR	Mal-PEG8-Val-Cit-PABC	ADC_LINKER	Cleavable	3	Anti-MSLN-44 ADC; FOLR1-Mal-PEG8-Val-Cit-PABC-Eribulin; MSLN-Mal-PEG8-Val-Cit-PABC-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0DLSZR
+LIN0ELIRD	Mal-PEG8	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0ELIRD
+LIN0NQMDK	Mal-PhenylGly-D-Lys	ADC_LINKER	Cleavable	1	1F6-PhenylGly- (D)Lys-AF		https://adcdb.idrblab.net/data/linker/details/LIN0NQMDK
+LIN0MCXCH	Mal-Polysarcosine10-Val-Ala-PABC	ADC_LINKER		1	LY-4170156		https://adcdb.idrblab.net/data/linker/details/LIN0MCXCH
+LIN0LYKDA	Mal-Polysarcosine10-Val-Ala-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0LYKDA
+LIN0IJZUH	Mal-Pro-D-Lys	ADC_LINKER	Cleavable	1	1F6-Pro- (D)Lys-AF		https://adcdb.idrblab.net/data/linker/details/LIN0IJZUH
+LIN0BSKSQ	Mal-Val-Ala-PAB	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0BSKSQ
+LIN0EWGDQ	Mal-Val-Cit-PABA-Cyclization spacer	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0EWGDQ
+LIN0MUXBI	Mal-Val-Cit-PABC-DMEA-PEG2	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0MUXBI
+LIN0QKDPC	Mal-Val-Cit-PABC-EDA	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0QKDPC
+LIN0ZPAQB	Mal-Val-Cit-PABC	ADC_LINKER	Cleavable	1	1F6-Val-Cit-PABC-MMAF		https://adcdb.idrblab.net/data/linker/details/LIN0ZPAQB
+LIN0RAUJA	Mal-Val-Cit-glucuronide-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0RAUJA
+LIN0CPFWS	Mal-Val-Cit-gucuronide-PEG8-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0CPFWS
+LIN0YXWRQ	Mal-Val-Cit	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YXWRQ
+LIN0ICWYU	Mal-acetic acid	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0ICWYU
+LIN0AROFL	Mal-adipamide-Ala-Ala	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0AROFL
+LIN0JNYYH	Mal-bata-Ala-D-Asp	ADC_LINKER	Cleavable	1	1F6-beta-Ala- (D)Asp-AF		https://adcdb.idrblab.net/data/linker/details/LIN0JNYYH
+LIN0HEIOI	Mal-glucuronidase cleavable linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0HEIOI
+LIN0KLMJG	Mal-glucuronide-PABC	ADC_LINKER		1	M-9140		https://adcdb.idrblab.net/data/linker/details/LIN0KLMJG
+LIN0DIGYN	Mal-glucuronide-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0DIGYN
+LIN0EPTLV	Maleamic methyl ester-based Val-Ala-PABC linker 12a	ADC_LINKER	Cleavable	1	Trastuzumab biosimilar mil40 12a		https://adcdb.idrblab.net/data/linker/details/LIN0EPTLV
+LIN0BBBMC	Maleamic methyl ester-based Val-Ala-PABC linker 12b	ADC_LINKER	Cleavable	1	Trastuzumab biosimilar mil40 12b		https://adcdb.idrblab.net/data/linker/details/LIN0BBBMC
+LIN0WXQSO	Maleamic methyl ester-based Val-Cit-PABC linker 12c	ADC_LINKER	Cleavable	1	Trastuzumab biosimilar mil40 12c		https://adcdb.idrblab.net/data/linker/details/LIN0WXQSO
+LIN0BUDEO	Maleamic methyl ester-based linker 12A	ADC_LINKER	Cleavable	1	Mil40-12A		https://adcdb.idrblab.net/data/linker/details/LIN0BUDEO
+LIN0CVLIT	Maleamic methyl ester-based linker 12B	ADC_LINKER	Cleavable	1	Mil40-12B		https://adcdb.idrblab.net/data/linker/details/LIN0CVLIT
+LIN0JQEEP	Maleamic methyl ester-based linker 12C	ADC_LINKER	Cleavable	1	Mil40-12C		https://adcdb.idrblab.net/data/linker/details/LIN0JQEEP
+LIN0KDVQN	Maleimide and PEGylated cleavable linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0KDVQN
+LIN0DYXCM	Maleimide based noncleavable linker 26	ADC_LINKER		2	HuIgG1-26; hCD46-26		https://adcdb.idrblab.net/data/linker/details/LIN0DYXCM
+LIN0QGXDL	Maleimide linker of vc PAB	ADC_LINKER		1	JS107		https://adcdb.idrblab.net/data/linker/details/LIN0QGXDL
+LIN0SFBWA	Maleimide tetrapeptide-based cleavable linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0SFBWA
+LIN0MOAWY	Maleimide-Caproyl-Val-Cit-PABC	ADC_LINKER	Cleavable	4	FOLR1-Mal-Caproyl-Val-Cit-PABC-Eribulin; FOLR1-Mal-Caproyl-Val-Cit-PABC-MMAE; FOLR1-Mal-Caproyl-Val-Cit-PABC-MMAF; MSLN-Mal-Caproyl-Val-Cit-PABC-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0MOAWY
+LIN0BVBXS	Maleimide-functionalized TCO	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0BVBXS
+LIN0HKQZS	Maleimide-thiol linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0HKQZS
+LIN0KCMKY	Maleimide-β-glucuronide poly-sarcosine linker	ADC_LINKER		1	LY4101174		https://adcdb.idrblab.net/data/linker/details/LIN0KCMKY
+LIN0YDWRB	Maleimido-caproyl based linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YDWRB
+LIN0HHPZM	Maleimido-caproyl-PEG8-Val-Ala-PABC	ADC_LINKER		1	Plozalizumab plevistinag		https://adcdb.idrblab.net/data/linker/details/LIN0HHPZM
+LIN0TAFAV	Maleimido-caproyl	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0TAFAV
+LIN0NYNCO	Maleimidocaproyl (Ser3-Gly)3	ADC_LINKER		1	ADAPT6-ABD-mcDM1		https://adcdb.idrblab.net/data/linker/details/LIN0NYNCO
+LIN0QVNCR	Man-beta-1,4-GlcNAc-DBCO-PEG5-VC-PAB	ADC_LINKER	Cleavable	5	Trastuzumab-MMAE conjugate DAR12; Trastuzumab-MMAE conjugate DAR2; Trastuzumab-MMAE conjugate DAR4; Trastuzumab-MMAE conjugate DAR6; Trastuzumab-MMAE conjugate DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0QVNCR
+LIN0DBWQB	Man-beta-1,4-GlcNAc	ADC_LINKER	Cleavable	1	Trastuzumab-Man-beta-1,4GlcNAc-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0DBWQB
+LIN0AJLYW	Mannosidase-cleavable maleimidopropionyl-mannose linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0AJLYW
+LIN0PBTHS	Mc-Ala-Ala-Ala	ADC_LINKER		1	IMGC-936		https://adcdb.idrblab.net/data/linker/details/LIN0PBTHS
+LIN0TPKXU	Mc-Ala-Ala-Ala	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0TPKXU
+LIN0ZETXE	Mc-Asn-Pro-Val-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ZETXE
+LIN0RPVYC	Mc-Gly-Gly-Phe-Gly (ring-opening derivative)	ADC_LINKER		1	GQ1005		https://adcdb.idrblab.net/data/linker/details/LIN0RPVYC
+LIN0YIZVG	Mc-Gly-Gly-Phe-Gly-AM	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YIZVG
+LIN0ECMCR	Mc-Gly-Gly-Phe-Gly	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ECMCR
+LIN0MBWZQ	Mc-PABC	ADC_LINKER	Cleavable	1	Cys-linker-MMAE-based ADC 15		https://adcdb.idrblab.net/data/linker/details/LIN0MBWZQ
+LIN0COBGG	Mc-PEG-WDP	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0COBGG
+LIN0GAWOX	Mc-PEG2-VA-PAB+DBCO-PEG4-GGFG	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0GAWOX
+LIN0VCLBF	Mc-PEG2-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0VCLBF
+LIN0VFZNC	Mc-PEG2	ADC_LINKER		1	Alpha-CD22-HC-A140C-11		https://adcdb.idrblab.net/data/linker/details/LIN0VFZNC
+LIN0KNQWV	Mc-PEG3-Val-Cit	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0KNQWV
+LIN0GSWHZ	Mc-PEG4-Val-Cit-PABC-DMAE	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0GSWHZ
+LIN0FLEGY	Mc-PEG4-Val-Lys-Gly	ADC_LINKER	Cleavable	4	CAC10-CPT-LA; CAC10-CPT-LB; H00-CPT-LA; H00-CPT-LB		https://adcdb.idrblab.net/data/linker/details/LIN0FLEGY
+LIN0IAETB	Mc-PEG8-Val-Ala-PABC	ADC_LINKER	Cleavable	1	SC16.103-DL5		https://adcdb.idrblab.net/data/linker/details/LIN0IAETB
+LIN0QYKBB	Mc-PEG8-Val-Lys-Gly	ADC_LINKER	Cleavable	2	CAC10-CPT-LC; H00-CPT-LC		https://adcdb.idrblab.net/data/linker/details/LIN0QYKBB
+LIN0KQAXA	Mc-PEG8-acid-labile linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0KQAXA
+LIN0KBZCU	Mc-Phe-Lys-PABC	ADC_LINKER	Cleavable	1	CBR96-Phe-Lys-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0KBZCU
+LIN0WLSXB	Mc-VASGFG	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0WLSXB
+LIN0MURFE	Mc-Val-Ala-PABC double self-immolative linker	ADC_LINKER		2	FDA-022; FZ-AD004		https://adcdb.idrblab.net/data/linker/details/LIN0MURFE
+LIN0ELNZK	Mc-Val-Ala-PABC double self-immolative linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ELNZK
+LIN0OXUQL	Mc-Val-Ala-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0OXUQL
+LIN0ENDIF	Mc-Val-Ala	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ENDIF
+LIN0KIBCK	Mc-Val-Cit-PAB-DEA	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0KIBCK
+LIN0AXNQD	Mc-Val-Cit-PABC-DMAE	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0AXNQD
+LIN0UDCPQ	Mc-Val-Cit-PABC-DMEA	ADC_LINKER	Cleavable	1	Neolymphostin ADC 21		https://adcdb.idrblab.net/data/linker/details/LIN0UDCPQ
+LIN0UGOWB	Mc-Val-Cit-PABC-PEG3	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0UGOWB
+LIN0SQEDQ	Mc-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0SQEDQ
+LIN0UVPJN	Mc-Val-Cit	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0UVPJN
+LIN0UTAIL	Mc-cBu-Cit	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0UTAIL
+LIN0QMLTE	Mc-disulfane based linker	ADC_LINKER	Cleavable	1	HN-01		https://adcdb.idrblab.net/data/linker/details/LIN0QMLTE
+LIN0NGGBZ	Mc-hydrazide linker	ADC_LINKER		1	Lupartumab amadotin		https://adcdb.idrblab.net/data/linker/details/LIN0NGGBZ
+LIN0XXKNS	Mc-hydrazide linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0XXKNS
+LIN0LSBAG	Mc-peptide-based linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0LSBAG
+LIN0FBGIN	Mc-peptidomimetic based linker 10	ADC_LINKER		6	Alpha-CD22-HC-A140C-10; Alpha-CD22-LC-K149C-10; Alpha-CD22-LC-V205C-10; Alpha-Ly6E-LC-K149C-10; Alpha-NaPi2b-LC-K149C-10; Alpha-gD-LC-K149C-10		https://adcdb.idrblab.net/data/linker/details/LIN0FBGIN
+LIN0YDBLE	Mc-peptidomimetic based linker 12	ADC_LINKER		2	Alpha-CD22-LC-K149C-12; Alpha-gD-LC-K149C-12		https://adcdb.idrblab.net/data/linker/details/LIN0YDBLE
+LIN0EDPXW	Mcc-hydrazide	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0EDPXW
+LIN0FZDAA	Me-disulfide linker	ADC_LINKER	Cleavable	2	HER2-HC-Me-SS-PBD; HER2-LC-Me-SS-PBD		https://adcdb.idrblab.net/data/linker/details/LIN0FZDAA
+LIN0KZOGI	Mepstra-PD-PEG3-Mal-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0KZOGI
+LIN0BWOFP	Metalloproteinases cleavable linker	ADC_LINKER		1	SGN-CD47M		https://adcdb.idrblab.net/data/linker/details/LIN0BWOFP
+LIN0TVSDW	Monobromomaleimide-PEG3	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0TVSDW
+LIN0MANPW	Mp-D-leucine-alanine-glutamate-PABC	ADC_LINKER		1	SGN-35T		https://adcdb.idrblab.net/data/linker/details/LIN0MANPW
+LIN0DOFAU	N-Methoxycarbonylmaleimide	ADC_LINKER		1	Neolymphostin ADC 24		https://adcdb.idrblab.net/data/linker/details/LIN0DOFAU
+LIN0FGOLV	N-gama-maleimidobutyryl-oxysuccinimide ester (GMBS)	ADC_LINKER		1	Y-TR1 GMBS		https://adcdb.idrblab.net/data/linker/details/LIN0FGOLV
+LIN0LJIKM	N-hydroxysuccinimide based linker	ADC_LINKER		1	Cet-TPL		https://adcdb.idrblab.net/data/linker/details/LIN0LJIKM
+LIN0ZQDJX	N-succinimidyl 3-(2-pyridyldithio) propionate (SPDP)	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ZQDJX
+LIN0VZYER	N-succinimidyl 4-(2-pyridyldithio) butanoate (SPDB)	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0VZYER
+LIN0QDUUQ	N-succinimidyl 4-(2-pyridyldithio) pentanoate (SPP)	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0QDUUQ
+LIN0GWLIO	N-succinimidyl iodoacetate (SIA)	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0GWLIO
+LIN0BJUQU	N-sulfosuccinimidyl-4-(5-nitro-2 pyridyldithio) butyrate (SSNPB)	ADC_LINKER	Cleavable	2	CNTO95-SSNPB-DM4; F105-SSNPB-DM4		https://adcdb.idrblab.net/data/linker/details/LIN0BJUQU
+LIN0PAIIV	N-terminal norbornene group pFcBP linker	ADC_LINKER		1	T-FcBP-DM1		https://adcdb.idrblab.net/data/linker/details/LIN0PAIIV
+LIN0VKPCS	N6-(2-azidoethoxy)carbonyl-L-lysine	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0VKPCS
+LIN0PRXQW	NAD-based dinucleotide linker	ADC_LINKER		2	DAR2-ARC-ADC; DAR4-ARC-ADC		https://adcdb.idrblab.net/data/linker/details/LIN0PRXQW
+LIN0PCVTG	NGM based linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0PCVTG
+LIN0LWOKO	NH2-PEG3-Val-Cit-PABC	ADC_LINKER		2	SYS6002; Trastuzumab envedotin		https://adcdb.idrblab.net/data/linker/details/LIN0LWOKO
+LIN0YLYYC	NH2-PEG3-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YLYYC
+LIN0OTSVG	Non-polyethylene glycol linker Full Information of The Activity Data of The ADC(s) Related to This Linker STI-6129 [Phase 1/2 (Terminated)] ADC Info Identified from the Human Clinical Data Experiment 1 Reporting the Activity Date of This ADC [ 1 ] Patients Enrolled Patients with relapsed/refractory (RR) myeloma. Administration Dosage Dose range from 0.25 mg/kg to 3.68 mg/kg. Related Clinical Trial NCT Number NCT05565807 Clinical Status Phase 1/2 Clinical Description A phase 1b/2a, open-label, dose-escalation and extension study to evaluate the safety and efficacy of an anti-CD38 antibody drug conjugate (STI-6129) in patients with relapsed or refractory multiple myeloma. Experiment 2 Reporting the Activity Date of This ADC [ 2 ] Related Clinical Trial NCT Number NCT05308225 Clinical Status Phase 1/2 Clinical Description A phase 1b/2a, open-label, dose-escalation study of the safety and efficacy of an anti-CD38 antibody drug conjugate (STI-6129) in patients with relapsed or refractory multiple myeloma. Experiment 3 Reporting the Activity Date of This ADC [ 3 ] Related Clinical Trial NCT Number NCT04316442 Clinical Status Phase 1/2 Clinical Description A phase 1b/2a, open-label, dose-escalation study of the safety and efficacy of an anti-CD38 antibody drug conjugate (STI-6129) in patients with relapsed or refractory systemic al amyloidosis. Experiment 4 Reporting the Activity Date of This ADC [ 4 ] Related Clinical Trial NCT Number NCT05692908 Clinical Status Phase 1 Clinical Description An open-label, dose-escalation study of the safety of an anti-CD38 antibody drug conjugate (STI-6129) in patients with relapsed or refractory systemic al amyloidosis. Experiment 5 Reporting the Activity Date of This ADC [ 5 ] Related Clinical Trial NCT Number NCT05584709 Clinical Status Phase 1 Clinical Description A phase 1b, open-label, dose-escalation study of the safety and efficacy of an anti-CD38 antibody drug conjugate (STI-6129) in patients with advanced solid tumors. Experiment 6 Reporting the Activity Date of This ADC [ 6 ] Related Clinical Trial NCT Number NCT05519527 Clinical Status Phase 1 Clinical Description A phase 1 study of safety and efficacy of an anti-CD38 antibody drug conjugate (STI-6129) in patients with relapsed or refractory t-acute lymphoblastic leukemia/lymphoma (T-ALL) or acute myeloid leukemia (AML). References Ref 1 First-in-human clinical trial of SC-006, a RNF43 targeted antibody-drug conjugate, as a monotherapy and in combination with budigalimab in patients with advanced colorectal cancer. Cancer Res (2020) 80 (16_Supplement): CT167. Ref 2 A Phase 1b/2a, Open-Label, Dose-Escalation Study of the Safety and Efficacy of an Anti-CD38 Antibody Drug Conjugate (STI-6129) in Patients With Relapsed or Refractory Multiple Myeloma, NCT05308225 Ref 3 A Phase 1b/2a, Open-Label, Dose-Escalation Study of the Safety and Efficacy of an Anti-CD38 Antibody Drug Conjugate (STI-6129) in Patients With Relapsed or Refractory Systemic AL Amyloidosis, NCT04316442 Ref 4 An Open-Label, Dose-Escalation Study of the Safety of an Anti-CD38 Antibody Drug Conjugate (STI-6129) in Patients With Relapsed or Refractory Systemic AL Amyloidosis, NCT05692908 Ref 5 A Phase 1B, Open-Label, Dose-Escalation Study of the Safety and Efficacy of an Anti-CD38 Antibody Drug Conjugate (STI-6129) in Patients With Advanced Solid Tumors, NCT05584709 Ref 6 A Phase 1 Study of Safety and Efficacy of an Anti-CD38 Antibody Drug Conjugate (STI-6129) in Patients With Relapsed or Refractory T-Acute Lymphoblastic Leukemia/Lymphoma (T-ALL) or Acute Myeloid Leukemia (AML), NCT05519527	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0OTSVG
+LIN0KNPZU	Noncleavable linker 6s	ADC_LINKER		1	HER2-gsADC-44		https://adcdb.idrblab.net/data/linker/details/LIN0KNPZU
+LIN0PVHPQ	Noncleavable linker 6t	ADC_LINKER		2	HER2-gsADC-17; HER2-gsADC-45		https://adcdb.idrblab.net/data/linker/details/LIN0PVHPQ
+LIN0TCMUB	Noncleavable linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0TCMUB
+LIN0JAHOY	Norbornene-tetrazine based linker 10c	ADC_LINKER	Cleavable	1	HER2-norbornene-tetrazine MMAE conjugate		https://adcdb.idrblab.net/data/linker/details/LIN0JAHOY
+LIN0BEGYO	Open-chain glycine maleimide-PEG	ADC_LINKER		3	B7H3-EC5; C4.4A-EC5; HER2-EC5		https://adcdb.idrblab.net/data/linker/details/LIN0BEGYO
+LIN0NUGJD	Open-chain glycine maleimide	ADC_LINKER		13	Anti-B7H3 APDC 3f; Anti-B7H3 APDC 3g; B7H3-EC4; C4.4A-EC4; HER2-EC4 DAR2.7; HER2-EC4 DAR7.8; TWEAKR ADC 3a; TWEAKR ADC 3b; TWEAKR ADC 3c; TWEAKR ADC 3d; TWEAKR ADC 3e; TWEAKR ADC 3f; TWEAKR ADC 3g		https://adcdb.idrblab.net/data/linker/details/LIN0NUGJD
+LIN0XIBCO	Ortho-hydroxy-protected aryl sulfate	ADC_LINKER	Cleavable	4	OHPAS ADC-1; OHPAS ADC-2; OHPAS ADC-3; OHPAS ADC-4		https://adcdb.idrblab.net/data/linker/details/LIN0XIBCO
+LIN0JDEBG	Oxime-PEG3	ADC_LINKER		1	ARX-517		https://adcdb.idrblab.net/data/linker/details/LIN0JDEBG
+LIN0BDQFG	Oxime-PEG3	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0BDQFG
+LIN0TQTFO	P5 (PEG24)-Val-Cit-PABC	ADC_LINKER		2	TUB-030; TUB-040		https://adcdb.idrblab.net/data/linker/details/LIN0TQTFO
+LIN0UBIYB	PD-Val-Cit-PABC	ADC_LINKER	Cleavable	1	CTX-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0UBIYB
+LIN0URRFS	PEG(24u)-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Crown Ether ADC 6b		https://adcdb.idrblab.net/data/linker/details/LIN0URRFS
+LIN0VZONQ	PEG(8u)-Val-Cit-PABC	ADC_LINKER	Cleavable	1	Crown Ether ADC 6a		https://adcdb.idrblab.net/data/linker/details/LIN0VZONQ
+LIN0MVTCK	PEG2-Val-Cit-PABC	ADC_LINKER	Cleavable	2	Anti-FucGM1-46 ADC; Anti-MSLN-46 ADC		https://adcdb.idrblab.net/data/linker/details/LIN0MVTCK
+LIN0KCPHV	PEG3-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0KCPHV
+LIN0VQYIZ	PEG3-benzotriazole-PEG-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0VQYIZ
+LIN0PDKLY	PEG4-DMEA	ADC_LINKER		1	Neolymphostin ADC 22		https://adcdb.idrblab.net/data/linker/details/LIN0PDKLY
+LIN0GQTJP	PEG4-Mal	ADC_LINKER		9	huFR1-21-PEG4-Mal-DM1; huFR1-21-PEG4-Mal-DM4; huMov19-PEG4-Mal-DM1; huMov19-PEG4-Mal-DM4; muFR1-13-PEG4-Mal-DM4; muFR1-21-PEG4-Mal-DM4; muFR1-22-PEG4-Mal-DM4; muFR1-23-PEG4-Mal-DM4; muFR1-9-PEG4-Mal-DM4		https://adcdb.idrblab.net/data/linker/details/LIN0GQTJP
+LIN0GPLEQ	PEG4-Val-Cit-PABC	ADC_LINKER	Cleavable	2	Anti-FucGM1-47 ADC; Anti-MSLN-47 ADC		https://adcdb.idrblab.net/data/linker/details/LIN0GPLEQ
+LIN0ONHYN	PEG8-Val-Cit-PABC	ADC_LINKER	Cleavable	2	Anti-FucGM1-48 ADC; Anti-MSLN-48 ADC		https://adcdb.idrblab.net/data/linker/details/LIN0ONHYN
+LIN0FFWID	PEGylated β-glucuronide linker	ADC_LINKER		1	SGN-CD48A		https://adcdb.idrblab.net/data/linker/details/LIN0FFWID
+LIN0XOMJS	PEGylation linker 6g	ADC_LINKER	Cleavable	3	HER2-gsADC-10; HER2-gsADC-23; HER2-gsADC-35		https://adcdb.idrblab.net/data/linker/details/LIN0XOMJS
+LIN0XWXHG	PEGylation linker 6h	ADC_LINKER	Cleavable	3	HER2-gsADC-11; HER2-gsADC-24; HER2-gsADC-36		https://adcdb.idrblab.net/data/linker/details/LIN0XWXHG
+LIN0TBEKP	PEGylation linker 6i	ADC_LINKER	Cleavable	3	HER2-gsADC-12; HER2-gsADC-25; HER2-gsADC-37		https://adcdb.idrblab.net/data/linker/details/LIN0TBEKP
+LIN0FSYDE	PEGylation linker 6j	ADC_LINKER	Cleavable	3	HER2-gsADC-13; HER2-gsADC-26; HER2-gsADC-38		https://adcdb.idrblab.net/data/linker/details/LIN0FSYDE
+LIN0HRWEZ	PEGylation linker 6k	ADC_LINKER	Cleavable	3	HER2-gsADC-14; HER2-gsADC-27; HER2-gsADC-39		https://adcdb.idrblab.net/data/linker/details/LIN0HRWEZ
+LIN0IKAMG	PEGylation linker 6l	ADC_LINKER	Cleavable	3	HER2-gsADC-15; HER2-gsADC-28; HER2-gsADC-40		https://adcdb.idrblab.net/data/linker/details/LIN0IKAMG
+LIN0VRUQV	PEGylation linker 6m	ADC_LINKER	Cleavable	4	HER2-gsADC-16; HER2-gsADC-29; HER2-gsADC-43; HER2-gsADC-7		https://adcdb.idrblab.net/data/linker/details/LIN0VRUQV
+LIN0MFKCG	PEGylation linker 6n	ADC_LINKER	Cleavable	1	HER2-gsADC-4		https://adcdb.idrblab.net/data/linker/details/LIN0MFKCG
+LIN0CZDZW	PHF polymer linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0CZDZW
+LIN0LXOIE	PNU-thiazole cleavable linker 29	ADC_LINKER	Cleavable	2	HuIgG1-29; hCD46-29		https://adcdb.idrblab.net/data/linker/details/LIN0LXOIE
+LIN0LHYHG	"PODS-CHX-A""-DTPA"	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0LHYHG
+LIN0DYSGZ	PY-MAA-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0DYSGZ
+LIN0NRGVE	PY-VC-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0NRGVE
+LIN0LJJOZ	Pacific blue fluorophore-SH based linker	ADC_LINKER	Cleavable	1	Trastuzumab-iCME		https://adcdb.idrblab.net/data/linker/details/LIN0LJJOZ
+LIN0AVMXM	Pentaglycine-EDA (Non-cleavable)	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0AVMXM
+LIN0UHJDN	Pentaglycine-EDA uncleavable linker	ADC_LINKER		1	SO-N102		https://adcdb.idrblab.net/data/linker/details/LIN0UHJDN
+LIN0CTJFB	PermaLink-PEG4-Val-Cit-PAB	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0CTJFB
+LIN0OWNTO	Phe-Dpr-MA	ADC_LINKER	Cleavable	2	h1F6-1 MMAE DAR4; h1F6-1 MMAE DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0OWNTO
+LIN0ODSFM	Phe-Glu-Dpr-MA	ADC_LINKER	Cleavable	2	h1F6-2 MMAE DAR4; h1F6-2 MMAE DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0ODSFM
+LIN0DHBQH	Phe-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	2	h1F6-5 MMAE DAR4; h1F6-5 MMAE DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0DHBQH
+LIN0UYMOG	Phe-Glu-EDA-MDpr	ADC_LINKER	Cleavable	1	h1F6-9 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0UYMOG
+LIN0LLBAU	Phe-Ile-EDA-MDpr	ADC_LINKER	Cleavable	2	h1F6-11 MMAE; h1F6-11 MMAE DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0LLBAU
+LIN0UXTZR	Phe-Ile-Leu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-33 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0UXTZR
+LIN0FHNSV	Phe-Leu-Phe-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-36 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0FHNSV
+LIN0WBDNL	Phenyl maleimide PEG2	ADC_LINKER	Cleavable	1	Trastuzumab-Me-PRX conjugate		https://adcdb.idrblab.net/data/linker/details/LIN0WBDNL
+LIN0VVVTH	PhosphoThr-Ala-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-23 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0VVVTH
+LIN0ZRKQG	PhosphoThr-Ala-Lys-MDpr	ADC_LINKER	Cleavable	1	h1F6-16 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0ZRKQG
+LIN0HCXGU	Photocaged C4AP	ADC_LINKER	Cleavable	1	Trastuzumab-PC4AP-DOX		https://adcdb.idrblab.net/data/linker/details/LIN0HCXGU
+LIN0RVQXQ	Pip-Val-Cit linker	ADC_LINKER		1	AMT-151		https://adcdb.idrblab.net/data/linker/details/LIN0RVQXQ
+LIN0FCZJP	Pip-Val-Cit	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0FCZJP
+LIN0WDLNA	Proprietary Concortis linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0WDLNA
+LIN0RNDLI	Protease cleavable linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0RNDLI
+LIN0RTZHA	Protease-labile valine-citrulline linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0RTZHA
+LIN0LGIYJ	Psyche-Ax	ADC_LINKER		1	ZHER2:342-Cupid-His-Ax-SiPc		https://adcdb.idrblab.net/data/linker/details/LIN0LGIYJ
+LIN0MSZIV	Pyrazole-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	2	h1F6-24 MMAE; h1F6-24 MMAE DAR4		https://adcdb.idrblab.net/data/linker/details/LIN0MSZIV
+LIN0WYIUB	Pyridino-caproic-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0WYIUB
+LIN0GERAA	Pyrimidine CL2A carbonate linker	ADC_LINKER		1	Sacituzumab tirumotecan		https://adcdb.idrblab.net/data/linker/details/LIN0GERAA
+LIN0ZEYRW	Pyrimidine-CL2A-carbonate	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0ZEYRW
+LIN0LNLAP	Pyro-Linker based linker	ADC_LINKER		1	Pyro-Linker-ZHER2		https://adcdb.idrblab.net/data/linker/details/LIN0LNLAP
+LIN0XKVSF	Pyrophosphate linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0XKVSF
+LIN0YWDVA	QD6/B09-AZ1508	ADC_LINKER	Cleavable	1	QD6/B09-AZ1508		https://adcdb.idrblab.net/data/linker/details/LIN0YWDVA
+LIN0HAZZL	Quaternary ammonium linker Gluc	ADC_LINKER	Cleavable	2	CC2B-h15H3-gluc-MMAE; h15H3-gluc-MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0HAZZL
+LIN0QPTEP	Quaternary ammonium linker GlucQ	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0QPTEP
+LIN0BHNXU	RAA22/B09-AZ1508	ADC_LINKER	Cleavable	1	RAA22/B09-AZ1508		https://adcdb.idrblab.net/data/linker/details/LIN0BHNXU
+LIN0AFVOW	RED-106	ADC_LINKER		2	2G10 RED-106 maytansine 2; 2G10 RED-106 maytansine 4		https://adcdb.idrblab.net/data/linker/details/LIN0AFVOW
+LIN0HKSAL	RED-244	ADC_LINKER	Cleavable	2	2G10 RED-244 MMAE 2; 2G10 RED-244 MMAE 4		https://adcdb.idrblab.net/data/linker/details/LIN0HKSAL
+LIN0DBQLG	RED-388	ADC_LINKER	Cleavable	1	2G10 RED-388 MMAE 4		https://adcdb.idrblab.net/data/linker/details/LIN0DBQLG
+LIN0HDMAW	RED-412	ADC_LINKER	Cleavable	1	2G10 RED-412 MMAE 4		https://adcdb.idrblab.net/data/linker/details/LIN0HDMAW
+LIN0DVRLJ	RED-425	ADC_LINKER	Cleavable	1	2G10 RED-425 maytansine 4		https://adcdb.idrblab.net/data/linker/details/LIN0DVRLJ
+LIN0POSIO	RED-426	ADC_LINKER	Cleavable	1	2G10 RED-426 MMAE 4		https://adcdb.idrblab.net/data/linker/details/LIN0POSIO
+LIN0WWSIY	RED-432	ADC_LINKER	Cleavable	1	2G10 RED-432 maytansine 4		https://adcdb.idrblab.net/data/linker/details/LIN0WWSIY
+LIN0ROKEJ	RED-601 linker	ADC_LINKER		1	XB010		https://adcdb.idrblab.net/data/linker/details/LIN0ROKEJ
+LIN0GGAUX	SC-Val-Cit-PABC	ADC_LINKER		1	REGN5093-M114		https://adcdb.idrblab.net/data/linker/details/LIN0GGAUX
+LIN0BWMAP	SC3417	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0BWMAP
+LIN0WJIST	SMCC-hydrazide	ADC_LINKER		1	Milatuzumab doxorubicin		https://adcdb.idrblab.net/data/linker/details/LIN0WJIST
+LIN0CZXLD	Self-immolative OHPAS linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0CZXLD
+LIN0NLPGG	Ser-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-30 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0NLPGG
+LIN0XVLWY	Silyl ether-based linker	ADC_LINKER	Cleavable	1	ADC Mil40-6		https://adcdb.idrblab.net/data/linker/details/LIN0XVLWY
+LIN0JYRYJ	Stable cleavable linker	ADC_LINKER		1	MHB036C		https://adcdb.idrblab.net/data/linker/details/LIN0JYRYJ
+LIN0NKIHY	Stable cleavable peptide linker	ADC_LINKER		1	Opugotamig olatansine		https://adcdb.idrblab.net/data/linker/details/LIN0NKIHY
+LIN0AAPCY	Stable cleavable peptide linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0AAPCY
+LIN0FZDWR	Stable enzyme-cleavable linker	ADC_LINKER		1	SHR-4602		https://adcdb.idrblab.net/data/linker/details/LIN0FZDWR
+LIN0YPYME	Stable linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0YPYME
+LIN0APDEP	Succinamide-SPAAC-PEG2	ADC_LINKER		2	FOLR1-Suc/SPAAC-PEG2-Eribulin; MSLN-Suc/SPAAC-PEG2-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0APDEP
+LIN0SMGTC	Succinamide-SPAAC-PEG3-Disylfidyl-dimethyl-PABC	ADC_LINKER	Cleavable	2	FOLR1-Suc/SPAAC-PEG3-Dis-dim-PABC-Eribulin; MSLN-Suc/SPAAC-PEG3-Dis-dim-PABC-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0SMGTC
+LIN0PWDFJ	Succinamide-SPAAC-PEG3-Sulfonamide	ADC_LINKER		2	FOLR1-Suc/SPAAC-PEG3-Sulfonamide-Eribulin; MSLN-Suc/SPAAC-PEG3-Sulfonamide-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0PWDFJ
+LIN0QHVOV	Succinamide-SPAAC-PEG4-Val-Cit-PABC	ADC_LINKER	Cleavable	2	FOLR1-Suc/SPAAC-PEG4-Val-Cit-PABC-Eribulin; MSLN-Suc/SPAAC-PEG4-Val-Cit-PABC-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0QHVOV
+LIN0TAILJ	Succinamide-SPAAC-PEG4	ADC_LINKER		2	FOLR1-Suc/SPAAC-PEG4-Eribulin; MSLN-Suc/SPAAC-PEG4-Eribulin		https://adcdb.idrblab.net/data/linker/details/LIN0TAILJ
+LIN0KPZTI	Succinate-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0KPZTI
+LIN0BQCKI	Succinimidyl acetylthiopropionate (SATP)	ADC_LINKER	Cleavable	1	Cetuximab-Puromycin		https://adcdb.idrblab.net/data/linker/details/LIN0BQCKI
+LIN0EBJON	Succinimidyl-4-(N-maleimidomethyl)cyclohexane-1-carboxylate (SMCC)	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0EBJON
+LIN0AEDTK	Succynimidyloxycarbonyl-alpha-methyl-alpha-(2-pyridyl-dithio) toluene (SMPT)	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0AEDTK
+LIN0AXKKM	Sulfo-SMCC	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0AXKKM
+LIN0MESCO	Sulfo-SPDB	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0MESCO
+LIN0SWKZW	Sulfosuccinimidyl 6-4 azido nitrophenylamido hexanode (SANPAH)	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0SWKZW
+LIN0WKPJE	Sulfosuccinimidyl-N-succinimidyl-4-(5-nitro-2-pyridyldithio) pentanoate (SSNPP)	ADC_LINKER	Cleavable	4	CNTO95-SSNPP-DM4; F105-SSNPP-DM4; Tmab-SSNPP-DM3; Tmab-SSNPP-DM4		https://adcdb.idrblab.net/data/linker/details/LIN0WKPJE
+LIN0VMUTI	SuperHydraTM linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0VMUTI
+LIN0IQOXJ	Synaffix linker	ADC_LINKER		1	Arcotatug tavatecan		https://adcdb.idrblab.net/data/linker/details/LIN0IQOXJ
+LIN0PSMBH	T1000	ADC_LINKER		6	AMT-253; AMT-676; CUSP06; GEN-1286; PRO-1160; PRO1184		https://adcdb.idrblab.net/data/linker/details/LIN0PSMBH
+LIN0LSQWK	T1000	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0LSQWK
+LIN0HUDNI	T800	ADC_LINKER		1	AMT-562		https://adcdb.idrblab.net/data/linker/details/LIN0HUDNI
+LIN0PVIFI	T800	ADC_LINKER	Cleavable	1	AMT-562		https://adcdb.idrblab.net/data/linker/details/LIN0PVIFI
+LIN0USNKE	TCO-PEG3-Mal	ADC_LINKER		2	T-Py-DM1; ch735-Py-DM1		https://adcdb.idrblab.net/data/linker/details/LIN0USNKE
+LIN0WABQX	TetraM-Val-Cit-PABC	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0WABQX
+LIN0GOSDZ	Tetraxetan	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0GOSDZ
+LIN0DLJQE	Tetrazine-PEG5-Val-Ala-PABC	ADC_LINKER	Cleavable	1	T-CpHK-Tet-ADC		https://adcdb.idrblab.net/data/linker/details/LIN0DLJQE
+LIN0PKGWS	Thiazole-Glu-EDA-MDpr	ADC_LINKER	Cleavable	2	h1F6-13 MMAE DAR4; h1F6-13 MMAE DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0PKGWS
+LIN0IBXOR	Thiazole-Glu-Lys-MDpr	ADC_LINKER	Cleavable	1	h1F6-8 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0IBXOR
+LIN0ILPTC	ThioBridge-PEG24-Val-Cit-PABC	ADC_LINKER		1	OBI-999		https://adcdb.idrblab.net/data/linker/details/LIN0ILPTC
+LIN0HFPWP	ThioPz linker 6a	ADC_LINKER	Cleavable	3	HER2-gsADC-1; HER2-gsADC-18; HER2-gsADC-46		https://adcdb.idrblab.net/data/linker/details/LIN0HFPWP
+LIN0QEEYV	Thiopentanoate linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0QEEYV
+LIN0NNBHU	Thr-Dpr-MA	ADC_LINKER	Cleavable	2	h1F6-3 MMAE DAR4; h1F6-3 MMAE DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0NNBHU
+LIN0MAAMV	Thr-Glu-Dpr-MA	ADC_LINKER	Cleavable	2	h1F6-4 MMAE DAR4; h1F6-4 MMAE DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0MAAMV
+LIN0LVZRJ	Thr-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	2	h1F6-6 MMAE DAR4; h1F6-6 MMAE DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0LVZRJ
+LIN0GCESQ	Thr-Glu-EDA-MDpr	ADC_LINKER	Cleavable	1	h1F6-10 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0GCESQ
+LIN0HYFKU	Thr-Glu-Lys-MDpr	ADC_LINKER	Cleavable	2	h1F6-7 MMAE DAR4; h1F6-7 MMAE DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0HYFKU
+LIN0DTOIA	Thr-Ile-EDA-MDpr	ADC_LINKER	Cleavable	2	h1F6-12 MMAE DAR4; h1F6-12 MMAE DAR8		https://adcdb.idrblab.net/data/linker/details/LIN0DTOIA
+LIN0ODYMW	Thr-IleLeu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-32 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0ODYMW
+LIN0VHOIT	Thr-LeuPhe-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-35 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0VHOIT
+LIN0YPPLA	Thr-Lys-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-39 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0YPPLA
+LIN0ACKJK	Thr-LysAla-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-38 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0ACKJK
+LIN0HNQHR	Triazole-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-25 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0HNQHR
+LIN0GKWIF	Tumor microenviroment activable tripeptide linker	ADC_LINKER		1	ZL-1310		https://adcdb.idrblab.net/data/linker/details/LIN0GKWIF
+LIN0MDVFB	Tumor microenviroment activable tripeptide linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0MDVFB
+LIN0OTRQR	Tumor-cleavable linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0OTRQR
+LIN0QAKBX	Uncleavable linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0QAKBX
+LIN0FAPXF	Unique hydrophilic Linker	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0FAPXF
+LIN0VMSNH	VK*G-NHCH2-O linker	ADC_LINKER		4	HLX-43; XNW-27011; YL-201; YL-202		https://adcdb.idrblab.net/data/linker/details/LIN0VMSNH
+LIN0PJDMT	Val-Ala dipeptide linker	ADC_LINKER		3	Mirzotamab clezutoclax; SC-002; SGN-CD352A		https://adcdb.idrblab.net/data/linker/details/LIN0PJDMT
+LIN0YLSDZ	Val-Cit dipeptide linker	ADC_LINKER		5	ALT-P7; AbGn-107; BAY 79-4620; BC3195; BMS-986183		https://adcdb.idrblab.net/data/linker/details/LIN0YLSDZ
+LIN0GGTKX	Val-Cit linker 2e	ADC_LINKER	Cleavable	1	Trastuzumab-Val-Cit linker-MMAE 2		https://adcdb.idrblab.net/data/linker/details/LIN0GGTKX
+LIN0RZUFV	Val-Cit linker	ADC_LINKER		2	"ADC
+ Info; SC-004"		https://adcdb.idrblab.net/data/linker/details/LIN0RZUFV
+LIN0ISQWW	Val-Cit-(PEG24) linker	ADC_LINKER		1	S227928		https://adcdb.idrblab.net/data/linker/details/LIN0ISQWW
+LIN0CSOSO	Val-Cit-PABA	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0CSOSO
+LIN0SLNEG	Val-Cit	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0SLNEG
+LIN0FCPRP	Val-Gln dipeptide linker	ADC_LINKER	Cleavable	2	Anti-EGFR-Val-Gln-IGN; Anti-FOLR1-Val-Gln-IGN		https://adcdb.idrblab.net/data/linker/details/LIN0FCPRP
+LIN0XHRPH	ValOH-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	2	h1F6-29 MMAE; h1F6-29 MMAE DAR4		https://adcdb.idrblab.net/data/linker/details/LIN0XHRPH
+LIN0YLEHF	Valeramide-Val-Cit-PABC	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0YLEHF
+LIN0MDRJG	Vali-Ala cleavable linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0MDRJG
+LIN0EUQUD	Valine-Citrulline (BCN-valyl-citrulline; Protease-cleavable linker)	ADC_LINKER		1	MRG-004A		https://adcdb.idrblab.net/data/linker/details/LIN0EUQUD
+LIN0CYVAU	Valine-alanine (cleavable linker)	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0CYVAU
+LIN0SUQCZ	ValoH-AlaGlu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-22 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0SUQCZ
+LIN0DVOII	Vinylsulfonamide based linker 15	ADC_LINKER	Cleavable	2	EGFR ADC-21; HER2 ADC-18		https://adcdb.idrblab.net/data/linker/details/LIN0DVOII
+LIN0XVNNP	Vinylsulfonamide based linker 16	ADC_LINKER	Cleavable	2	EGFR ADC-22; HER2 ADC-19		https://adcdb.idrblab.net/data/linker/details/LIN0XVNNP
+LIN0QTIWK	Vinylsulfonamide based linker 17	ADC_LINKER	Cleavable	2	EGFR ADC-23; HER2 ADC-20		https://adcdb.idrblab.net/data/linker/details/LIN0QTIWK
+LIN0VKZYN	b-glucuronidase cleavable linker	ADC_LINKER	Cleavable	0			https://adcdb.idrblab.net/data/linker/details/LIN0VKZYN
+LIN0QUSMP	dTSPEG	ADC_LINKER		0			https://adcdb.idrblab.net/data/linker/details/LIN0QUSMP
+LIN0TMASW	hSer-Ala-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-21 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0TMASW
+LIN0MUHAO	hSer-Glu-Dpr-MDpr	ADC_LINKER	Cleavable	1	h1F6-31 MMAE		https://adcdb.idrblab.net/data/linker/details/LIN0MUHAO
+LIN0GZQER	mp-dLAE-PABC	ADC_LINKER	Cleavable	10	hL49-ADC; hL49_27D_Ala-ADC; hL49_27D_Gln-ADC; hL49_27D_Tyr-ADC; hL49_34_Ala-ADC; hL49_34_Gln-ADC; hL49_34_Tyr-ADC; hL49_3x_Ala-ADC; hL49_3x_Gln-ADC; hL49_3x_Tyr-ADC		https://adcdb.idrblab.net/data/linker/details/LIN0GZQER
+LIN0TQECQ	triglycyl peptide linker CX	ADC_LINKER	Cleavable	1	M9346A-CX-DM1		https://adcdb.idrblab.net/data/linker/details/LIN0TQECQ
+LIN0XNWWH	β-glucuronide linker	ADC_LINKER		2	LCB84; LNCB74		https://adcdb.idrblab.net/data/linker/details/LIN0XNWWH
+LIN0LIESO	β-glucuronide trigger linker	ADC_LINKER		2	ABL202; LCB73		https://adcdb.idrblab.net/data/linker/details/LIN0LIESO

@@ -21,34 +21,35 @@ since=(no lower bound), until=(no upper bound)
 
 ## Records discovered
 
-778 query-hits across 4 active queries; 523 unique PMIDs.
+1179 query-hits across 4 active queries; 839 unique PMIDs.
 
 ## Records downloaded
 
-0 downloaded, 20 skipped as unchanged (matched checkpoint content hash).
+576 downloaded, 23 skipped as unchanged (matched checkpoint content hash).
 
 ## Duplicates
 
-201 PMIDs were discovered by more than one query. The content manifest (`pubmed.parquet`) attributes each record to a single "primary" query per Prompt.md section 3's single-valued contract, but every discovering query is preserved as a separate row in `pubmed_discovery.parquet` (append-only, one row per (PMID, query, run)) — that ledger, not this report, is the authoritative answer to "why is this document in our corpus."
+293 PMIDs were discovered by more than one query. The content manifest (`pubmed.parquet`) attributes each record to a single "primary" query per Prompt.md section 3's single-valued contract, but every discovering query is preserved as a separate row in `pubmed_discovery.parquet` (append-only, one row per (PMID, query, run)) — that ledger, not this report, is the authoritative answer to "why is this document in our corpus."
 
 ### Records per query
 
-- PUBMED_ADC_001: 200
+- PUBMED_ADC_001: 600
 - PUBMED_ADC_002: 200
 - PUBMED_ADC_003: 200
-- PUBMED_ADC_004: 178
+- PUBMED_ADC_004: 179
 
 ## Missing fields
 
-- doi missing in 8/20 records
+- abstract missing in 13/599 records
+- doi missing in 38/599 records
 
-- records with abstract: 20
-- records without abstract: 0
-- records with DOI: 12
+- records with abstract: 586
+- records without abstract: 13
+- records with DOI: 561
 
 ## Failed downloads
 
-0 (none). Failed attempts never occupy a content-manifest version slot — they live only in the attempts ledger, so they can never overwrite or be overwritten by a real evidence snapshot.
+1 (see DATA/logs/pubmed_failures.log and pubmed_attempts.parquet (status=failed)). Failed attempts never occupy a content-manifest version slot — they live only in the attempts ledger, so they can never overwrite or be overwritten by a real evidence snapshot.
 
 ## Rate/access limitations
 
@@ -67,10 +68,10 @@ since=(no lower bound), until=(no upper bound)
 
 ## Date distribution
 
-1988: 1, 1989: 3, 1990: 6, 1991: 7, 1992: 3
+1983: 1, 1984: 1, 1987: 2, 1988: 4, 1989: 4, 1990: 6, 1991: 7, 1992: 3, 1993: 7, 1994: 6, 1995: 2, 1996: 4, 1997: 8, 1998: 4, 1999: 6, 2000: 4, 2001: 5, 2002: 7, 2003: 3, 2004: 12, 2005: 8, 2006: 3, 2007: 6, 2008: 5, 2009: 4, 2010: 2, 2011: 7, 2012: 4, 2013: 1, 2014: 3, 2015: 5, 2016: 4, 2017: 1, 2018: 4, 2019: 2, 2020: 3, 2021: 2, 2022: 2, 2023: 5, 2024: 3, 2025: 4, 2026: 425
 
 ## Reproduction command
 
 ```bash
-python -m adc_acquisition pubmed --since 1900-01-01 --until 3000-01-01 --limit 523 --output DATA
+python -m adc_acquisition pubmed --since 1900-01-01 --until 3000-01-01 --limit 839 --output DATA
 ```
