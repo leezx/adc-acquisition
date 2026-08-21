@@ -1,490 +1,490 @@
-nar_adc_id	canonical_name	phase_bucket	unresolved_category	possible_patent_text_gap	reference_count	nct_ids	reference_dois	nct_discovery_ledger_check
-DRG0AAJTS	ETX-22	Investigative	SOURCE_GAP	True	0			
-DRG0ADKKF	AbGn-108	Investigative	SOURCE_GAP	True	0			
-DRG0AJCCS	BAT-8008	Phase1	SOURCE_GAP	False	0			
-DRG0ALCYL	NKTR-288	Investigative	SOURCE_GAP	True	0			
-DRG0AMZIS	DN-028	Investigative	SOURCE_GAP	True	0			
-DRG0ANRPC	JSKN021	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07617727		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0AQITP	RG-7636	Phase1	SOURCE_GAP	False	0			
-DRG0ARIWN	CMD-193	Phase1	BROAD_BACKLOG_UNRESOLVED	False	4	NCT00161642; NCT00257881; NCT00293215	10.1158/1078-0432.CCR-04-0037.	0/3 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0ASYKZ	Izeltabart tapatansine	Investigative	SOURCE_GAP	False	0			
-DRG0AUAOQ	ZL-6201	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07374848		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0AVEQT	SYD1091	Investigative	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0AVJCO	AOC-1020	Phase2	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05747924		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0AWSBJ	HDP-104	Investigative	SOURCE_GAP	True	0			
-DRG0AXDIU	IIIA4-USAN	Investigative	SOURCE_GAP	True	0			
-DRG0AXGPR	BIL-03n	Investigative	SOURCE_GAP	True	0			
-DRG0AXWSD	BIO-112	Investigative	SOURCE_GAP	False	0			
-DRG0AYTGS	PF-08046037	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06974734		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0AZRNL	Iladatuzumab vedotin	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT02453087		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0AZUEZ	ZV-0203	Phase1	SOURCE_GAP	False	0			
-DRG0BBHPW	DXC-004A	Phase1	SOURCE_GAP	True	0			
-DRG0BCSND	BSI-077	Investigative	SOURCE_GAP	True	0			
-DRG0BDOJD	BL-M005A2	Investigative	SOURCE_GAP	True	0			
-DRG0BGQOD	ADCT-901	Phase1	SOURCE_GAP	True	0			
-DRG0BIQVN	AZD-5335	Phase2	SOURCE_GAP	False	0			
-DRG0BJYDH	LMB-12	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1		10.1016/j.clcc.2019.06.006.	
-DRG0BLINK	ALT-Q5	Investigative	SOURCE_GAP	True	0			
-DRG0BRHCV	KM254-ADC	Investigative	SOURCE_GAP	True	0			
-DRG0BSWTQ	QLS5316	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07358884		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0BWCTV	ARX-305	Phase1	SOURCE_GAP	True	0			
-DRG0BWWWF	BL-M15D1	Phase1	SOURCE_GAP	False	0			
-DRG0BXRDQ	Veltuzumab-SN-38	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1		10.1158/1535-7163.MCT-11-0632.	
-DRG0BZCIJ	DAC-002	Phase1	SOURCE_GAP	False	0			
-DRG0BZEMH	JAB-BX400	Investigative	SOURCE_GAP	True	0			
-DRG0CAEXH	RC-118	Phase2	BROAD_BACKLOG_UNRESOLVED	False	3	NCT03895112; NCT04914117; NCT05205850		0/3 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0CBHSI	MG1901	Phase1	SOURCE_GAP	False	0			
-DRG0CCQWD	MM-310	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT03076372		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0CDYJL	MYTX-011	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05652868		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0CEJDT	DB-1317	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07141706		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0CESQS	Recombinant humanized anti-Trop2 antibody	Phase1	SOURCE_GAP	False	0			
-DRG0CHZRH	NEP1-40	Investigative	SOURCE_GAP	True	0			
-DRG0CIZWI	AMT-676	Phase1	SOURCE_GAP	True	0			
-DRG0CKWNZ	BA-3181	Investigative	SOURCE_GAP	True	0			
-DRG0CLBRQ	NNAS-Mc-Val-Cit-PABC-MMAE	Investigative	SOURCE_GAP	True	0			
-DRG0CMPYD	ADCX-020	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07238075		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0CNWMR	ABBV-901	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07278336		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0CPNIE	DS6-DM1	Investigative	SOURCE_GAP	True	0			
-DRG0CVTZD	MG2011C	Investigative	SOURCE_GAP	True	0			
-DRG0CWADI	AZD-9592	Phase1	SOURCE_GAP	False	0			
-DRG0CXFTH	Serclutamab talirine	Phase1	BROAD_BACKLOG_UNRESOLVED	False	3	NCT03234712		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0CXSNU	SIBP-A19	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06990464		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0CYJSZ	OGD-204	Investigative	SOURCE_GAP	True	0			
-DRG0DCONA	SHR-7631	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06381050		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0DDMKC	A-410	Investigative	SOURCE_GAP	True	0			
-DRG0DDQHT	XYD-9668-198	Investigative	SOURCE_GAP	True	0			
-DRG0DDWPP	CPO-301	Investigative	SOURCE_GAP	True	0			
-DRG0DJFNE	IMAB362-Val-Cit-MMAE	Investigative	SOURCE_GAP	True	0			
-DRG0DLZVY	SC-007	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT03253185		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0DNGPW	RN765C	Investigative	SOURCE_GAP	True	0			
-DRG0DOBID	GMA-305	Investigative	SOURCE_GAP	True	0			
-DRG0DOTIX	CUSP06	Phase1	SOURCE_GAP	True	0			
-DRG0DSMMR	IMGS-501	Investigative	SOURCE_GAP	True	0			
-DRG0DSOMP	LY3343544	Investigative	SOURCE_GAP	True	0			
-DRG0DVKJO	LCB14-15nm	Investigative	SOURCE_GAP	True	0			
-DRG0DWHZY	SIM 0686	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07050459		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0DXEAS	CAT-03-106	Investigative	SOURCE_GAP	True	0			
-DRG0DXROV	Cetuximab sarotalocan	Approved	SOURCE_GAP	True	0			
-DRG0EBFGG	IBI3009	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06613009		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0EDBXG	Lintuzumab Ac-225	Phase1	BROAD_BACKLOG_UNRESOLVED	False	5	NCT02575963; NCT02998047; NCT03441048; NCT03867682; NCT03932318		0/5 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0EEDEE	DXC-008	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06926283		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0EGQMP	BAT-8006	Phase1	SOURCE_GAP	False	0			
-DRG0EGTVL	DAC-005	Phase1	SOURCE_GAP	False	0			
-DRG0EGZQD	SBT-8230	Investigative	SOURCE_GAP	True	0			
-DRG0EHWIM	CME-548	Investigative	SOURCE_GAP	True	0			
-DRG0EJZGZ	SYN-101	Investigative	SOURCE_GAP	True	0			
-DRG0ENSWF	Cotinine-duocarmycin	Investigative	SOURCE_GAP	False	0			
-DRG0EOBLX	HDM2017	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07274085		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0EOFTU	PD-L1 ISA	Investigative	SOURCE_GAP	True	0			
-DRG0EOMCN	BL-M02D1	Phase2	BROAD_BACKLOG_UNRESOLVED	False	2	NCT05339685; NCT05385692		0/2 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0EOWOQ	KSI-501	Phase1	SOURCE_GAP	False	0			
-DRG0EPYFC	SAR-428926	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT02575781		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0EQEVI	CBT-3112	Investigative	SOURCE_GAP	True	0			
-DRG0EQGNV	MYK-3	Investigative	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0ERYUF	SGN-B7H4V	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05194072		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0ESGFZ	RG-7986	Phase1	SOURCE_GAP	False	0			
-DRG0EUGGJ	ICAM1-DM1 ADC	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1		10.1002/advs.202002852.	
-DRG0EUQQY	MBC-301	Investigative	SOURCE_GAP	True	0			
-DRG0EWNZL	HLX-41	Investigative	SOURCE_GAP	True	0			
-DRG0EZYUP	JAB-X1800	Investigative	SOURCE_GAP	True	0			
-DRG0FAKKA	AVP10	Investigative	SOURCE_GAP	True	0			
-DRG0FBPCP	TGW-101	Investigative	SOURCE_GAP	True	0			
-DRG0FCYCB	BMT-125961	Investigative	SOURCE_GAP	True	0			
-DRG0FGCQK	RC-168	Investigative	SOURCE_GAP	True	0			
-DRG0FGJBT	P38B-DM1	Investigative	BROAD_BACKLOG_UNRESOLVED	False	2		10.1089/mab.2020.0001.; 10.3390/cancers12030744.	
-DRG0FGLFW	ATG-022	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05718895		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0FIYMR	NBT-568	Investigative	SOURCE_GAP	True	0			
-DRG0FJYPL	MP-EV-20	Investigative	SOURCE_GAP	True	0			
-DRG0FKHUJ	MP-ENDOS-ADC	Phase1	SOURCE_GAP	False	0			
-DRG0FKQPI	LM-001	Investigative	SOURCE_GAP	True	0			
-DRG0FLLMW	Omalizumab-amanitin 3	Investigative	SOURCE_GAP	True	0			
-DRG0FOOJX	LCB-71	Phase1	SOURCE_GAP	False	0			
-DRG0FPQOM	XMT-1660	Phase1	SOURCE_GAP	True	0			
-DRG0FQZSZ	JSKN027	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07391644		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0FRFEQ	TAA-013	Phase3	SOURCE_GAP	True	0			
-DRG0FTDBR	LCB-73	Investigative	SOURCE_GAP	True	0			
-DRG0FUAVD	BC5084	Investigative	SOURCE_GAP	True	0			
-DRG0FZFYY	SMD-5033	Investigative	SOURCE_GAP	True	0			
-DRG0FZNCB	HLX48	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07473726		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0GAYQK	SBO-154	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07042100		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0GBXLR	<sup>131</sup>I-ImmuRAIT-HCG	Investigative	SOURCE_GAP	False	0			
-DRG0GCCJJ	LM-302	Phase3	SOURCE_GAP	True	0			
-DRG0GCTYJ	Cymac-001	Investigative	SOURCE_GAP	True	0			
-DRG0GDKSW	TT-01	Investigative	SOURCE_GAP	True	0			
-DRG0GEOJG	NBT-508	Phase1	SOURCE_GAP	False	0			
-DRG0GGFRA	DpADC	Investigative	SOURCE_GAP	True	0			
-DRG0GHMKS	VLS-301	Investigative	SOURCE_GAP	True	0			
-DRG0GHMXV	ARC-02	Investigative	SOURCE_GAP	True	0			
-DRG0GMNXB	WTX-231	Investigative	SOURCE_GAP	True	0			
-DRG0GMWTW	BL-M24D1	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07232420; NCT07232524; NCT07255898; NCT07279428		0/4 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0GNFMC	LMB-7	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT00003020		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0GONLK	MRX-23	Investigative	SOURCE_GAP	True	0			
-DRG0GWFGY	Obexelimab-amanitin	Investigative	SOURCE_GAP	True	0			
-DRG0GXGXB	GenSci139	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07230977		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0GYMEE	ESG406	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06979674		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0GZPSF	JY-023	Investigative	SOURCE_GAP	True	0			
-DRG0HBGGX	LNL-008	Investigative	SOURCE_GAP	True	0			
-DRG0HCDAC	ATRC-301	Investigative	SOURCE_GAP	True	0			
-DRG0HDUGB	BAT-8010	Phase1	SOURCE_GAP	False	0			
-DRG0HEAGN	DB-1202	Phase2	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05785728		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0HEJWD	SC-011	Phase1	SOURCE_GAP	False	0			
-DRG0HGHXE	MHB088C	Phase2	SOURCE_GAP	False	0			
-DRG0HHXRF	AR081	Investigative	SOURCE_GAP	True	0			
-DRG0HKEBI	ANT-045	Investigative	SOURCE_GAP	True	0			
-DRG0HMQMZ	KTN0182A	Investigative	SOURCE_GAP	True	0			
-DRG0HOBUN	OMTX-705	Phase1	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0HPEHO	BL-B029A1	Investigative	SOURCE_GAP	True	0			
-DRG0HQVXQ	TORL-3-600	Phase1	SOURCE_GAP	True	0			
-DRG0HVSBG	BDC-1001	Phase2	BROAD_BACKLOG_UNRESOLVED	False	1	NCT04278144		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0HWAWD	Zapadcine-1	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1		10.7150/thno.33598.	
-DRG0HWLAE	T320-ADC	Phase1	SOURCE_GAP	False	0			
-DRG0HXUZU	MBK-101	Investigative	SOURCE_GAP	True	0			
-DRG0HYRZD	BAY-1862864	Phase1	SOURCE_GAP	True	0			
-DRG0IBMMG	IOG-101	Investigative	SOURCE_GAP	True	0			
-DRG0ICCWP	Elatatug vedotin	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT05156866		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0ICSRW	CHB-111	Phase1	SOURCE_GAP	False	0			
-DRG0IDOUS	MK-6204	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06726369		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0IDRYV	LCB-67	Investigative	SOURCE_GAP	True	0			
-DRG0IITIR	EX107	Investigative	SOURCE_GAP	True	0			
-DRG0IJSIT	MG2106E	Investigative	SOURCE_GAP	True	0			
-DRG0INCQV	DXC-003	Investigative	SOURCE_GAP	True	0			
-DRG0INYKO	BCMA-077	Investigative	SOURCE_GAP	True	0			
-DRG0IQKOR	CON-4619	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT03057418		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0IQNVH	PRO-1102	Investigative	SOURCE_GAP	True	0			
-DRG0IRZPG	AB-160	Phase1	SOURCE_GAP	True	0			
-DRG0ISFPP	Anti-B7-2-gelonin immunotoxin	Investigative	SOURCE_GAP	True	0			
-DRG0ITBMZ	HD-101	Investigative	SOURCE_GAP	True	0			
-DRG0IUXVP	ABBV-324	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06858813		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0IWQWQ	DXC-014	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07177937		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0IYBRT	ADCT-602	Phase2	BROAD_BACKLOG_UNRESOLVED	False	3	NCT03698552		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JCGJZ	ABBV-291	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06667687		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JDDLS	GF-2014	Investigative	SOURCE_GAP	True	0			
-DRG0JEJPW	YH-013	Investigative	SOURCE_GAP	True	0			
-DRG0JEUPG	Sacituzumab-Deruxtecan	Investigative	SOURCE_GAP	True	0			
-DRG0JJONS	HS-20124	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06763159		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JKQOU	HB0052	Investigative	SOURCE_GAP	True	0			
-DRG0JLDZY	SIBP-A13	Investigative	SOURCE_GAP	True	0			
-DRG0JLIZJ	CD38 ADC	Phase1	SOURCE_GAP	False	0			
-DRG0JMVCQ	ONC-784	Investigative	SOURCE_GAP	True	0			
-DRG0JMXQX	HDM2012	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07100249		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JNCVK	YL217	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06859762		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JNMAT	SIBP-A17	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06512116		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JNXDB	XMT-1592	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT04396340		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JNZLF	PCA-062	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT02375958		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JOMGD	NC18	Phase1	SOURCE_GAP	False	0			
-DRG0JQAJB	MGTA-117	Phase1	SOURCE_GAP	True	0			
-DRG0JUOLN	MDX-1203	Phase1	BROAD_BACKLOG_UNRESOLVED	False	2	NCT00944905		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JVAJA	Rosopatamab tetraxetan	Investigative	BROAD_BACKLOG_UNRESOLVED	False	3	NCT00052000; NCT00070837; NCT02576548		0/3 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JVDPQ	AG 02 saporin conjugate	Investigative	SOURCE_GAP	True	0			
-DRG0JXYIZ	DS-9606	Phase1	SOURCE_GAP	False	0			
-DRG0JYFQF	ZPC-21	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06823167		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0JYKFE	BSI-712	Investigative	SOURCE_GAP	True	0			
-DRG0KAGOH	PLBA-001	Investigative	SOURCE_GAP	True	0			
-DRG0KBCEN	M3554	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06641908		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0KDTFA	F0002-ADC	Phase1	SOURCE_GAP	True	0			
-DRG0KFMAB	DXC-009	Phase1	SOURCE_GAP	True	0			
-DRG0KGFDM	Zt/g4-Maytansinoid	Investigative	SOURCE_GAP	False	0			
-DRG0KHDFE	BAT-8007	Phase1	SOURCE_GAP	False	0			
-DRG0KKBKT	BBT-001	Investigative	SOURCE_GAP	True	0			
-DRG0KKQDW	SRB19	Investigative	SOURCE_GAP	True	0			
-DRG0KNAKC	QBK249-G	Investigative	SOURCE_GAP	True	0			
-DRG0KRSBQ	IKS-012	Investigative	SOURCE_GAP	True	0			
-DRG0KSBCU	EP-400	Investigative	SOURCE_GAP	True	0			
-DRG0KSTYX	CLR-180099	Investigative	SOURCE_GAP	True	0			
-DRG0KTRKE	PF-06664178	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT02122146		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0KTTFS	XMT-2056	Phase1	SOURCE_GAP	True	0			
-DRG0KWGRK	IMMU-140	Investigative	SOURCE_GAP	True	0			
-DRG0KWKQC	DX126-262	Phase2	SOURCE_GAP	True	0			
-DRG0KXLGG	MK-6837	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06460961		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0LBQXO	PA-368A	Investigative	SOURCE_GAP	True	0			
-DRG0LDEJY	ITC-6146RO	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07423117		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0LFBZI	ALK202	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06707610		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0LFGHB	HTI-1511	Investigative	SOURCE_GAP	True	0			
-DRG0LFZFX	ABBV-319	Phase1	SOURCE_GAP	True	0			
-DRG0LGBME	Ispectamab tazide	Investigative	SOURCE_GAP	False	0			
-DRG0LHLWT	LR-DM1	Investigative	SOURCE_GAP	True	0			
-DRG0LIPUK	GL-231	Investigative	SOURCE_GAP	True	0			
-DRG0LJGJX	IBI3028	Phase1	SOURCE_GAP	False	0			
-DRG0LJSQF	Sacituzumab-SN-38	Investigative	SOURCE_GAP	False	0			
-DRG0LKZJZ	CS-5002	Investigative	SOURCE_GAP	True	0			
-DRG0LLSDP	9MW-2921	Phase2	SOURCE_GAP	True	0			
-DRG0LNARP	MEDI-0641	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1		10.1158/1535-7163.MCT-18-0314.	
-DRG0LNBQO	PHN-012	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07127874		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0LRYYB	HS630	Phase1	SOURCE_GAP	False	0			
-DRG0LSAKO	PF-06888667	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1		10.1021/acs.bioconjchem.8b00843.	
-DRG0LSXKR	JS107	Phase1	SOURCE_GAP	True	0			
-DRG0LTMPJ	GBM-12401	Investigative	SOURCE_GAP	True	0			
-DRG0LTXQB	YBL-015	Investigative	SOURCE_GAP	True	0			
-DRG0LUQSH	RG-7861	Phase1	SOURCE_GAP	False	0			
-DRG0LUTMF	ELN-11	Investigative	SOURCE_GAP	True	0			
-DRG0LVUGT	PCG-N003	Investigative	SOURCE_GAP	True	0			
-DRG0LWEMD	SY-0625	Investigative	SOURCE_GAP	True	0			
-DRG0LYIPC	Inebilizumab-amanitin	Investigative	SOURCE_GAP	True	0			
-DRG0MBBBD	Anti-CD22-SN36248	Investigative	SOURCE_GAP	False	0			
-DRG0MCPAF	SIM-005A	Investigative	SOURCE_GAP	True	0			
-DRG0MELRN	BC2027	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07368478		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0MGBXM	CD38-077	Investigative	SOURCE_GAP	True	0			
-DRG0MKREW	SIM0505	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06792552		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0MKSMI	CRB-2107	Investigative	SOURCE_GAP	True	0			
-DRG0MKVBS	A1801	Investigative	SOURCE_GAP	True	0			
-DRG0MLOQN	NI-2201	Investigative	SOURCE_GAP	True	0			
-DRG0MMRSA	DAN-222	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT05261269		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0MOGWD	Anvatabart pactil	Investigative	SOURCE_GAP	False	0			
-DRG0MPTSO	Trastuzumab-amanitin 1	Investigative	SOURCE_GAP	True	0			
-DRG0MSZBZ	BB-1709	Phase1	SOURCE_GAP	True	0			
-DRG0MSZNJ	SHR-3792	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06907628		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0MTMQA	M-1231	Phase1	SOURCE_GAP	True	0			
-DRG0MTUPD	CytSCA208	Investigative	SOURCE_GAP	True	0			
-DRG0MUIQK	LFD-200	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07207954		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0MXUQM	MYX2449	Investigative	SOURCE_GAP	True	0			
-DRG0MYSHH	Thio-Tmab-BMPEO-DM1	Investigative	SOURCE_GAP	True	0			
-DRG0NATHY	LP-A18	Investigative	SOURCE_GAP	True	0			
-DRG0NDFLP	OXS-1650	Phase1	SOURCE_GAP	False	0			
-DRG0NDSLT	DYNE-301	Investigative	SOURCE_GAP	True	0			
-DRG0NELLD	<sup>111</sup>In-DTPA-D2B-DAR4-MMAE	Investigative	SOURCE_GAP	False	0			
-DRG0NEMOV	Losatuxizumab vedotin	Phase1	BROAD_BACKLOG_UNRESOLVED	False	4	NCT02365662	10.3390/ph13100289.	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0NFTVD	APN-959038	Investigative	SOURCE_GAP	True	0			
-DRG0NGDCM	SKB445	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06826040		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0NKUQA	JS114	Investigative	SOURCE_GAP	True	0			
-DRG0NLEYN	Tra-IR700	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1		10.1002/btm2.10388.	
-DRG0NMCNK	ZV0203	Phase1	SOURCE_GAP	True	0			
-DRG0NMRNE	KSI-601	Investigative	SOURCE_GAP	True	0			
-DRG0NNNWR	EX108	Investigative	SOURCE_GAP	True	0			
-DRG0NOFEI	BB-1712	Phase1	SOURCE_GAP	False	0			
-DRG0NOYME	NW-001	Investigative	SOURCE_GAP	True	0			
-DRG0NWBIQ	HY-0001	Investigative	SOURCE_GAP	True	0			
-DRG0NXVNX	PNU-159682-P1C1TM	Phase1	SOURCE_GAP	False	0			
-DRG0NZUKF	WTX-212	Phase1	SOURCE_GAP	False	0			
-DRG0NZUZJ	CX-2051	Phase1	SOURCE_GAP	True	0			
-DRG0ODFEJ	EGFR-EDV-RRM1	Phase1	SOURCE_GAP	False	0			
-DRG0OJHEN	AVID-100	Phase2	BROAD_BACKLOG_UNRESOLVED	False	1	NCT03094169		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0OMIWX	BA1301	Phase1	SOURCE_GAP	False	0			
-DRG0ONAEP	BRY811	Investigative	SOURCE_GAP	True	0			
-DRG0ONNVN	PSM-101	Investigative	SOURCE_GAP	True	0			
-DRG0OOMJM	Basiliximab sarotalocan	Investigative	SOURCE_GAP	False	0			
-DRG0OOXRC	XNW-28012	Investigative	SOURCE_GAP	True	0			
-DRG0OPFVY	Samrotamab vedotin	Phase1	BROAD_BACKLOG_UNRESOLVED	False	3	NCT02565758		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0OPGMW	Recombinant chimeric anti-CD30 mAb-MCC-DM1	Phase1	SOURCE_GAP	False	0			
-DRG0ORDYU	LIN-002	Investigative	SOURCE_GAP	True	0			
-DRG0OTOJV	IKS-03	Phase1	SOURCE_GAP	True	0			
-DRG0OUXWT	Rolinsatamab talirine	Phase1	BROAD_BACKLOG_UNRESOLVED	False	2	NCT03145909		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0OVMJM	PRN 222	Investigative	SOURCE_GAP	True	0			
-DRG0OVQWP	HDM2024	Phase1	SOURCE_GAP	False	0			
-DRG0OWHOL	<sup>89</sup>Zr-DFO-T-DM1	Investigative	SOURCE_GAP	False	0			
-DRG0PCGKN	hu5B1-TCO	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT05737615		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0PDZSX	3-NAntC	Investigative	SOURCE_GAP	False	0			
-DRG0PFQKN	EDC-2	Investigative	SOURCE_GAP	True	0			
-DRG0PGRFM	BCG-011	Investigative	SOURCE_GAP	True	0			
-DRG0PGYJL	IPH43	Investigative	SOURCE_GAP	True	0			
-DRG0PHKMG	TORL-4-500	Phase1	SOURCE_GAP	True	0			
-DRG0PKYBF	N01-OX2	Investigative	SOURCE_GAP	True	0			
-DRG0PLPNX	SGN-ALPV	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05229900		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0PPLJW	Y-TR1 SPDP	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1		10.3390/cancers11081138.	
-DRG0PPLRQ	GENA-111-AF	Investigative	SOURCE_GAP	True	0			
-DRG0PQJDH	MEDI-2228	Phase1	BROAD_BACKLOG_UNRESOLVED	False	3	NCT03489525		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0PRKPN	VL-DAB31-SN38	Investigative	SOURCE_GAP	False	0			
-DRG0PSWNN	SIBP-A18	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06985368		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0PWAOJ	SGN-CD228A	Phase1	BROAD_BACKLOG_UNRESOLVED	False	2	NCT04042480		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0PXBVI	RC68-PY-Val-Cit-PABC-MMAE	Investigative	SOURCE_GAP	True	0			
-DRG0QAHFT	DS3610	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07159126		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0QCCTW	KM501	Phase1	SOURCE_GAP	True	0			
-DRG0QDCHN	PRO-1160	Phase2	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05721222		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0QEAUM	RG7787	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1		10.1158/0008-5472.CAN-15-2401.	
-DRG0QEUVQ	BSC-4201	Investigative	SOURCE_GAP	True	0			
-DRG0QFDKM	RAD-502	Investigative	SOURCE_GAP	True	0			
-DRG0QIJRR	IMB-201	Investigative	SOURCE_GAP	True	0			
-DRG0QNWFH	CBP-1609	Investigative	SOURCE_GAP	True	0			
-DRG0QODVX	16A5-MCC-DM1	Phase1	SOURCE_GAP	False	0			
-DRG0QOWCK	NV101	Investigative	SOURCE_GAP	True	0			
-DRG0QQETS	BDB-101	Investigative	SOURCE_GAP	True	0			
-DRG0QQUXG	SMP-656	Phase1	SOURCE_GAP	True	0			
-DRG0QRLPU	LCB17-0877	Phase1	SOURCE_GAP	False	0			
-DRG0QRTNX	BioLink018	Phase1	SOURCE_GAP	False	0			
-DRG0QTTET	BSA01	Investigative	SOURCE_GAP	True	0			
-DRG0QWZSI	VAL-0620	Investigative	SOURCE_GAP	True	0			
-DRG0QXDTN	R4702	Investigative	SOURCE_GAP	True	0			
-DRG0QYTLQ	IN30728	Investigative	SOURCE_GAP	True	0			
-DRG0QYUVZ	MI-130004	Investigative	SOURCE_GAP	True	0			
-DRG0RBGQK	MHB118C	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07045454		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0RCFPY	BL-M11D1	Phase1	SOURCE_GAP	True	0			
-DRG0RDZIH	SAB-Y27	Investigative	SOURCE_GAP	True	0			
-DRG0RLKMU	IBI343	Phase3	SOURCE_GAP	False	0			
-DRG0RNICE	BIO104	Investigative	SOURCE_GAP	True	0			
-DRG0RONXP	SIM0609	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07265921		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0RRORA	AK138D1	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06730386; NCT07281326		0/2 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0RSBMJ	Sofituzumab vedotin	Phase1	SOURCE_GAP	True	0			
-DRG0RUAXZ	DS001	Phase1	SOURCE_GAP	False	0			
-DRG0RVNRW	J58-PE24	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1			
-DRG0RVOYG	GenSci140	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07251166		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0RWFIB	SG3-Val-Cit-MMAF8	Investigative	SOURCE_GAP	True	0			
-DRG0RWVUF	V-DOS47	Investigative	SOURCE_GAP	True	0			
-DRG0RYBMQ	SHR-A1201	Phase1	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0SACUI	BB-1705	Phase2	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05217693		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0SALIN	SHR-7782	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07123129		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0SARIF	HDM2020	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07098052		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0SAXJE	IN30705	Investigative	SOURCE_GAP	True	0			
-DRG0SBYGM	Blinatumomab-amanitin	Investigative	SOURCE_GAP	True	0			
-DRG0SCLSY	GB-251	Phase1	SOURCE_GAP	True	0			
-DRG0SDGDV	C6vcMMAD	Investigative	SOURCE_GAP	True	0			
-DRG0SEZFV	DhuVHH6-PE38	Investigative	SOURCE_GAP	True	0			
-DRG0SGCAF	BG-C477	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06596473		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0SGXZO	huHEA125-amanitin4	Investigative	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0SHZAQ	BCG034	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07503808		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0SIURJ	CPO-204	Phase1	SOURCE_GAP	True	0			
-DRG0SJVKP	<sup>111</sup>In-DTPA-D2B-DAR2-MMAE	Investigative	SOURCE_GAP	False	0			
-DRG0SLLFJ	BCG022	Investigative	SOURCE_GAP	True	0			
-DRG0SMTQN	MG2002A	Phase1	SOURCE_GAP	False	0			
-DRG0SNPYJ	PBX-001	Investigative	SOURCE_GAP	True	0			
-DRG0SPYZJ	TST013	Investigative	SOURCE_GAP	True	0			
-DRG0SQAHG	Septuximab vedotin	Investigative	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0SQAQX	AMB-101	Investigative	SOURCE_GAP	True	0			
-DRG0SSFSR	DM001	Phase1	SOURCE_GAP	True	0			
-DRG0SSTBB	HS-20108	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06936735		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0STCNY	OX-002	Investigative	SOURCE_GAP	True	0			
-DRG0SURHR	PF-08046031	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06799533		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0SUYIT	G-100	Investigative	SOURCE_GAP	False	0			
-DRG0SVXYY	RC-188	Investigative	SOURCE_GAP	True	0			
-DRG0SWCOG	ADC2122	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT05423977		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0SYLKC	B7H3-MMAE	Investigative	SOURCE_GAP	True	0			
-DRG0SZERO	Lonigutamab ugodotin	Phase2	BROAD_BACKLOG_UNRESOLVED	False	2	NCT03316638		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0SZXVK	PF-08046032	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06870487		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0TAOLW	LY203725	Phase1	SOURCE_GAP	False	0			
-DRG0TCBEP	Hertuzumab vedotin	Investigative	SOURCE_GAP	True	0			
-DRG0TCKKR	XMT-2175	Investigative	SOURCE_GAP	True	0			
-DRG0TDXML	Epratuzumab-SN38	Phase1	SOURCE_GAP	False	0			
-DRG0TEQRI	MP-LGS-ADC	Phase1	SOURCE_GAP	False	0			
-DRG0TEQTA	CM-09	Investigative	SOURCE_GAP	True	0			
-DRG0TEUSB	ANG-101	Investigative	SOURCE_GAP	True	0			
-DRG0TJYIW	ORM-6151	Phase3	SOURCE_GAP	True	0			
-DRG0TMDEU	AMT-754	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06597721		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0TMDKY	AOC 1044	Investigative	SOURCE_GAP	True	0			
-DRG0TMPMK	PHN-010	Phase1	SOURCE_GAP	True	0			
-DRG0TNQTB	DXC1002	Phase1	SOURCE_GAP	False	0			
-DRG0TOMLD	GB7008-01-Val-Cit-MMAE	Investigative	SOURCE_GAP	True	0			
-DRG0TUKTY	PRO-1184	Phase3	SOURCE_GAP	False	0			
-DRG0TWLXC	SBT-6290	Phase2	SOURCE_GAP	True	0			
-DRG0TZVTS	SYS6040	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06970795		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0UBSWW	SIM0610	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07348211		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0UCTSX	RG-7600	Phase1	SOURCE_GAP	False	0			
-DRG0UEGSE	33B7-Saporin	Investigative	SOURCE_GAP	True	0			
-DRG0UEVLW	TGW101	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06959706		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0UFZLI	NBE-001	Investigative	SOURCE_GAP	True	0			
-DRG0UGQRX	Enlimomab pegol	Phase1	SOURCE_GAP	False	0			
-DRG0UHXQK	SYS6041	Phase1	SOURCE_GAP	False	0			
-DRG0UIDCY	NJH-395	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT03696771	10.1158/1078-0432.CCR-18-3965.	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0UIZFH	XB3-001	Investigative	SOURCE_GAP	True	0			
-DRG0UJALJ	MSLN MMAE	Investigative	SOURCE_GAP	True	0			
-DRG0UJMPA	BA-1302	Phase1	SOURCE_GAP	True	0			
-DRG0UJUZQ	GQ-1007	Phase1	SOURCE_GAP	True	0			
-DRG0ULJQN	OBT207	Investigative	SOURCE_GAP	True	0			
-DRG0UPZCS	MGC026	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06242470		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0UQTJG	Lifastuzumab vedotin	Phase2	BROAD_BACKLOG_UNRESOLVED	False	7	NCT01363947; NCT01911598; NCT01991210; NCT01995188		0/4 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0UQXWB	BI-CON-02	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT03062007		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0USADY	DXC004	Phase1	SOURCE_GAP	False	0			
-DRG0USIEY	DA-3501	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07481357		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0USILO	TAC-001	Phase2	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05399654		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0UTRTT	<sup>124</sup>I-scFvD2B	Investigative	SOURCE_GAP	False	0			
-DRG0UTYGF	Trastuzumab-deBouganin	Investigative	SOURCE_GAP	True	0			
-DRG0UUFIR	SYD998	Investigative	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0UUOGO	TORL-2-307-ADC	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05156866		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0UVYLY	SYS6005	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06958679		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0UWYXJ	ALTA-002	Phase1	SOURCE_GAP	True	0			
-DRG0UYIOG	YL-212	Investigative	SOURCE_GAP	True	0			
-DRG0UZQBB	NOV0712-DXd	Investigative	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0VFBIW	AMG-224	Phase1	BROAD_BACKLOG_UNRESOLVED	False	2	NCT02561962		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0VFEIE	BR111	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06937957		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0VFTUI	LY256787	Phase1	SOURCE_GAP	False	0			
-DRG0VGXGH	CD4-BFFI	Investigative	SOURCE_GAP	True	0			
-DRG0VHHWJ	OBI-998	Investigative	SOURCE_GAP	True	0			
-DRG0VHRBL	RC-88	Phase2	BROAD_BACKLOG_UNRESOLVED	False	3	NCT04175847; NCT05508334		0/2 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0VHVOA	TUB-030	Phase2	SOURCE_GAP	True	0			
-DRG0VKEZC	BL-M005	Investigative	SOURCE_GAP	True	0			
-DRG0VNZZZ	PF-06688992	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT03159117		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0VOIMW	BSI-709	Investigative	SOURCE_GAP	True	0			
-DRG0VSEXE	MG2001	Phase1	SOURCE_GAP	False	0			
-DRG0VSGFV	BRKB-28	Investigative	SOURCE_GAP	True	0			
-DRG0VURPQ	NC-6201	Investigative	SOURCE_GAP	True	0			
-DRG0VWNGX	BIO-201	Investigative	SOURCE_GAP	True	0			
-DRG0VWODF	Anetumab corixetan	Investigative	SOURCE_GAP	True	0			
-DRG0VXXXS	BIO105	Investigative	SOURCE_GAP	True	0			
-DRG0VYGBA	Araris ADC	Investigative	SOURCE_GAP	True	0			
-DRG0VYKSA	LM-305	Phase2	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0WBCEJ	Vas-201	Investigative	SOURCE_GAP	True	0			
-DRG0WCBFK	Cirmtuzumab vedotin	Investigative	SOURCE_GAP	True	0			
-DRG0WCYUM	Lupartumab amadotin	Phase1	SOURCE_GAP	True	0			
-DRG0WEEMU	AT-03	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06809114		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0WEGRW	MGTA-C100	Investigative	SOURCE_GAP	True	0			
-DRG0WFJHW	BAT-8009	Phase1	SOURCE_GAP	False	0			
-DRG0WIBDT	HDP-101	Phase2	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0WIVJB	SYD1035	Investigative	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0WJKRI	DS-6157a	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT04276415	10.1158/1078-0432.CCR-23-0640.	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0WMPDO	<sup>111</sup>In-DOTA-5D3	Investigative	SOURCE_GAP	False	0			
-DRG0WNUZE	IMB-213I	Investigative	SOURCE_GAP	True	0			
-DRG0WNVBV	ICP-B794	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT07136558		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0WOUMV	RG-7841	Phase1	SOURCE_GAP	False	0			
-DRG0WPYAS	BSI-04702	Phase2	SOURCE_GAP	False	0			
-DRG0WRFYU	PF-06650808	Phase1	BROAD_BACKLOG_UNRESOLVED	False	2	NCT02129205		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0WVXVY	DK-410	Investigative	SOURCE_GAP	True	0			
-DRG0WWBVZ	BC3195	Phase1	SOURCE_GAP	True	0			
-DRG0WWZAS	SYS6010	Phase3	SOURCE_GAP	True	0			
-DRG0WXTQM	APEC-1	Investigative	SOURCE_GAP	True	0			
-DRG0WYSHT	RC-178	Investigative	SOURCE_GAP	True	0			
-DRG0XCSOA	ST8176AA1	Investigative	SOURCE_GAP	True	0			
-DRG0XEXPT	SGN-STNV	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT04665921		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0XFTRM	Bevacizumab vedotin	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1		10.1016/j.bioorg.2023.106575.	
-DRG0XGLSR	NOV0712-DM4	Investigative	BROAD_BACKLOG_UNRESOLVED	True	1			
-DRG0XHLKM	C6vc0101	Investigative	SOURCE_GAP	True	0			
-DRG0XIERX	P-1000	Investigative	SOURCE_GAP	True	0			
-DRG0XKMVA	SYS6002	Phase2	SOURCE_GAP	False	0			
-DRG0XKZBO	AZD-8205	Phase2	SOURCE_GAP	False	0			
-DRG0XLJJW	IMGN-388	Phase1	SOURCE_GAP	False	0			
-DRG0XLSWN	SC-006	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT03035279	10.1093/annonc/mdy023.	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0XOUNW	SDV-1001	Investigative	SOURCE_GAP	True	0			
-DRG0XOZXZ	SIB-029A	Investigative	SOURCE_GAP	True	0			
-DRG0XRBCK	DAN-405	Investigative	SOURCE_GAP	True	0			
-DRG0XRDLA	S3F-CL-MMAE	Investigative	SOURCE_GAP	True	0			
-DRG0XUVMS	CBT-005	Investigative	SOURCE_GAP	True	0			
-DRG0XVPES	LM-306	Investigative	SOURCE_GAP	True	0			
-DRG0XWNPK	AK0406	Phase1	SOURCE_GAP	False	0			
-DRG0XWTYJ	DXC-005	Phase1	SOURCE_GAP	True	0			
-DRG0XXDCJ	ABL-202	Phase1	SOURCE_GAP	False	0			
-DRG0YAEPQ	TGM-005	Investigative	SOURCE_GAP	True	0			
-DRG0YAZBQ	RM-1995	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05220748		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0YBNRC	GQ-1003	Investigative	SOURCE_GAP	True	0			
-DRG0YGXLF	CPO-102	Phase1	SOURCE_GAP	False	0			
-DRG0YHHWC	N501-SN38	Investigative	BROAD_BACKLOG_UNRESOLVED	False	1			
-DRG0YHRUZ	BP-A102	Investigative	SOURCE_GAP	True	0			
-DRG0YKTME	OXS-1750	Investigative	SOURCE_GAP	True	0			
-DRG0YKZGZ	cHD37-amanitin	Investigative	SOURCE_GAP	True	0			
-DRG0YLNPN	BRY-812	Phase1	SOURCE_GAP	True	0			
-DRG0YNUEK	XB371	Investigative	SOURCE_GAP	True	0			
-DRG0YQAIX	SHR-A1904	Phase3	BROAD_BACKLOG_UNRESOLVED	False	3	NCT04877717; NCT04928625; NCT05277168		0/3 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0YRJDY	ALT-P7	Phase1	SOURCE_GAP	False	0			
-DRG0YSIDA	Xl-250	Investigative	SOURCE_GAP	True	0			
-DRG0YTJTJ	APH-0912	Investigative	SOURCE_GAP	True	0			
-DRG0YTMFF	VIS-705	Investigative	SOURCE_GAP	True	0			
-DRG0YTRFZ	Vandortuzumab vedotin	Phase1	BROAD_BACKLOG_UNRESOLVED	False	2	NCT01283373		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0YUCNA	BL-M08D1	Phase1	SOURCE_GAP	True	0			
-DRG0YVBCV	REGN-3124-PBD	Investigative	SOURCE_GAP	True	0			
-DRG0YWPJC	TARG-9	Investigative	SOURCE_GAP	True	0			
-DRG0YXBEH	SHR-A1912	Phase1	BROAD_BACKLOG_UNRESOLVED	False	1	NCT05113069		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0YXJPS	Veltuzumab-CL2E-SN-38	Investigative	SOURCE_GAP	False	0			
-DRG0YZEVV	MT-5111	Phase1	SOURCE_GAP	True	0			
-DRG0YZPWM	SGN-CD352A	Phase1	SOURCE_GAP	True	0			
-DRG0ZAECD	AGS-16M8F	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT01114230		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0ZAFBL	IBI129	Phase2	SOURCE_GAP	False	0			
-DRG0ZAJGM	BL-M09D1	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06954077; NCT07056556		0/2 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0ZGWBV	JY201	Investigative	SOURCE_GAP	True	0			
-DRG0ZIJNR	Milatuzumab doxorubicin	Phase2	SOURCE_GAP	False	0			
-DRG0ZLJPV	SKB-410	Phase2	SOURCE_GAP	True	0			
-DRG0ZNAID	SHR-A1307	Investigative	SOURCE_GAP	True	0			
-DRG0ZNUYD	Pab-001-MMAE	Investigative	SOURCE_GAP	True	0			
-DRG0ZODWK	M-DGN549	Investigative	SOURCE_GAP	True	0			
-DRG0ZOMIJ	OMTX-505	Investigative	SOURCE_GAP	True	0			
-DRG0ZQLZD	TR1801-ADC	Phase1	BROAD_BACKLOG_UNRESOLVED	False	2	NCT03859752		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0ZSNLV	KGX201	Investigative	SOURCE_GAP	True	0			
-DRG0ZSVBZ	<sup>111</sup>In-1849	Investigative	SOURCE_GAP	False	0			
-DRG0ZTZMD	BAY-943	Investigative	SOURCE_GAP	True	0			
-DRG0ZUQNL	BAT-8001	Phase3	SOURCE_GAP	False	0			
-DRG0ZXRLG	SLV-154	Phase1	BROAD_BACKLOG_UNRESOLVED	False	0	NCT06771219		0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad)
-DRG0ZYLBB	ZW-33	Investigative	SOURCE_GAP	True	0			
+nar_adc_id	canonical_name	phase_bucket	unresolved_category	root_cause_hypothesis	possible_patent_text_gap	reference_count	nct_ids	reference_dois	in_known_registry	nct_discovery_ledger_check
+DRG0AAJTS	ETX-22	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ADKKF	AbGn-108	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0AJCCS	BAT-8008	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0ALCYL	NKTR-288	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0AMZIS	DN-028	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ANRPC	JSKN021	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07617727		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0AQITP	RG-7636	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0ARIWN	CMD-193	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	4	NCT00161642; NCT00257881; NCT00293215	10.1158/1078-0432.CCR-04-0037.	False	0/3 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0ASYKZ	Izeltabart tapatansine	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0AUAOQ	ZL-6201	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07374848		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0AVEQT	SYD1091	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0AVJCO	AOC-1020	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05747924		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0AWSBJ	HDP-104	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0AXDIU	IIIA4-USAN	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0AXGPR	BIL-03n	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0AXWSD	BIO-112	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0AYTGS	PF-08046037	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06974734		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0AZRNL	Iladatuzumab vedotin	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT02453087		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0AZUEZ	ZV-0203	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0BBHPW	DXC-004A	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0BCSND	BSI-077	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0BDOJD	BL-M005A2	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0BGQOD	ADCT-901	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0BIQVN	AZD-5335	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0BJYDH	LMB-12	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1		10.1016/j.clcc.2019.06.006.	False	
+DRG0BLINK	ALT-Q5	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0BRHCV	KM254-ADC	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0BSWTQ	QLS5316	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07358884		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0BWCTV	ARX-305	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0BWWWF	BL-M15D1	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0BXRDQ	Veltuzumab-SN-38	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1		10.1158/1535-7163.MCT-11-0632.	False	
+DRG0BZCIJ	DAC-002	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0BZEMH	JAB-BX400	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0CAEXH	RC-118	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	3	NCT03895112; NCT04914117; NCT05205850		False	0/3 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0CBHSI	MG1901	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0CCQWD	MM-310	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT03076372		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0CDYJL	MYTX-011	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05652868		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0CEJDT	DB-1317	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07141706		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0CESQS	Recombinant humanized anti-Trop2 antibody	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0CHZRH	NEP1-40	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0CIZWI	AMT-676	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0CKWNZ	BA-3181	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0CLBRQ	NNAS-Mc-Val-Cit-PABC-MMAE	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0CMPYD	ADCX-020	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07238075		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0CNWMR	ABBV-901	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07278336		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0CPNIE	DS6-DM1	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0CVTZD	MG2011C	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0CWADI	AZD-9592	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0CXFTH	Serclutamab talirine	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	3	NCT03234712		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0CXSNU	SIBP-A19	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06990464		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0CYJSZ	OGD-204	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DCONA	SHR-7631	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06381050		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0DDMKC	A-410	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DDQHT	XYD-9668-198	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DDWPP	CPO-301	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DJFNE	IMAB362-Val-Cit-MMAE	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DLZVY	SC-007	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT03253185		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0DNGPW	RN765C	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DOBID	GMA-305	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DOTIX	CUSP06	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DSMMR	IMGS-501	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DSOMP	LY3343544	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DVKJO	LCB14-15nm	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DWHZY	SIM 0686	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07050459		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0DXEAS	CAT-03-106	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0DXROV	Cetuximab sarotalocan	Approved	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0EBFGG	IBI3009	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06613009		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0EDBXG	Lintuzumab Ac-225	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	5	NCT02575963; NCT02998047; NCT03441048; NCT03867682; NCT03932318		False	0/5 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0EEDEE	DXC-008	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06926283		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0EGQMP	BAT-8006	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0EGTVL	DAC-005	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0EGZQD	SBT-8230	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0EHWIM	CME-548	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0EJZGZ	SYN-101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ENSWF	Cotinine-duocarmycin	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0EOBLX	HDM2017	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07274085		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0EOFTU	PD-L1 ISA	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0EOMCN	BL-M02D1	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	2	NCT05339685; NCT05385692		False	0/2 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0EOWOQ	KSI-501	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0EPYFC	SAR-428926	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT02575781		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0EQEVI	CBT-3112	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0EQGNV	MYK-3	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0ERYUF	SGN-B7H4V	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05194072		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0ESGFZ	RG-7986	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0EUGGJ	ICAM1-DM1 ADC	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1		10.1002/advs.202002852.	False	
+DRG0EUQQY	MBC-301	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0EWNZL	HLX-41	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0EZYUP	JAB-X1800	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FAKKA	AVP10	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FBPCP	TGW-101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FCYCB	BMT-125961	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FGCQK	RC-168	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FGJBT	P38B-DM1	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	2		10.1089/mab.2020.0001.; 10.3390/cancers12030744.	False	
+DRG0FGLFW	ATG-022	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05718895		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0FIYMR	NBT-568	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FJYPL	MP-EV-20	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FKHUJ	MP-ENDOS-ADC	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0FKQPI	LM-001	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FLLMW	Omalizumab-amanitin 3	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FOOJX	LCB-71	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0FPQOM	XMT-1660	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FQZSZ	JSKN027	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07391644		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0FRFEQ	TAA-013	Phase3	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FTDBR	LCB-73	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FUAVD	BC5084	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FZFYY	SMD-5033	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0FZNCB	HLX48	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07473726		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0GAYQK	SBO-154	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07042100		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0GBXLR	<sup>131</sup>I-ImmuRAIT-HCG	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0GCCJJ	LM-302	Phase3	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0GCTYJ	Cymac-001	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0GDKSW	TT-01	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0GEOJG	NBT-508	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0GGFRA	DpADC	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0GHMKS	VLS-301	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0GHMXV	ARC-02	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0GMNXB	WTX-231	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0GMWTW	BL-M24D1	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07232420; NCT07232524; NCT07255898; NCT07279428		False	0/4 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0GNFMC	LMB-7	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT00003020		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0GONLK	MRX-23	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0GWFGY	Obexelimab-amanitin	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0GXGXB	GenSci139	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07230977		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0GYMEE	ESG406	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06979674		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0GZPSF	JY-023	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0HBGGX	LNL-008	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0HCDAC	ATRC-301	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0HDUGB	BAT-8010	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0HEAGN	DB-1202	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05785728		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0HEJWD	SC-011	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0HGHXE	MHB088C	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0HHXRF	AR081	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0HKEBI	ANT-045	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0HMQMZ	KTN0182A	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0HOBUN	OMTX-705	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0HPEHO	BL-B029A1	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0HQVXQ	TORL-3-600	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0HVSBG	BDC-1001	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT04278144		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0HWAWD	Zapadcine-1	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1		10.7150/thno.33598.	False	
+DRG0HWLAE	T320-ADC	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0HXUZU	MBK-101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0HYRZD	BAY-1862864	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0IBMMG	IOG-101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ICCWP	Elatatug vedotin	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT05156866		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0ICSRW	CHB-111	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0IDOUS	MK-6204	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06726369		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0IDRYV	LCB-67	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0IITIR	EX107	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0IJSIT	MG2106E	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0INCQV	DXC-003	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0INYKO	BCMA-077	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0IQKOR	CON-4619	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT03057418		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0IQNVH	PRO-1102	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0IRZPG	AB-160	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ISFPP	Anti-B7-2-gelonin immunotoxin	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ITBMZ	HD-101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0IUXVP	ABBV-324	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06858813		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0IWQWQ	DXC-014	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07177937		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0IYBRT	ADCT-602	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	3	NCT03698552		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JCGJZ	ABBV-291	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06667687		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JDDLS	GF-2014	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0JEJPW	YH-013	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0JEUPG	Sacituzumab-Deruxtecan	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0JJONS	HS-20124	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06763159		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JKQOU	HB0052	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0JLDZY	SIBP-A13	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0JLIZJ	CD38 ADC	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0JMVCQ	ONC-784	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0JMXQX	HDM2012	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07100249		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JNCVK	YL217	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06859762		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JNMAT	SIBP-A17	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06512116		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JNXDB	XMT-1592	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT04396340		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JNZLF	PCA-062	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT02375958		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JOMGD	NC18	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0JQAJB	MGTA-117	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0JUOLN	MDX-1203	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	2	NCT00944905		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JVAJA	Rosopatamab tetraxetan	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	3	NCT00052000; NCT00070837; NCT02576548		False	0/3 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JVDPQ	AG 02 saporin conjugate	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0JXYIZ	DS-9606	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0JYFQF	ZPC-21	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06823167		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0JYKFE	BSI-712	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KAGOH	PLBA-001	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KBCEN	M3554	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06641908		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0KDTFA	F0002-ADC	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KFMAB	DXC-009	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KGFDM	Zt/g4-Maytansinoid	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0KHDFE	BAT-8007	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0KKBKT	BBT-001	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KKQDW	SRB19	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KNAKC	QBK249-G	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KRSBQ	IKS-012	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KSBCU	EP-400	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KSTYX	CLR-180099	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KTRKE	PF-06664178	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT02122146		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0KTTFS	XMT-2056	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KWGRK	IMMU-140	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KWKQC	DX126-262	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0KXLGG	MK-6837	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06460961		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0LBQXO	PA-368A	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LDEJY	ITC-6146RO	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07423117		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0LFBZI	ALK202	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06707610		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0LFGHB	HTI-1511	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LFZFX	ABBV-319	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LGBME	Ispectamab tazide	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0LHLWT	LR-DM1	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LIPUK	GL-231	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LJGJX	IBI3028	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0LJSQF	Sacituzumab-SN-38	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0LKZJZ	CS-5002	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LLSDP	9MW-2921	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LNARP	MEDI-0641	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1		10.1158/1535-7163.MCT-18-0314.	False	
+DRG0LNBQO	PHN-012	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07127874		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0LRYYB	HS630	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0LSAKO	PF-06888667	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1		10.1021/acs.bioconjchem.8b00843.	False	
+DRG0LSXKR	JS107	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LTMPJ	GBM-12401	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LTXQB	YBL-015	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LUQSH	RG-7861	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0LUTMF	ELN-11	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LVUGT	PCG-N003	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LWEMD	SY-0625	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0LYIPC	Inebilizumab-amanitin	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MBBBD	Anti-CD22-SN36248	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0MCPAF	SIM-005A	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MELRN	BC2027	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07368478		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0MGBXM	CD38-077	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MKREW	SIM0505	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06792552		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0MKSMI	CRB-2107	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MKVBS	A1801	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MLOQN	NI-2201	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MMRSA	DAN-222	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT05261269		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0MOGWD	Anvatabart pactil	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0MPTSO	Trastuzumab-amanitin 1	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MSZBZ	BB-1709	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MSZNJ	SHR-3792	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06907628		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0MTMQA	M-1231	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MTUPD	CytSCA208	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MUIQK	LFD-200	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07207954		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0MXUQM	MYX2449	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0MYSHH	Thio-Tmab-BMPEO-DM1	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0NATHY	LP-A18	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0NDFLP	OXS-1650	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0NDSLT	DYNE-301	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0NELLD	<sup>111</sup>In-DTPA-D2B-DAR4-MMAE	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0NEMOV	Losatuxizumab vedotin	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	4	NCT02365662	10.3390/ph13100289.	False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0NFTVD	APN-959038	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0NGDCM	SKB445	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06826040		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0NKUQA	JS114	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0NLEYN	Tra-IR700	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1		10.1002/btm2.10388.	False	
+DRG0NMCNK	ZV0203	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0NMRNE	KSI-601	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0NNNWR	EX108	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0NOFEI	BB-1712	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0NOYME	NW-001	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0NWBIQ	HY-0001	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0NXVNX	PNU-159682-P1C1TM	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0NZUKF	WTX-212	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0NZUZJ	CX-2051	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ODFEJ	EGFR-EDV-RRM1	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0OJHEN	AVID-100	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT03094169		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0OMIWX	BA1301	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0ONAEP	BRY811	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ONNVN	PSM-101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0OOMJM	Basiliximab sarotalocan	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0OOXRC	XNW-28012	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0OPFVY	Samrotamab vedotin	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	3	NCT02565758		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0OPGMW	Recombinant chimeric anti-CD30 mAb-MCC-DM1	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0ORDYU	LIN-002	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0OTOJV	IKS-03	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0OUXWT	Rolinsatamab talirine	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	2	NCT03145909		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0OVMJM	PRN 222	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0OVQWP	HDM2024	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0OWHOL	<sup>89</sup>Zr-DFO-T-DM1	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0PCGKN	hu5B1-TCO	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT05737615		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0PDZSX	3-NAntC	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0PFQKN	EDC-2	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0PGRFM	BCG-011	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0PGYJL	IPH43	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0PHKMG	TORL-4-500	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0PKYBF	N01-OX2	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0PLPNX	SGN-ALPV	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05229900		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0PPLJW	Y-TR1 SPDP	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1		10.3390/cancers11081138.	False	
+DRG0PPLRQ	GENA-111-AF	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0PQJDH	MEDI-2228	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	3	NCT03489525		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0PRKPN	VL-DAB31-SN38	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0PSWNN	SIBP-A18	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06985368		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0PWAOJ	SGN-CD228A	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	2	NCT04042480		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0PXBVI	RC68-PY-Val-Cit-PABC-MMAE	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QAHFT	DS3610	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07159126		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0QCCTW	KM501	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QDCHN	PRO-1160	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05721222		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0QEAUM	RG7787	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1		10.1158/0008-5472.CAN-15-2401.	False	
+DRG0QEUVQ	BSC-4201	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QFDKM	RAD-502	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QIJRR	IMB-201	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QNWFH	CBP-1609	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QODVX	16A5-MCC-DM1	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0QOWCK	NV101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QQETS	BDB-101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QQUXG	SMP-656	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QRLPU	LCB17-0877	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0QRTNX	BioLink018	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0QTTET	BSA01	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QWZSI	VAL-0620	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QXDTN	R4702	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QYTLQ	IN30728	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0QYUVZ	MI-130004	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0RBGQK	MHB118C	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07045454		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0RCFPY	BL-M11D1	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0RDZIH	SAB-Y27	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0RLKMU	IBI343	Phase3	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0RNICE	BIO104	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0RONXP	SIM0609	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07265921		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0RRORA	AK138D1	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06730386; NCT07281326		False	0/2 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0RSBMJ	Sofituzumab vedotin	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0RUAXZ	DS001	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0RVNRW	J58-PE24	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1			False	
+DRG0RVOYG	GenSci140	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07251166		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0RWFIB	SG3-Val-Cit-MMAF8	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0RWVUF	V-DOS47	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0RYBMQ	SHR-A1201	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0SACUI	BB-1705	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05217693		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0SALIN	SHR-7782	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07123129		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0SARIF	HDM2020	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07098052		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0SAXJE	IN30705	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SBYGM	Blinatumomab-amanitin	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SCLSY	GB-251	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SDGDV	C6vcMMAD	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SEZFV	DhuVHH6-PE38	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SGCAF	BG-C477	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06596473		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0SGXZO	huHEA125-amanitin4	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0SHZAQ	BCG034	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07503808		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0SIURJ	CPO-204	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SJVKP	<sup>111</sup>In-DTPA-D2B-DAR2-MMAE	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0SLLFJ	BCG022	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SMTQN	MG2002A	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0SNPYJ	PBX-001	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SPYZJ	TST013	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SQAHG	Septuximab vedotin	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0SQAQX	AMB-101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SSFSR	DM001	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SSTBB	HS-20108	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06936735		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0STCNY	OX-002	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SURHR	PF-08046031	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06799533		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0SUYIT	G-100	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0SVXYY	RC-188	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SWCOG	ADC2122	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT05423977		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0SYLKC	B7H3-MMAE	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0SZERO	Lonigutamab ugodotin	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	2	NCT03316638		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0SZXVK	PF-08046032	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06870487		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0TAOLW	LY203725	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0TCBEP	Hertuzumab vedotin	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0TCKKR	XMT-2175	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0TDXML	Epratuzumab-SN38	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0TEQRI	MP-LGS-ADC	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0TEQTA	CM-09	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0TEUSB	ANG-101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0TJYIW	ORM-6151	Phase3	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0TMDEU	AMT-754	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06597721		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0TMDKY	AOC 1044	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0TMPMK	PHN-010	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0TNQTB	DXC1002	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0TOMLD	GB7008-01-Val-Cit-MMAE	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0TUKTY	PRO-1184	Phase3	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0TWLXC	SBT-6290	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0TZVTS	SYS6040	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06970795		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0UBSWW	SIM0610	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07348211		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0UCTSX	RG-7600	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0UEGSE	33B7-Saporin	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0UEVLW	TGW101	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06959706		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0UFZLI	NBE-001	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0UGQRX	Enlimomab pegol	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0UHXQK	SYS6041	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0UIDCY	NJH-395	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT03696771	10.1158/1078-0432.CCR-18-3965.	False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0UIZFH	XB3-001	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0UJALJ	MSLN MMAE	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0UJMPA	BA-1302	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0UJUZQ	GQ-1007	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ULJQN	OBT207	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0UPZCS	MGC026	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06242470		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0UQTJG	Lifastuzumab vedotin	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	7	NCT01363947; NCT01911598; NCT01991210; NCT01995188		False	0/4 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0UQXWB	BI-CON-02	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT03062007		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0USADY	DXC004	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0USIEY	DA-3501	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07481357		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0USILO	TAC-001	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05399654		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0UTRTT	<sup>124</sup>I-scFvD2B	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0UTYGF	Trastuzumab-deBouganin	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0UUFIR	SYD998	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0UUOGO	TORL-2-307-ADC	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05156866		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0UVYLY	SYS6005	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06958679		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0UWYXJ	ALTA-002	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0UYIOG	YL-212	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0UZQBB	NOV0712-DXd	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0VFBIW	AMG-224	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	2	NCT02561962		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0VFEIE	BR111	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06937957		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0VFTUI	LY256787	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0VGXGH	CD4-BFFI	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VHHWJ	OBI-998	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VHRBL	RC-88	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	3	NCT04175847; NCT05508334		False	0/2 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0VHVOA	TUB-030	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VKEZC	BL-M005	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VNZZZ	PF-06688992	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT03159117		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0VOIMW	BSI-709	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VSEXE	MG2001	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0VSGFV	BRKB-28	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VURPQ	NC-6201	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VWNGX	BIO-201	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VWODF	Anetumab corixetan	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VXXXS	BIO105	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VYGBA	Araris ADC	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0VYKSA	LM-305	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0WBCEJ	Vas-201	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0WCBFK	Cirmtuzumab vedotin	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0WCYUM	Lupartumab amadotin	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0WEEMU	AT-03	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06809114		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0WEGRW	MGTA-C100	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0WFJHW	BAT-8009	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0WIBDT	HDP-101	Phase2	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0WIVJB	SYD1035	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0WJKRI	DS-6157a	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT04276415	10.1158/1078-0432.CCR-23-0640.	False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0WMPDO	<sup>111</sup>In-DOTA-5D3	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0WNUZE	IMB-213I	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0WNVBV	ICP-B794	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT07136558		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0WOUMV	RG-7841	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0WPYAS	BSI-04702	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0WRFYU	PF-06650808	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	2	NCT02129205		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0WVXVY	DK-410	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0WWBVZ	BC3195	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0WWZAS	SYS6010	Phase3	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0WXTQM	APEC-1	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0WYSHT	RC-178	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XCSOA	ST8176AA1	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XEXPT	SGN-STNV	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT04665921		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0XFTRM	Bevacizumab vedotin	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1		10.1016/j.bioorg.2023.106575.	False	
+DRG0XGLSR	NOV0712-DM4	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	True	1			False	
+DRG0XHLKM	C6vc0101	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XIERX	P-1000	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XKMVA	SYS6002	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0XKZBO	AZD-8205	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0XLJJW	IMGN-388	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0XLSWN	SC-006	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT03035279	10.1093/annonc/mdy023.	False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0XOUNW	SDV-1001	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XOZXZ	SIB-029A	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XRBCK	DAN-405	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XRDLA	S3F-CL-MMAE	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XUVMS	CBT-005	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XVPES	LM-306	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XWNPK	AK0406	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0XWTYJ	DXC-005	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0XXDCJ	ABL-202	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0YAEPQ	TGM-005	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YAZBQ	RM-1995	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05220748		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0YBNRC	GQ-1003	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YGXLF	CPO-102	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0YHHWC	N501-SN38	Investigative	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1			False	
+DRG0YHRUZ	BP-A102	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YKTME	OXS-1750	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YKZGZ	cHD37-amanitin	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YLNPN	BRY-812	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YNUEK	XB371	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YQAIX	SHR-A1904	Phase3	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	3	NCT04877717; NCT04928625; NCT05277168		False	0/3 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0YRJDY	ALT-P7	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0YSIDA	Xl-250	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YTJTJ	APH-0912	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YTMFF	VIS-705	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YTRFZ	Vandortuzumab vedotin	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	2	NCT01283373		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0YUCNA	BL-M08D1	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YVBCV	REGN-3124-PBD	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YWPJC	TARG-9	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YXBEH	SHR-A1912	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	1	NCT05113069		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0YXJPS	Veltuzumab-CL2E-SN-38	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0YZEVV	MT-5111	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0YZPWM	SGN-CD352A	Phase1	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ZAECD	AGS-16M8F	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT01114230		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0ZAFBL	IBI129	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0ZAJGM	BL-M09D1	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06954077; NCT07056556		False	0/2 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0ZGWBV	JY201	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ZIJNR	Milatuzumab doxorubicin	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0ZLJPV	SKB-410	Phase2	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ZNAID	SHR-A1307	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ZNUYD	Pab-001-MMAE	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ZODWK	M-DGN549	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ZOMIJ	OMTX-505	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ZQLZD	TR1801-ADC	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	2	NCT03859752		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0ZSNLV	KGX201	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ZSVBZ	<sup>111</sup>In-1849	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0ZTZMD	BAY-943	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	
+DRG0ZUQNL	BAT-8001	Phase3	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	False	0			False	
+DRG0ZXRLG	SLV-154	Phase1	NAR_EXTERNAL_CITATION_PRESENT	POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH	False	0	NCT06771219		False	0/1 cited NCT ids appear in OUR clinicaltrials discovery ledger (any query type, not just broad -- but see module docstring: this is only informative for assets already in configs/known_adc_assets.yaml)
+DRG0ZYLBB	ZW-33	Investigative	NO_NAR_EXTERNAL_CITATION_SIGNAL	POSSIBLE_SOURCE_GAP	True	0			False	

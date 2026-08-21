@@ -1,52 +1,66 @@
 #!/usr/bin/env python3
 """Phase 2 (reports/validation/BREADTH_PLAN.md Part 3): a coarse,
-evidence-based split of the `NOT_CONFIRMED_BROAD` assets from Phase 1's
+observation-based split of the `NOT_CONFIRMED_BROAD` assets from Phase 1's
 `nar702_broad_recall.tsv` -- starting explicitly from "N unresolved
 negatives", NOT "N confirmed query misses" (per the Phase 1 review's
 correction). Only patch a production query when a REPEATED pattern proves
 a systematic acquisition-mechanism defect; this script's job is to find
 out whether such a pattern exists, not to assume one.
 
-Four categories (minimum split requested in review):
+Two OBSERVATION-based categories (round-1 fix: the category name itself
+must describe what was actually checked, not the root-cause guess -- the
+guess lives in a separate `root_cause_hypothesis` column so a later phase
+can revise it without having to rename/reinterpret the category):
 
-  SOURCE_GAP                -- NAR itself shows essentially no external
-                                citable evidence for this asset (its own
-                                reference_count is 0 and it cites no NCT
-                                id) -- consistent with a genuinely
-                                early-stage/conference-only/company-
-                                disclosure-only asset that may never have
-                                entered any currently-implemented broad
-                                source. This is a real hypothesis, not
-                                confirmed absence -- Phase 4/5 (conference,
-                                company disclosures) is where it would be
-                                tested, not this script.
-  BROAD_BACKLOG_UNRESOLVED  -- NAR cites external evidence (a reference or
-                                an NCT id) for this asset, so it plausibly
-                                DOES have a discoverable footprint, but
-                                Phase 1's broad-query discovery/
-                                materialization hasn't found/downloaded it
-                                yet. The default explanation for anything
-                                with a positive external-evidence signal.
-  PATENT_TEXT_NOT_OBSERVABLE -- a flag (not exclusive of the above) for
-                                assets whose only plausible trace would be
-                                a patent (no NCT id, no reference DOI, but
-                                a named company) -- uncertain specifically
+  NO_NAR_EXTERNAL_CITATION_SIGNAL -- NAR itself cites zero references and
+                                no NCT id for this asset. Does NOT mean
+                                "this asset only exists in a source we
+                                don't query" -- only that NAR's own curation
+                                gives us nothing to check against.
+                                root_cause_hypothesis: POSSIBLE_SOURCE_GAP.
+  NAR_EXTERNAL_CITATION_PRESENT -- NAR cites >=1 reference or NCT id for
+                                this asset. Does NOT mean "we just haven't
+                                materialized/paginated deep enough yet" --
+                                only that NAR itself points to something
+                                external we could in principle check.
+                                root_cause_hypothesis:
+                                POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH.
+
+  possible_patent_text_gap  -- a flag (not exclusive of the above) for
+                                assets whose only cited trace would be a
+                                patent (no NCT id, no reference DOI, but a
+                                named company) -- uncertain specifically
                                 because of the USPTO text-extraction gap
                                 and WIPO/EPO's large unmaterialized backlog
-                                disclosed in Phase 1.
+                                disclosed in Phase 1. Kept "possible" per
+                                the same round-1 correction.
   TRUE_CANDIDATE_MISS        -- reserved for cases where investigation
                                 finds the query MECHANISM itself at fault
-                                (not just depth/observability). Assigned
-                                only after the diagnostic check below finds
-                                a repeated pattern -- see report.
+                                (not just depth/observability/registry
+                                scope). Not assigned by this script -- see
+                                the diagnostic below and the report for why.
 
-Diagnostic check (this script, not a manual claim): for every unresolved
-asset that cites >=1 NCT id, checks whether that NCT id appears ANYWHERE
-in the clinicaltrials discovery ledger at all (any query_id, not just the
-broad-query subset) -- if it's absent even from Job 15's much deeper
-per-asset/per-intervention lookups and CT.gov's own broad-query pagination
-never reached it, that is direct, checkable evidence of a discovery-depth
-limitation, not a query-content defect.
+Diagnostic check on the 14 most NAR-documented, later-stage unresolved
+assets (round-1 fix: downgraded from an overclaimed conclusion). What this
+script actually checks: whether each cited NCT id appears ANYWHERE in the
+clinicaltrials discovery ledger (any query_id). What that check does NOT
+prove: Job 15's per-asset/per-intervention targeted lookups only ever run
+for assets already in configs/known_adc_assets.yaml -- for any of these 14
+NAR assets that are NOT in that curated registry, no targeted lookup was
+EVER attempted for it, so its absence from the ledger's targeted query_ids
+is uninformative, not evidence of anything. And CT.gov's broad-query
+pagination is genuinely `--limit`-capped (jobs/clinicaltrials/job.py stops
+paginating once `len(record_first_query) >= args.limit`), which makes
+discovery-depth censoring PLAUSIBLE -- but absence from the ledger alone
+does not distinguish "we just haven't paginated far enough" from "the
+query's phrasing/terms wouldn't match this trial even with full
+pagination." Confirming pagination-depth specifically (as opposed to a
+query-scope mismatch) would require fetching each flagged trial's own
+intervention/title text and checking it offline against the current broad
+query's semantics -- not done in this script, and not needed to satisfy
+Phase 2's actual job (find whether a REPEATED, evidence-backed defect
+pattern exists before patching anything -- it does not, per this round's
+finding, but that is "no defect confirmed," not "pagination proven").
 
 Usage:
     python3 tools/breadth/miss_taxonomy.py \
@@ -69,8 +83,15 @@ import pandas as pd
 
 def classify_unresolved_category(reference_count: int, nct_ids: str) -> str:
     if reference_count == 0 and not nct_ids:
-        return "SOURCE_GAP"
-    return "BROAD_BACKLOG_UNRESOLVED"
+        return "NO_NAR_EXTERNAL_CITATION_SIGNAL"
+    return "NAR_EXTERNAL_CITATION_PRESENT"
+
+
+def root_cause_hypothesis(category: str) -> str:
+    return {
+        "NO_NAR_EXTERNAL_CITATION_SIGNAL": "POSSIBLE_SOURCE_GAP",
+        "NAR_EXTERNAL_CITATION_PRESENT": "POSSIBLE_DISCOVERY_OR_MATERIALIZATION_DEPTH",
+    }[category]
 
 
 def possible_patent_text_gap(nct_ids: str, reference_dois: str, companies: str) -> bool:
@@ -109,12 +130,15 @@ def main() -> int:
             found_any = [n for n in nct_ids if n in any_discovered_nct_ids]
             nct_status = (
                 f"{len(found_any)}/{len(nct_ids)} cited NCT ids appear in OUR clinicaltrials discovery ledger "
-                f"(any query type, not just broad)"
+                f"(any query type, not just broad -- but see module docstring: this is only informative for "
+                f"assets already in configs/known_adc_assets.yaml)"
             )
         rows.append(dict(
             nar_adc_id=r["nar_adc_id"], canonical_name=r["canonical_name"], phase_bucket=r["phase_bucket"],
-            unresolved_category=category, possible_patent_text_gap=patent_gap,
+            unresolved_category=category, root_cause_hypothesis=root_cause_hypothesis(category),
+            possible_patent_text_gap=patent_gap,
             reference_count=r["reference_count"], nct_ids=r["nct_ids"], reference_dois=r["reference_dois"],
+            in_known_registry=r.get("in_known_registry", ""),
             nct_discovery_ledger_check=nct_status,
         ))
 
@@ -128,35 +152,47 @@ def main() -> int:
 
     write_tsv(
         output_dir / "broad_miss_taxonomy.tsv", rows,
-        ["nar_adc_id", "canonical_name", "phase_bucket", "unresolved_category", "possible_patent_text_gap",
-         "reference_count", "nct_ids", "reference_dois", "nct_discovery_ledger_check"],
+        ["nar_adc_id", "canonical_name", "phase_bucket", "unresolved_category", "root_cause_hypothesis",
+         "possible_patent_text_gap", "reference_count", "nct_ids", "reference_dois", "in_known_registry",
+         "nct_discovery_ledger_check"],
     )
 
     cat_counts = Counter(r["unresolved_category"] for r in rows)
     n_patent_gap = sum(1 for r in rows if r["possible_patent_text_gap"])
-    print(f"SOURCE_GAP: {cat_counts['SOURCE_GAP']}", file=sys.stderr)
-    print(f"BROAD_BACKLOG_UNRESOLVED: {cat_counts['BROAD_BACKLOG_UNRESOLVED']}", file=sys.stderr)
+    print(f"NO_NAR_EXTERNAL_CITATION_SIGNAL: {cat_counts['NO_NAR_EXTERNAL_CITATION_SIGNAL']}", file=sys.stderr)
+    print(f"NAR_EXTERNAL_CITATION_PRESENT: {cat_counts['NAR_EXTERNAL_CITATION_PRESENT']}", file=sys.stderr)
     print(f"possible_patent_text_gap flag set on: {n_patent_gap} rows", file=sys.stderr)
 
     # Diagnostic: among the most "suspicious" cases -- NAR-documented,
     # later-stage, still unresolved -- how many of their cited NCT ids are
-    # genuinely absent from our discovery ledger ENTIRELY (any query type)?
+    # absent from our discovery ledger ENTIRELY (any query type)? See
+    # module docstring for exactly what this does and does NOT prove.
     suspicious = unresolved[
         (unresolved["reference_count"] > 0) & (unresolved["nct_ids"] != "")
         & (unresolved["phase_bucket"].isin(["Approved", "Phase3", "Phase2"]))
     ]
     fully_absent = 0
+    fully_absent_and_not_in_registry = 0
     for _, r in suspicious.iterrows():
         nct_ids = [n for n in r["nct_ids"].split("; ") if n]
         if nct_ids and not any(n in any_discovered_nct_ids for n in nct_ids):
             fully_absent += 1
+            if str(r.get("in_known_registry", "")).lower() != "true":
+                fully_absent_and_not_in_registry += 1
     print(
-        f"\nTRUE_CANDIDATE_MISS diagnostic: {len(suspicious)} well-documented, later-stage "
-        f"(Approved/Phase3/Phase2) unresolved assets found. {fully_absent}/{len(suspicious)} "
-        f"have ALL their cited NCT ids completely absent from our clinicaltrials discovery "
-        f"ledger (any query type, including Job 15's per-asset lookups) -- i.e. our own CT.gov "
-        f"query pagination has never reached them, a discovery-DEPTH limitation, not evidence "
-        f"of a query-CONTENT defect. See report for the TRUE_CANDIDATE_MISS verdict.",
+        f"\nDiagnostic sample: {len(suspicious)} well-documented, later-stage (Approved/Phase3/Phase2) "
+        f"unresolved assets found. {fully_absent}/{len(suspicious)} have ALL their cited NCT ids "
+        f"completely absent from our clinicaltrials discovery ledger (any query type). "
+        f"Of those, {fully_absent_and_not_in_registry} are NOT in configs/known_adc_assets.yaml, "
+        f"meaning Job 15's targeted lookup was never attempted for them at all -- their ledger "
+        f"absence is expected and uninformative for those, not evidence of anything. "
+        f"CT.gov's broad-query pagination IS genuinely --limit-capped this session, which makes "
+        f"discovery-depth censoring a PLAUSIBLE explanation for the rest, but this check alone "
+        f"cannot distinguish pagination-depth from a query-scope/wording mismatch -- that would "
+        f"require fetching each trial's own text and checking it against current query semantics, "
+        f"not done here. Verdict: no evidence found in this round to CONFIRM a query-content "
+        f"defect -- that is an absence of confirmed defect, not a proof of query completeness. "
+        f"See report for the full TRUE_CANDIDATE_MISS discussion.",
         file=sys.stderr,
     )
 
