@@ -1,0 +1,65 @@
+# Conference abstract corpus query registry (BREADTH_PLAN.md Phase 4, Part 6).
+#
+# Unlike every other *_queries.yaml in this repo, these two "queries" do NOT
+# describe a live, per-run search this job executes itself. AACR/ASCO have no
+# public search API this project accesses directly; the underlying abstract
+# metadata was already fetched (via Crossref, keyed by each meeting's DOI
+# prefix) and filtered by an ADC-keyword regex by a separate, external
+# workflow (REPOS/aacr-abstract-workflow, outside both this repo and the
+# adc-acquisition Claude Code project). This job reuses that already-computed
+# local historical corpus (Part 6: "search this project and local data for
+# reusable historical corpora before any new download") rather than
+# re-implementing a second AACR/ASCO scraper.
+#
+# query_text below documents the ACTUAL filter that already ran, verified by
+# reading the external workflow's own scripts -- not assumed. Both filters
+# are deliberately declared broad-discovery queries for Phase 1's locked
+# provenance definition: neither depends on configs/known_adc_assets.yaml,
+# both are pure ADC-terminology matches over an otherwise-unfiltered set of
+# conference abstracts.
+#
+# If the external workflow's filter logic is ever re-run with a materially
+# different regex/scope, bump query_version and mint a new query_id -- same
+# rule as every other registry in this repo -- so historical manifests stay
+# interpretable even though this job doesn't execute the filter itself.
+
+queries:
+  - query_id: CONFERENCE_AACR_001
+    query_version: 1
+    query_text: >-
+      TITLE-ONLY regex match against Crossref-sourced AACR Annual Meeting
+      abstract metadata (2016-2025) and AACR 2026 proceedings PDF text
+      (2026, pre-Crossref-indexing): /\bADC\b|ADCs|antibody[- ]drug
+      conjugate|bsADC|iADC|biparatopic ADC|dual-payload ADC/ (case-
+      insensitive), with a manual exclusion pass removing obvious
+      non-antibody drug conjugates (peptide/protein/polymer conjugates).
+      Computed externally by
+      REPOS/aacr-abstract-workflow/scripts/extract_aacr_annual_adc.py
+      (2016-2025) and extract_aacr2026_adc.py (2026); reused here as an
+      already-materialized snapshot, not re-run by this job.
+    purpose: >-
+      KNOWN LIMITATION (disclosed, not fixed this phase): this filter only
+      matches the abstract TITLE, not the abstract body -- narrower than
+      this repo's own PubMed/Europe PMC [tiab] (title+abstract) queries.
+      An AACR abstract that discusses an ADC substantively without the
+      matched terms in its own title will not be in this corpus at all,
+      and this job cannot recover it (the filtering already happened
+      upstream, outside this job's control).
+    active: true
+
+  - query_id: CONFERENCE_ASCO_001
+    query_version: 1
+    query_text: >-
+      TITLE+ABSTRACT regex match against Crossref-sourced ASCO Annual
+      Meeting abstract metadata (JCO supplement DOI prefixes
+      10.1200/jco.<year>.<vol>.15_suppl.* / 16_suppl.*, 2016-2026):
+      /antibody[-\s]?drug conjugates?|ADCs?|.../ (case-insensitive; see
+      REPOS/aacr-abstract-workflow/scripts/download_asco_adc_abstracts.py
+      for the exact pattern). Computed externally; reused here as an
+      already-materialized snapshot, not re-run by this job.
+    purpose: >-
+      Broader than the AACR filter above (title+abstract, not title-only)
+      -- closer in shape to this repo's own PubMed/Europe PMC broad
+      queries, though still computed by a different, external codebase
+      this job does not control or re-verify.
+    active: true
