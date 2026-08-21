@@ -1,5 +1,43 @@
 # Phase 5b — ADC Modality Taxonomy
 
+## Round-1 fix (1 correctness blocker)
+
+**Modality evidence was attributed at the wrong granularity: the whole
+record, not the specific candidate mention.** The first version scanned
+an entire conference abstract's title+abstract (or a CT.gov row's shared
+`brief_title`) once, then applied whatever modality keywords it found to
+EVERY candidate extracted from that same record. A real abstract
+discussing `zelenectide pevedotin` (a Bicycle Toxin Conjugate) alongside
+`Trastuzumab deruxtecan` as a comparator would incorrectly tag BOTH
+candidates as `ADJACENT_CONJUGATE_MODALITY` -- and the promotion gate
+would then permanently exclude the unrelated, genuinely strict ADC. The
+same risk existed on the CT.gov side: a trial's `brief_title` can
+describe multiple interventions/arms.
+
+Fixed with candidate-LOCAL evidence attribution, no NLP required:
+- **CT.gov**: scan each intervention's own raw string (already per-
+  mention, inherently local), never the row's shared `brief_title`.
+- **Conference text**: a new `local_context_for_span()` takes the
+  INTERSECTION of (1) the sentence containing this specific mention
+  (split on `[.!?]` + whitespace -- deliberately over-eager, since a
+  false split only narrows the window, which is safe here, while a
+  missed split would let another candidate's context leak in, which is
+  not) and (2) a fixed +/-300-character radius (bounding the case where
+  sentence splitting finds no nearby boundary at all). A new
+  `_iter_adc_generic_name_matches()` exposes each match's character
+  span so this localization is possible; `extract_all_adc_generic_names_
+  from_text()`'s existing public behavior/tests are unchanged (it's now
+  a dedup wrapper around the same iterator).
+
+Regression tests added (both of the reviewer's exact scenarios, plus the
+CT.gov equivalent): a record mentioning two candidates where only one is
+actually near a modality phrase now correctly tags only that one.
+Re-verified live against the real corpus: still exactly 1
+`ADJACENT_CONJUGATE_MODALITY` row (`zelenectide pevedotin`) -- the real
+corpus happened not to contain an actual cross-contamination case, but the
+mechanism was wrong in general and is now fixed. 456 tests passing (4 new
+this round).
+
 Per `reports/validation/BREADTH_PLAN.md` Phase 5 Part 5. Second increment
 after Phase 5a (candidate discovery from conference abstract text). Full
 taxonomy definitions and design rationale are in

@@ -10,6 +10,7 @@ from tools.breadth.candidate_queue import (
     extract_all_adc_generic_names_from_text,
     find_suffix_matches,
     known_identifier_set,
+    local_context_for_span,
     mentions_known_asset,
     merge_suffix_candidates,
     normalize_name,
@@ -195,6 +196,66 @@ def test_detect_adjacent_modalities_empty_for_ordinary_adc_text():
     assert detect_adjacent_modalities(text) == set()
 
 
+def test_local_context_for_span_excludes_a_different_adjacent_sentence():
+    """Regression test for the round-1 fix: modality evidence about one
+    candidate must not leak into the local context of a different
+    candidate mentioned in an adjacent sentence of the same record."""
+    text = "Zelenectide pevedotin is a Bicycle Toxin Conjugate. Trastuzumab deruxtecan was used as comparator."
+    zele_start = text.index("Zelenectide")
+    zele_end = zele_start + len("Zelenectide pevedotin")
+    trast_start = text.index("Trastuzumab")
+    trast_end = trast_start + len("Trastuzumab deruxtecan")
+
+    zele_context = local_context_for_span(text, zele_start, zele_end)
+    trast_context = local_context_for_span(text, trast_start, trast_end)
+
+    assert "bicycle toxin conjugate" in zele_context.lower()
+    assert "bicycle toxin conjugate" not in trast_context.lower()
+
+
+def test_build_conference_suffix_candidates_does_not_cross_contaminate_unrelated_candidate():
+    """The exact scenario the reviewer flagged: one abstract mentions two
+    ADC-like candidates, and only one is actually described as a Bicycle
+    Toxin Conjugate. The unrelated candidate must NOT inherit that
+    modality just because it appears in the same record."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(
+            source_record_id="10.1/1",
+            title="A comparison of two conjugates",
+            abstract="Zelenectide pevedotin is a Bicycle Toxin Conjugate. "
+                     "Trastuzumab deruxtecan was used as comparator.",
+            publication_or_release_date="2025-01-01",
+        ),
+    ])
+    candidates = build_conference_suffix_candidates(manifest, known)
+    by_label = {c["label"].lower(): c for c in candidates.values()}
+
+    assert by_label["zelenectide pevedotin"]["adjacent_modalities"] == {"BICYCLE_TOXIN_CONJUGATE"}
+    assert by_label["trastuzumab deruxtecan"]["adjacent_modalities"] == set()
+
+
+def test_build_conference_suffix_candidates_only_flags_the_candidate_in_the_matching_sentence():
+    """A second variant of the same scenario, using a different keyword
+    (peptide-drug conjugate) and different candidate names, to confirm
+    this isn't specific to the zelenectide/Bicycle wording."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(
+            source_record_id="10.1/2",
+            title="A comparison of two candidates",
+            abstract="Mecbotamab vedotin is a peptide-drug conjugate targeting AXL. "
+                     "Sonesitatug vedotin was evaluated separately in a different cohort.",
+            publication_or_release_date="2025-01-01",
+        ),
+    ])
+    candidates = build_conference_suffix_candidates(manifest, known)
+    by_label = {c["label"].lower(): c for c in candidates.values()}
+
+    assert by_label["mecbotamab vedotin"]["adjacent_modalities"] == {"PEPTIDE_DRUG_CONJUGATE"}
+    assert by_label["sonesitatug vedotin"]["adjacent_modalities"] == set()
+
+
 def test_build_conference_suffix_candidates_flags_adjacent_modality_from_full_abstract_text():
     """The real zelenectide pevedotin case: the modality phrase appears in
     the abstract BODY, not (necessarily) within the 150-char title
@@ -212,6 +273,26 @@ def test_build_conference_suffix_candidates_flags_adjacent_modality_from_full_ab
     candidates = build_conference_suffix_candidates(manifest, known)
     entry = next(iter(candidates.values()))
     assert entry["adjacent_modalities"] == {"BICYCLE_TOXIN_CONJUGATE"}
+
+
+def test_build_ctgov_suffix_candidates_attributes_modality_to_the_specific_intervention_only():
+    """Same class of bug as the conference-text case, for CT.gov: a row's
+    brief_title can describe multiple interventions/arms, so modality
+    evidence must come from the specific intervention string itself, not
+    the shared brief_title -- otherwise an unrelated intervention in the
+    same trial could inherit another arm's modality."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(nct_id="NCT1",
+             intervention_names=["Mecbotamab vedotin (a peptide-drug conjugate)", "Sonesitatug vedotin"],
+             phases=["PHASE1"], brief_title="A trial comparing two ADC-class candidates",
+             study_first_post_date="2021-01-01"),
+    ])
+    candidates = build_ctgov_suffix_candidates(manifest, known)
+    by_label = {c["label"].lower(): c for c in candidates.values()}
+
+    assert by_label["mecbotamab vedotin"]["adjacent_modalities"] == {"PEPTIDE_DRUG_CONJUGATE"}
+    assert by_label["sonesitatug vedotin"]["adjacent_modalities"] == set()
 
 
 def test_build_ctgov_suffix_candidates_has_empty_adjacent_modalities_for_ordinary_candidate():

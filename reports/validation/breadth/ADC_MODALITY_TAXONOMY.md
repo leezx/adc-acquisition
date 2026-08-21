@@ -66,11 +66,17 @@ inferred from the shape of its name alone.
 ## What changed in the pipeline
 
 `tools/breadth/candidate_queue.py`'s `build_ctgov_suffix_candidates()` and
-`build_conference_suffix_candidates()` now also scan each mention's own
-text (CT.gov's `brief_title`; conference abstracts' FULL `title`+`abstract`
-text, not the 150-char truncated snippet stored in `candidate_queue.tsv`'s
-`context` column) for `ADJACENT_MODALITY_KEYWORDS`, accumulating any hits
-per candidate. `candidate_queue.tsv` gained two columns:
+`build_conference_suffix_candidates()` now scan text LOCAL to each
+specific candidate mention for `ADJACENT_MODALITY_KEYWORDS` -- round-1
+fix: the first version scanned the WHOLE shared record (CT.gov's
+`brief_title`; conference abstracts' full `title`+`abstract`) once and
+applied any hits to every candidate extracted from that record, which
+could wrongly tag an unrelated candidate mentioned elsewhere in the same
+record with a modality that was actually about a different candidate.
+Fixed with: CT.gov's own raw intervention string (already per-mention);
+conference text's `local_context_for_span()` (the sentence/window around
+that one mention, via `_iter_adc_generic_name_matches()`'s exposed
+character spans). `candidate_queue.tsv` gained two columns:
 `modality_classification` (`STRICT_ADC` / `PRESUMED_STRICT_ADC` /
 `ADJACENT_CONJUGATE_MODALITY`) and `modality_detail` (which specific
 keyword-matched modality, when applicable).
