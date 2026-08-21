@@ -249,10 +249,19 @@ def _load_all_records(corpus_root: Path, since: str | None, until: str | None) -
 
     all_records.sort(key=lambda r: (r["conference"], r["year"], r["record_id"]))
 
+    # round-1 fix: an undated record (all of AACR 2026's 307 PDF-extracted,
+    # no-doi records) must NEVER be silently dropped by --since/--until --
+    # verified live that this is exactly the record class Phase 6's
+    # twice-monthly `--since <last_update>` update will run against, and
+    # dropping them here would mean a new-or-corrected undated conference
+    # abstract is never even hash-compared, let alone re-materialized. A
+    # date filter can only exclude a record it can actually date; an
+    # undated record always stays in scope for the hash-comparison step
+    # below (still cheap even when unchanged, since it's a local re-read).
     if since:
-        all_records = [r for r in all_records if (r["publication_or_release_date"] or "") >= since]
+        all_records = [r for r in all_records if not r["publication_or_release_date"] or r["publication_or_release_date"] >= since]
     if until:
-        all_records = [r for r in all_records if (r["publication_or_release_date"] or "9999-99-99") <= until]
+        all_records = [r for r in all_records if not r["publication_or_release_date"] or r["publication_or_release_date"] <= until]
 
     record_by_id: dict[str, dict] = {}
     for record in all_records:

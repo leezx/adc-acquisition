@@ -29,11 +29,26 @@ project and is not depended on, imported from, or modified by this phase.
 ## 2. What was verified before writing the job (not assumed)
 
 - Read the external workflow's own extraction scripts to get the ACTUAL
-  filter methodology per source, not a guess: AACR's filter is
-  **title-only** regex match (`extract_aacr_annual_adc.py`'s
-  `selection_rule`); ASCO's filter is **title+abstract** regex match
-  (`download_asco_adc_abstracts.py`'s `item_to_record`). Both are recorded
-  verbatim in `configs/conference_abstract_corpus_queries.yaml`.
+  filter methodology per source, not a guess or a summary. **Round-1
+  fix**: the first version of this report/registry both truncated the
+  ASCO regex with "..." and mischaracterized AACR's exclusion step as a
+  "manual exclusion pass" (copying `extraction_report.json`'s own
+  `curation_note` wording) when it is actually a second, fully
+  deterministic regex. Both filters' complete, verbatim logic is now
+  recorded in `configs/conference_abstract_corpus_queries.yaml`:
+  - **AACR**: title-only, two-regex deterministic filter (no manual
+    step) -- included iff `TITLE_INCLUDE_RE` matches the title AND
+    `TITLE_EXCLUDE_RE` does not, byte-identical between
+    `extract_aacr_annual_adc.py` (2016-2025) and `extract_aacr2026_adc.py`
+    (2026).
+  - **ASCO**: a two-stage pipeline -- Stage 1 is a Crossref
+    `query.title`-based candidate fetch (title-only, restricted by
+    default to 4 core terms; a broader `EXPANDED_QUERY_TERMS` list is
+    only used if the external workflow's `ASCO_ADC_EXPANDED=1` env var
+    was set at build time, which is **not verifiable now** -- disclosed
+    as an unresolved provenance gap, not assumed either way); Stage 2 is
+    a deterministic `ADC_RE` match against title+abstract, applied to
+    every Stage-1 candidate.
 - Read the real per-year JSON files directly (not assumed uniform):
   AACR 2016-2025 carry full Crossref metadata (doi, `published_online`/
   `published_print` date-parts, `container_title`, ...); AACR's 2026 file
@@ -95,6 +110,30 @@ never trusting the attempts ledger's last status -- removing an entire
 class of ledger/checkpoint desync logic (`_classify_ids`/
 `pending_recovery`) that existed only to work around an expensive-recheck
 cost this job doesn't have.
+
+## 4b. Round-1 fix: `--since`/`--until` must never exclude undated records
+
+The first version filtered `all_records` by `publication_or_release_date`
+directly (`>= since` / `<= until`), which silently dropped every undated
+record -- exactly AACR 2026's 307 no-doi, no-date, PDF-extracted records --
+before it ever reached the content-hash comparison step. This directly
+conflicts with Phase 6's intended `--since <last_successful_update>`
+twice-monthly update pattern: an undated record that is new, or that the
+external workflow corrects, would never be re-compared or re-materialized
+on any incremental run, permanently defeating exactly the early-seed
+conference update this phase exists for.
+
+Fixed to the minimum correct rule: a date filter can only exclude a record
+it can actually date. `--since`/`--until` now keep every record with no
+`publication_or_release_date` in scope for hash comparison, filtering only
+records that actually have a date outside the requested window. Re-reading
+an unchanged undated record every run costs nothing beyond a cheap
+in-memory hash comparison (still a local file read either way), so this
+does not reintroduce any real per-run cost. Regression test:
+`test_since_never_excludes_undated_records_from_change_detection` --
+an undated AACR record materialized at v1, corrected, then re-run with
+`--since` set to a recent date, and asserted to still detect the change
+and materialize v2.
 
 ## 5. Live run against the real corpus (not just synthetic test fixtures)
 

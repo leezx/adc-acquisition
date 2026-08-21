@@ -155,6 +155,26 @@ def test_since_until_filter_by_publication_date(tmp_path):
     assert manifest.iloc[0]["publication_or_release_date"] == "2020-12-01"
 
 
+def test_since_never_excludes_undated_records_from_change_detection(tmp_path):
+    corpus_root = tmp_path / "corpus"
+    _write_aacr_year(corpus_root, 2026, [_aacr_record(doi=None, published_print={}, abstract_text="Original text.")])
+
+    ConferenceAbstractCorpusJob().run(_base_args(tmp_path, corpus_root))
+    manifest = pd.read_parquet(tmp_path / "DATA" / "manifests" / "conference_abstract_corpus.parquet")
+    assert len(manifest) == 1
+    assert manifest.iloc[0]["version"] == 1
+
+    _write_aacr_year(corpus_root, 2026, [_aacr_record(doi=None, published_print={}, abstract_text="Corrected text.")])
+    result2 = ConferenceAbstractCorpusJob().run(_base_args(tmp_path, corpus_root, since="2026-08-01"))
+
+    assert result2.records_discovered == 1
+    assert result2.records_downloaded == 1
+    manifest = pd.read_parquet(tmp_path / "DATA" / "manifests" / "conference_abstract_corpus.parquet")
+    latest = manifest.sort_values("version").iloc[-1]
+    assert latest["version"] == 2
+    assert latest["abstract"] == "Corrected text."
+
+
 def test_dry_run_writes_nothing(tmp_path):
     corpus_root = tmp_path / "corpus"
     _write_aacr_year(corpus_root, 2020, [_aacr_record()])
