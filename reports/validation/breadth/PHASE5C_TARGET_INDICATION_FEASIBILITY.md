@@ -1,5 +1,40 @@
 # Phase 5c — Target x Indication Feasibility Table
 
+## Round-1 fix (2 semantic issues from review)
+
+1. **Field names implied the wrong thing was being counted.** The count
+   is the number of DISTINCT SUPPORTING ADC ASSETS for a (target,
+   indication) pair (two assets each backed by 100 trials still count as
+   2, not 200) -- not evidence documents/trials/sources. Renamed
+   `evidence_count`/`associated_adc_candidates` to
+   `supporting_asset_count`/`supporting_adc_candidates`, leaving the
+   `evidence_count`/`evidence_*` name family free for a genuinely
+   different future evidence-document-count metric without a schema
+   collision.
+2. **`status=VALIDATED` overclaimed what this table actually proves.**
+   "A known-target ADC and a CT.gov condition string were both associated
+   with the same trial record" proves an OBSERVED CLINICAL ASSOCIATION,
+   not that target-in-indication therapeutic feasibility has been
+   biologically validated -- especially since `indication` is raw,
+   undeduplicated CT.gov text mixing real disease indications with
+   biomarker/mutation/comorbidity conditions (e.g. "HER2 Gene Mutation").
+   Changed `status` to `OBSERVED_CLINICAL_ASSOCIATION`; `confidence=high`
+   is kept but now documented as confidence in the ASSOCIATION's
+   provenance (a real CT.gov record links this target's asset to this
+   condition string), not confidence in therapeutic feasibility. This
+   table does not yet distinguish clinical/preclinical/patent/conference
+   support tiers (a separate future increment per the original
+   specification's `highest_development_stage`/`clinical_validation`/
+   `preclinical_validation`/`patent_support`/`conference_support` split)
+   -- every row here is intentionally one honestly-labeled tier until
+   that layering exists.
+
+Regression test added for each: field renames verified throughout;
+`test_build_target_indication_rows_never_asserts_validated_status`
+explicitly locks in the new status. Re-verified live: same 1012 rows,
+same aggregation/sort behavior, just correctly named/labeled. 462 tests
+passing (1 new this round).
+
 Per `reports/validation/BREADTH_PLAN.md` Phase 5 Part 10. Third increment
 after Phase 5a (conference-text candidate discovery) and Phase 5b (ADC
 modality taxonomy).
@@ -51,12 +86,12 @@ $ python3 tools/breadth/feasibility_entities.py ...
 target_indication_feasibility.tsv: 1012 (target, indication) pairs (known-registry-only this phase)
 ```
 
-Top rows by evidence_count (3 of the 14 known HER2-targeted assets --
-`Disitamab vedotin`, `Trastuzumab deruxtecan`, `Trastuzumab emtansine` --
-share several indication strings, e.g. "Breast Cancer", "Gastric Cancer"),
-descending from there. Rows sorted by `evidence_count` (desc), then
-`target`, then `indication`, so the most cross-validated (target,
-indication) pairs sort first.
+Top rows by supporting_asset_count (3 of the 14 known HER2-targeted assets
+-- `Disitamab vedotin`, `Trastuzumab deruxtecan`, `Trastuzumab emtansine`
+-- share several indication strings, e.g. "Breast Cancer", "Gastric
+Cancer"), descending from there. Rows sorted by `supporting_asset_count`
+(desc), then `target`, then `indication`, so the (target, indication)
+pairs with the most distinct supporting assets sort first.
 
 ## What Phase 5c does and does not establish
 

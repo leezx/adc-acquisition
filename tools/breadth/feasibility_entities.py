@@ -97,7 +97,7 @@ COMPONENT_FIELDS = [
     "evidence_count", "evidence_sources", "confidence", "status", "associated_adc_candidates",
 ]
 TARGET_INDICATION_FIELDS = [
-    "target", "target_entity_id", "indication", "evidence_count", "associated_adc_candidates",
+    "target", "target_entity_id", "indication", "supporting_asset_count", "supporting_adc_candidates",
     "confidence", "status",
 ]
 
@@ -164,7 +164,29 @@ def build_target_indication_rows(candidate_rows: list[dict], target_rows: list[d
     has no resolved target to pair with any indication here. The 16
     CT.gov/conference-derived candidates (Phase 3/5a) have `target=""`
     (honestly left blank, Part 4's explicit tolerance for partial
-    entities), so they cannot contribute a row -- not silently guessed."""
+    entities), so they cannot contribute a row -- not silently guessed.
+
+    ROUND-1 FIX (2 semantic issues from review): the count field counts
+    DISTINCT SUPPORTING ADC ASSETS for a (target, indication) pair, not
+    evidence documents/trials/sources -- two assets each backed by 100
+    trials still count as 2, not 200 -- so it's named
+    `supporting_asset_count`/`supporting_adc_candidates`, not
+    `evidence_count`/`associated_adc_candidates`, leaving room for a
+    genuinely different future `supporting_evidence_count` without a
+    schema collision. And this table does NOT assert `status=VALIDATED`:
+    "a known-target ADC and a CT.gov condition string were both
+    associated with the same trial record" proves an OBSERVED CLINICAL
+    ASSOCIATION, not that target-in-indication therapeutic feasibility has
+    been biologically validated -- especially since `indication` is raw,
+    undeduplicated CT.gov `conditions` text (mixing real disease
+    indications with biomarker/mutation/comorbidity conditions like "HER2
+    Gene Mutation"). `confidence=high` describes confidence in the
+    ASSOCIATION's provenance (a real CT.gov record links this target's
+    asset to this condition string), not confidence in therapeutic
+    feasibility -- this table does not yet distinguish clinical vs.
+    preclinical vs. patent/conference-only support levels (a future,
+    separate increment), so every row here is intentionally the same,
+    honestly-labeled tier."""
     candidates_by_entity_id = {c["entity_id"]: c for c in candidate_rows}
     pairs: dict[tuple[str, str], dict] = {}
     for target_row in target_rows:
@@ -178,20 +200,20 @@ def build_target_indication_rows(candidate_rows: list[dict], target_rows: list[d
                 key = (target_row["entity_id"], indication)
                 entry = pairs.setdefault(key, dict(
                     target=target_row["canonical_label"], target_entity_id=target_row["entity_id"],
-                    indication=indication, associated_adc_candidates=set(),
+                    indication=indication, supporting_adc_candidates=set(),
                 ))
-                entry["associated_adc_candidates"].add(candidate_id)
+                entry["supporting_adc_candidates"].add(candidate_id)
 
     rows = [
         dict(
             target=entry["target"], target_entity_id=entry["target_entity_id"], indication=entry["indication"],
-            evidence_count=len(entry["associated_adc_candidates"]),
-            associated_adc_candidates="; ".join(sorted(entry["associated_adc_candidates"])),
-            confidence="high", status="VALIDATED",
+            supporting_asset_count=len(entry["supporting_adc_candidates"]),
+            supporting_adc_candidates="; ".join(sorted(entry["supporting_adc_candidates"])),
+            confidence="high", status="OBSERVED_CLINICAL_ASSOCIATION",
         )
         for entry in pairs.values()
     ]
-    rows.sort(key=lambda r: (-r["evidence_count"], r["target"], r["indication"]))
+    rows.sort(key=lambda r: (-r["supporting_asset_count"], r["target"], r["indication"]))
     return rows
 
 
