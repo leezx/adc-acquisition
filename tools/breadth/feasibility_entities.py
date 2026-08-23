@@ -78,6 +78,7 @@ CANDIDATE_FIELDS = [
     "evidence_count", "evidence_sources", "confidence", "status",
     "asset_name", "development_codes", "target", "company", "stage", "indications",
     "payload_if_known", "payload_evidence_type", "linker_if_known", "linker_evidence_type",
+    "modality_classification",
 ]
 COMPONENT_FIELDS = [
     "entity_id", "entity_type", "canonical_label", "aliases", "first_seen", "last_seen",
@@ -98,6 +99,20 @@ def load_known_registry(path: Path) -> dict[str, dict]:
     with path.open(encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
     return {a["asset_id"]: a for a in data.get("assets", [])}
+
+
+def filter_promotable(queue: pd.DataFrame) -> pd.DataFrame:
+    """PROMOTED/AUTO_HIGH_CONFIDENCE rows, excluding any row whose own
+    evidence positively confirms a non-strict-ADC conjugate modality
+    (Phase 5b, reports/validation/breadth/ADC_MODALITY_TAXONOMY.md) -- a
+    real ADC candidate table must never silently include a confirmed
+    non-antibody conjugate, regardless of validation_status. Not
+    load-bearing against the current data (every ADJACENT_CONJUGATE_
+    MODALITY row today is already NEEDS_REVIEW, excluded by the status
+    filter alone), but closes a real gap for any future case where an
+    adjacent-modality candidate is ALSO confirmed via a structured field."""
+    excluded_modality = queue["modality_classification"] == "ADJACENT_CONJUGATE_MODALITY"
+    return queue[queue["validation_status"].isin(PROMOTABLE_STATUSES) & ~excluded_modality]
 
 
 def indications_for_nct_ids(ct_manifest: pd.DataFrame, nct_ids: list[str]) -> tuple[list[str], str]:
@@ -129,10 +144,11 @@ def main() -> int:
 
     output_dir = Path(args.output)
     queue = pd.read_csv(args.candidate_queue, sep="\t", dtype=str).fillna("")
-    promoted = queue[queue["validation_status"].isin(PROMOTABLE_STATUSES)]
+    promoted = filter_promotable(queue)
+    excluded_modality_count = int((queue["modality_classification"] == "ADJACENT_CONJUGATE_MODALITY").sum())
     print(f"{len(promoted)}/{len(queue)} candidate_queue.tsv rows are validated "
-          f"(PROMOTED/AUTO_HIGH_CONFIDENCE); building feasibility entities from those only",
-          file=sys.stderr)
+          f"(PROMOTED/AUTO_HIGH_CONFIDENCE, excluding {excluded_modality_count} ADJACENT_CONJUGATE_MODALITY); "
+          "building feasibility entities from those only", file=sys.stderr)
 
     known_registry = load_known_registry(Path(args.known_assets_file))
     ct_path = Path(args.data_dir) / "manifests" / "clinicaltrials.parquet"
@@ -190,6 +206,7 @@ def main() -> int:
                 indications="; ".join(indications),
                 payload_if_known=payload_if_known, payload_evidence_type=payload_evidence_type,
                 linker_if_known=linker_if_known, linker_evidence_type=linker_evidence_type,
+                modality_classification="STRICT_ADC",
             ))
         else:
             indications, stage = indications_for_nct_ids(ct_manifest, nct_ids)
@@ -204,6 +221,7 @@ def main() -> int:
                 stage=stage or "unknown", indications="; ".join(indications),
                 payload_if_known=payload_if_known, payload_evidence_type=payload_evidence_type,
                 linker_if_known=linker_if_known, linker_evidence_type=linker_evidence_type,
+                modality_classification=c["modality_classification"],
             ))
 
         if suffix:
