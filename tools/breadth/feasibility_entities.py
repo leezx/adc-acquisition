@@ -35,10 +35,22 @@ word is not safe in general (naming structure varies and isn't guaranteed
 splittable that way). Antibody-entity extraction is deferred until a
 source explicitly supports antibody identity.
 
-`adc_platforms.tsv` and `target_indication_feasibility.tsv` are explicitly
-Phase 5 work (BREADTH_PLAN.md Parts 5/10) and are NOT written here -- this
-script does not create empty placeholder files for them, to avoid implying
-they've been started.
+  DATA/feasibility/target_indication_feasibility.tsv (Phase 5c, Part 10)
+                                          -- (ADC_TARGET, indication) pairs
+                                          derived from adc_candidates.tsv x
+                                          adc_targets.tsv; `target` is
+                                          ALWAYS ADC_TARGET (the delivery
+                                          antigen), never PAYLOAD_MOA_TARGET.
+                                          Known-registry-only in this phase,
+                                          same reason as adc_targets.tsv:
+                                          the 16 CT.gov/conference-derived
+                                          candidates have no resolved
+                                          target yet, so they cannot
+                                          contribute a row here.
+
+`adc_platforms.tsv` is explicitly separate Phase 5 work (BREADTH_PLAN.md
+Part 5/7/8) and is NOT written here -- this script does not create an
+empty placeholder file for it, to avoid implying it's been started.
 
 Usage:
     python3 tools/breadth/feasibility_entities.py \
@@ -83,6 +95,10 @@ CANDIDATE_FIELDS = [
 COMPONENT_FIELDS = [
     "entity_id", "entity_type", "canonical_label", "aliases", "first_seen", "last_seen",
     "evidence_count", "evidence_sources", "confidence", "status", "associated_adc_candidates",
+]
+TARGET_INDICATION_FIELDS = [
+    "target", "target_entity_id", "indication", "evidence_count", "associated_adc_candidates",
+    "confidence", "status",
 ]
 
 
@@ -132,6 +148,51 @@ def indications_for_nct_ids(ct_manifest: pd.DataFrame, nct_ids: list[str]) -> tu
                 if phase_rank.get(p, 0) > phase_rank.get(max_phase, 0):
                     max_phase = p
     return sorted(conditions), max_phase
+
+
+def build_target_indication_rows(candidate_rows: list[dict], target_rows: list[dict]) -> list[dict]:
+    """target x indication feasibility table (Phase 5c, BREADTH_PLAN.md
+    Part 10) -- `target` is ALWAYS ADC_TARGET (the antibody-binding
+    delivery antigen), never PAYLOAD_MOA_TARGET (BREADTH_PLAN.md Phase 1's
+    permanent ontology split).
+
+    Built ONLY from candidates whose target is already known -- today,
+    the 14 known-registry assets only. This is not a new restriction: it
+    directly follows adc_targets.tsv's own existing scope ("known-registry
+    only this phase" -- Phase 3's original comment, still true), since a
+    candidate absent from adc_targets.tsv's `associated_adc_candidates`
+    has no resolved target to pair with any indication here. The 16
+    CT.gov/conference-derived candidates (Phase 3/5a) have `target=""`
+    (honestly left blank, Part 4's explicit tolerance for partial
+    entities), so they cannot contribute a row -- not silently guessed."""
+    candidates_by_entity_id = {c["entity_id"]: c for c in candidate_rows}
+    pairs: dict[tuple[str, str], dict] = {}
+    for target_row in target_rows:
+        candidate_ids = [c.strip() for c in target_row["associated_adc_candidates"].split(";") if c.strip()]
+        for candidate_id in candidate_ids:
+            candidate = candidates_by_entity_id.get(candidate_id)
+            if not candidate:
+                continue
+            indications = [i for i in candidate["indications"].split("; ") if i]
+            for indication in indications:
+                key = (target_row["entity_id"], indication)
+                entry = pairs.setdefault(key, dict(
+                    target=target_row["canonical_label"], target_entity_id=target_row["entity_id"],
+                    indication=indication, associated_adc_candidates=set(),
+                ))
+                entry["associated_adc_candidates"].add(candidate_id)
+
+    rows = [
+        dict(
+            target=entry["target"], target_entity_id=entry["target_entity_id"], indication=entry["indication"],
+            evidence_count=len(entry["associated_adc_candidates"]),
+            associated_adc_candidates="; ".join(sorted(entry["associated_adc_candidates"])),
+            confidence="high", status="VALIDATED",
+        )
+        for entry in pairs.values()
+    ]
+    rows.sort(key=lambda r: (-r["evidence_count"], r["target"], r["indication"]))
+    return rows
 
 
 def main() -> int:
@@ -260,6 +321,11 @@ def main() -> int:
             merged_targets[row["entity_id"]] = row
     write_tsv(output_dir / "adc_targets.tsv", list(merged_targets.values()), COMPONENT_FIELDS)
     print(f"adc_targets.tsv: {len(merged_targets)} entities (known-registry only this phase)", file=sys.stderr)
+
+    target_indication_rows = build_target_indication_rows(candidate_rows, list(merged_targets.values()))
+    write_tsv(output_dir / "target_indication_feasibility.tsv", target_indication_rows, TARGET_INDICATION_FIELDS)
+    print(f"target_indication_feasibility.tsv: {len(target_indication_rows)} (target, indication) pairs "
+          "(known-registry-only this phase, same reason as adc_targets.tsv)", file=sys.stderr)
 
     # adc_payloads.tsv / adc_linkers.tsv: status = INFERRED (round-1 fix,
     # not VALIDATED) -- these are naming-convention inferences from a
