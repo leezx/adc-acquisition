@@ -3,9 +3,12 @@
 Per `reports/validation/BREADTH_PLAN.md` Phase 7 ("Final breadth benchmark
 + freeze decision") and the reviewer's explicit instruction after PR #27's
 APPROVE: put the cumulative Phase 1–5e results against all six acceptance
-gates (`BREADTH_PLAN.md` Section 4), decide which gaps are v1 blockers vs.
-explicit v1.x deferrals, and use that to inform whether Phase 6 (the
-14-day delta system) should start next.
+gates (`BREADTH_PLAN.md` Section 4), and use that to answer two
+DELIBERATELY SEPARATE questions (Section 7/8): whether Phase 6 (the
+14-day delta system) should start next, and whether breadth itself is
+ready to be frozen as v1 — the second does not follow from the first,
+and conflating them is exactly the failure mode the freeze gates exist
+to prevent.
 
 **This report recommends a verdict; it does not unilaterally declare
 one.** Every prior phase in this project has been gated on the reviewer's
@@ -104,12 +107,30 @@ negative, not a proven miss** — true recall is unknown but at least
 43.4%, a conservative lower bound, exactly as Phase 1 originally framed
 its own (lower) number.
 
-**Recommendation:** this gate is a genuine, real, disclosed gap — but it
-is a **depth** problem (materialize more of what's already discovered),
-not a **breadth** problem (add a new source/capability). Phase 6's own
-periodic re-runs are the natural mechanism to keep closing it over time;
-treating "95%" as a precondition for Phase 6 would be circular, since
-Phase 6 is part of how it gets closed further.
+**ROUND-1 FIX — the causal claim below was overstated in an earlier
+draft of this report and is corrected here.** Materialization depth and
+text observability are **demonstrated major contributors** to the
+remaining gap (the WIPO/USPTO numbers above are real and severe). But
+Phase 2's 14-case diagnostic (`PHASE2_MISS_TAXONOMY.md` §3) checked only
+the most diagnostic subset available — assets with real NAR-cited
+evidence AND a mature phase bucket — and found no confirmed query-
+content defect *among those 14*. That does **not** extend to a claim
+that all 365 currently-unresolved assets are purely a depth problem: a
+genuine query-scope gap, an uncovered source, or some other capability
+gap could still exist among the remaining unresolved set, and this
+audit has not checked for one. The honest statement is: **materialization
+depth and text observability are demonstrated major contributors to the
+remaining gap; the limited Phase 2 diagnostic found no confirmed
+query-content defect, but does not exclude additional query/source/
+capability gaps among the remaining unresolved assets.**
+
+**Recommendation:** this gate is a genuine, real, disclosed gap, with at
+least part of it attributable to materialization depth rather than a
+missing source/capability — but not proven to be *entirely* that.
+Closing it further requires both continued materialization (Phase 6's
+natural remit) and a broader root-cause pass than Phase 2's 14-case
+sample (not attempted here). This gate is **not met** by any reading,
+and is treated as such in the verdict below.
 
 ## 2. Gate 2 — Approved assets (100% recognized/recoverable unless a documented ontology exclusion applies)
 
@@ -128,17 +149,36 @@ Phase 6 is part of how it gets closed further.
   precedent was presumably a deliberate, documented call, not an
   automatic one.
 - **Trastuzumab botidotin (Sertaly)** — `AMBIGUOUS` (low-confidence alias
-  match only, in `conference_abstract_corpus` + `pubmed`). This is a
-  genuinely recent approval (FDA, October 2025) — the gap is plausibly
-  just recency (evidence hasn't accumulated/materialized yet for a
-  ~10-month-old approval), not a modality or query issue. A real,
-  disclosed, likely time-resolving gap.
+  match only, in `conference_abstract_corpus` + `pubmed`). **ROUND-1
+  FIX**: an earlier draft of this report reproduced NAR's own record
+  verbatim as "Approved (FDA): Oct, 2025." External verification (Kelun-
+  Biotech's own press releases, prnewswire.com, and independent news
+  coverage, October 2025) confirms the October 2025 approval was by
+  **China's NMPA**, for adult HER2+ breast cancer patients who received
+  >=1 prior anti-HER2 therapy — not an FDA approval. The live ADCdb
+  website itself currently shows the same "Approved (FDA)" label, so
+  this is an **upstream NAR/ADCdb reference-metadata error**, not
+  something introduced by this audit or this repo — treated here as a
+  documented inconsistency rather than reproduced as fact. This is a
+  genuinely valuable benchmark finding in its own right: it demonstrates
+  this system can catch an error in the reference benchmark itself, not
+  just measure recall against it.
+
+  Separately, its `AMBIGUOUS` broad-recall status should **not** be
+  attributed to recency without evidence for that specifically: the
+  asset has multiple mature-looking identifiers (`A166`, `KL-A166`,
+  `trastuzumab botidotin`), and at least NCI's own thesaurus already
+  indexes `A166`. The correct, undemonstrated-cause framing is: an
+  **unresolved identifier/matching or evidence-observability gap**;
+  recency may contribute but is not demonstrated as the cause.
 
 **Recommendation:** effectively 20/21 (95.2%) once Cetuximab sarotalocan
 is treated as a probable ontology exclusion (pending an explicit
-decision) — Gate 2 is close to met and the one clear residual gap
-(Trastuzumab botidotin) is the kind Phase 6's periodic re-runs should
-close on their own as more literature accumulates.
+decision) — Gate 2 is close to met, but the one clear residual gap
+(Trastuzumab botidotin) has an undemonstrated cause and should not be
+assumed to self-resolve on a timeline; it needs the same kind of
+identifier/matching investigation Phase 2's diagnostic applied to other
+cases, not deferred as a recency issue.
 
 ## 3. Gate 3 — Component breadth (ADC_TARGET, PAYLOAD_MOA_TARGET, payloads, linkers; ontology split preserved)
 
@@ -176,10 +216,11 @@ corroboration ladder); read broadly (comprehensive coverage of NAR's
 full 316-antigen/522-payload/589-linker universe), it is clearly not
 met. This is a genuine ambiguity in the gate's own wording that the
 reviewer should resolve explicitly rather than have this audit assume
-an answer. Either way: **target resolution for new candidates is a real,
-disclosed, unclosed gap** — recommend v1.x, since closing it needs a new
-target-identification mechanism (a capability gap), not more of what
-already exists.
+an answer. Either way: **target resolution for new candidates remains
+0/16, a real, disclosed, currently-open gap** (see Section 7 for why
+this does not block Phase 6 but does block a freeze verdict) — closing
+it needs a new target-identification mechanism (a capability gap), not
+more of what already exists.
 
 ## 4. Gate 4 — Ours-only value (non-trivial, provenance-preserving entities absent from NAR)
 
@@ -269,40 +310,57 @@ expert spot-checks 10-15 promoted entities across types) rather than a
 v1 blocker, since no evidence of a precision problem exists to justify
 blocking on it now.
 
-## 7. V1-blocker vs. v1.x-defer classification
+## 7. Blocks Phase 6 vs. blocks ACQUISITION_V1 freeze — kept as two separate questions
 
-| Gap | Classification | Why |
-|---|---|---|
-| Gate 1 shortfall (43.4% vs. 95%) | **Defer to v1.x**, closed incrementally by Phase 6 | Diagnosed as materialization-depth (esp. WIPO/USPTO 6.7% materialized), not a missing capability or confirmed query defect |
-| Gate 2's 2 unresolved Approved assets | **Defer to v1.x** | 1 plausible ontology exclusion (photoimmunotherapy conjugate), 1 likely recency (Oct 2025 approval) |
-| Gate 3's target-resolution gap for new candidates | **Defer to v1.x** | Requires a new target-identification mechanism (capability gap), honestly disclosed since Phase 3 |
-| Gate 4's candidate-novelty overstatement | **Already corrected here, no further action needed** | Reframing only — the entities themselves are still correctly VALIDATED, just not "beyond NAR" |
-| Gate 5 (delta system) | **Not a gap — Phase 6's own deliverable** | Cannot be evaluated before Phase 6 exists by definition |
-| Gate 6's independent-audit gap | **Defer to v1.x**, lightweight | No evidence of a precision problem; nice-to-have rigor, not urgent |
-| Patent-derived breadth mining (BREADTH_PLAN Part 8) | **Defer to v1.x** (already explicitly deferred every phase since Phase 5) | Never attempted; explicitly out of scope through Phase 5e |
-| Zymeworks scientific-presentation source | **Defer to v1.x** (already explicitly deferred, Phase 5d) | Real page found, deferred for markup fragility |
-| Candidate-to-platform attribution | **Defer to v1.x** | Tried, produced a real false positive (Phase 5e), needs a better mechanism (usage-verb pattern matching) than time allowed this phase |
+**ROUND-1 FIX.** An earlier draft of this report used a single "v1-blocker
+vs. v1.x-defer" column, which is exactly the kind of conflation the
+freeze gates exist to prevent: it let "Phase 6 can start" quietly stand
+in for "breadth is done." These are two different questions with two
+different answers, kept explicitly separate below.
 
-**No item on this list requires a new acquisition source or a new
-entity-type/table to close** — every deferred gap is either (a) more
-depth on an existing source, (b) a mechanism enhancement to existing
-extraction, or (c) explicitly Phase 6/8's own charge already. This is
-the concrete basis for the recommendation below.
+| Gap | Blocks Phase 6 start? | Blocks ACQUISITION_V1 freeze? | Why |
+|---|---|---|---|
+| Gate 1 shortfall (43.4% vs. 95% target) | **No** | **Yes — open** | Materialization depth (WIPO/USPTO under 7% materialized) is a demonstrated major contributor, but Phase 2's 14-case diagnostic does not clear the remaining ~365 unresolved assets of every possible query/source/capability gap. Genuinely unmet, not merely "depth, so it's fine" |
+| Gate 2's 2 unresolved Approved assets | **No** | **Yes — open** | 1 plausible ontology exclusion (photoimmunotherapy conjugate, pending explicit decision); 1 (Trastuzumab botidotin) an unresolved identifier/matching or observability gap with an undemonstrated cause — this case also surfaced a real NAR/ADCdb upstream metadata error (FDA vs. NMPA), worth reporting upstream independent of this repo |
+| Gate 3's target-resolution gap for new candidates (0/16) | **No** | **Yes — open** | Requires a new target-identification mechanism (a real capability gap, not a depth gap), honestly disclosed since Phase 3, still 0/16 |
+| Gate 4's candidate-novelty overstatement | **No** | **No — already corrected** | Reframing only, resolved in this report — the entities are still correctly VALIDATED, just not "beyond NAR"; the 29 platforms remain the real beyond-NAR claim |
+| Gate 5 (delta system) | **N/A — this IS Phase 6** | **Not yet evaluable** | Cannot be tested before Phase 6 exists; Phase 6's own two controlled delta runs ARE gate 5's evaluation, not a precondition for starting Phase 6 |
+| Gate 6's independent-audit gap | **No** | **Open, lower priority** | No evidence of a precision problem found; a real gap in rigor, not urgent enough to block anything |
+| Patent-derived breadth mining (Part 8) | **No** | **Open (explicitly deferred since Phase 5)** | Never attempted, explicitly out of scope through Phase 5e |
+| Zymeworks scientific-presentation source | **No** | **Open (explicitly deferred, Phase 5d)** | Real page found, deferred for markup fragility |
+| Candidate-to-platform attribution | **No** | **Open** | Tried, produced a real false positive (Phase 5e), needs a better mechanism than time allowed this phase |
 
-## 8. Recommendation
+**No item above requires a new acquisition source or entity-type/table
+to eventually close** — every open item is either more materialization
+depth, a mechanism enhancement, a root-cause investigation broader than
+Phase 2's sample, or explicitly Phase 6/8's own future charge. That is
+why nothing here blocks *starting* Phase 6. It is not, on its own,
+evidence that breadth is *sufficient* — Gates 1, 2, and 3 are genuinely,
+currently open, not merely procedurally pending.
 
-The breadth-layer architecture (source set, entity-type schema, ontology
-splits, evidence-tier ladder) is now broad and mature enough to support
-Phase 6's incremental delta system — no gap identified above requires a
-NEW source or entity type to close, only more depth on what already
-exists or mechanisms Phase 6/8 already own. Recommend: proceed to Phase
-6 (`update_breadth` orchestration), treating Gate 1/2's residual
-recall gaps as things Phase 6's own periodic re-runs will keep closing,
-not preconditions blocking its start.
+## 8. Verdict
+
+```
+PROCEED_TO_PHASE6: YES
+ACQUISITION_V1_FREEZE_STATUS: NOT_YET_READY_TO_FREEZE
+```
+
+Current evidence supports starting Phase 6 (the 14-day delta system) --
+no identified gap requires a new acquisition source or entity type, and
+Gate 5 cannot be evaluated any other way. Current evidence does **not**
+support `READY_TO_FREEZE_ACQUISITION_V1`: Gate 1 (43.4% vs. 95%), Gate 2
+(19/21, 2 gaps with undemonstrated causes), and Gate 3 (0/16 new-candidate
+target resolution) are genuinely open, not merely deferred as
+administrative follow-up. The correct sequencing is: build Phase 6, run
+it through (at minimum) two controlled delta cycles as Gate 5 itself
+requires, and only then re-evaluate all six gates together for a real
+freeze verdict — re-opening scope discussion mid-Phase-6 would be scope
+creep the same way skipping this distinction now would be premature
+closure.
 
 This is a recommendation for the reviewer's own APPROVE/REQUEST_CHANGES
 decision, per this project's standing governance model — not a
-unilateral `READY_TO_FREEZE_ACQUISITION_V1` declaration.
+unilateral declaration in either direction.
 
 ## Reproduction
 
