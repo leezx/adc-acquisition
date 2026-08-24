@@ -4,11 +4,12 @@ import pandas as pd
 import yaml
 
 from tools.breadth.feasibility_entities import (
+    build_component_evidence_index,
     build_platform_rows,
+    evidence_tier_from_sources,
     filter_promotable,
     load_text_corpus,
     main as feasibility_main,
-    text_observed_payload_linker,
 )
 
 
@@ -56,19 +57,30 @@ def test_filter_promotable_keeps_known_registry_strict_adc_rows():
     assert list(promoted["candidate_id"]) == ["D"]
 
 
-def test_text_observed_payload_linker_true_when_local_context_names_chemistry():
-    """Phase 5e: a new candidate's own evidence record explicitly naming
-    its payload chemistry in the LOCAL context around its own mention
-    upgrades it from INFERRED to OBSERVED."""
+def test_evidence_index_upgrades_to_text_observed_from_single_corpus():
+    """Phase 5e: a candidate's own evidence explicitly naming its payload
+    chemistry in the LOCAL context around its own mention, in exactly one
+    corpus, upgrades it from INFERRED to TEXT_OBSERVED -- regardless of
+    whether the candidate is known-registry or newly discovered (round-1
+    fix: registry status is never chemistry evidence on its own)."""
     text = "Novel Fooximab vedotin ADC was conjugated to MMAE and showed potent activity in xenograft models."
-    text_by_id = {"REC1": text}
-    payload_observed, linker_observed = text_observed_payload_linker(
-        "Fooximab vedotin", "vedotin", ["REC1"], text_by_id,
-    )
-    assert payload_observed is True
+    index = build_component_evidence_index([("conference_abstract_corpus", {"REC1": text})])
+    entry = index["fooximabvedotin"]
+    assert evidence_tier_from_sources(entry["payload"]) == "TEXT_OBSERVED"
 
 
-def test_text_observed_payload_linker_false_when_chemistry_belongs_to_different_candidate():
+def test_evidence_index_upgrades_to_text_validated_across_two_corpora():
+    text_a = "Fooximab vedotin was conjugated to MMAE."
+    text_b = "In this study, Fooximab vedotin (an MMAE-based ADC) was evaluated in xenografts."
+    index = build_component_evidence_index([
+        ("conference_abstract_corpus", {"REC1": text_a}),
+        ("pubmed", {"REC2": text_b}),
+    ])
+    entry = index["fooximabvedotin"]
+    assert evidence_tier_from_sources(entry["payload"]) == "TEXT_VALIDATED_CROSS_CORPUS"
+
+
+def test_evidence_index_ignores_chemistry_belonging_to_different_candidate():
     """The cross-contamination guard (Phase 5b's own round-1 fix
     discipline, reused here): a DIFFERENT candidate's chemistry mentioned
     elsewhere in the same record must not upgrade THIS candidate's tier."""
@@ -76,19 +88,31 @@ def test_text_observed_payload_linker_false_when_chemistry_belongs_to_different_
         "Trastuzumab deruxtecan uses an exatecan derivative payload. "
         "In contrast, Fooximab vedotin was evaluated as a comparator arm with no payload details disclosed."
     )
-    text_by_id = {"REC1": text}
-    payload_observed, linker_observed = text_observed_payload_linker(
-        "Fooximab vedotin", "vedotin", ["REC1"], text_by_id,
-    )
-    assert payload_observed is False
+    index = build_component_evidence_index([("conference_abstract_corpus", {"REC1": text})])
+    entry = index.get("fooximabvedotin", {"payload": set(), "linker": set()})
+    assert evidence_tier_from_sources(entry["payload"]) == "USAN_INN_NAMING_INFERENCE"
 
 
-def test_text_observed_payload_linker_false_when_no_evidence_text_available():
-    payload_observed, linker_observed = text_observed_payload_linker(
-        "Fooximab vedotin", "vedotin", ["UNKNOWN_ID"], {},
-    )
-    assert payload_observed is False
-    assert linker_observed is False
+def test_evidence_index_empty_for_no_evidence_text_available():
+    index = build_component_evidence_index([("conference_abstract_corpus", {})])
+    entry = index.get("fooximabvedotin", {"payload": set(), "linker": set()})
+    assert evidence_tier_from_sources(entry["payload"]) == "USAN_INN_NAMING_INFERENCE"
+    assert evidence_tier_from_sources(entry["linker"]) == "USAN_INN_NAMING_INFERENCE"
+
+
+def test_known_registry_asset_without_linker_text_evidence_stays_inferred_not_validated():
+    """The reviewer's required regression: a known-registry -vedotin
+    asset whose corpus text never states its OWN linker chemistry must
+    stay USAN_INN_NAMING_INFERENCE for its linker -- registry membership
+    alone must never promote it to TEXT_OBSERVED/TEXT_VALIDATED. The SAME
+    asset's payload IS explicitly named in the corpus, confirming this
+    isn't merely "no text was scanned" but a genuine, evidence-gated
+    per-component distinction."""
+    text = "Testuzumab vedotin, an anti-HER2 ADC, was conjugated to MMAE and showed potent activity."
+    index = build_component_evidence_index([("conference_abstract_corpus", {"REC1": text})])
+    entry = index["testuzumabvedotin"]
+    assert evidence_tier_from_sources(entry["payload"]) == "TEXT_OBSERVED"
+    assert evidence_tier_from_sources(entry["linker"]) == "USAN_INN_NAMING_INFERENCE"
 
 
 def test_load_text_corpus_returns_empty_dict_for_missing_file(tmp_path):
@@ -126,12 +150,15 @@ def test_build_platform_rows_no_hits_returns_empty_list():
 
 
 def test_main_end_to_end_produces_platform_and_moa_target_tables_with_correct_tiers(tmp_path, monkeypatch):
-    """Phase 5e end-to-end: a known-registry candidate's payload/linker
-    is VALIDATED, a new candidate with corroborating local text is
-    OBSERVED, payload_moa_targets.tsv resolves Tubulin for -vedotin, and
-    a platform mention in the SAME evidence record is mined into
-    adc_platforms.tsv -- all from evidence already written to tmp_path,
-    no new acquisition."""
+    """Phase 5e end-to-end (round-1 fix): a known-registry candidate's
+    payload is TEXT_VALIDATED_CROSS_CORPUS only because its OWN chemistry
+    is independently named in TWO corpora -- never because it is
+    known-registry. Its LINKER has no corroborating text anywhere and
+    must stay INFERRED, the reviewer's required regression, exercised
+    here through the full pipeline. A new candidate with corroborating
+    local text in exactly one corpus is TEXT_OBSERVED. A platform
+    mention in the same evidence is mined into adc_platforms.tsv -- all
+    from evidence already written to tmp_path, no new acquisition."""
     known_assets_yaml = tmp_path / "known_adc_assets.yaml"
     known_assets_yaml.write_text(yaml.dump(dict(assets=[dict(
         asset_id="testuzumab_vedotin", canonical_name="Testuzumab vedotin", aliases=[], dev_codes=[],
@@ -160,9 +187,17 @@ def test_main_end_to_end_produces_platform_and_moa_target_tables_with_correct_ti
     conf_df = pd.DataFrame([dict(
         source_record_id="REC1",
         title="Newmab vedotin ADC using the TMALIN platform",
-        abstract="Newmab vedotin was conjugated to MMAE and showed potent antitumor activity.",
+        abstract=(
+            "Newmab vedotin was conjugated to MMAE and showed potent antitumor activity. "
+            "Testuzumab vedotin, an anti-HER2 ADC, was also conjugated to MMAE in this comparison."
+        ),
     )])
     conf_df.to_parquet(data_dir / "manifests" / "conference_abstract_corpus.parquet")
+    pubmed_df = pd.DataFrame([dict(
+        source_record_id="REC2", title="Testuzumab vedotin preclinical evaluation",
+        abstract="In this study, Testuzumab vedotin (an MMAE-based ADC) was evaluated in xenografts.",
+    )])
+    pubmed_df.to_parquet(data_dir / "manifests" / "pubmed.parquet")
 
     output_dir = tmp_path / "output"
     monkeypatch.setattr(sys, "argv", [
@@ -174,11 +209,26 @@ def test_main_end_to_end_produces_platform_and_moa_target_tables_with_correct_ti
     ])
     feasibility_main()
 
+    candidates = pd.read_csv(output_dir / "adc_candidates.tsv", sep="\t", dtype=str).fillna("")
+    known_row = candidates[candidates["canonical_label"] == "Testuzumab vedotin"].iloc[0]
+    new_row = candidates[candidates["canonical_label"] == "Newmab vedotin"].iloc[0]
+    # The required regression: known-registry status alone never promotes linker tier.
+    assert known_row["linker_evidence_type"] == "USAN_INN_NAMING_INFERENCE"
+    # But its payload IS independently corroborated across 2 corpora (conference + pubmed).
+    assert known_row["payload_evidence_type"] == "TEXT_VALIDATED_CROSS_CORPUS"
+    # The new candidate's payload is named in exactly 1 corpus -> OBSERVED, not VALIDATED.
+    assert new_row["payload_evidence_type"] == "TEXT_OBSERVED"
+    assert new_row["linker_evidence_type"] == "USAN_INN_NAMING_INFERENCE"
+
     payloads = pd.read_csv(output_dir / "adc_payloads.tsv", sep="\t", dtype=str).fillna("")
     mmae_row = payloads[payloads["canonical_label"].str.contains("MMAE")].iloc[0]
-    assert mmae_row["status"] == "VALIDATED"  # known asset present -> best tier wins
+    assert mmae_row["status"] == "VALIDATED"  # best tier among associated candidates wins
     assert "TEXT_OBSERVED" in mmae_row["evidence_sources"]
-    assert "VALIDATED_KNOWN_ASSET" in mmae_row["evidence_sources"]
+    assert "TEXT_VALIDATED_CROSS_CORPUS" in mmae_row["evidence_sources"]
+
+    linkers = pd.read_csv(output_dir / "adc_linkers.tsv", sep="\t", dtype=str).fillna("")
+    linker_row = linkers.iloc[0]
+    assert linker_row["status"] == "INFERRED"  # no candidate has any linker text evidence
 
     moa_targets = pd.read_csv(output_dir / "payload_moa_targets.tsv", sep="\t", dtype=str).fillna("")
     assert "Tubulin" in moa_targets["canonical_label"].tolist()

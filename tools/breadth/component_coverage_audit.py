@@ -136,7 +136,7 @@ def main() -> int:
         add(f"{group_name}.payload_resolved", f"{payload_resolved}/{n}")
         add(f"{group_name}.linker_resolved", f"{linker_resolved}/{n}")
         for evidence_col, name in (("payload_evidence_type", "payload"), ("linker_evidence_type", "linker")):
-            for tier in ("VALIDATED_KNOWN_ASSET", "TEXT_OBSERVED", "USAN_INN_NAMING_INFERENCE"):
+            for tier in ("TEXT_VALIDATED_CROSS_CORPUS", "TEXT_OBSERVED", "USAN_INN_NAMING_INFERENCE"):
                 n_tier = int((group[evidence_col] == tier).sum())
                 if n_tier:
                     add(f"{group_name}.{name}_tier.{tier}", n_tier)

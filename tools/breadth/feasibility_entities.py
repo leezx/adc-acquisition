@@ -78,17 +78,21 @@ no patent-derived mining (BREADTH_PLAN Part 8, explicitly deferred):
                                            see component_evidence.py)
 
 `adc_payloads.tsv`/`adc_linkers.tsv` also gain a real evidence-tier
-upgrade this phase: a known-registry candidate's payload/linker is now
-`VALIDATED` (not `INFERRED`) -- its identity is independently established
-public pharmacology for an FDA-approved/late-stage asset already audited
-in PR #17, not a naming-convention guess. A NEW candidate's payload/
-linker is upgraded from `INFERRED` to `OBSERVED` when the SAME evidence
-record that discovered it ALSO explicitly names that chemistry in the
-LOCAL context around that one candidate's own mention (never the whole
-record -- same cross-contamination discipline as Phase 5b's round-1
-fix). Neither upgrade guesses a NEW payload/linker identity beyond the
-existing 8-suffix map; it only raises confidence in an already-suffix-
-inferred identity when stronger evidence for THAT SAME identity exists.
+upgrade this phase, via ONE ladder applied IDENTICALLY to every
+candidate, known-registry or newly-discovered alike (round-1 fix -- see
+`build_component_evidence_index()`'s docstring for the logic gap this
+closes: PR #17 audited that a known asset IS a real antibody ADC, which
+is not the same claim as knowing its SPECIFIC payload/linker chemistry,
+so registry membership alone is never used as chemistry evidence):
+`USAN_INN_NAMING_INFERENCE` (suffix alone) -> `TEXT_OBSERVED` (that
+candidate's OWN evidence explicitly names the chemistry in the LOCAL
+context around its own mention, in exactly one corpus -- never the whole
+record, same cross-contamination discipline as Phase 5b's round-1 fix)
+-> `TEXT_VALIDATED_CROSS_CORPUS` (corroborated across >=2 INDEPENDENT
+evidence corpora). No tier guesses a NEW payload/linker identity beyond
+the existing 8-suffix map; each only raises confidence in an already-
+suffix-inferred identity when stronger evidence for THAT SAME identity
+exists.
 
 Usage:
     python3 tools/breadth/feasibility_entities.py \
@@ -131,7 +135,7 @@ from tools.breadth.component_evidence import (  # noqa: E402
 PROMOTABLE_STATUSES = {"PROMOTED", "AUTO_HIGH_CONFIDENCE"}
 NAMING_INFERENCE = "USAN_INN_NAMING_INFERENCE"
 TEXT_OBSERVED = "TEXT_OBSERVED"
-VALIDATED_KNOWN_ASSET = "VALIDATED_KNOWN_ASSET"
+TEXT_VALIDATED = "TEXT_VALIDATED_CROSS_CORPUS"
 MOA_TARGET_PHARMACOLOGY_BASIS = "USAN_INN_PAYLOAD_CLASS_PHARMACOLOGY"
 
 CANDIDATE_FIELDS = [
@@ -279,29 +283,59 @@ def load_text_corpus(path: Path, text_cols: list[str]) -> dict[str, str]:
     return dict(zip(df["source_record_id"], texts))
 
 
-def text_observed_payload_linker(
-    candidate_label: str, suffix: str, evidence_ids: list[str], text_by_id: dict[str, str],
-) -> tuple[bool, bool]:
-    """Whether `candidate_label`'s own payload/linker chemistry (per its
-    USAN suffix) is EXPLICITLY named in the LOCAL context around that
-    candidate's own mention, in any of its own evidence records that have
-    free text available -- never the whole record (same discipline as
-    Phase 5b's modality-keyword round-1 fix)."""
-    target_norm = normalize_name(candidate_label)
-    payload_found = False
-    linker_found = False
-    for evidence_id in evidence_ids:
-        text = text_by_id.get(evidence_id)
-        if not text:
-            continue
-        for extracted, start, end in _iter_adc_generic_name_matches(text):
-            if normalize_name(extracted) != target_norm:
+def build_component_evidence_index(text_corpora: list[tuple[str, dict[str, str]]]) -> dict[str, dict[str, set[str]]]:
+    """ROUND-1 FIX (Phase 5e review): a single pass over ALL already-
+    acquired free-text corpora, mapping normalize_name(extracted generic
+    name) -> {"payload": {distinct corpus names with a payload-chemistry
+    hit in the LOCAL context around THAT mention}, "linker": {...}}.
+
+    Applied IDENTICALLY to every candidate regardless of whether it came
+    from configs/known_adc_assets.yaml or Phase 3/5a discovery -- a
+    candidate's registry status is NEVER used as chemistry evidence on
+    its own. The prior version of this mechanism gave every known-
+    registry candidate's suffix-derived payload/linker a blanket
+    VALIDATED tier on the theory that "PR #17 already audited this as a
+    real antibody ADC" -- but that audit confirmed the asset's IDENTITY,
+    not which specific payload/linker chemistry it uses; asserting the
+    latter from the former was exactly the logic gap this fix closes.
+    Every candidate, known or new, now needs the SAME textual evidence
+    (candidate_queue.local_context_for_span() around its own mention,
+    never the whole record -- Phase 5b's cross-contamination discipline)
+    to earn TEXT_OBSERVED (>=1 corpus) or TEXT_VALIDATED (>=2 INDEPENDENT
+    corpora); absent that, it stays USAN_INN_NAMING_INFERENCE, exactly as
+    Phase 3 originally and correctly left it uncertain (e.g. -vedotin's
+    linker was deliberately labeled "valine-citrulline cleavable linker
+    (typical)" -- "typical", not "confirmed for every asset using this
+    suffix")."""
+    index: dict[str, dict[str, set[str]]] = defaultdict(lambda: {"payload": set(), "linker": set()})
+    for source_name, texts in text_corpora:
+        for text in texts.values():
+            if not text:
                 continue
-            local = local_context_for_span(text, start, end)
-            payload_hit, linker_hit = payload_linker_text_observed(local, suffix)
-            payload_found = payload_found or bool(payload_hit)
-            linker_found = linker_found or bool(linker_hit)
-    return payload_found, linker_found
+            for extracted, start, end in _iter_adc_generic_name_matches(text):
+                suffix = find_suffix_matches(extracted)
+                if not suffix:
+                    continue
+                local = local_context_for_span(text, start, end)
+                payload_hit, linker_hit = payload_linker_text_observed(local, suffix)
+                norm = normalize_name(extracted)
+                if payload_hit:
+                    index[norm]["payload"].add(source_name)
+                if linker_hit:
+                    index[norm]["linker"].add(source_name)
+    return index
+
+
+def evidence_tier_from_sources(sources: set[str]) -> str:
+    """USAN suffix alone -> NAMING_INFERENCE; explicit asset-local text
+    in exactly one corpus -> TEXT_OBSERVED; corroborated across >=2
+    INDEPENDENT corpora -> TEXT_VALIDATED. Same ladder for every
+    candidate (see build_component_evidence_index() docstring)."""
+    if len(sources) >= 2:
+        return TEXT_VALIDATED
+    if len(sources) == 1:
+        return TEXT_OBSERVED
+    return NAMING_INFERENCE
 
 
 def build_platform_rows(text_corpora: list[tuple[str, dict[str, str]]]) -> list[dict]:
@@ -391,6 +425,12 @@ def main() -> int:
         ("company_scientific_presentations", load_text_corpus(data_dir / "manifests" / "company_scientific_presentations.parquet", ["title"])),
     ]
 
+    # ROUND-1 FIX (Phase 5e review): one pass over ALL text corpora,
+    # reused identically for every candidate below -- see
+    # build_component_evidence_index()'s docstring for why a known-
+    # registry candidate gets no shortcut here.
+    component_evidence_index = build_component_evidence_index(text_corpora)
+
     candidate_rows = []
     payload_usage: dict[str, list[dict]] = defaultdict(list)
     linker_usage: dict[str, list[dict]] = defaultdict(list)
@@ -401,28 +441,16 @@ def main() -> int:
         suffix = find_suffix_matches(c["candidate_label"])
         payload_if_known = ADC_SUFFIX_PAYLOAD_CLASS.get(suffix, "") if suffix else ""
         linker_if_known = ADC_SUFFIX_LINKER_CLASS.get(suffix, "") if suffix else ""
-        is_known_asset = c["source"] == "configs/known_adc_assets.yaml"
-        # Evidence-tier assignment (Phase 5e): a known-registry asset's
-        # suffix-derived payload/linker is VALIDATED -- its identity is
-        # independently established public pharmacology for an asset
-        # already audited as a real antibody ADC in PR #17, not a bare
-        # naming-convention guess. A NEW candidate is upgraded from
-        # INFERRED to OBSERVED only when its OWN evidence record's LOCAL
-        # context around its OWN mention explicitly names that chemistry
-        # (text_observed_payload_linker) -- otherwise it stays INFERRED,
-        # exactly as before this phase.
-        if not suffix:
-            payload_evidence_type, linker_evidence_type = "", ""
-        elif is_known_asset:
-            payload_evidence_type = VALIDATED_KNOWN_ASSET if payload_if_known else ""
-            linker_evidence_type = VALIDATED_KNOWN_ASSET if linker_if_known else ""
-        else:
-            evidence_ids = [e for e in c["evidence_id"].split("; ") if e]
-            payload_observed, linker_observed = text_observed_payload_linker(
-                c["candidate_label"], suffix, evidence_ids, conf_text_by_id,
-            )
-            payload_evidence_type = (TEXT_OBSERVED if payload_observed else NAMING_INFERENCE) if payload_if_known else ""
-            linker_evidence_type = (TEXT_OBSERVED if linker_observed else NAMING_INFERENCE) if linker_if_known else ""
+        # Evidence-tier assignment (Phase 5e, round-1 fix): the SAME
+        # ladder for known-registry and newly-discovered candidates
+        # alike -- USAN suffix alone is NAMING_INFERENCE; the candidate's
+        # OWN local evidence context explicitly naming that chemistry in
+        # exactly one corpus is TEXT_OBSERVED; corroborated across >=2
+        # independent corpora is TEXT_VALIDATED. A candidate's registry
+        # status is never itself chemistry evidence.
+        evidence_entry = component_evidence_index.get(normalize_name(c["candidate_label"]), {"payload": set(), "linker": set()})
+        payload_evidence_type = evidence_tier_from_sources(evidence_entry["payload"]) if payload_if_known else ""
+        linker_evidence_type = evidence_tier_from_sources(evidence_entry["linker"]) if linker_if_known else ""
 
         if c["source"] == "configs/known_adc_assets.yaml":
             asset = known_registry[c["evidence_id"]]
@@ -523,21 +551,24 @@ def main() -> int:
     print(f"target_indication_feasibility.tsv: {len(target_indication_rows)} (target, indication) pairs "
           "(known-registry-only this phase, same reason as adc_targets.tsv)", file=sys.stderr)
 
-    # adc_payloads.tsv / adc_linkers.tsv (Phase 5e round: tier-aware, no
-    # longer flat INFERRED-only): a component entity's status is the BEST
-    # evidence tier found among its associated candidates -- VALIDATED (>=1
-    # known-registry candidate) > OBSERVED (>=1 candidate's own local text
-    # explicitly names this chemistry) > INFERRED (naming-convention only,
-    # for every other candidate using this suffix). evidence_sources lists
-    # every distinct tier actually contributing, so a payload used by both
-    # a known asset AND a text-unconfirmed new candidate honestly shows both.
+    # adc_payloads.tsv / adc_linkers.tsv (Phase 5e round-1 fix: tier-aware,
+    # no longer flat INFERRED-only, and no known-registry shortcut): a
+    # component entity's status is the BEST evidence tier found among its
+    # associated candidates -- VALIDATED (>=1 candidate corroborated
+    # across >=2 independent evidence corpora) > OBSERVED (>=1
+    # candidate's own local text names this chemistry in exactly one
+    # corpus) > INFERRED (naming-convention only, for every other
+    # candidate using this suffix, known-registry or not). evidence_sources
+    # lists every distinct tier actually contributing, so a payload used
+    # by both a text-corroborated candidate AND a text-unconfirmed one
+    # honestly shows both.
     def _component_rows(entity_type: str, usage: dict[str, list[dict]]) -> list[dict]:
         rows = []
         for label, entries in usage.items():
             if not label:
                 continue
             tiers = {e["tier"] for e in entries if e["tier"]}
-            if VALIDATED_KNOWN_ASSET in tiers:
+            if TEXT_VALIDATED in tiers:
                 status, confidence = "VALIDATED", "high"
             elif TEXT_OBSERVED in tiers:
                 status, confidence = "OBSERVED", "high"

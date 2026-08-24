@@ -26,10 +26,10 @@ Europe PMC, Crossref, company scientific presentations).
   `adc_targets.tsv`'s own rows.
 - **Evidence-backed extraction only.** Every ADC_PLATFORM entity requires
   a literal, quoted keyword match in already-acquired text (see Section
-  2). Every payload/linker tier upgrade requires either (a) independent
-  public pharmacology for an asset already audited as a real antibody
-  ADC in PR #17, or (b) a literal chemistry-name match in the SAME
-  candidate's own local evidence context. Nothing is inferred from a
+  2). Every payload/linker tier upgrade requires a literal chemistry-name
+  match in that SAME candidate's own local evidence context (Section 3)
+  -- a candidate's registry status is never itself used as chemistry
+  evidence (round-1 fix, see Section 3). Nothing is inferred from a
   name's shape or guessed.
 
 ## 2. ADC_PLATFORM mining (`tools/breadth/component_evidence.py`)
@@ -100,44 +100,69 @@ evidence-gated discipline. Disclosed, not silently narrowed.
 
 ## 3. Payload/linker evidence-tier upgrade
 
-Two independent upgrade paths from the existing `INFERRED`
-(USAN/INN-suffix naming-convention) tier, both requiring positive
-evidence, neither guessing a NEW payload/linker identity beyond the
-existing 8-suffix map:
+**ROUND-1 FIX.** The first version of this mechanism gave every
+known-registry candidate's suffix-derived payload/linker a blanket
+`VALIDATED` tier, reasoning that "PR #17 already audited this as a real
+antibody ADC." The reviewer correctly identified the logic gap: PR #17's
+audit established that the asset IS a real antibody ADC -- it did not
+establish WHICH specific payload it carries or WHICH specific linker
+chemistry it uses. Phase 3's own original linker labels were deliberately
+qualified `"... (typical)"` for exactly this reason (a USAN suffix
+implies a typical, not a guaranteed-per-asset, linker chemistry) -- the
+blanket `VALIDATED` shortcut silently re-erased that carefully-preserved
+uncertainty, and did so more permissively for known assets than the rule
+this same PR applied to new candidates. Fixed: ONE evidence ladder, applied
+IDENTICALLY regardless of registry status --
 
-- **`VALIDATED`** -- a known-registry candidate's (14 active assets,
-  `configs/known_adc_assets.yaml`) suffix-derived payload/linker. This is
-  not a naming-convention guess: it is independently established public
-  pharmacology for an FDA-approved/late-stage asset already audited as a
-  real antibody ADC in PR #17.
-- **`OBSERVED`/`TEXT_OBSERVED`** -- a NEW (Phase 3/5a-discovered)
-  candidate's own evidence record explicitly names its payload/linker
-  chemistry in the LOCAL context around that ONE candidate's own mention
-  (`candidate_queue.local_context_for_span()`) -- never the whole record,
-  same cross-contamination discipline as Phase 5b's round-1 fix (a
-  regression test, `test_text_observed_payload_linker_false_when_
-  chemistry_belongs_to_different_candidate`, confirms a different
-  candidate's chemistry mentioned elsewhere in the same abstract does
-  NOT leak into this one).
+- **`USAN_INN_NAMING_INFERENCE`** -- suffix alone, no corroborating text
+  found (Phase 3's original tier, unchanged default).
+- **`TEXT_OBSERVED`** -- that SAME candidate's own evidence explicitly
+  names its payload/linker chemistry in the LOCAL context around its own
+  mention (`candidate_queue.local_context_for_span()`, never the whole
+  record -- Phase 5b's cross-contamination discipline), in exactly ONE
+  evidence corpus.
+- **`TEXT_VALIDATED_CROSS_CORPUS`** -- the SAME candidate's own chemistry
+  is independently corroborated in >=2 DISTINCT evidence corpora (e.g. a
+  conference abstract AND a PubMed paper both explicitly naming its
+  payload) -- genuine independent corroboration, not registry status.
 
-**Real numbers:**
+A candidate's presence in `configs/known_adc_assets.yaml` is NEVER used
+as chemistry evidence on its own -- `build_component_evidence_index()`
+in `tools/breadth/feasibility_entities.py` builds one evidence index from
+ALL already-acquired text corpora (`conference_abstract_corpus`,
+`pubmed`, `europe_pmc`, `crossref`, `company_scientific_presentations`)
+and applies it identically to every promoted candidate.
+
+**Real numbers** (a genuinely more honest distribution than the original,
+now-reverted, version):
 
 ```
-14/14 known-registry candidates: payload VALIDATED, linker VALIDATED (all 14)
-16/16 new candidates: payload/linker resolved via suffix (unchanged from Phase 3)
-  11/16 upgraded to TEXT_OBSERVED payload (their own conference-abstract
-        evidence explicitly names MMAE/MMAF/SN-38/exatecan/DXd/PBD dimer)
-   5/16 remain INFERRED payload (no corroborating text found this phase)
-  16/16 linker remains INFERRED (no linker-chemistry keyword found in any
-        new candidate's local context this phase -- abstracts far more
-        often state the payload than the specific linker chemistry;
-        honest, not a bug)
+Known-registry (14):   payload  10 TEXT_VALIDATED_CROSS_CORPUS, 4 TEXT_OBSERVED, 0 INFERRED
+                        linker    7 TEXT_OBSERVED,               7 USAN_INN_NAMING_INFERENCE
+New candidates (16):    payload   3 TEXT_VALIDATED_CROSS_CORPUS, 10 TEXT_OBSERVED, 3 INFERRED
+                        linker    1 TEXT_OBSERVED,               15 USAN_INN_NAMING_INFERENCE
 ```
+
+Even for FDA-approved assets, roughly half (7/14) still have NO
+corroborating linker-chemistry text anywhere in this repo's evidence and
+correctly remain `USAN_INN_NAMING_INFERENCE` -- e.g. Brentuximab
+vedotin's `valine-citrulline cleavable linker (typical)` and Belantamab
+mafodotin's `maleimidocaproyl non-cleavable linker (typical)` are
+well-established public pharmacology, but that specific chemistry phrase
+simply does not appear, verbatim, in any evidence text this repo has
+acquired for those two assets -- exactly the honest, evidence-gated
+result this fix restores. A dedicated regression test,
+`test_known_registry_asset_without_linker_text_evidence_stays_inferred_
+not_validated`, locks this down: a known-registry `-vedotin` asset whose
+corpus text names its payload but never its linker chemistry keeps
+`TEXT_OBSERVED` payload and `USAN_INN_NAMING_INFERENCE` linker -- not
+promoted to any tier by registry status alone.
 
 Each `adc_payloads.tsv`/`adc_linkers.tsv` row's `evidence_sources` column
-lists every distinct tier actually contributing (e.g. `TEXT_OBSERVED;
-USAN_INN_NAMING_INFERENCE; VALIDATED_KNOWN_ASSET` for MMAE), so the tier
-mix behind an entity's rolled-up `status` is never hidden.
+lists every distinct tier actually contributing across its associated
+candidates (e.g. `TEXT_OBSERVED; TEXT_VALIDATED_CROSS_CORPUS;
+USAN_INN_NAMING_INFERENCE`), so the tier mix behind an entity's rolled-up
+`status` is never hidden.
 
 ## 4. `payload_moa_targets.tsv` (Phase 1's ontology split, preserved)
 
@@ -156,7 +181,7 @@ the 8 -vedotin/-mafodotin/-emtansine/-soravtansine classes' candidates,
 ## 5. Coverage audit (`tools/breadth/component_coverage_audit.py`)
 
 Full output: `reports/validation/breadth/component_coverage_audit.tsv`
-(28 rows). Headline findings:
+(32 rows, regenerated after the round-1 fix above). Headline findings:
 
 **Resolved coverage:**
 
@@ -219,8 +244,9 @@ by this repo to date.
 
 This phase adds a real, substantive, independently-verified new component
 category (29 platform entities, 297 evidence mentions, a genuine
-architectural gap in NAR's own schema) and meaningfully deepens payload
-evidence confidence (11/16 new candidates upgraded to TEXT_OBSERVED) --
+architectural gap in NAR's own schema) and meaningfully deepens payload/
+linker evidence confidence for both known-registry and new candidates
+alike, via one honest, non-shortcut evidence ladder (Section 3) --
 without any new acquisition source or patent mining, exactly as scoped.
 Whether this breadth is now "adequate" to trigger a freeze-audit is a
 Phase 7 verdict, evaluated against BREADTH_PLAN's six explicit acceptance

@@ -17,8 +17,8 @@ def test_audit_end_to_end_classifies_coverage_and_nar_overlap(tmp_path, monkeypa
 
     _write_tsv(feas / "adc_candidates.tsv", [
         dict(entity_id="ADC_CANDIDATE_KNOWN1", target="HER2", payload_if_known="MMAE",
-             payload_evidence_type="VALIDATED_KNOWN_ASSET", linker_if_known="vc linker",
-             linker_evidence_type="VALIDATED_KNOWN_ASSET"),
+             payload_evidence_type="TEXT_VALIDATED_CROSS_CORPUS", linker_if_known="vc linker",
+             linker_evidence_type="TEXT_VALIDATED_CROSS_CORPUS"),
         dict(entity_id="ADC_CANDIDATE_ADC_SUFFIX_new1", target="", payload_if_known="MMAE",
              payload_evidence_type="TEXT_OBSERVED", linker_if_known="vc linker",
              linker_evidence_type="USAN_INN_NAMING_INFERENCE"),
