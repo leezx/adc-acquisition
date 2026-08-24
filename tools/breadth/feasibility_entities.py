@@ -48,9 +48,51 @@ source explicitly supports antibody identity.
                                           target yet, so they cannot
                                           contribute a row here.
 
-`adc_platforms.tsv` is explicitly separate Phase 5 work (BREADTH_PLAN.md
-Part 5/7/8) and is NOT written here -- this script does not create an
-empty placeholder file for it, to avoid implying it's been started.
+Phase 5e (BREADTH_PLAN.md Phase 5 Parts 5/11) additionally populates,
+still from evidence already in this repo -- no new acquisition source,
+no patent-derived mining (BREADTH_PLAN Part 8, explicitly deferred):
+
+  DATA/feasibility/adc_platforms.tsv      (ADC_PLATFORM -- named
+                                           bioconjugation/antibody-
+                                           engineering technology
+                                           mentions mined from already-
+                                           acquired free text via a
+                                           curated, individually-verified
+                                           keyword dictionary,
+                                           tools/breadth/
+                                           component_evidence.py's
+                                           ADC_PLATFORM_KEYWORDS; status
+                                           OBSERVED (single source) or
+                                           VALIDATED (corroborated across
+                                           >=2 independent evidence
+                                           corpora))
+  DATA/feasibility/payload_moa_targets.tsv (PAYLOAD_MOA_TARGET -- the
+                                           payload's mechanism-of-action
+                                           target, Phase 1's ontology
+                                           split, NEVER merged into
+                                           adc_targets.tsv/ADC_TARGET;
+                                           only populated for the 6 of 8
+                                           USAN suffix classes with an
+                                           uncontroversial public
+                                           pharmacology MoA target --
+                                           see component_evidence.py)
+
+`adc_payloads.tsv`/`adc_linkers.tsv` also gain a real evidence-tier
+upgrade this phase, via ONE ladder applied IDENTICALLY to every
+candidate, known-registry or newly-discovered alike (round-1 fix -- see
+`build_component_evidence_index()`'s docstring for the logic gap this
+closes: PR #17 audited that a known asset IS a real antibody ADC, which
+is not the same claim as knowing its SPECIFIC payload/linker chemistry,
+so registry membership alone is never used as chemistry evidence):
+`USAN_INN_NAMING_INFERENCE` (suffix alone) -> `TEXT_OBSERVED` (that
+candidate's OWN evidence explicitly names the chemistry in the LOCAL
+context around its own mention, in exactly one corpus -- never the whole
+record, same cross-contamination discipline as Phase 5b's round-1 fix)
+-> `TEXT_VALIDATED_CROSS_CORPUS` (corroborated across >=2 INDEPENDENT
+evidence corpora). No tier guesses a NEW payload/linker identity beyond
+the existing 8-suffix map; each only raises confidence in an already-
+suffix-inferred identity when stronger evidence for THAT SAME identity
+exists.
 
 Usage:
     python3 tools/breadth/feasibility_entities.py \
@@ -76,14 +118,25 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.breadth.candidate_queue import (  # noqa: E402
     ADC_SUFFIX_LINKER_CLASS,
     ADC_SUFFIX_PAYLOAD_CLASS,
+    _iter_adc_generic_name_matches,
     find_suffix_matches,
     known_identifier_set,
+    local_context_for_span,
     mentions_known_asset,
     normalize_name,
+)
+from tools.breadth.component_evidence import (  # noqa: E402
+    ADC_PLATFORM_KEYWORDS,
+    PAYLOAD_MOA_TARGET_BY_SUFFIX,
+    find_platform_mentions_in_text,
+    payload_linker_text_observed,
 )
 
 PROMOTABLE_STATUSES = {"PROMOTED", "AUTO_HIGH_CONFIDENCE"}
 NAMING_INFERENCE = "USAN_INN_NAMING_INFERENCE"
+TEXT_OBSERVED = "TEXT_OBSERVED"
+TEXT_VALIDATED = "TEXT_VALIDATED_CROSS_CORPUS"
+MOA_TARGET_PHARMACOLOGY_BASIS = "USAN_INN_PAYLOAD_CLASS_PHARMACOLOGY"
 
 CANDIDATE_FIELDS = [
     "entity_id", "entity_type", "canonical_label", "aliases", "first_seen", "last_seen",
@@ -217,6 +270,123 @@ def build_target_indication_rows(candidate_rows: list[dict], target_rows: list[d
     return rows
 
 
+def load_text_corpus(path: Path, text_cols: list[str]) -> dict[str, str]:
+    """id -> concatenated free text, for one already-acquired manifest.
+    Returns {} if the manifest doesn't exist (a source not yet run is not
+    an error here -- Phase 5e mines whatever evidence already exists, it
+    does not require every possible source to be present)."""
+    if not path.exists():
+        return {}
+    cols = ["source_record_id"] + text_cols
+    df = pd.read_parquet(path, columns=cols)
+    texts = df[text_cols].fillna("").agg(" ".join, axis=1)
+    return dict(zip(df["source_record_id"], texts))
+
+
+def build_component_evidence_index(text_corpora: list[tuple[str, dict[str, str]]]) -> dict[str, dict[str, set[str]]]:
+    """ROUND-1 FIX (Phase 5e review): a single pass over ALL already-
+    acquired free-text corpora, mapping normalize_name(extracted generic
+    name) -> {"payload": {distinct corpus names with a payload-chemistry
+    hit in the LOCAL context around THAT mention}, "linker": {...}}.
+
+    Applied IDENTICALLY to every candidate regardless of whether it came
+    from configs/known_adc_assets.yaml or Phase 3/5a discovery -- a
+    candidate's registry status is NEVER used as chemistry evidence on
+    its own. The prior version of this mechanism gave every known-
+    registry candidate's suffix-derived payload/linker a blanket
+    VALIDATED tier on the theory that "PR #17 already audited this as a
+    real antibody ADC" -- but that audit confirmed the asset's IDENTITY,
+    not which specific payload/linker chemistry it uses; asserting the
+    latter from the former was exactly the logic gap this fix closes.
+    Every candidate, known or new, now needs the SAME textual evidence
+    (candidate_queue.local_context_for_span() around its own mention,
+    never the whole record -- Phase 5b's cross-contamination discipline)
+    to earn TEXT_OBSERVED (>=1 corpus) or TEXT_VALIDATED (>=2 INDEPENDENT
+    corpora); absent that, it stays USAN_INN_NAMING_INFERENCE, exactly as
+    Phase 3 originally and correctly left it uncertain (e.g. -vedotin's
+    linker was deliberately labeled "valine-citrulline cleavable linker
+    (typical)" -- "typical", not "confirmed for every asset using this
+    suffix")."""
+    index: dict[str, dict[str, set[str]]] = defaultdict(lambda: {"payload": set(), "linker": set()})
+    for source_name, texts in text_corpora:
+        for text in texts.values():
+            if not text:
+                continue
+            for extracted, start, end in _iter_adc_generic_name_matches(text):
+                suffix = find_suffix_matches(extracted)
+                if not suffix:
+                    continue
+                local = local_context_for_span(text, start, end)
+                payload_hit, linker_hit = payload_linker_text_observed(local, suffix)
+                norm = normalize_name(extracted)
+                if payload_hit:
+                    index[norm]["payload"].add(source_name)
+                if linker_hit:
+                    index[norm]["linker"].add(source_name)
+    return index
+
+
+def evidence_tier_from_sources(sources: set[str]) -> str:
+    """USAN suffix alone -> NAMING_INFERENCE; explicit asset-local text
+    in exactly one corpus -> TEXT_OBSERVED; corroborated across >=2
+    INDEPENDENT corpora -> TEXT_VALIDATED. Same ladder for every
+    candidate (see build_component_evidence_index() docstring)."""
+    if len(sources) >= 2:
+        return TEXT_VALIDATED
+    if len(sources) == 1:
+        return TEXT_OBSERVED
+    return NAMING_INFERENCE
+
+
+def build_platform_rows(text_corpora: list[tuple[str, dict[str, str]]]) -> list[dict]:
+    """ADC_PLATFORM entities mined from already-acquired free text
+    (BREADTH_PLAN.md Phase 5 Parts 5/11) -- see component_evidence.py's
+    ADC_PLATFORM_KEYWORDS module docstring for how this dictionary was
+    built and verified. status=VALIDATED when the SAME canonical platform
+    is corroborated across >=2 INDEPENDENT evidence corpora, else
+    OBSERVED (a single source's own mention) -- there is no INFERRED
+    tier for platforms, since (unlike payload/linker) there is no
+    naming-convention mechanism to infer a platform identity from; every
+    hit here is a direct, literal keyword match with real provenance,
+    never a guess.
+
+    `associated_adc_candidates` is deliberately ALWAYS left blank, not
+    attempted via local-window co-occurrence -- tried during development
+    and rejected: real abstract "aacr:2026:1689" mentions ConjuAll (a
+    LegoChem platform for its OWN BCMA candidates LCB14-2524/LCB14-2516)
+    and belantamab mafodotin (an unrelated, different company's BCMA ADC)
+    in the same abstract purely as a comparator drug in the background
+    section -- proximity alone produced a false "ConjuAll used by
+    belantamab mafodotin" link. Attributing a specific candidate to a
+    specific platform reliably needs an explicit usage-verb pattern
+    ("prepared using X", "leveraging its proprietary X") tied to that
+    SAME candidate's own name, not mere co-occurrence in the same
+    record -- out of scope for this narrowly-scoped phase; guessing the
+    link instead would violate this project's evidence-gated discipline."""
+    occurrences: dict[str, list[dict]] = defaultdict(list)
+    for source_name, texts in text_corpora:
+        for record_id, text in texts.items():
+            if not text:
+                continue
+            for label, variant, start, end in find_platform_mentions_in_text(text):
+                occurrences[label].append(dict(source=source_name, record_id=record_id, variant=variant))
+
+    rows = []
+    for label, occs in occurrences.items():
+        sources = sorted({o["source"] for o in occs})
+        variants = sorted({o["variant"] for o in occs})
+        validated = len(sources) >= 2
+        rows.append(dict(
+            entity_id=f"ADC_PLATFORM_{normalize_name(label).upper()}", entity_type="ADC_PLATFORM",
+            canonical_label=label, aliases="; ".join(variants), first_seen="", last_seen="",
+            evidence_count=len(occs), evidence_sources="; ".join(sources),
+            confidence="high" if validated else "medium", status="VALIDATED" if validated else "OBSERVED",
+            associated_adc_candidates="",
+        ))
+    rows.sort(key=lambda r: (-r["evidence_count"], r["canonical_label"]))
+    return rows
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidate-queue", type=str, default="DATA/feasibility/candidate_queue.tsv")
@@ -237,22 +407,50 @@ def main() -> int:
     ct_path = Path(args.data_dir) / "manifests" / "clinicaltrials.parquet"
     ct_manifest = pd.read_parquet(ct_path) if ct_path.exists() else None
 
+    # Phase 5e (BREADTH_PLAN.md Phase 5 Parts 5/11): free-text evidence
+    # ALREADY acquired by prior phases, used to upgrade payload/linker
+    # evidence tiers and to mine ADC_PLATFORM mentions -- no new
+    # acquisition source. Every corpus is optional (a source not yet run
+    # is not an error); conference_abstract_corpus is used for the
+    # payload/linker text-observed upgrade (its abstracts most reliably
+    # state a specific asset's own chemistry), all five for platform
+    # mining (a platform brand can appear in any of them).
+    data_dir = Path(args.data_dir)
+    conf_text_by_id = load_text_corpus(data_dir / "manifests" / "conference_abstract_corpus.parquet", ["title", "abstract"])
+    text_corpora = [
+        ("conference_abstract_corpus", conf_text_by_id),
+        ("pubmed", load_text_corpus(data_dir / "manifests" / "pubmed.parquet", ["title", "abstract"])),
+        ("europe_pmc", load_text_corpus(data_dir / "manifests" / "europe_pmc.parquet", ["title", "abstract"])),
+        ("crossref", load_text_corpus(data_dir / "manifests" / "crossref.parquet", ["title", "abstract"])),
+        ("company_scientific_presentations", load_text_corpus(data_dir / "manifests" / "company_scientific_presentations.parquet", ["title"])),
+    ]
+
+    # ROUND-1 FIX (Phase 5e review): one pass over ALL text corpora,
+    # reused identically for every candidate below -- see
+    # build_component_evidence_index()'s docstring for why a known-
+    # registry candidate gets no shortcut here.
+    component_evidence_index = build_component_evidence_index(text_corpora)
+
     candidate_rows = []
-    payload_usage: dict[str, list[str]] = defaultdict(list)
-    linker_usage: dict[str, list[str]] = defaultdict(list)
+    payload_usage: dict[str, list[dict]] = defaultdict(list)
+    linker_usage: dict[str, list[dict]] = defaultdict(list)
+    moa_target_usage: dict[str, list[str]] = defaultdict(list)
 
     for _, c in promoted.iterrows():
         nct_ids = [n for n in c["evidence_id"].split("; ") if n.startswith("NCT")]
         suffix = find_suffix_matches(c["candidate_label"])
         payload_if_known = ADC_SUFFIX_PAYLOAD_CLASS.get(suffix, "") if suffix else ""
         linker_if_known = ADC_SUFFIX_LINKER_CLASS.get(suffix, "") if suffix else ""
-        # Round-1 fix: a suffix-derived payload/linker is a naming-convention
-        # INFERENCE, not a directly-extracted structured fact -- tagged
-        # explicitly so adc_candidates.tsv never implies more certainty
-        # than it has, independent of the ADC_CANDIDATE row's own identity
-        # confidence (which can legitimately be "high").
-        payload_evidence_type = NAMING_INFERENCE if payload_if_known else ""
-        linker_evidence_type = NAMING_INFERENCE if linker_if_known else ""
+        # Evidence-tier assignment (Phase 5e, round-1 fix): the SAME
+        # ladder for known-registry and newly-discovered candidates
+        # alike -- USAN suffix alone is NAMING_INFERENCE; the candidate's
+        # OWN local evidence context explicitly naming that chemistry in
+        # exactly one corpus is TEXT_OBSERVED; corroborated across >=2
+        # independent corpora is TEXT_VALIDATED. A candidate's registry
+        # status is never itself chemistry evidence.
+        evidence_entry = component_evidence_index.get(normalize_name(c["candidate_label"]), {"payload": set(), "linker": set()})
+        payload_evidence_type = evidence_tier_from_sources(evidence_entry["payload"]) if payload_if_known else ""
+        linker_evidence_type = evidence_tier_from_sources(evidence_entry["linker"]) if linker_if_known else ""
 
         if c["source"] == "configs/known_adc_assets.yaml":
             asset = known_registry[c["evidence_id"]]
@@ -308,8 +506,12 @@ def main() -> int:
             ))
 
         if suffix:
-            payload_usage[payload_if_known].append(candidate_rows[-1]["entity_id"])
-            linker_usage[linker_if_known].append(candidate_rows[-1]["entity_id"])
+            candidate_entity_id = candidate_rows[-1]["entity_id"]
+            payload_usage[payload_if_known].append(dict(candidate_id=candidate_entity_id, tier=payload_evidence_type))
+            linker_usage[linker_if_known].append(dict(candidate_id=candidate_entity_id, tier=linker_evidence_type))
+            moa_target = PAYLOAD_MOA_TARGET_BY_SUFFIX.get(suffix)
+            if moa_target:
+                moa_target_usage[moa_target].append(candidate_entity_id)
 
     write_tsv(output_dir / "adc_candidates.tsv", candidate_rows, CANDIDATE_FIELDS)
     print(f"adc_candidates.tsv: {len(candidate_rows)} entities "
@@ -349,33 +551,75 @@ def main() -> int:
     print(f"target_indication_feasibility.tsv: {len(target_indication_rows)} (target, indication) pairs "
           "(known-registry-only this phase, same reason as adc_targets.tsv)", file=sys.stderr)
 
-    # adc_payloads.tsv / adc_linkers.tsv: status = INFERRED (round-1 fix,
-    # not VALIDATED) -- these are naming-convention inferences from a
-    # generic drug name's USAN/INN stem, not a directly-extracted or
-    # independently confirmed chemistry fact for any specific asset.
-    payload_rows = [
-        dict(
-            entity_id=f"ADC_PAYLOAD_{normalize_name(label).upper()}", entity_type="ADC_PAYLOAD",
-            canonical_label=label, aliases="", first_seen="", last_seen="",
-            evidence_count=len(ids), evidence_sources=NAMING_INFERENCE,
-            confidence="medium", status="INFERRED", associated_adc_candidates="; ".join(ids),
-        )
-        for label, ids in payload_usage.items() if label
-    ]
-    linker_rows = [
-        dict(
-            entity_id=f"ADC_LINKER_{normalize_name(label).upper()}", entity_type="ADC_LINKER",
-            canonical_label=label, aliases="", first_seen="", last_seen="",
-            evidence_count=len(ids), evidence_sources=NAMING_INFERENCE,
-            confidence="medium", status="INFERRED", associated_adc_candidates="; ".join(ids),
-        )
-        for label, ids in linker_usage.items() if label
-    ]
+    # adc_payloads.tsv / adc_linkers.tsv (Phase 5e round-1 fix: tier-aware,
+    # no longer flat INFERRED-only, and no known-registry shortcut): a
+    # component entity's status is the BEST evidence tier found among its
+    # associated candidates -- VALIDATED (>=1 candidate corroborated
+    # across >=2 independent evidence corpora) > OBSERVED (>=1
+    # candidate's own local text names this chemistry in exactly one
+    # corpus) > INFERRED (naming-convention only, for every other
+    # candidate using this suffix, known-registry or not). evidence_sources
+    # lists every distinct tier actually contributing, so a payload used
+    # by both a text-corroborated candidate AND a text-unconfirmed one
+    # honestly shows both.
+    def _component_rows(entity_type: str, usage: dict[str, list[dict]]) -> list[dict]:
+        rows = []
+        for label, entries in usage.items():
+            if not label:
+                continue
+            tiers = {e["tier"] for e in entries if e["tier"]}
+            if TEXT_VALIDATED in tiers:
+                status, confidence = "VALIDATED", "high"
+            elif TEXT_OBSERVED in tiers:
+                status, confidence = "OBSERVED", "high"
+            else:
+                status, confidence = "INFERRED", "medium"
+            rows.append(dict(
+                entity_id=f"{entity_type}_{normalize_name(label).upper()}", entity_type=entity_type,
+                canonical_label=label, aliases="", first_seen="", last_seen="",
+                evidence_count=len(entries), evidence_sources="; ".join(sorted(tiers)),
+                confidence=confidence, status=status,
+                associated_adc_candidates="; ".join(sorted(e["candidate_id"] for e in entries)),
+            ))
+        return rows
+
+    payload_rows = _component_rows("ADC_PAYLOAD", payload_usage)
+    linker_rows = _component_rows("ADC_LINKER", linker_usage)
     write_tsv(output_dir / "adc_payloads.tsv", payload_rows, COMPONENT_FIELDS)
     write_tsv(output_dir / "adc_linkers.tsv", linker_rows, COMPONENT_FIELDS)
-    print(f"adc_payloads.tsv: {len(payload_rows)} entities (status=INFERRED, medium confidence -- "
-          f"a naming-convention inference, not a validated chemistry fact)", file=sys.stderr)
-    print(f"adc_linkers.tsv: {len(linker_rows)} entities (same basis and caveat as payloads)", file=sys.stderr)
+    for name, rows in (("adc_payloads.tsv", payload_rows), ("adc_linkers.tsv", linker_rows)):
+        by_status = defaultdict(int)
+        for r in rows:
+            by_status[r["status"]] += 1
+        print(f"{name}: {len(rows)} entities ({dict(by_status)})", file=sys.stderr)
+
+    # payload_moa_targets.tsv (Phase 5e, BREADTH_PLAN.md Phase 1's ontology
+    # split -- NEVER merged into adc_targets.tsv/ADC_TARGET). Only the 6 of
+    # 8 suffix classes with an uncontroversial public-pharmacology MoA
+    # target; see component_evidence.py for why ozogamicin/tesirine are
+    # honestly left unmapped rather than guessed.
+    moa_target_rows = [
+        dict(
+            entity_id=f"PAYLOAD_MOA_TARGET_{normalize_name(label).upper()}", entity_type="PAYLOAD_MOA_TARGET",
+            canonical_label=label, aliases="", first_seen="", last_seen="",
+            evidence_count=len(ids), evidence_sources=MOA_TARGET_PHARMACOLOGY_BASIS,
+            confidence="high", status="VALIDATED", associated_adc_candidates="; ".join(sorted(ids)),
+        )
+        for label, ids in moa_target_usage.items()
+    ]
+    write_tsv(output_dir / "payload_moa_targets.tsv", moa_target_rows, COMPONENT_FIELDS)
+    print(f"payload_moa_targets.tsv: {len(moa_target_rows)} entities "
+          "(6 of 8 USAN suffix classes have an uncontroversial MoA target; ozogamicin/tesirine honestly unmapped)",
+          file=sys.stderr)
+
+    # adc_platforms.tsv (Phase 5e, BREADTH_PLAN.md Phase 5 Parts 5/11) --
+    # mined from already-acquired free text only, see build_platform_rows().
+    platform_rows = build_platform_rows(text_corpora)
+    write_tsv(output_dir / "adc_platforms.tsv", platform_rows, COMPONENT_FIELDS)
+    validated_platforms = sum(1 for r in platform_rows if r["status"] == "VALIDATED")
+    print(f"adc_platforms.tsv: {len(platform_rows)} entities "
+          f"({validated_platforms} VALIDATED via cross-corpus corroboration, "
+          f"{len(platform_rows) - validated_platforms} OBSERVED single-source)", file=sys.stderr)
 
     # adc_indications.tsv: aggregate distinct condition strings across all
     # validated candidates, with a count of how many candidates cite each.

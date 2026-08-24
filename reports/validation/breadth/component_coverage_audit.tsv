@@ -1,0 +1,33 @@
+metric	value	detail
+known_registry.candidate_count	14	
+known_registry.target_resolved	14/14	
+known_registry.payload_resolved	14/14	
+known_registry.linker_resolved	14/14	
+known_registry.payload_tier.TEXT_VALIDATED_CROSS_CORPUS	10	
+known_registry.payload_tier.TEXT_OBSERVED	4	
+known_registry.linker_tier.TEXT_OBSERVED	7	
+known_registry.linker_tier.USAN_INN_NAMING_INFERENCE	7	
+new_discovered.candidate_count	16	
+new_discovered.target_resolved	0/16	
+new_discovered.payload_resolved	16/16	
+new_discovered.linker_resolved	16/16	
+new_discovered.payload_tier.TEXT_VALIDATED_CROSS_CORPUS	3	
+new_discovered.payload_tier.TEXT_OBSERVED	10	
+new_discovered.payload_tier.USAN_INN_NAMING_INFERENCE	3	
+new_discovered.linker_tier.TEXT_OBSERVED	1	
+new_discovered.linker_tier.USAN_INN_NAMING_INFERENCE	15	
+adc_platforms.distinct_entities	29	
+adc_platforms.validated_cross_corpus	3	
+adc_platforms.observed_single_source	26	
+adc_platforms.total_evidence_mentions	297	sum of evidence_count across all platform entities
+adc_platforms.candidates_with_resolved_platform_link	0	associated_adc_candidates deliberately never populated this phase -- proximity-based co-occurrence was tried and rejected as unreliable (see feasibility_entities.py's build_platform_rows() docstring for the real false-positive case found)
+nar_comparison.adc_platform.nar_has_this_component_category	NO	NAR's reference schema (Antigen/Antibody/Payload/Linker/Target pages) has no platform category at all -- every one of our adc_platforms.tsv entities is categorically beyond what NAR's own extraction schema captures, independent of any name-level match
+nar_comparison.adc_payload.in_both	8	of 8 our entities
+nar_comparison.adc_payload.ours_only	0	none
+nar_comparison.adc_linker.in_both	7	of 8 our entities
+nar_comparison.adc_linker.ours_only	0	none
+nar_comparison.adc_linker.not_compared	1	cleavable linker (typical) -- no reliable keyword exists to compare (too generic a description to search NAR by)
+nar_comparison.adc_target.in_both	11	of 11 our entities
+nar_comparison.adc_target.ours_only	0	none
+nar_comparison.payload_moa_target.in_both	2	of 2 our entities
+nar_comparison.payload_moa_target.ours_only	0	none
