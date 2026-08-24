@@ -12,6 +12,7 @@ import sys
 from jobs.clinicaltrials.job import ClinicalTrialsJob
 from jobs.company_pipeline.job import CompanyPipelineJob
 from jobs.company_press_release.job import CompanyPressReleaseJob
+from jobs.company_scientific_presentations.job import CompanyScientificPresentationsJob
 from jobs.conference_abstract_corpus.job import ConferenceAbstractCorpusJob
 from jobs.crossref.job import CrossrefJob
 from jobs.ema.job import EMAJob
@@ -39,6 +40,7 @@ JOBS = {
     "epo": EPOJob,
     "company_pipeline": CompanyPipelineJob,
     "company_press_release": CompanyPressReleaseJob,
+    "company_scientific_presentations": CompanyScientificPresentationsJob,
     "conference_abstract_corpus": ConferenceAbstractCorpusJob,
     "patent_bioactivity_corpus": PatentBioactivityCorpusJob,
     "publication_bioactivity_corpus": PublicationBioactivityCorpusJob,
