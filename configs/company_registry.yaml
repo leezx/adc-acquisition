@@ -61,6 +61,44 @@
 #     shared with any other registered company.
 # See jobs/company_press_release/parser.py for the per-template parsers
 # this field selects between.
+#
+# `presentations_url`/`presentations_template` (added 2026-08-24,
+# BREADTH_PLAN.md Phase 5 Part 7 -- company scientific-presentation
+# source): distinct from `press_release_url` -- an IR newsroom covers
+# corporate announcements, this covers actual scientific congress
+# presentations/posters (AACR/ASCO/ESMO/ASH/etc.), which is often hosted
+# on a SEPARATE page or even a separate domain from the press-release
+# feed (confirmed live 2026-08-24: ADC Therapeutics' scientific
+# presentations live on adctmedical.com, a distinct medical-affairs
+# microsite, not adctherapeutics.com or ir.adctherapeutics.com -- see
+# jobs/company_scientific_presentations/job.py for why its own-domain
+# check is anchored to `presentations_url`'s own host, not
+# `official_domain`). Only registered for companies where a real,
+# scrapable listing with genuine congress-presentation content was found
+# live -- NOT attempted for every company (see that job's report for
+# which companies were checked and found to have no such page: AbbVie's
+# main domain is behind the same Cloudflare challenge documented above
+# for its pipeline page and no separate public microsite was found;
+# Pfizer has no distinct presentations archive, only stale 2018-2020
+# press-kit assets; Seagen/ImmunoGen/Mersana are acquired/absorbed with
+# no standalone page, same as their pipeline/press-release situation).
+# Templates:
+#   - "adctmedical_congress_listing": a single unpaginated page (~115
+#     items, all loaded at once, confirmed live) of `<div class='pub_row
+#     ...'>` blocks, each linking DIRECTLY to a PDF poster/slide-deck file
+#     (no separate HTML detail page) -- no per-item date beyond the
+#     congress year, preserved via the extra `congress` field ("ASH
+#     2025") rather than fabricated into a false-precision date.
+#   - "sutro_divi_blog": a Divi-theme (Elegant Themes) WordPress blog
+#     loop, `<article id="post-N" ...>` items with a clean `entry-title`/
+#     `post-meta published` date, standard `/page/N/` pagination --
+#     confirmed live that pages past the real end return zero matching
+#     items (a static, always-present "page"-type post exists on every
+#     page but does not match the entry-title pattern, so it never
+#     produces a spurious item). Each item's own URL is an HTML detail
+#     page (not a direct PDF) -- materialized as-is, same "don't chase
+#     embedded assets one hop deeper" principle as Job 12's press-release
+#     detail pages.
 
 companies:
   - company_id: seagen
@@ -163,6 +201,8 @@ companies:
     investor_relations_url: https://ir.sutrobio.com/
     press_release_url: https://ir.sutrobio.com/news-events/news-releases
     press_release_template: q4_ir_media
+    presentations_url: https://www.sutrobio.com/news/presentations/
+    presentations_template: sutro_divi_blog
     notes: >
       Pipeline page verified live 2026-08-14: plain static HTML tables
       (STRO-004, STRO-006, STRO-227, STRO-00Y proprietary programs; VAX-31,
@@ -173,6 +213,19 @@ companies:
       ~230+ releases going back years. Also has an RSS feed
       (/press-releases/rss) not currently used by this job. Individual
       release URLs stay on ir.sutrobio.com -- no wire-service redirect.
+      SCIENTIFIC PRESENTATIONS (verified live 2026-08-24): a SEPARATE
+      WordPress category page on the main corporate domain (not
+      ir.sutrobio.com), a Divi-theme blog loop mixing real AACR/ASCO/World
+      ADC Summit/R&D-Day presentation posts with some plain announcement
+      posts under the same "presentations" category -- acquired broadly,
+      same "acquire broadly, filter downstream" principle as the press-
+      release feed. Standard `/page/N/` pagination, at least 8 full pages
+      (80+ items) confirmed live, going back to at least 2025-05; a static
+      "page"-type post (id post-3163) appears on every paginated URL
+      including far past the real end but does NOT match the entry-title
+      pattern, so pages past the real end correctly parse to zero items.
+      Each item's own URL is an HTML detail page on sutrobio.com, not a
+      direct PDF -- materialized as the acquisition artifact as-is.
 
   - company_id: adc_therapeutics
     canonical_name: ADC Therapeutics SA
@@ -185,6 +238,8 @@ companies:
     investor_relations_url: https://ir.adctherapeutics.com/
     press_release_url: https://ir.adctherapeutics.com/news
     press_release_template: workiva_ir_newsroom
+    presentations_url: https://www.adctmedical.com/congresses/
+    presentations_template: adctmedical_congress_listing
     notes: >
       Swiss company, files as a foreign private issuer where applicable.
       Pipeline page verified live 2026-08-14: plain static HTML
@@ -198,7 +253,17 @@ companies:
       up to o=220, ~224 releases total, genuinely returns 0 items past the
       real end). Individual release URLs stay on ir.adctherapeutics.com
       (date-prefixed slugs, e.g. /2026-08-13-ADC-Therapeutics-...) -- no
-      wire-service redirect.
+      wire-service redirect. SCIENTIFIC PRESENTATIONS (verified live
+      2026-08-24): NOT on adctherapeutics.com or ir.adctherapeutics.com --
+      a separate "Medical Information Hub" microsite at adctmedical.com
+      (also ADC Therapeutics' own official medical-affairs site, confirmed
+      via its page title/branding) has a single unpaginated congress-
+      presentations listing, 115 distinct entries confirmed live
+      (AACR/ASCO/ASH/EHA/ICML/CTOS/EORTC-NCI-AACR/PPLC, 2015-2025), each
+      linking DIRECTLY to a PDF poster/slide-deck file hosted on the same
+      domain -- no separate HTML detail page, no pagination needed (all
+      entries load on the one page). No per-item date finer than the
+      congress year.
 
   - company_id: abbvie
     canonical_name: AbbVie Inc.

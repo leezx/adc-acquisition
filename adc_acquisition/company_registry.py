@@ -16,6 +16,15 @@ already treats as "nothing to do for this company."
 recognized field, so this file can keep gaining new job-specific fields
 over time without ever needing InputValidationError-style lockstep
 changes to every job's loader.
+
+EXTENDED for the company scientific-presentation source (BREADTH_PLAN.md
+Phase 5, Part 7) on 2026-08-24: `presentations_url`/`presentations_template`.
+Live-verified this is NOT always the same domain as `official_domain` or
+`investor_relations_url` -- ADC Therapeutics' scientific-presentations
+archive lives on adctmedical.com (a separate medical-affairs microsite),
+not adctherapeutics.com. jobs/company_scientific_presentations/job.py's
+own official-domain check is therefore anchored to `presentations_url`'s
+OWN host, never to `official_domain` -- see that job's module docstring.
 """
 
 from __future__ import annotations
@@ -40,6 +49,8 @@ class Company:
     investor_relations_url: str | None = None
     press_release_url: str | None = None
     press_release_template: str | None = None
+    presentations_url: str | None = None
+    presentations_template: str | None = None
 
 
 _KNOWN_FIELDS = {f.name for f in fields(Company)}
