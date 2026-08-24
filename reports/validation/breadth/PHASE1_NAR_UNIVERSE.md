@@ -15,6 +15,20 @@ This is a genuine, safe enhancement to the same Phase 1 metric, not a new
 one, so the numbers below reflect the current, regenerated
 `nar702_broad_recall.tsv` rather than the figures originally reviewed.
 
+**Updated again during the Phase 7 breadth-freeze audit**
+(`reports/validation/breadth_closure.md`): `conference_abstract_corpus`
+(Phase 4) was never wired into this comparison -- it did not exist when
+this script/report were first written. Adding it (its own query registry
+already self-declares broad-discovery status) raised confirmed
+BROAD_DISCOVERED from 198/702 (28.2%) to **305/702 (43.4%)** -- 124 of
+those 702 assets are found ONLY via conference_abstract_corpus, direct,
+measured confirmation of the hypothesis that motivated prioritizing
+Phase 4 in the first place. The specific numbers below (§2 onward) are
+now superseded by `reports/validation/breadth/nar702_broad_recall.tsv`'s
+current content and `breadth_closure.md`'s full gate-by-gate re-analysis
+-- kept here unedited as the historical record of what Phase 1 itself
+established, not silently rewritten.
+
 ## 1. NAR reference universe (`DATA/reference/nar_adcdb/`)
 
 Built by `tools/breadth/build_nar_reference_universe.py`, read-only against

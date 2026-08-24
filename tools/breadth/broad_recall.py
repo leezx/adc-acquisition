@@ -108,6 +108,17 @@ BROAD_QUERY_CONFIGS = {
     "epo": "configs/epo_queries.yaml",
     "uspto": "configs/uspto_queries.yaml",
     "clinicaltrials": "configs/clinicaltrials_queries.yaml",
+    # Breadth-freeze audit addition (Phase 7): conference_abstract_corpus
+    # (Phase 4, BREADTH_PLAN.md Part 6) did not exist when this script was
+    # first written and was never wired in -- its own query registry
+    # explicitly self-declares "both are deliberately declared broad-
+    # discovery queries for Phase 1's locked provenance definition"
+    # (configs/conference_abstract_corpus_queries.yaml's own header), so
+    # omitting it understated Gate 1/2 recall for exactly the early-
+    # stage/conference-only assets Phase 4 was built to help find. Added
+    # here so "re-run the NAR comparison against the completed breadth
+    # layer" (BREADTH_PLAN.md Phase 7) actually reflects Phase 4.
+    "conference_abstract_corpus": "configs/conference_abstract_corpus_queries.yaml",
 }
 
 # Conservative, heuristic collision-risk guard INSPIRED BY the confirmed

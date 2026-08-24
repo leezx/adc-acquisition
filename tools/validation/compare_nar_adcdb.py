@@ -253,6 +253,11 @@ MANIFEST_NAMES = [
     "fda_submissions", "fda_documents", "ema", "ema_documents", "wipo", "epo", "uspto",
     "uspto_documents", "company_pipeline", "patent_bioactivity_corpus",
     "publication_bioactivity_corpus",
+    # Phase 5e/7 breadth-freeze audit addition: conference_abstract_corpus
+    # (Phase 4) existed before this comparison tool was ever re-run against
+    # it -- added here so the NAR benchmark reflects the completed breadth
+    # layer, not just the original Job 01-14 sources this tool predates.
+    "conference_abstract_corpus",
 ]
 
 # For each manifest, which columns hold free text worth grepping for an
@@ -276,6 +281,7 @@ TEXT_COLUMNS = {
     "company_pipeline": ["title"],
     "patent_bioactivity_corpus": ["title"],
     "publication_bioactivity_corpus": ["title"],
+    "conference_abstract_corpus": ["title", "abstract"],
 }
 
 IDENTIFIER_COLUMNS = {
@@ -316,7 +322,11 @@ def load_known_adc_assets(path: Path) -> list[dict]:
     return data.get("assets", [])
 
 
-DISCOVERY_SOURCES = ["pubmed", "europe_pmc", "wipo", "epo", "uspto", "clinicaltrials"]
+DISCOVERY_SOURCES = [
+    "pubmed", "europe_pmc", "wipo", "epo", "uspto", "clinicaltrials",
+    # Phase 5e/7 breadth-freeze audit addition -- see MANIFEST_NAMES above.
+    "conference_abstract_corpus",
+]
 
 
 def load_discovery_ledgers(data_dir: Path) -> dict[str, pd.DataFrame]:
