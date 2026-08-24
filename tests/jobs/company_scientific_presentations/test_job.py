@@ -389,6 +389,191 @@ def test_company_filter_selects_single_company(tmp_path, monkeypatch):
     assert result.records_discovered == 1
 
 
+SUTRO_DETAIL_WITH_ARTIFACT = (
+    b"<html><body><article><h1>AACR 2026 Presentation</h1>"
+    b'<p>Download, <a class="et_pb_button" href="https://www.sutrobio.example/wp-content/uploads/2026/04/'
+    b'Sutro-AACR-2026-Poster-FINAL.pdf" target="_blank">Poster</a></p>'
+    b'<p><a href="https://www.sutrobio.example/wp-content/uploads/2026/01/'
+    b'Sutro-Biopharma-Visitors-Guide.pdf" title="VISITOR GUIDE">VISITOR GUIDE</a></p>'
+    b"</article></body></html>"
+)
+SUTRO_DETAIL_NO_ARTIFACT = b"<html><body><article><h1>Sutro to Present at a Conference</h1><p>Details soon.</p></article></body></html>"
+SUTRO_DETAIL_WITH_TWO_ARTIFACTS = (
+    b"<html><body><article><h1>World ADC 2024 -- Presentations</h1>"
+    b'<p><a href="https://www.sutrobio.example/wp-content/uploads/2024/11/Author-One.pdf">Poster 1</a></p>'
+    b'<p><a href="https://www.sutrobio.example/wp-content/uploads/2024/11/Author-Two.pdf">Poster 2</a></p>'
+    b"</article></body></html>"
+)
+
+
+SUTRO_ONE_ITEM_PAGE = _sutro_page([_sutro_item(1, "https://www.sutrobio.example/post-1/", "Post 1")])
+
+
+def _sutro_setup_with_one_listing_item(tmp_path, monkeypatch, detail_body):
+    _setup(tmp_path, monkeypatch, registry_yaml=SUTRO_ONLY_YAML)
+    responses.add(responses.GET, "https://www.sutrobio.example/news/presentations/", body=SUTRO_ONE_ITEM_PAGE, content_type="text/html")
+    responses.add(responses.GET, "https://www.sutrobio.example/news/presentations/page/2/", body=EMPTY_PAGE, content_type="text/html")
+    responses.add(responses.GET, "https://www.sutrobio.example/post-1/", body=detail_body, content_type="text/html")
+
+
+@responses.activate
+def test_sutro_detail_with_one_artifact_materializes_pdf_child(tmp_path, monkeypatch):
+    """The reviewer's required scenario: a Sutro HTML detail page that
+    contains one presentation PDF -- the HTML parent must still succeed,
+    the PDF must be materialized as a separate child with the correct
+    parent_record_id, and the sitewide 'Visitors Guide' footer PDF must
+    NOT be mistaken for the primary artifact."""
+    _sutro_setup_with_one_listing_item(tmp_path, monkeypatch, SUTRO_DETAIL_WITH_ARTIFACT)
+    responses.add(
+        responses.GET, "https://www.sutrobio.example/wp-content/uploads/2026/04/Sutro-AACR-2026-Poster-FINAL.pdf",
+        body=b"%PDF-1.4 poster bytes", content_type="application/pdf",
+    )
+
+    result = CompanyScientificPresentationsJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 2  # parent HTML + 1 artifact PDF child
+    df = _manifest_df(tmp_path)
+    assert len(df) == 2
+    parent = df[df["source_record_type"] == "company_scientific_presentation"].iloc[0]
+    child = df[df["source_record_type"] == "company_scientific_presentation_artifact"].iloc[0]
+    assert pd.isna(parent["parent_record_id"])
+    assert child["parent_record_id"] == parent["source_record_id"]
+    assert child["url"] == "https://www.sutrobio.example/wp-content/uploads/2026/04/Sutro-AACR-2026-Poster-FINAL.pdf"
+    assert "Visitors-Guide" not in child["url"]
+
+
+@responses.activate
+def test_sutro_detail_with_no_artifact_leaves_html_parent_as_sole_record(tmp_path, monkeypatch):
+    """The reviewer's other required scenario: a Sutro HTML detail page
+    with no primary artifact -- the HTML remains the successful
+    acquisition artifact, and no child is fabricated."""
+    _sutro_setup_with_one_listing_item(tmp_path, monkeypatch, SUTRO_DETAIL_NO_ARTIFACT)
+
+    result = CompanyScientificPresentationsJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1
+    df = _manifest_df(tmp_path)
+    assert len(df) == 1
+    assert df.iloc[0]["source_record_type"] == "company_scientific_presentation"
+    assert pd.isna(df.iloc[0]["parent_record_id"])
+
+
+@responses.activate
+def test_sutro_detail_with_multiple_artifacts_materializes_all_as_children(tmp_path, monkeypatch):
+    _sutro_setup_with_one_listing_item(tmp_path, monkeypatch, SUTRO_DETAIL_WITH_TWO_ARTIFACTS)
+    responses.add(
+        responses.GET, "https://www.sutrobio.example/wp-content/uploads/2024/11/Author-One.pdf",
+        body=b"%PDF-1.4 one", content_type="application/pdf",
+    )
+    responses.add(
+        responses.GET, "https://www.sutrobio.example/wp-content/uploads/2024/11/Author-Two.pdf",
+        body=b"%PDF-1.4 two", content_type="application/pdf",
+    )
+
+    result = CompanyScientificPresentationsJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 3  # parent HTML + 2 artifact PDF children
+    df = _manifest_df(tmp_path)
+    children = df[df["source_record_type"] == "company_scientific_presentation_artifact"]
+    assert len(children) == 2
+    assert set(children["parent_record_id"]) == {df[df["source_record_type"] == "company_scientific_presentation"].iloc[0]["source_record_id"]}
+
+
+@responses.activate
+def test_artifact_fetch_failure_does_not_erase_successful_html_parent(tmp_path, monkeypatch):
+    _sutro_setup_with_one_listing_item(tmp_path, monkeypatch, SUTRO_DETAIL_WITH_ARTIFACT)
+    responses.add(
+        responses.GET, "https://www.sutrobio.example/wp-content/uploads/2026/04/Sutro-AACR-2026-Poster-FINAL.pdf",
+        status=500,
+    )
+
+    result = CompanyScientificPresentationsJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1  # the HTML parent only
+    assert result.records_failed == 1  # the artifact child only
+    df = _manifest_df(tmp_path)
+    assert len(df) == 1
+    assert df.iloc[0]["source_record_type"] == "company_scientific_presentation"
+    assert df.iloc[0]["download_status"] == "success"
+
+
+@responses.activate
+def test_off_domain_artifact_link_excluded(tmp_path, monkeypatch):
+    detail_with_off_domain_pdf = (
+        b"<html><body><article><h1>Presentation</h1>"
+        b'<p><a href="https://someothersite.example/wp-content/uploads/2026/04/mirror.pdf">Poster</a></p>'
+        b"</article></body></html>"
+    )
+    _sutro_setup_with_one_listing_item(tmp_path, monkeypatch, detail_with_off_domain_pdf)
+
+    result = CompanyScientificPresentationsJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1  # the HTML parent only -- off-domain link never fetched
+    df = _manifest_df(tmp_path)
+    assert len(df) == 1
+
+
+@responses.activate
+def test_adct_single_page_template_never_attempts_artifact_extraction(tmp_path, monkeypatch):
+    """adctmedical_congress_listing items are already direct PDFs and have
+    no registered ARTIFACT_PARSERS entry -- the new artifact machinery
+    must not touch this template at all."""
+    _setup(tmp_path, monkeypatch)
+    responses.add(responses.GET, "https://www.adctmedical.example/congresses/", body=ONE_ADCT_ITEM_PAGE, content_type="text/html")
+    responses.add(
+        responses.GET, "https://www.adctmedical.example/wp-content/uploads/lonca.pdf",
+        body=b"%PDF-1.4 fake pdf bytes", content_type="application/pdf",
+    )
+
+    result = CompanyScientificPresentationsJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 1
+    df = _manifest_df(tmp_path)
+    assert len(df) == 1
+    assert df.iloc[0]["source_record_type"] == "company_scientific_presentation"
+
+
+@responses.activate
+def test_artifact_already_resolved_fast_skipped_with_no_request_on_rerun(tmp_path, monkeypatch):
+    """Once an artifact child is resolved, an ordinary (non-refresh)
+    rerun must not re-fetch it -- same discipline as the parent's own
+    fast-skip."""
+    _sutro_setup_with_one_listing_item(tmp_path, monkeypatch, SUTRO_DETAIL_WITH_ARTIFACT)
+    responses.add(
+        responses.GET, "https://www.sutrobio.example/wp-content/uploads/2026/04/Sutro-AACR-2026-Poster-FINAL.pdf",
+        body=b"%PDF-1.4 poster bytes", content_type="application/pdf",
+    )
+    CompanyScientificPresentationsJob().run(_base_args(tmp_path))
+
+    responses.reset()
+    responses.add(responses.GET, "https://www.sutrobio.example/news/presentations/", body=SUTRO_ONE_ITEM_PAGE, content_type="text/html")
+    result = CompanyScientificPresentationsJob().run(_base_args(tmp_path))
+
+    assert result.records_downloaded == 0
+    assert len(responses.calls) == 1  # only the listing re-fetch -- no re-request for the parent HTML or the child PDF
+
+
+@responses.activate
+def test_report_sutro_parent_count_dedupes_multi_version_records(tmp_path, monkeypatch):
+    """A parent whose own detail-page content genuinely changes between
+    runs gets a second version ROW in the manifest -- the report's Sutro
+    parent count must dedupe by source_record_id, not count manifest
+    rows, or a single presentation with 2 content versions would be
+    double-counted as 2 presentations."""
+    _sutro_setup_with_one_listing_item(tmp_path, monkeypatch, SUTRO_DETAIL_NO_ARTIFACT)
+    CompanyScientificPresentationsJob().run(_base_args(tmp_path))
+
+    responses.reset()
+    responses.add(responses.GET, "https://www.sutrobio.example/news/presentations/", body=SUTRO_ONE_ITEM_PAGE, content_type="text/html")
+    responses.add(responses.GET, "https://www.sutrobio.example/post-1/", body=SUTRO_DETAIL_NO_ARTIFACT + b"<!-- changed -->", content_type="text/html")
+    CompanyScientificPresentationsJob().run(_base_args(tmp_path, refresh=True))
+
+    df = _manifest_df(tmp_path)
+    assert sorted(df["version"]) == [1, 2]  # genuinely 2 content versions of the SAME presentation
+    report_text = (tmp_path / "reports" / "acquisition" / "company_scientific_presentations.md").read_text()
+    assert "1 Sutro presentation-category listing/detail records" in report_text
+
+
 @responses.activate
 def test_inactive_and_no_presentations_url_companies_excluded(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch, registry_yaml=FULL_REGISTRY_YAML)

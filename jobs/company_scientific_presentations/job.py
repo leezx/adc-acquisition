@@ -65,18 +65,53 @@ failure isolation per company. An item's own URL may be a direct PDF
 (ADC Therapeutics) or an HTML detail page (Sutro) -- transparent to this
 job's generic fetch/store logic, which already infers raw_format from the
 response Content-Type/URL (adc_acquisition.html_utils.infer_raw_format),
-same as every other job. Deliberately NOT following a Sutro item one hop
-deeper to find an embedded PDF within its detail page -- same
-"acquisition preserves raw evidence, it does not chase every embedded
-asset" principle already established for Job 12's press-release detail
-pages.
+same as every other job.
+
+ROUND-1 FIX -- Sutro PRIMARY-ARTIFACT PDF CHILD (one hop, not a generic
+crawler): a Sutro detail page's raw HTML is frequently just a wrapper
+("Sutro presented at AACR... View presentation here.") -- unlike Job
+12's press-release detail pages, where the fetched HTML itself IS the
+primary evidence. The actual target/payload/linker/platform/preclinical
+content this whole source exists to capture lives in an embedded
+presentation/poster PDF. So for any template registered in parser.py's
+ARTIFACT_PARSERS (currently only "sutro_divi_blog"), whenever a parent
+HTML page's content is actually fetched in the materialization loop
+below (a brand-new presentation, a backlog retry, a pending-recovery
+reconfirm, or an already-resolved one specifically under --refresh),
+this job parses THAT SAME PAGE ONLY for an on-domain `/wp-content/
+uploads/.../*.pdf` link and materializes each one found as its own child
+record -- source_record_type="company_scientific_presentation_artifact",
+parent_record_id set to the HTML parent's own source_record_id, own
+content_hash/version/checkpoint entry, own attempt/manifest rows. This
+does NOT recurse (the PDF's own bytes are never parsed for further
+links), does NOT fetch any page the parent's own HTML didn't already
+link to, and a child fetch failure never touches the parent's own
+already-recorded success (the parent's attempt/manifest rows are written
+before any child is even considered). If no artifact is found, the
+parent HTML is still kept as the acquisition artifact -- this is not
+treated as a failure of any kind, only as a fact worth reporting (see
+report.py's "Sutro primary-artifact PDF children" section).
+
+A genuinely already-resolved parent never re-enters this run's scope at
+all on an ordinary run (same early-stop discipline as everywhere else in
+this job -- see _discovery_history_state/_classify_presentation_ids), so
+it is never re-fetched and its artifact(s) are never re-checked on an
+ordinary run either; a brand-new presentation's very first fetch always
+checks it, going forward, with no perpetual need for --refresh. Backfilling
+this fix onto presentations that were ALREADY resolved before this fix
+existed requires exactly one `--refresh` run (the pre-existing, already-
+documented mechanism for "re-verify everything already materialized") --
+not a special-cased code path of its own.
 
 Three tables: company_scientific_presentations.parquet (content-version
-manifest), company_scientific_presentations_discovery.parquet (every
+manifest, holding both parent HTML/PDF rows and child artifact-PDF
+rows), company_scientific_presentations_discovery.parquet (every
 (presentation, company, run) triple this run's live pagination actually
 observed, plus the listing-provided title/date/congress so a presentation
-can be reconstructed WITHOUT re-fetching a listing page), company_
-scientific_presentations_attempts.parquet (every fetch attempt).
+can be reconstructed WITHOUT re-fetching a listing page -- parent records
+only, since children are derived from an already-discovered parent's own
+content, not from listing pagination), company_scientific_presentations_
+attempts.parquet (every fetch attempt, parent and child alike).
 """
 
 from __future__ import annotations
@@ -100,6 +135,7 @@ from adc_acquisition.manifest import append_only, new_manifest_row, write_manife
 from adc_acquisition.web_snapshot_client import DEFAULT_RATE_LIMIT as RATE_LIMIT
 from adc_acquisition.web_snapshot_client import WebSnapshotClient
 from jobs.company_scientific_presentations.parser import (
+    ARTIFACT_PARSERS,
     PAGINATION_CONFIGS,
     TEMPLATE_PARSERS,
     PresentationListingItem,
@@ -140,6 +176,10 @@ def _presentation_id(company_id: str, url: str) -> str:
     return f"SCIPRESENTATION_{company_id.upper()}_{sha256_bytes(url.encode('utf-8'))[:12]}"
 
 
+def _artifact_id(parent_source_record_id: str, artifact_url: str) -> str:
+    return f"{parent_source_record_id}_ARTIFACT_{sha256_bytes(artifact_url.encode('utf-8'))[:8]}"
+
+
 def _is_on_presentations_domain(url: str, presentations_url: str) -> bool:
     """Anchored to presentations_url's OWN host, never official_domain --
     see module docstring for why (ADC Therapeutics' presentations
@@ -162,15 +202,22 @@ def _record_row(
     )
 
 
+ARTIFACT_LICENSE_NOTE = (
+    "Company-published scientific congress presentation/poster PDF, embedded in a "
+    "company_scientific_presentation parent's own detail page. Public disclosure."
+)
+
+
 def _manifest_row(
     company: Company, item: PresentationListingItem, source_record_id: str, query_id: str, query_text: str,
     title: str | None, raw_path: Path, raw_format: str, content_hash: str, version: int, now: str, http_status: int,
+    source_record_type: str = "company_scientific_presentation", parent_record_id: str | None = None,
 ) -> dict:
     return new_manifest_row(
         extra_fields=EXTRA_FIELDS,
         source="company_scientific_presentations",
         source_record_id=source_record_id,
-        source_record_type="company_scientific_presentation",
+        source_record_type=source_record_type,
         title=title,
         url=item.url,
         publication_or_release_date=item.presentation_date,
@@ -182,8 +229,8 @@ def _manifest_row(
         content_hash=content_hash,
         download_status="success",
         http_status=http_status,
-        license_or_access_note=LICENSE_NOTE,
-        parent_record_id=None,
+        license_or_access_note=ARTIFACT_LICENSE_NOTE if parent_record_id else LICENSE_NOTE,
+        parent_record_id=parent_record_id,
         version=version,
         notes=None,
         company_id=company.company_id,
@@ -191,6 +238,94 @@ def _manifest_row(
         official_domain=company.official_domain,
         congress=item.congress,
     )
+
+
+def _candidate_artifact_urls(template: str | None, content_bytes: bytes | None, page_url_: str, presentations_url: str) -> list[str]:
+    parser_fn = ARTIFACT_PARSERS.get(template) if template else None
+    if parser_fn is None or content_bytes is None:
+        return []
+    urls = parser_fn(content_bytes, page_url_)
+    return [u for u in urls if _is_on_presentations_domain(u, presentations_url)]
+
+
+def _materialize_artifact(
+    client: WebSnapshotClient, checkpoint_store: CheckpointStore, checkpoint: dict, run_id: str, now: str,
+    output_dir: Path, company: Company, parent_item: PresentationListingItem, parent_source_record_id: str,
+    artifact_url: str, refresh: bool, logger, failure_logger, result: JobRunResult,
+    attempt_rows: list, content_rows: list,
+) -> None:
+    """Materialize one artifact PDF as a CHILD of an already-processed
+    parent -- own checkpoint entry, own attempt/manifest rows. A failure
+    here only ever appends a "failed" attempt row for the CHILD's own id;
+    it can never retroactively touch the parent's already-appended
+    success (that happened before this function is ever called)."""
+    child_id = _artifact_id(parent_source_record_id, artifact_url)
+    query_id = f"SCIPRESENTATION_ARTIFACT_{company.company_id.upper()}"
+    query_text = parent_item.url
+
+    raw_prior_state = checkpoint_store.get_record_state(checkpoint, child_id, namespace=RAW_NAMESPACE)
+    if raw_prior_state and not refresh:
+        result.records_skipped_unchanged += 1
+        attempt_rows.append(_record_row(
+            child_id, run_id, now, "skipped_unchanged", query_id, query_text,
+            content_hash=raw_prior_state["content_hash"], version=raw_prior_state["version"],
+        ))
+        return
+
+    try:
+        response = client.fetch(artifact_url)
+    except requests.RequestException as exc:
+        logger.warning("presentation_artifact=%s url=%s fetch failed: %s", child_id, artifact_url, exc)
+        failure_logger.info("presentation_artifact=%s url=%s error=%s", child_id, artifact_url, exc)
+        result.records_failed += 1
+        attempt_rows.append(_record_row(child_id, run_id, now, "failed", query_id, query_text, error=str(exc)))
+        return
+
+    if response.status_code != 200:
+        logger.warning("presentation_artifact=%s url=%s: HTTP %d", child_id, artifact_url, response.status_code)
+        failure_logger.info("presentation_artifact=%s url=%s error=http_%d", child_id, artifact_url, response.status_code)
+        result.records_failed += 1
+        attempt_rows.append(_record_row(
+            child_id, run_id, now, "failed", query_id, query_text,
+            http_status=response.status_code, error=f"http_{response.status_code}",
+        ))
+        return
+
+    content_bytes = response.content
+    content_hash = sha256_bytes(content_bytes)
+    raw_format = infer_raw_format(response.headers.get("Content-Type"), artifact_url)
+    raw_dir = (
+        output_dir / "raw" / "company_scientific_presentations" / company.company_id
+        / sha256_bytes(artifact_url.encode("utf-8"))[:12]
+    )
+
+    unchanged = bool(raw_prior_state) and raw_prior_state.get("content_hash") == content_hash
+    version = raw_prior_state["version"] if unchanged else ((raw_prior_state["version"] + 1) if raw_prior_state else 1)
+    raw_path = raw_dir / f"v{version}.{raw_format}"
+    if not unchanged:
+        raw_dir.mkdir(parents=True, exist_ok=True)
+        raw_path.write_bytes(content_bytes)
+        checkpoint_store.set_record_state(checkpoint, child_id, content_hash, version, now, namespace=RAW_NAMESPACE)
+        checkpoint_store.save(checkpoint)
+
+    if unchanged:
+        result.records_skipped_unchanged += 1
+        attempt_rows.append(_record_row(
+            child_id, run_id, now, "skipped_unchanged", query_id, query_text,
+            content_hash=content_hash, version=version,
+        ))
+        return
+
+    result.records_downloaded += 1
+    attempt_rows.append(_record_row(child_id, run_id, now, "success", query_id, query_text, content_hash=content_hash, version=version))
+    child_item = PresentationListingItem(
+        url=artifact_url, title=parent_item.title, presentation_date=parent_item.presentation_date, congress=parent_item.congress,
+    )
+    content_rows.append(_manifest_row(
+        company, child_item, child_id, query_id, query_text, parent_item.title, raw_path, raw_format,
+        content_hash, version, now, response.status_code,
+        source_record_type="company_scientific_presentation_artifact", parent_record_id=parent_source_record_id,
+    ))
 
 
 def _latest_attempt_by_id(attempts_path: Path) -> dict[str, dict]:
@@ -491,6 +626,15 @@ class CompanyScientificPresentationsJob(AcquisitionJob):
                     version=raw_prior_state["version"] if raw_prior_state else None,
                 )
             )
+            # No artifact re-check here: fast_skip_ids is only ever
+            # populated under --refresh (see module docstring's "ROUND-1
+            # FIX" section) -- on an ordinary run, a genuinely resolved
+            # parent's URL is already in known_urls BEFORE pagination
+            # starts, so it never re-enters hits_by_id/all_ids at all,
+            # meaning already_skipped_ids (and therefore fast_skip_ids)
+            # is structurally always empty outside of --refresh, where
+            # already-skipped ids flow through target_ids instead (see
+            # below) and get a real content refetch + artifact check.
 
         for source_record_id in target_ids:
             company, item = hits_by_id[source_record_id]
@@ -524,6 +668,15 @@ class CompanyScientificPresentationsJob(AcquisitionJob):
                 output_dir / "raw" / "company_scientific_presentations" / company.company_id
                 / sha256_bytes(item.url.encode("utf-8"))[:12]
             )
+
+            for artifact_url in _candidate_artifact_urls(
+                company.presentations_template, content_bytes, item.url, company.presentations_url
+            ):
+                _materialize_artifact(
+                    client, checkpoint_store, checkpoint, run_id, now, output_dir, company, item,
+                    source_record_id, artifact_url, args.refresh, logger, failure_logger, result,
+                    attempt_rows, content_rows,
+                )
 
             if raw_prior_state and raw_prior_state.get("content_hash") == content_hash:
                 version = raw_prior_state["version"]

@@ -25,10 +25,27 @@ here.
   (Elegant Themes) WordPress blog loop, `<article id="post-N" ...>`
   items. Each item's own URL is an HTML detail page (not a direct PDF).
 
-Deliberately NOT following each Sutro item one hop deeper to find an
-embedded PDF within its detail page -- same "acquisition preserves raw
-evidence, it does not chase every embedded asset" principle already
-established for Job 12's press-release detail pages.
+ROUND-1 FIX: a Sutro detail page's own HTML is frequently just a wrapper
+("Sutro presented at AACR... View presentation here.") -- unlike Job 12's
+press-release detail pages, where the HTML itself IS the primary
+evidence. The actual target/payload/linker/platform/preclinical content
+lives in an embedded presentation/poster PDF, so this module also
+extracts that PDF (`parse_sutro_detail_page_artifacts`), materialized by
+the job as a CHILD record of the HTML parent -- one hop only, no further
+recursion, on-domain only, HTML parent is always kept regardless of
+whether an artifact was found. See `jobs/company_scientific_presentations
+/job.py`'s module docstring for the full materialization design.
+
+Live-verified against all 189 already-downloaded Sutro detail pages
+(2026-08-24): the WordPress standard per-post-dated media-library path
+(`/wp-content/uploads/YYYY/MM/*.pdf`) is a reliable, narrow signal for a
+genuine on-page artifact -- of 112 distinct such URLs found across all
+189 pages, only ONE (a "Visitors Guide" PDF in the sitewide footer)
+recurs across many pages and is not a genuine per-presentation artifact;
+every other URL is unique to its own page. That one is excluded by name
+(`_SUTRO_VISITOR_GUIDE_MARKER`), the same "one known, named, static,
+non-entry element" exclusion discipline this module's listing parser
+already uses for the always-present `post-3163` page wrapper.
 """
 
 from __future__ import annotations
@@ -112,6 +129,39 @@ def parse_sutro_divi_blog_listing(content_bytes: bytes, base_url: str) -> list[P
 TEMPLATE_PARSERS = {
     "adctmedical_congress_listing": parse_adctmedical_congress_listing,
     "sutro_divi_blog": parse_sutro_divi_blog_listing,
+}
+
+# The one known, named, static, sitewide asset that is never a genuine
+# per-presentation artifact -- confirmed live 2026-08-24 to appear
+# identically on all 189 Sutro detail pages (a footer widget link), the
+# only URL of the 112 distinct matches across all pages that repeats.
+_SUTRO_VISITOR_GUIDE_MARKER = "Visitors-Guide"
+
+# WordPress's own per-post-dated media-library upload path -- confirmed
+# live 2026-08-24 to be a reliable, narrow signal for a genuine embedded
+# presentation/poster PDF on a Sutro detail page (see module docstring).
+_SUTRO_DETAIL_ARTIFACT_RE = re.compile(r'href="(?P<url>[^"]*/wp-content/uploads/\d{4}/\d{2}/[^"]+\.pdf)"')
+
+
+def parse_sutro_detail_page_artifacts(content_bytes: bytes, page_url: str) -> list[str]:
+    """Extract the primary presentation/poster PDF artifact URL(s) embedded
+    in a Sutro detail page -- one hop only, no further recursion. A page
+    may legitimately bundle several distinct artifacts (e.g. a multi-
+    author conference wrap-up post links one poster PDF per author), so
+    this returns all matches, deduplicated, in document order."""
+    text = content_bytes.decode("utf-8", errors="replace")
+    seen: list[str] = []
+    for m in _SUTRO_DETAIL_ARTIFACT_RE.finditer(text):
+        url = html_module.unescape(m.group("url"))
+        if _SUTRO_VISITOR_GUIDE_MARKER in url:
+            continue
+        if url not in seen:
+            seen.append(url)
+    return seen
+
+
+ARTIFACT_PARSERS = {
+    "sutro_divi_blog": parse_sutro_detail_page_artifacts,
 }
 
 # Pagination scheme per template, live-verified 2026-08-24:

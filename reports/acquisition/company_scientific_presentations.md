@@ -4,6 +4,8 @@
 
 Distinct from Job 12 (company press releases): an IR newsroom announces corporate news, but a company's ACTUAL scientific congress presentations/posters (AACR/ASCO/ESMO/ASH/etc.) often live on a separate page -- sometimes a genuinely different domain (see `configs/company_registry.yaml`'s note on ADC Therapeutics' adctmedical.com microsite). Only companies with a real, live-verified scrapable listing are registered here -- not attempted for every company (see "Companies checked but not registered" below). Each company's `presentations_url` is discovered by walking its listing's pagination (or fetching once, for a "single_page" template), using a per-company `presentations_template` to select the correct parser (`jobs/company_scientific_presentations/parser.py`). Only items whose own URL stays on `presentations_url`'s OWN domain (never the company's generic `official_domain` -- see module docstring for why) are accepted.
 
+**Sutro's own listing/detail records are wrapper pages, not necessarily scientific content.** Sutro's presentations-category listing mixes real conference/R&D-day posts with plain corporate announcements under the same WordPress category, and even a real conference post's own detail-page HTML is frequently just an announcement ("Sutro presented at AACR... View presentation here.") rather than the scientific content itself. So the counts below distinguish "Sutro presentation-category listing/detail records" (the wrapper HTML, always kept regardless) from "primary-artifact PDFs" (the embedded poster/slide-deck PDF that actually carries target/payload/linker/platform/preclinical data, materialized as a separate child record -- see "Sutro primary-artifact PDF children" below). ADC Therapeutics' items need no such distinction -- each IS a direct PDF poster/slide-deck already.
+
 ## Registered companies this run
 
 - Sutro Biopharma, Inc. (sutro_biopharma): https://www.sutrobio.com/news/presentations/ [sutro_divi_blog]
@@ -18,30 +20,15 @@ Distinct from Job 12 (company press releases): an IR newsroom announces corporat
 
 ## Materialization this run
 
-293 presentations discovered across 2 companies. 293 never-attempted (fresh), 0 unresolved-retry (backlog), 0 pending recovery (raw durable but ledger stale), 0 already successful and skipped with no request. 293 newly downloaded (new or changed content), 0 unchanged, 0 failed.
+0 presentations discovered across 2 companies. 0 never-attempted (fresh), 0 unresolved-retry (backlog), 0 pending recovery (raw durable but ledger stale), 0 already successful and skipped with no request. 0 newly downloaded (new or changed content), 0 unchanged, 0 failed.
 
 ## Sample materialized presentations
 
-- ADC Therapeutics SA: Lonca RW Effectiveness Post CAR-T | N. Epperla (Tandem 2024, https://www.adctmedical.com/wp-content/uploads/2024/02/Tandem-2024_Epperla_Poster_482.pdf, version 1)
-- ADC Therapeutics SA: Lonca RW Outcomes Pre CAR-T (CIBMTR) | M . Hamadani (Tandem 2024, https://www.adctmedical.com/wp-content/uploads/2024/02/Tandem-2024_Hamadani_Poster_492.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-5: Lonca-R in r/r DLBCL - Safety Run-In [Updated Results] | M. Kwiatek (SOHO 2023, https://www.adctmedical.com/wp-content/uploads/2023/09/Kwiatek_SOHO-402-311-LOTIS-5-poster_updated-FINAL.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-5: Lonca-R vs Immunotherapy in r/r DLBCL - Safety Run-in [Initial Results] | E. Kingsley (SOHO 2022, https://www.adctmedical.com/wp-content/uploads/2022/09/SOHO_2022_Kingsley_LOTIS_5_Safety_Run_in_Poster_FINAL.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-2: Lonca HRQoL - Skin Toxicity | A. Spira (SOHO 2022, https://www.adctmedical.com/wp-content/uploads/2022/09/SOHO_2022_Spira_HEOR_LOTIS_2_HRQoL_Skin_Toxicity_Poster_FINAL.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-2: Lonca r/r DLBCL [Updated Results] - ENCORE | B. Kahl (SOHO 2021, https://www.adctmedical.com/wp-content/uploads/2021/09/SOHO-2021_Kahl_ADCT-402-201-Encore-Oral__ABCL-022_FINAL.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-2: Lonca AE Management - Edema and Effusion | J. Alderuccio (SOHO 2021, https://www.adctmedical.com/wp-content/uploads/2021/10/SOHO-2021_Alderuccio_ADCT-402-201-edema-effusion_Eposter_ABCL-396_FINAL_corrected.pdf, version 1)
-- ADC Therapeutics SA: Preclinical: Camidanlumab in Solid Cancers | F. Zammarchi (SITC 2020, https://www.adctmedical.com/wp-content/uploads/2023/06/SITC-2020_Zammarchi_CD25-ADC-combo-preclin_poster.pdf, version 1)
-- ADC Therapeutics SA: Preclinical: Cami (ADCT-301) MOA in Solid Cancers | F. Zammarchi (SITC 2019, https://www.adctmedical.com/wp-content/uploads/2023/06/SITC-2019_Zammarchi_ADCT-301-preclin_Poster_Final.pdf, version 1)
-- ADC Therapeutics SA: Preclinical: Camidanlumab in Solid Tumors alone or w/ anti-PD-1s | F. Zammarchi (SITC 2018, https://www.adctmedical.com/wp-content/uploads/2021/04/SITC_301_2018_SolidTumors.pdf, version 1)
-- ADC Therapeutics SA: Lonca + Epcoritamab in DLBCL (QSP modeling) | Y. Li (PPLC 2024, https://www.adctmedical.com/wp-content/uploads/2024/08/PPLC-2024-QSP-Lonca-_-epcor-ePoster_FINAL.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-7: Lonca in r/r B-NHL [Trial-In-Progress Update] | E. Ayers (PPLC 2024, https://www.adctmedical.com/wp-content/uploads/2024/07/PPLC-2024_Ayers_LOTIS-7-TiP-Update-Poster_FINAL.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-2: Lonca AE Management - Cutaneous Reactions | J. Pruett (ONS 2022, https://www.adctmedical.com/wp-content/uploads/2022/06/ONS_2022_Pruett_402-201_Cutaneous_Reactions_poster_FINAL_63.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-2: Lonca AE Management - Edema and Effusion [Updated Results] | C. Grandas (ONS 2022, https://www.adctmedical.com/wp-content/uploads/2022/06/ONS_2022_Grandas_402-201_Edema_and_Effusion_poster_FINAL_14.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-2: Lonca in r/r/ DLBCL - HRQoL Older vs Younger | A. Spira (NCCN 2022, https://www.adctmedical.com/wp-content/uploads/2022/06/NCCN_2022_Spira_402-201_HRQoL_Poster_FINAL.pdf, version 1)
-- ADC Therapeutics SA: HEOR: Treatment-Related Costs in r/r DLBCL | L. Liao (ISPOR 2021, https://www.adctmedical.com/wp-content/uploads/2021/05/Treatment-Related-Costs-for-Patients-with-RR-DLBCL-with-2-or-More-Prior-Lines-of-Therapy.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-7: Lonca + Glofit r/r DLBCL [Initial Results] - ENCORE | J. Alderuccio (ICML 2025, https://www.adctmedical.com/wp-content/uploads/2025/06/ICML-2025_LOTIS-7-Prelim_Encore_Oral-Presentation_FINAL.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-2: Lonca in r/r DLBCL [Updated Results] - ENCORE | P. Caimi (ICML 2023, https://www.adctmedical.com/wp-content/uploads/2023/06/ICML_2023_EncoreLOTIS-2-1-and-2-yr-Responders_Oral-Presentation_FINAL.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-6: Lonca vs Idelalisib in r/r FL [Trial-In-Progress] | C. Carlo-Stella (ICML 2021, https://www.adctmedical.com/wp-content/uploads/2021/06/Carlo-Stella-et-al-A-Phase-2-randomized-study-of-lonca-vs-idelalisib-in-patients-with-RR-FL-LOTIS-6.pdf, version 1)
-- ADC Therapeutics SA: LOTIS-2: Lonca in r/r DLBCL [Updated Results] - ENCORE | P.L. Zinzani (ICML 2021, https://www.adctmedical.com/wp-content/uploads/2021/08/PPLC-2021-Kahl-ADCT-402-201-eposter-encore-ICML-2021.pdf, version 1)
+n/a
+
+## Sutro primary-artifact PDF children
+
+189 Sutro presentation-category listing/detail records (wrapper HTML, always kept regardless of whether a primary artifact was found; a record with more than one content-version row over time is counted once here). 83 of those have at least one primary presentation/poster PDF discovered on their own detail page. 107 artifact PDFs successfully materialized so far as separate child records (source_record_type=company_scientific_presentation_artifact, parent_record_id set to their Sutro HTML parent's own source_record_id) -- a single detail page can legitimately bundle more than one artifact (e.g. a multi-author conference wrap-up post links one poster PDF per author). A page with no primary artifact is not a failure of any kind -- its wrapper HTML is still the correct acquisition artifact for that record.
 
 ## Failed downloads
 
@@ -56,8 +43,8 @@ None this run.
 ## Known coverage gaps
 
 - ADC Therapeutics' items have NO date finer than the congress year (e.g. "ASH 2025") -- preserved in the `congress` column, never fabricated into a false-precision date; `--since`/`--until` cannot filter these items.
-- Sutro's presentations-category listing mixes real conference/R&D-day presentation posts with some plain announcement posts under the same WordPress category -- same "acquire broadly, filter downstream" principle already used throughout this repo (e.g. AbbVie/Pfizer's non-ADC-specific pipeline/press-release volume).
-- Individual presentation BODY content (poster figures, slide text) is not extracted -- only the raw page/PDF snapshot and the listing page's own title/date/congress are preserved.
+- Sutro's presentations-category listing mixes real conference/R&D-day presentation posts with some plain announcement posts under the same WordPress category -- same "acquire broadly, filter downstream" principle already used throughout this repo (e.g. AbbVie/Pfizer's non-ADC-specific pipeline/press-release volume). See "Sutro primary-artifact PDF children" above for how many of these 189 listing/detail records actually carry a primary scientific-content PDF, as opposed to being announcement-only wrapper pages.
+- Individual presentation BODY content (poster figures, slide text) is not extracted -- only the raw page/PDF snapshot and the listing page's own title/date/congress are preserved. For Sutro, the primary-artifact PDF child IS materialized as its own raw snapshot (one hop from the wrapper HTML); its own body content (poster figures, slide text) is likewise not further extracted.
 
 ## Reproduction command
 

@@ -107,21 +107,91 @@ DATA/manifests/company_scientific_presentations.parquet: 304 rows total
   source_record_id, 0 failed downloads.
 ```
 
-## 6. What Phase 5d does and does not establish
+## 6. Round-1 fix: Sutro primary-artifact PDF child (one hop, not a generic crawler)
+
+The reviewer's one blocker: a Sutro detail page's own HTML is frequently
+just a wrapper ("Sutro presented at AACR... View presentation here.") --
+unlike Job 12's press-release detail pages, where the HTML itself IS the
+primary evidence. The real target/payload/linker/platform/preclinical
+content this source exists to capture lives in an embedded
+presentation/poster PDF, so materializing only the wrapper HTML would
+make the 189 Sutro records look like 189 units of scientific content when
+many are really just announcement pages.
+
+Fix: for the `sutro_divi_blog` template only, whenever a parent HTML
+page's content is actually fetched, this job parses THAT SAME PAGE ONLY
+for an on-domain `/wp-content/uploads/YYYY/MM/*.pdf` link (WordPress's own
+per-post-dated media-library path -- validated live against all 189
+already-downloaded Sutro pages before writing the regex: of 112 distinct
+matching URLs found, only ONE, a sitewide footer "Visitors Guide" PDF,
+recurs across pages and is excluded by name; every other match is unique
+to its own page) and materializes each one found as a separate CHILD
+record: `source_record_type=company_scientific_presentation_artifact`,
+`parent_record_id` set to the HTML parent's own `source_record_id`, its
+own content_hash/version/checkpoint entry, its own attempt/manifest rows.
+No recursion (the PDF's own bytes are never parsed for further links), no
+off-domain fetches (same `_is_on_presentations_domain` anchor as
+everywhere else in this job), and a child fetch failure never touches the
+parent's already-recorded success -- confirmed by a dedicated test
+(`test_artifact_fetch_failure_does_not_erase_successful_html_parent`). A
+page with no artifact keeps its HTML as the acquisition artifact; this is
+not a failure of any kind, only a fact the report now surfaces (see
+"Sutro primary-artifact PDF children" below). ADC Therapeutics needs no
+such fix -- each of its items already IS a direct PDF poster/slide-deck.
+
+This does NOT introduce a second discovery/backlog ledger for children:
+a genuinely already-resolved parent never re-enters this job's scope at
+all on an ordinary run (the same early-stop pagination discipline this
+job already had), so a brand-new Sutro presentation's very first fetch
+always checks it for an artifact going forward, with no perpetual need
+for `--refresh`. Backfilling this fix onto the 189 presentations that
+were already resolved before the fix existed required exactly one
+`--refresh` run -- the pre-existing, already-documented mechanism for
+"re-verify everything already materialized" -- not a new code path.
+
+Real numbers from that backfill run, against the real internet:
+
+```
+$ python -m adc_acquisition company_scientific_presentations --refresh
+records_discovered=304, records_downloaded=166, records_skipped_unchanged=245, records_failed=2
+  (2 failures: two Sutro corporate-deck PDFs 404 on Sutro's own site --
+  filenames suggest they were superseded/removed since first indexed;
+  logged, retried automatically on every future run, do not block this PR)
+
+189 Sutro presentation-category listing/detail records (unique; 59 of them
+  picked up a genuine second content-version row this run -- Sutro's own
+  detail-page HTML changed bytewise since first fetched, e.g. a sidebar
+  "recent posts" widget)
+83 of those 189 have >=1 primary presentation-artifact PDF discovered
+107 artifact PDFs successfully materialized as separate child records
+  (a few pages bundle multiple posters/authors under one wrapper post,
+  e.g. "15th Annual World ADC Conference -- Presentations" -> 5 artifacts)
+115 ADC Therapeutics direct-PDF parents unaffected (no ARTIFACT_PARSERS
+  entry for that template -- confirmed by a dedicated regression test)
+```
+
+8 tests added for this fix (one artifact, no artifact, multiple artifacts,
+fetch-failure isolation, off-domain exclusion, ADCT-template exclusion,
+already-resolved fast-skip on rerun, and a report-wording regression test
+that a multi-version parent is counted once, not once per version row --
+a real bug caught while regenerating this report). 491 tests passing
+project-wide.
+
+## 7. What Phase 5d does and does not establish
 
 - Adds the first genuinely NEW acquisition source since Phase 4
   (conference abstracts) -- distinct from, and complementary to, that
   corpus: company-published presentations often predate or supplement
   what appears in AACR/ASCO's own indexed abstracts.
-- Does **not** chase a Sutro item's detail page one hop deeper to find an
-  embedded PDF -- same "acquisition preserves raw evidence, it does not
-  chase every embedded asset" principle as Job 12's press-release detail
-  pages. The detail page's own raw HTML is the acquisition artifact.
+- Extracts one hop of primary-artifact PDF from a Sutro wrapper page (see
+  Section 6) -- but does NOT recurse further (the PDF's own content is
+  never parsed for additional links) and does NOT fetch any page the
+  wrapper HTML didn't already link to.
 - Does **not** extract target/payload/candidate entities from this new
-  corpus's content -- that is a future increment (the same Phase 3/5a
-  extraction mechanism could, in principle, later be extended to this
-  source's title/detail-page text, analogous to Phase 5a's extension to
-  conference abstracts).
+  corpus's content (wrapper HTML or artifact PDF alike) -- that is a
+  future increment (the same Phase 3/5a extraction mechanism could, in
+  principle, later be extended to this source's text, analogous to Phase
+  5a's extension to conference abstracts).
 - Does **not** attempt Zymeworks or any of the 5 companies with no
   scrapable page found -- both explicitly disclosed, not silently
   narrowed.
