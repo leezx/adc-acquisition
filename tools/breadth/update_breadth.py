@@ -52,6 +52,28 @@ An existing entity whose own evidence_count/supporting_asset_count grew
 (same key, higher count) is reported separately as "evidence deepened,"
 never miscounted as a new entity.
 
+**Status/confidence-change detection for EXISTING keys** (round-1 fix).
+Persistent candidate/entity IDs (Phase 5a) deliberately do not change when
+a candidate's evidence strengthens -- so a promotion like NEEDS_REVIEW ->
+AUTO_HIGH_CONFIDENCE on the SAME candidate_id is invisible to both new-row
+detection and count-column "deepened" detection (candidate_queue.tsv has
+no count column at all). `STATUS_FIELDS_BY_TABLE` names the decision-
+relevant fields watched per table; any change on an existing key is
+reported in `status_changes.tsv` and in the delta markdown, and a
+transition into PROMOTED/AUTO_HIGH_CONFIDENCE/VALIDATED is surfaced as a
+Tier A event, not buried under "evidence deepened."
+
+**Derivation-chain failures fail closed** (round-1 fix). The acquisition
+stage's jobs are genuinely independent siblings -- one job's failure never
+blocks another. The derivation stage is NOT: candidate_queue ->
+feasibility_entities -> component_coverage_audit is a fixed dependency
+chain where each step reads the previous step's own output. If a step
+fails, every remaining step is recorded as SKIPPED_UPSTREAM_FAILURE rather
+than run against stale upstream output, and no new-entity/deepened/status-
+change diff is computed for that run (`DELTA_STATUS: INCOMPLETE_DERIVATION`,
+`main()` returns nonzero) -- comparing before/partial-after snapshots would
+misattribute stale-vs-new state.
+
 **Immutability discipline for delta output itself**: `reports/delta/
 YYYY-MM-DD/` is never overwritten by a same-day second run -- a second
 run on the same date gets `YYYY-MM-DD_run2`, `_run3`, etc., so a
@@ -105,6 +127,40 @@ FEASIBILITY_TABLES = [
     ("adc_indications.tsv", ["indication"], "n_adc_candidates"),
 ]
 
+# Decision-relevant fields to watch for changes on an EXISTING natural key
+# (persistent candidate/entity IDs, per Phase 5a's design, deliberately do
+# NOT change when evidence/confidence changes -- so a promotion like
+# NEEDS_REVIEW -> AUTO_HIGH_CONFIDENCE is invisible to new-row detection and
+# invisible to count-column "deepened" detection on tables with no count
+# column). Deliberately narrow to fields that represent an actual decision
+# state, not every text column (free-text columns like `context`/`reason`
+# change constantly and are not delta-worthy).
+STATUS_FIELDS_BY_TABLE = {
+    "candidate_queue.tsv": ["validation_status", "confidence", "modality_classification", "source"],
+    "adc_candidates.tsv": ["status", "stage", "target", "payload_evidence_type", "linker_evidence_type", "modality_classification"],
+    "adc_targets.tsv": ["status", "confidence", "evidence_sources"],
+    "adc_payloads.tsv": ["status", "confidence", "evidence_sources"],
+    "adc_linkers.tsv": ["status", "confidence", "evidence_sources"],
+    "adc_platforms.tsv": ["status", "confidence", "evidence_sources"],
+    "payload_moa_targets.tsv": ["status", "confidence", "evidence_sources"],
+    "target_indication_feasibility.tsv": ["status", "confidence"],
+    # adc_indications.tsv intentionally excluded: it is a raw count
+    # aggregate with no decision-relevant status field of its own.
+}
+
+# A status/validation_status field landing on one of these values is a
+# Tier A event even when it is not a new row -- surfaced separately from
+# "evidence deepened" per the reviewer's explicit requirement.
+_TIER_A_STATUS_VALUES = {"PROMOTED", "AUTO_HIGH_CONFIDENCE", "VALIDATED"}
+
+
+def _is_tier_a_upgrade(field: str, before_val: str, after_val: str) -> bool:
+    return (
+        field in ("validation_status", "status")
+        and after_val in _TIER_A_STATUS_VALUES
+        and before_val not in _TIER_A_STATUS_VALUES
+    )
+
 
 @dataclass
 class JobRunOutcome:
@@ -113,6 +169,7 @@ class JobRunOutcome:
     returncode: int
     tail_stdout: str
     tail_stderr: str
+    skipped: bool = False  # True only for SKIPPED_UPSTREAM_FAILURE derivation steps
 
 
 @dataclass
@@ -122,6 +179,8 @@ class DeltaResult:
     derivation_outcomes: list[JobRunOutcome] = field(default_factory=list)
     new_rows_by_table: dict = field(default_factory=dict)  # table -> list[dict(row..., tier=...)]
     deepened_by_table: dict = field(default_factory=dict)  # table -> list[key tuples]
+    status_changes_by_table: dict = field(default_factory=dict)  # table -> list[dict(key, field, before, after, tier_a_upgrade)]
+    delta_status: str = "OK"  # or "INCOMPLETE_DERIVATION"
     delta_dir: str = ""
 
 
@@ -150,22 +209,32 @@ def read_feasibility_snapshot(feasibility_dir: Path) -> dict[str, pd.DataFrame]:
     return snapshot
 
 
-def diff_snapshots(before: dict[str, pd.DataFrame], after: dict[str, pd.DataFrame]) -> tuple[dict, dict]:
-    """Returns (new_rows_by_table, deepened_by_table). A row is NEW only
-    if its natural key was absent from `before` entirely -- never inferred
-    from a changed non-key column. `deepened_by_table` separately flags an
-    EXISTING key whose own count_col value increased (more evidence for
-    an already-known entity), which is informational, never a new-entity
-    event."""
+def diff_snapshots(before: dict[str, pd.DataFrame], after: dict[str, pd.DataFrame]) -> tuple[dict, dict, dict]:
+    """Returns (new_rows_by_table, deepened_by_table, status_changes_by_table).
+
+    A row is NEW only if its natural key was absent from `before` entirely
+    -- never inferred from a changed non-key column. `deepened_by_table`
+    separately flags an EXISTING key whose own count_col value increased
+    (more evidence for an already-known entity). `status_changes_by_table`
+    flags an EXISTING key where one of that table's STATUS_FIELDS_BY_TABLE
+    decision-relevant fields changed value -- this is the ONLY mechanism
+    that can see a persistent-ID candidate's confidence promotion (e.g.
+    NEEDS_REVIEW -> AUTO_HIGH_CONFIDENCE), since the candidate_id itself is
+    deliberately stable across such a promotion (Phase 5a) and
+    candidate_queue.tsv has no count column at all. All three are mutually
+    exclusive per (table, key): a brand-new key is only ever reported as
+    new, never also as deepened/changed."""
     new_rows_by_table: dict[str, list[dict]] = {}
     deepened_by_table: dict[str, list[tuple]] = {}
+    status_changes_by_table: dict[str, list[dict]] = {}
 
     for filename, key_columns, count_col in FEASIBILITY_TABLES:
         before_df, after_df = before.get(filename, pd.DataFrame()), after.get(filename, pd.DataFrame())
         if after_df.empty:
             continue
 
-        before_keys = {_row_key(r, key_columns) for r in before_df.to_dict("records")} if not before_df.empty else set()
+        before_records = before_df.to_dict("records") if not before_df.empty else []
+        before_keys = {_row_key(r, key_columns) for r in before_records}
         new_rows = []
         for row in after_df.to_dict("records"):
             key = _row_key(row, key_columns)
@@ -175,7 +244,7 @@ def diff_snapshots(before: dict[str, pd.DataFrame], after: dict[str, pd.DataFram
             new_rows_by_table[filename] = new_rows
 
         if count_col and not before_df.empty:
-            before_by_key = {_row_key(r, key_columns): r.get(count_col) for r in before_df.to_dict("records")}
+            before_by_key = {_row_key(r, key_columns): r.get(count_col) for r in before_records}
             deepened = []
             for row in after_df.to_dict("records"):
                 key = _row_key(row, key_columns)
@@ -190,7 +259,26 @@ def diff_snapshots(before: dict[str, pd.DataFrame], after: dict[str, pd.DataFram
             if deepened:
                 deepened_by_table[filename] = deepened
 
-    return new_rows_by_table, deepened_by_table
+        watched_fields = STATUS_FIELDS_BY_TABLE.get(filename, [])
+        if watched_fields and not before_df.empty:
+            before_row_by_key = {_row_key(r, key_columns): r for r in before_records}
+            changes = []
+            for row in after_df.to_dict("records"):
+                key = _row_key(row, key_columns)
+                before_row = before_row_by_key.get(key)
+                if before_row is None:
+                    continue  # new row -- already reported above, not a status change
+                for f in watched_fields:
+                    before_val, after_val = str(before_row.get(f, "")), str(row.get(f, ""))
+                    if before_val != after_val:
+                        changes.append({
+                            "key": key, "field": f, "before": before_val, "after": after_val,
+                            "tier_a_upgrade": _is_tier_a_upgrade(f, before_val, after_val),
+                        })
+            if changes:
+                status_changes_by_table[filename] = changes
+
+    return new_rows_by_table, deepened_by_table, status_changes_by_table
 
 
 def _run_subprocess(label: str, cmd: list[str]) -> JobRunOutcome:
@@ -217,13 +305,25 @@ def run_acquisition_stage(job_names: list[str], output_dir: Path) -> list[JobRun
 
 
 def run_derivation_stage(data_dir: Path, feasibility_output: Path) -> list[JobRunOutcome]:
-    """Fixed dependency order -- each step reads the previous step's own
-    output files, same as running them by hand per their own Usage
-    docstrings. A failure here is recorded, not silently swallowed, but
-    subsequent steps still attempt to run (they will simply see whatever
-    the prior step last successfully wrote, same as a manual re-run)."""
+    """Fixed DEPENDENCY order, not independent siblings -- candidate_queue
+    -> feasibility_entities -> component_coverage_audit, each reading the
+    previous step's own output files. Unlike the acquisition stage (whose
+    jobs are genuinely independent and must all be attempted regardless of
+    a sibling's failure), a derivation step failure must fail the REST OF
+    THE CHAIN closed: running feasibility_entities against a stale
+    candidate_queue.tsv (because candidate_queue.py itself failed) would
+    silently blend new acquisition manifests with an old derived queue,
+    producing a coverage_audit that looks normal but rests on mixed-
+    generation state. Once a step fails, every remaining step is recorded
+    as SKIPPED_UPSTREAM_FAILURE rather than run."""
     outcomes = []
+    upstream_failed = False
     for label, script_path in DERIVATION_STEPS:
+        if upstream_failed:
+            outcomes.append(JobRunOutcome(
+                name=label, ok=False, returncode=-2, tail_stdout="", tail_stderr="SKIPPED_UPSTREAM_FAILURE", skipped=True,
+            ))
+            continue
         cmd = [sys.executable, str(script_path), "--data-dir", str(data_dir), "--output", str(feasibility_output)]
         if label == "component_coverage_audit":
             cmd = [
@@ -232,7 +332,10 @@ def run_derivation_stage(data_dir: Path, feasibility_output: Path) -> list[JobRu
                 "--nar-dir", str(data_dir / "reference" / "nar_adcdb"),
                 "--output", str(REPO_ROOT / "reports" / "validation" / "breadth" / "component_coverage_audit.tsv"),
             ]
-        outcomes.append(_run_subprocess(label, cmd))
+        outcome = _run_subprocess(label, cmd)
+        outcomes.append(outcome)
+        if not outcome.ok:
+            upstream_failed = True
     return outcomes
 
 
@@ -262,14 +365,76 @@ def write_delta_summary_tsv(path: Path, new_rows_by_table: dict) -> None:
     df.to_csv(path, sep="\t", index=False)
 
 
+def write_status_changes_tsv(path: Path, status_changes_by_table: dict) -> None:
+    """table/key/field/before/after -- one row per decision-relevant field
+    change on an EXISTING natural key (never a new row; new rows are
+    delta_summary.tsv's job)."""
+    rows = []
+    for table, changes in status_changes_by_table.items():
+        for c in changes:
+            rows.append(dict(
+                table=table, key="|".join(c["key"]), field=c["field"],
+                before=c["before"], after=c["after"], tier_a_upgrade=c["tier_a_upgrade"],
+            ))
+    df = pd.DataFrame(rows, columns=["table", "key", "field", "before", "after", "tier_a_upgrade"])
+    df.sort_values(["table", "key", "field"], inplace=True) if not df.empty else None
+    df.to_csv(path, sep="\t", index=False)
+
+
 def build_delta_markdown(result: DeltaResult) -> str:
     def _outcome_lines(outcomes: list[JobRunOutcome]) -> str:
         if not outcomes:
             return "None run this cycle (--jobs filtered to an empty/derivation-only set)."
-        return "\n".join(f"- {o.name}: {'OK' if o.ok else f'FAILED (exit {o.returncode})'}" for o in outcomes)
+        lines = []
+        for o in outcomes:
+            if o.skipped:
+                lines.append(f"- {o.name}: SKIPPED_UPSTREAM_FAILURE")
+            else:
+                lines.append(f"- {o.name}: {'OK' if o.ok else f'FAILED (exit {o.returncode})'}")
+        return "\n".join(lines)
 
     failed_jobs = [o for o in result.job_outcomes if not o.ok]
-    failed_derivation = [o for o in result.derivation_outcomes if not o.ok]
+    failed_derivation = [o for o in result.derivation_outcomes if not o.ok and not o.skipped]
+    skipped_derivation = [o for o in result.derivation_outcomes if o.skipped]
+
+    header = f"""# ADC Breadth Delta — {result.run_started_at}
+
+Per `reports/validation/BREADTH_PLAN.md` Phase 6 (Parts 12-13). Generated by
+`tools/breadth/update_breadth.py` -- snapshot-diff of `DATA/feasibility/*.tsv`
+before/after this run's acquisition + breadth-derivation stages. Never
+overwrites a prior day's delta (see this directory's own creation rule).
+
+**DELTA_STATUS: {result.delta_status}**
+
+## Acquisition stage ({len(result.job_outcomes)} jobs)
+
+{_outcome_lines(result.job_outcomes)}
+
+## Breadth-derivation stage
+
+{_outcome_lines(result.derivation_outcomes)}
+"""
+
+    if result.delta_status == "INCOMPLETE_DERIVATION":
+        return header + f"""
+## Derivation did not complete -- no entity/status delta computed
+
+`candidate_queue` -> `feasibility_entities` -> `component_coverage_audit` is
+a fixed DEPENDENCY chain, not independent siblings (unlike the acquisition
+stage's jobs). Because {', '.join(o.name for o in failed_derivation) or '(unknown step)'} failed,
+downstream step(s) {', '.join(o.name for o in skipped_derivation) or '(none)'} were
+skipped rather than run against stale upstream output. Diffing the before/
+after `DATA/feasibility/*.tsv` snapshot in this state would misattribute
+stale vs. newly-derived rows, so no new-entity, evidence-deepened, or
+status-change report was computed this run. Fix the failing step and
+re-run `update_breadth`.
+
+## Reproduction
+
+```bash
+python3 tools/breadth/update_breadth.py --data-dir DATA --delta-output reports/delta
+```
+"""
 
     tier_counts = {"A": 0, "B": 0, "C": 0}
     tier_sections = {"A": [], "B": [], "C": []}
@@ -279,29 +444,26 @@ def build_delta_markdown(result: DeltaResult) -> str:
             label = e.get("canonical_label") or e.get("candidate_label") or e.get("entity_id") or e.get("candidate_id") or e.get("indication", "")
             tier_sections[e["_tier"]].append(f"- `{table}`: {label}")
 
+    upgrade_lines = []
+    all_status_change_lines = []
+    for table, changes in result.status_changes_by_table.items():
+        for c in changes:
+            key_repr = "|".join(c["key"])
+            line = f"- `{table}` [{key_repr}] {c['field']}: {c['before']!r} -> {c['after']!r}"
+            all_status_change_lines.append(line)
+            if c["tier_a_upgrade"]:
+                upgrade_lines.append(line)
+                tier_counts["A"] += 1
+
     deepened_lines = "\n".join(
         f"- `{table}`: {len(entries)} existing entities gained more evidence"
         for table, entries in result.deepened_by_table.items()
     ) or "None this run."
 
-    return f"""# ADC Breadth Delta — {result.run_started_at}
-
-Per `reports/validation/BREADTH_PLAN.md` Phase 6 (Parts 12-13). Generated by
-`tools/breadth/update_breadth.py` -- snapshot-diff of `DATA/feasibility/*.tsv`
-before/after this run's acquisition + breadth-derivation stages. Never
-overwrites a prior day's delta (see this directory's own creation rule).
-
-## Acquisition stage ({len(result.job_outcomes)} jobs)
-
-{_outcome_lines(result.job_outcomes)}
-
-## Breadth-derivation stage
-
-{_outcome_lines(result.derivation_outcomes)}
-
+    return header + f"""
 ## New entities this run, by tier
 
-- **Tier A** (VALIDATED-tier components, PROMOTED/AUTO_HIGH_CONFIDENCE candidates): {tier_counts['A']}
+- **Tier A** (VALIDATED-tier components, PROMOTED/AUTO_HIGH_CONFIDENCE candidates, status/confidence upgrades into these tiers): {tier_counts['A']}
 - **Tier B** (OBSERVED-tier components, NEEDS_REVIEW candidates, new target-indication pairs): {tier_counts['B']}
 - **Tier C** (INFERRED-tier components, new indication aggregates): {tier_counts['C']}
 
@@ -317,6 +479,23 @@ overwrites a prior day's delta (see this directory's own creation rule).
 
 {chr(10).join(tier_sections["C"]) or "None this run."}
 
+## Status / confidence upgrades (Tier A — existing entities, not new rows)
+
+An existing entity (same persistent candidate_id/entity_id) whose
+validation_status/status field crossed into PROMOTED/AUTO_HIGH_CONFIDENCE/
+VALIDATED. Surfaced here as Tier A, not buried in "evidence deepened" below.
+
+{chr(10).join(upgrade_lines) or "None this run."}
+
+## All status/field changes this run (existing entities, not new rows)
+
+Every decision-relevant field change on an existing key, including
+non-upgrade changes (see `status_changes.tsv` for the full machine-readable
+list). Free-text fields (e.g. `context`, `reason`) are deliberately not
+watched -- see STATUS_FIELDS_BY_TABLE.
+
+{chr(10).join(all_status_change_lines) or "None this run."}
+
 ## Evidence deepened (existing entities, not new)
 
 {deepened_lines}
@@ -327,9 +506,11 @@ overwrites a prior day's delta (see this directory's own creation rule).
 {chr(10).join(f'- acquisition job {o.name}: exit {o.returncode}' for o in failed_jobs)}
 {chr(10).join(f'- derivation step {o.name}: exit {o.returncode}' for o in failed_derivation)}
 
-Every failure above is independently retryable on the next `update_breadth`
-run -- a failure in one job/step never blocks any other job/step in this
-same run (Prompt.md section 31's orchestration-without-coupling discipline).
+Acquisition job failures are independently retryable and never block a
+sibling job or the derivation stage (Prompt.md section 31's orchestration-
+without-coupling discipline). Derivation step failures, in contrast, fail
+the rest of the derivation chain closed (see above) precisely because they
+are NOT independent siblings.
 
 ## Reproduction
 
@@ -366,19 +547,34 @@ def main() -> int:
         result.job_outcomes = run_acquisition_stage(job_names, data_dir)
     result.derivation_outcomes = run_derivation_stage(data_dir, feasibility_dir)
 
-    after_snapshot = read_feasibility_snapshot(feasibility_dir)
-    result.new_rows_by_table, result.deepened_by_table = diff_snapshots(before_snapshot, after_snapshot)
+    derivation_ok = all(o.ok for o in result.derivation_outcomes)
+    if derivation_ok:
+        after_snapshot = read_feasibility_snapshot(feasibility_dir)
+        result.new_rows_by_table, result.deepened_by_table, result.status_changes_by_table = diff_snapshots(before_snapshot, after_snapshot)
+        result.delta_status = "OK"
+    else:
+        # Fail closed: a partial derivation chain must never be diffed
+        # against the pre-run snapshot as if it were a complete re-
+        # derivation -- that would misattribute stale-vs-new state.
+        result.delta_status = "INCOMPLETE_DERIVATION"
 
     date_str = datetime.now(timezone.utc).date().isoformat()
     delta_dir = make_delta_dir(delta_output_root, date_str)
     result.delta_dir = str(delta_dir)
 
     write_delta_summary_tsv(delta_dir / "delta_summary.tsv", result.new_rows_by_table)
+    write_status_changes_tsv(delta_dir / "status_changes.tsv", result.status_changes_by_table)
     (delta_dir / "ADC_BREADTH_DELTA.md").write_text(build_delta_markdown(result), encoding="utf-8")
 
+    total_job_failed = sum(1 for o in result.job_outcomes if not o.ok)
+
+    if result.delta_status == "INCOMPLETE_DERIVATION":
+        print(f"update_breadth: DERIVATION INCOMPLETE ({total_job_failed} acquisition failures). Delta written to {delta_dir}")
+        return 1
+
     total_new = sum(len(v) for v in result.new_rows_by_table.values())
-    total_failed = sum(1 for o in result.job_outcomes if not o.ok) + sum(1 for o in result.derivation_outcomes if not o.ok)
-    print(f"update_breadth: {total_new} new entities, {total_failed} stage failures. Delta written to {delta_dir}")
+    total_upgrades = sum(1 for changes in result.status_changes_by_table.values() for c in changes if c["tier_a_upgrade"])
+    print(f"update_breadth: {total_new} new entities, {total_upgrades} tier-A status upgrades, {total_job_failed} acquisition failures. Delta written to {delta_dir}")
     return 0
 
 

@@ -115,6 +115,65 @@ update_breadth: 0 new entities, 0 stage failures. Delta written to reports/delta
   against all six gates together, after Phase 6 has run for real over
   time, remains explicit future work per that report's own Section 8.
 
+## 4. Round-1 fix: existing-entity status changes + derivation fail-closed
+
+Two P1 correctness fixes identified by the reviewer:
+
+**(a) Status/confidence-change detection for existing entities.** Persistent
+candidate/entity IDs (Phase 5a's design) deliberately do NOT change when a
+candidate's own evidence strengthens — so a promotion like `NEEDS_REVIEW`
+-> `AUTO_HIGH_CONFIDENCE` on the same `candidate_id` was previously
+invisible: not a new row (same key), and `candidate_queue.tsv` has no
+count column for "deepened" detection to catch either. This was exactly
+the kind of event Tier A prioritization exists to surface. Fixed by adding
+`STATUS_FIELDS_BY_TABLE` (a per-table list of decision-relevant fields —
+`validation_status`/`confidence`/`modality_classification`/`source` for
+`candidate_queue.tsv`; `status`/`stage`/`target`/`payload_evidence_type`/
+`linker_evidence_type`/`modality_classification` for `adc_candidates.tsv`;
+`status`/`confidence`/`evidence_sources` for the component tables;
+`status`/`confidence` for `target_indication_feasibility.tsv` — free-text
+fields like `context`/`reason` deliberately excluded) and a third
+`diff_snapshots()` return value, `status_changes_by_table`, written to a
+new `status_changes.tsv` (table/key/field/before/after/tier_a_upgrade) and
+surfaced in the delta markdown as its own "Status / confidence upgrades"
+section whenever a field crosses into `PROMOTED`/`AUTO_HIGH_CONFIDENCE`/
+`VALIDATED` — never folded into "evidence deepened."
+
+**(b) Derivation-chain failures now fail closed.** The acquisition stage's
+17 jobs are genuinely independent siblings — one job's failure correctly
+never blocks another (Prompt.md section 31). The derivation stage is NOT
+independent: `candidate_queue.py` -> `feasibility_entities.py` ->
+`component_coverage_audit.py` is a fixed dependency chain, each step
+reading the previous step's own output files. Previously, a
+`candidate_queue.py` failure did not stop `feasibility_entities.py` from
+running anyway — silently blending newly-acquired manifests with a STALE
+derived queue, then letting `component_coverage_audit.py` succeed against
+that mixed-generation state, with the final snapshot-diff reporting it as
+an unremarkable normal run. Fixed: `run_derivation_stage()` now marks
+every step after the first failure as `SKIPPED_UPSTREAM_FAILURE` rather
+than running it, and `main()` sets `DELTA_STATUS: INCOMPLETE_DERIVATION`
+and returns exit code 1 instead of computing any new-entity/deepened/
+status-change diff against a partial "after" snapshot.
+
+Both fixes verified with a real derivation-only run against the actual
+repository (`--skip-acquisition`, unchanged evidence):
+
+```
+$ python3 tools/breadth/update_breadth.py --skip-acquisition \
+    --data-dir DATA --feasibility-dir DATA/feasibility --delta-output reports/delta
+update_breadth: 0 new entities, 0 tier-A status upgrades, 0 acquisition failures.
+Delta written to reports/delta/2026-08-25
+```
+
+`status_changes.tsv` was correctly empty (no real status change occurred
+in this window) and `DELTA_STATUS: OK` was correctly reported end to end —
+see `reports/delta/2026-08-25/`. The failure-closed and status-upgrade
+paths themselves are covered by 6 new unit tests (2 status-change
+detection, 2 derivation fail-closed, 1 `main()`-level nonzero-exit
+integration test, 1 markdown-rendering test for the incomplete-derivation
+case), since neither condition occurred organically in this run. 532 tests
+passing project-wide.
+
 ## Reproduction
 
 ```bash
