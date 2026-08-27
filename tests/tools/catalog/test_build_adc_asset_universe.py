@@ -4,6 +4,7 @@ from tools.catalog.build_adc_asset_universe import (
     build_coverage_report,
     build_master_rows,
     catalog_status_for_ours_only,
+    compute_adc_scope,
     load_our_candidates,
     main as universe_main,
     nar_identifiers,
@@ -43,6 +44,48 @@ def test_build_master_rows_unions_every_nar_row_unconditionally():
     assert master_rows[0]["catalog_status"] == "REFERENCE_CONFIRMED"
     assert master_rows[0]["canonical_name"] == "BAT-8008"
     assert stats == {"n_nar": 1, "n_matched": 0, "n_ours_only": 0, "n_excluded_modality": 0}
+
+
+def test_compute_adc_scope_maps_modality_to_scope_axis():
+    assert compute_adc_scope("STRICT_ADC") == "STRICT_ADC"
+    assert compute_adc_scope("PRESUMED_STRICT_ADC") == "PRESUMED_ADC"
+    assert compute_adc_scope("ADJACENT_CONJUGATE_MODALITY") == "ADJACENT_CONJUGATE_MODALITY"
+    assert compute_adc_scope("") == "REFERENCE_UNCLASSIFIED"
+
+
+def test_nar_only_row_never_independently_matched_is_reference_unclassified():
+    """Round-1 fix (reviewer-identified blocker): NAR reference membership
+    alone must never be read as a STRICT_ADC classification -- NAR's own
+    702-asset universe includes non-classical-ADC antibody conjugates."""
+    nar_rows = [_nar_row(nar_adc_id="NARID1", canonical_name="AOC-1020")]
+    master_rows, _ = build_master_rows(nar_rows, our_candidates=[])
+    assert master_rows[0]["adc_scope"] == "REFERENCE_UNCLASSIFIED"
+    assert master_rows[0]["modality"] == ""  # NAR itself exposes no modality field
+
+
+def test_matched_known_registry_candidate_upgrades_nar_row_to_strict_adc_scope():
+    nar_rows = [_nar_row(nar_adc_id="NARID1", canonical_name="Trastuzumab deruxtecan")]
+    candidate = dict(
+        origin="adc_candidates.tsv", key="k1", label="Trastuzumab deruxtecan",
+        aliases=[], dev_codes=[], target="HER2", company="Daiichi Sankyo", stage="Approved",
+        modality_classification="STRICT_ADC", sources=["configs/known_adc_assets.yaml", "clinicaltrials"],
+        first_seen="", last_seen="",
+    )
+    master_rows, _ = build_master_rows(nar_rows, [candidate])
+    assert master_rows[0]["adc_scope"] == "STRICT_ADC"
+
+
+def test_ours_only_suffix_derived_candidate_is_presumed_adc_scope():
+    nar_rows = [_nar_row(nar_adc_id="NARID1", canonical_name="Unrelated")]
+    candidate = dict(
+        origin="adc_candidates.tsv", key="k1", label="Brand New Vedotin",
+        aliases=[], dev_codes=[], target="", company="", stage="PHASE1",
+        modality_classification="PRESUMED_STRICT_ADC", sources=["clinicaltrials"],
+        first_seen="", last_seen="",
+    )
+    master_rows, _ = build_master_rows(nar_rows, [candidate])
+    ours_row = next(r for r in master_rows if r["asset_id"].startswith("OURS_"))
+    assert ours_row["adc_scope"] == "PRESUMED_ADC"
 
 
 def test_exact_match_merges_candidate_into_existing_nar_row_not_a_new_row():
@@ -123,6 +166,7 @@ def test_adjacent_modality_candidate_is_excluded_not_merged_or_ours_only():
     assert stats["n_matched"] == 0  # never attempted a merge, even though the label would exact-match
     excluded_row = next(r for r in master_rows if r["asset_id"].startswith("OURS_"))
     assert excluded_row["catalog_status"] == "EXCLUDED_ADJACENT_MODALITY"
+    assert excluded_row["adc_scope"] == "ADJACENT_CONJUGATE_MODALITY"
     nar_row = next(r for r in master_rows if r["asset_id"].startswith("NAR_"))
     assert nar_row["catalog_status"] == "REFERENCE_CONFIRMED"  # untouched
 
@@ -166,9 +210,12 @@ def test_coverage_report_total_universe_excludes_adjacent_modality_rows():
     )
     master_rows, _ = build_master_rows(nar_rows, [excluded_candidate])
     report = build_coverage_report(master_rows, nar_rows)
-    # 1 NAR row + 1 excluded row = 2 master rows, but total universe = 1 (excluded not counted)
-    assert "TOTAL UNIQUE ADC UNIVERSE:            1" in report
+    # 1 NAR row + 1 excluded row = 2 catalog rows, but the ADC-oriented
+    # superset excludes the adjacent-modality row.
+    assert "TOTAL CATALOG ROWS:                  2" in report
+    assert "ADC-ORIENTED SUPERSET:               1" in report
     assert "explicit modality exclusions:        1" in report
+    assert "TOTAL UNIQUE ADC UNIVERSE" not in report  # round-1 fix: this framing must not reappear
 
 
 def test_load_our_candidates_combines_promoted_and_needs_review_only(tmp_path):
@@ -229,5 +276,11 @@ def test_end_to_end_main_writes_universe_tsv_and_report(tmp_path):
     df = pd.read_csv(output, sep="\t", dtype=str).fillna("")
     assert len(df) == 3  # 2 NAR rows (1 merged, 1 untouched) + 1 ours-only NEEDS_REVIEW row
     assert set(df["catalog_status"]) == {"MULTISOURCE_CONFIRMED", "REFERENCE_CONFIRMED", "NEEDS_REVIEW"}
+    # adc_scope: the merged known-registry row is STRICT_ADC, the untouched
+    # NAR-only row (BAT-8008) is honestly REFERENCE_UNCLASSIFIED, the
+    # ours-only NEEDS_REVIEW row is PRESUMED_ADC.
+    assert set(df["adc_scope"]) == {"STRICT_ADC", "REFERENCE_UNCLASSIFIED", "PRESUMED_ADC"}
     assert report_output.exists()
-    assert "TOTAL UNIQUE ADC UNIVERSE" in report_output.read_text()
+    report_text = report_output.read_text()
+    assert "ADC-ORIENTED SUPERSET" in report_text
+    assert "TOTAL UNIQUE ADC UNIVERSE" not in report_text

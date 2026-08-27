@@ -36,6 +36,22 @@ identity resolution, and conflating them here would be scope creep).
 Never writes back to DATA/reference/nar_adcdb/*.tsv or DATA/feasibility/*
 -- read-only against both, output is its own new table.
 
+Round-1 fix (reviewer-identified blocker): INCLUSION and ADC-SCOPE
+CLASSIFICATION are two separate axes, never conflated. NAR reference
+membership alone is not proof a row is a classical antibody-drug
+conjugate -- NAR's own 702-asset universe includes non-classical-ADC
+antibody conjugates (antibody-oligonucleotide conjugates, antibody-STING-
+agonist conjugates, photoimmunotherapy conjugates) alongside classical
+ADCs. Every row gets its own `adc_scope` column (STRICT_ADC /
+PRESUMED_ADC / REFERENCE_UNCLASSIFIED / ADJACENT_CONJUGATE_MODALITY),
+computed from that row's own independent modality classification (from
+OUR pipeline) where one exists, and honestly REFERENCE_UNCLASSIFIED
+(never assumed STRICT_ADC) for a NAR row we never independently matched.
+The coverage report's headline number is therefore "ADC-ORIENTED
+SUPERSET" (all non-excluded catalog rows) and "STRICT/PRESUMED ADCs" (the
+adc_scope-confirmed subset) -- never a single "TOTAL UNIQUE ADC UNIVERSE"
+number that would silently claim every catalog row is a confirmed ADC.
+
 Usage:
     python3 tools/catalog/build_adc_asset_universe.py \
         --feasibility-dir DATA/feasibility \
@@ -59,7 +75,7 @@ from tools.validation.compare_nar_adcdb import normalize_name  # noqa: E402
 
 UNIVERSE_FIELDS = [
     "asset_id", "canonical_name", "aliases", "development_codes",
-    "modality", "target", "company", "highest_stage", "development_status",
+    "modality", "adc_scope", "target", "company", "highest_stage", "development_status",
     "nct_ids", "first_seen", "last_seen", "sources", "source_count",
     "evidence_ids", "catalog_status",
 ]
@@ -68,6 +84,39 @@ ADJACENT_MODALITY_VALUE = "ADJACENT_CONJUGATE_MODALITY"
 
 NAR_PHASE_BUCKETS = ["Approved", "Phase3", "Phase2", "Phase1", "Investigative"]
 NAR_PHASE1_PLUS = {"Approved", "Phase3", "Phase2", "Phase1"}
+
+# Round-1 fix (reviewer-identified blocker): NAR reference membership is an
+# INCLUSION signal, never an ADC-SCOPE classification. NAR's own 702-asset
+# universe includes non-classical-ADC antibody conjugates (e.g. AOC-1020,
+# an antibody-oligonucleotide conjugate; TAK-500, an antibody-STING-agonist
+# conjugate; Cetuximab sarotalocan, a photoimmunotherapy conjugate) -- so
+# "in the catalog" must never be read as "is a STRICT_ADC." adc_scope is a
+# SEPARATE axis from catalog_status (which measures evidence strength, not
+# ontology scope): every row's own `modality` field (STRICT_ADC/
+# PRESUMED_STRICT_ADC/ADJACENT_CONJUGATE_MODALITY when we have an
+# independent classification from our own pipeline, blank when a NAR row
+# was never matched to any of our own evidence) maps deterministically to
+# one of the four ADC_SCOPE_VALUES below -- never guessed, never inferred
+# from NAR membership alone.
+ADC_SCOPE_VALUES = ("STRICT_ADC", "PRESUMED_ADC", "REFERENCE_UNCLASSIFIED", "ADJACENT_CONJUGATE_MODALITY")
+
+_MODALITY_TO_ADC_SCOPE = {
+    "STRICT_ADC": "STRICT_ADC",
+    "PRESUMED_STRICT_ADC": "PRESUMED_ADC",
+    "ADJACENT_CONJUGATE_MODALITY": "ADJACENT_CONJUGATE_MODALITY",
+}
+
+
+def compute_adc_scope(modality: str) -> str:
+    """A row's own `modality` field is either an independent classification
+    from OUR pipeline (STRICT_ADC = one of the 14 known-registry assets;
+    PRESUMED_STRICT_ADC = suffix-derived with no adjacent-modality
+    evidence; ADJACENT_CONJUGATE_MODALITY = positive adjacent-modality
+    evidence) or blank (a pure NAR-reference row we never independently
+    matched -- NAR itself exposes no modality field, see nar_identifiers()
+    docstring, so this is honestly REFERENCE_UNCLASSIFIED, never assumed
+    to be a strict ADC just because NAR lists it)."""
+    return _MODALITY_TO_ADC_SCOPE.get(modality, "REFERENCE_UNCLASSIFIED")
 
 
 def split_multi(value: str) -> list[str]:
@@ -279,6 +328,10 @@ def build_master_rows(nar_rows: list[dict], our_candidates: list[dict]) -> tuple
         row["sources"] = "; ".join(row["sources"])
         row["source_count"] = row["sources"].count(";") + 1 if row["sources"] else 0
         row["evidence_ids"] = "; ".join(str(e) for e in row["evidence_ids"])
+        # Computed AFTER every modality backfill above (a NAR row matched to
+        # one of our candidates may have just had `modality` filled in) --
+        # adc_scope must reflect the row's final, fully-merged modality.
+        row["adc_scope"] = compute_adc_scope(row["modality"])
 
     stats = {
         "n_nar": len(nar_rows), "n_matched": n_matched,
@@ -325,7 +378,14 @@ def build_coverage_report(master_rows: list[dict], nar_rows: list[dict]) -> str:
     )
     needs_review = by_status.get("NEEDS_REVIEW", 0)
     excluded_modality = by_status.get("EXCLUDED_ADJACENT_MODALITY", 0)
-    total_universe = len(master_rows) - excluded_modality
+    total_catalog_rows = len(master_rows)
+    adc_oriented_superset = total_catalog_rows - excluded_modality
+
+    by_scope: dict[str, int] = {}
+    for row in master_rows:
+        by_scope[row["adc_scope"]] = by_scope.get(row["adc_scope"], 0) + 1
+    strict_or_presumed = by_scope.get("STRICT_ADC", 0) + by_scope.get("PRESUMED_ADC", 0)
+    reference_unclassified = by_scope.get("REFERENCE_UNCLASSIFIED", 0)
 
     lines = [
         "# ADC Asset Universe — Coverage Report",
@@ -387,9 +447,37 @@ def build_coverage_report(master_rows: list[dict], nar_rows: list[dict]) -> str:
         lines.append(f"- {status}: {by_status.get(status, 0)}")
     lines += [
         "",
-        f"TOTAL UNIQUE ADC UNIVERSE:            {total_universe}",
-        "(= all master rows minus EXCLUDED_ADJACENT_MODALITY rows, which are "
-        "explicitly not counted as ADCs.)",
+        "## ADC-scope classification (round-1 fix — separate axis from catalog_status)",
+        "",
+        "`catalog_status` measures EVIDENCE STRENGTH (how well-supported is "
+        "this row's presence in the catalog). `adc_scope` measures ONTOLOGY "
+        "SCOPE (is this row actually a classical antibody-drug conjugate) "
+        "-- the two must never be conflated. NAR reference membership alone "
+        "is NOT an ADC-scope classification: NAR's own 702-asset universe "
+        "includes non-classical-ADC antibody conjugates (e.g. an antibody-"
+        "oligonucleotide conjugate, an antibody-STING-agonist conjugate, "
+        "photoimmunotherapy conjugates) alongside classical ADCs. A NAR row "
+        "we never independently matched to our own evidence is honestly "
+        "REFERENCE_UNCLASSIFIED, not assumed STRICT_ADC.",
+        "",
+    ]
+    for scope in ADC_SCOPE_VALUES:
+        lines.append(f"- {scope}: {by_scope.get(scope, 0)}")
+    lines += [
+        "",
+        f"TOTAL CATALOG ROWS:                  {total_catalog_rows}",
+        f"EXPLICIT ADJACENT MODALITIES:        {excluded_modality}",
+        f"ADC-ORIENTED SUPERSET:               {adc_oriented_superset}",
+        "  (= all catalog rows minus EXCLUDED_ADJACENT_MODALITY rows -- a "
+        "high-recall catalog of ADC-and-adjacent-conjugate candidates, "
+        "NOT a claim that every row is independently confirmed to be a "
+        "classical ADC.)",
+        "",
+        f"STRICT/PRESUMED ADCs:                {strict_or_presumed}",
+        f"REFERENCE_UNCLASSIFIED:              {reference_unclassified}",
+        "  (NAR-seeded rows never independently matched to our own "
+        "modality-classified evidence -- their true ADC-scope status is "
+        "simply not yet known to us, not defaulted to either answer.)",
         "",
         "## Known, disclosed limitation: exact-identifier resolution does not catch misspellings",
         "",
@@ -433,11 +521,14 @@ def main() -> int:
     Path(args.report_output).write_text(build_coverage_report(master_rows, nar_rows), encoding="utf-8")
 
     excluded = sum(1 for r in master_rows if r["catalog_status"] == "EXCLUDED_ADJACENT_MODALITY")
+    strict_or_presumed = sum(1 for r in master_rows if r["adc_scope"] in ("STRICT_ADC", "PRESUMED_ADC"))
+    unclassified = sum(1 for r in master_rows if r["adc_scope"] == "REFERENCE_UNCLASSIFIED")
     print(
-        f"adc_asset_universe: {len(master_rows)} master rows "
+        f"adc_asset_universe: {len(master_rows)} catalog rows "
         f"({stats['n_nar']} NAR-seeded, {stats['n_matched']} matched to our own evidence, "
         f"{stats['n_ours_only']} ours-only, {stats['n_excluded_modality']} excluded-adjacent-modality) "
-        f"-- {len(master_rows) - excluded} total unique ADC universe. "
+        f"-- {len(master_rows) - excluded} ADC-oriented superset "
+        f"({strict_or_presumed} STRICT/PRESUMED_ADC, {unclassified} REFERENCE_UNCLASSIFIED). "
         f"Written to {args.output}, report at {args.report_output}",
         file=sys.stderr,
     )

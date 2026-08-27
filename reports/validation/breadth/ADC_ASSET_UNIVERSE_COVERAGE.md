@@ -39,8 +39,23 @@ PASS by construction — this catalog's schema has no gating requirement on targ
 - NEEDS_REVIEW: 15
 - EXCLUDED_ADJACENT_MODALITY: 1
 
-TOTAL UNIQUE ADC UNIVERSE:            724
-(= all master rows minus EXCLUDED_ADJACENT_MODALITY rows, which are explicitly not counted as ADCs.)
+## ADC-scope classification (round-1 fix — separate axis from catalog_status)
+
+`catalog_status` measures EVIDENCE STRENGTH (how well-supported is this row's presence in the catalog). `adc_scope` measures ONTOLOGY SCOPE (is this row actually a classical antibody-drug conjugate) -- the two must never be conflated. NAR reference membership alone is NOT an ADC-scope classification: NAR's own 702-asset universe includes non-classical-ADC antibody conjugates (e.g. an antibody-oligonucleotide conjugate, an antibody-STING-agonist conjugate, photoimmunotherapy conjugates) alongside classical ADCs. A NAR row we never independently matched to our own evidence is honestly REFERENCE_UNCLASSIFIED, not assumed STRICT_ADC.
+
+- STRICT_ADC: 14
+- PRESUMED_ADC: 43
+- REFERENCE_UNCLASSIFIED: 667
+- ADJACENT_CONJUGATE_MODALITY: 1
+
+TOTAL CATALOG ROWS:                  725
+EXPLICIT ADJACENT MODALITIES:        1
+ADC-ORIENTED SUPERSET:               724
+  (= all catalog rows minus EXCLUDED_ADJACENT_MODALITY rows -- a high-recall catalog of ADC-and-adjacent-conjugate candidates, NOT a claim that every row is independently confirmed to be a classical ADC.)
+
+STRICT/PRESUMED ADCs:                57
+REFERENCE_UNCLASSIFIED:              667
+  (NAR-seeded rows never independently matched to our own modality-classified evidence -- their true ADC-scope status is simply not yet known to us, not defaulted to either answer.)
 
 ## Known, disclosed limitation: exact-identifier resolution does not catch misspellings
 
