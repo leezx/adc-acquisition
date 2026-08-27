@@ -22,3 +22,6 @@ DATA/checkpoints/
 # standalone evidence, same reasoning as raw/logs/checkpoints above).
 DATA/generated_queries/
 !DATA/generated_queries/.gitkeep
+
+# Local-only operational helper scripts (not part of the reviewed codebase).
+updateDB.sh

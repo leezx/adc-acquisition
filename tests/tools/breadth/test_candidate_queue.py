@@ -4,6 +4,7 @@ import pandas as pd
 from tools.breadth.candidate_queue import (
     build_conference_suffix_candidates,
     build_ctgov_suffix_candidates,
+    build_dev_code_candidates,
     candidate_id_for_name,
     detect_adjacent_modalities,
     extract_adc_generic_name,
@@ -12,6 +13,7 @@ from tools.breadth.candidate_queue import (
     known_identifier_set,
     local_context_for_span,
     mentions_known_asset,
+    merge_dev_code_candidates,
     merge_suffix_candidates,
     normalize_name,
     status_and_confidence_for_sources,
@@ -320,3 +322,106 @@ def test_clean_date_string_never_produces_literal_nan():
     entry = next(iter(candidates.values()))
     assert entry["first_seen"] is None
     assert entry["first_seen"] != "nan"
+
+
+# --- PR #31: development-code + explicit ADC-context signal ---------------
+
+
+def test_build_dev_code_candidates_finds_code_first_pattern():
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="pmid:1", title="Population-Based Modeling to Predict Human PK/PD of TAK-500",
+             abstract="TAK-500 is a novel antibody-drug conjugate composed of an anti-CCR2 antibody "
+                      "conjugated to a STING agonist.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "pubmed", known)
+    assert len(candidates) == 1
+    entry = next(iter(candidates.values()))
+    assert entry["label"] == "TAK-500"
+    assert entry["sources"] == {"pubmed"}
+
+
+def test_build_dev_code_candidates_finds_term_first_pattern():
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="pmid:2", title="A phase 1 study",
+             abstract="Here we report the first-in-human results for the ADC candidate BAT-8008 in "
+                      "patients with advanced solid tumors.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "pubmed", known)
+    assert len(candidates) == 1
+    assert next(iter(candidates.values()))["label"] == "BAT-8008"
+
+
+def test_build_dev_code_candidates_rejects_loose_cooccurrence_without_tight_grammar():
+    """A dev-code-shaped token merely co-occurring with 'ADC' elsewhere in
+    the abstract (not in the tight 'is/was a(n) ADC' or 'ADC <code>'
+    relationship) must NOT be surfaced -- this is exactly the class of
+    false positive (clinical trial acronyms, cell lines, target symbols)
+    the tight-grammar requirement exists to exclude."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="pmid:3", title="KEYNOTE-057 study of pembrolizumab",
+             abstract="This ADC trial enrolled patients from KEYNOTE-057 across multiple centers.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "pubmed", known)
+    assert candidates == {}
+
+
+def test_build_dev_code_candidates_excludes_scientific_notation():
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="pmid:4", title="A study",
+             abstract="The observed hazard ratio was significant (p = 5E-33), consistent with the "
+                      "antibody-drug conjugate's efficacy.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "pubmed", known)
+    assert candidates == {}
+
+
+def test_build_dev_code_candidates_suppresses_known_registry_dev_code_by_exact_match():
+    """Round-1-class regression: a short dev code (e.g. 'SGN-35',
+    normalize_name -> 'sgn35', only 5 chars) must still be suppressed even
+    though mentions_known_asset()'s substring-containment check requires
+    >=6 chars -- this signal's candidate label IS the entire dev code, so
+    exact match (not containment) is used instead."""
+    known = known_identifier_set([
+        {"asset_id": "x", "canonical_name": "Brentuximab vedotin", "aliases": [], "dev_codes": ["SGN-35"]},
+    ])
+    manifest = pd.DataFrame([
+        dict(source_record_id="pmid:5", title="A study",
+             abstract="SGN-35 is an antibody-drug conjugate targeting CD30.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "pubmed", known)
+    assert candidates == {}
+
+
+def test_build_dev_code_candidates_attributes_modality_to_local_context():
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="pmid:6", title="A study",
+             abstract="ZK-1000 is an antibody-drug conjugate that is also a bicycle toxin conjugate "
+                      "in its structural class.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "pubmed", known)
+    entry = next(iter(candidates.values()))
+    assert entry["adjacent_modalities"] == {"BICYCLE_TOXIN_CONJUGATE"}
+
+
+def test_merge_dev_code_candidates_combines_sources_for_same_code():
+    a = {"tak500": dict(label="TAK-500", nct_ids=set(), conference_ids={"pmid:1"}, phases=set(),
+                         first_seen="2024-01-01", contexts={"x"}, sources={"pubmed"}, adjacent_modalities=set())}
+    b = {"tak500": dict(label="TAK-500", nct_ids=set(), conference_ids={"pmid:2"}, phases=set(),
+                         first_seen="2023-06-01", contexts={"y"}, sources={"europe_pmc"}, adjacent_modalities=set())}
+    merged = merge_dev_code_candidates(a, b)
+    assert len(merged) == 1
+    entry = merged["tak500"]
+    assert entry["sources"] == {"pubmed", "europe_pmc"}
+    assert entry["conference_ids"] == {"pmid:1", "pmid:2"}
+    assert entry["first_seen"] == "2023-06-01"  # earliest of the two

@@ -23,6 +23,7 @@ Prompt.md section 14 explicitly prohibits relying on a manually maintained ADC d
 - BLA761115: TRODELVY (SACITUZUMAB GOVITECAN-HZIY), sponsor: IMMUNOMEDICS INC
 - BLA761121: POLIVY (POLATUZUMAB VEDOTIN-PIIQ), sponsor: GENENTECH
 - BLA761137: PADCEV (ENFORTUMAB VEDOTIN-EJFV), sponsor: ASTELLAS
+- BLA761137: PADCEV (ENFORTUMAB VEDOTIN-EJFV), sponsor: ASTELLAS
 - BLA761139: ENHERTU (FAM-TRASTUZUMAB DERUXTECAN-NXKI), sponsor: DAIICHI SANKYO
 - BLA761196: ZYNLONTA (LONCASTUXIMAB TESIRINE-LPYL), sponsor: ADC Therapeutics SA
 - BLA761208: TIVDAK (TISOTUMAB VEDOTIN-TFTV), sponsor: SEAGEN
@@ -38,7 +39,7 @@ Prompt.md section 14 explicitly prohibits relying on a manually maintained ADC d
 
 ## Submissions downloaded
 
-0 new/changed submission snapshots, 20 skipped as unchanged (matched checkpoint content hash).
+82 new/changed submission snapshots, 20 skipped as unchanged (matched checkpoint content hash).
 
 ## Duplicates
 
@@ -53,12 +54,12 @@ Prompt.md section 14 explicitly prohibits relying on a manually maintained ADC d
 
 - none observed in this run
 
-- application distribution: BLA125388: 19, BLA125427: 1
-- submission class distribution: Efficacy: 8, Labeling: 9, Manufacturing (CMC): 1, Type 1 - New Molecular Entity: 2
+- application distribution: BLA125388: 19, BLA125427: 14, BLA761040: 2, BLA761060: 5, BLA761115: 12, BLA761121: 4, BLA761137: 13, BLA761139: 16, BLA761196: 5, BLA761208: 4, BLA761310: 3, BLA761384: 1, BLA761394: 2, BLA761440: 1, BLA761460: 1
+- submission class distribution: Efficacy: 44, Labeling: 40, Manufacturing (CMC): 3, Type 1 - New Molecular Entity: 13, Type 2 - New Active Ingredient: 1, Type 4 - New Combination: 1
 
 ## Documents (independent artifact, see `fda_documents.parquet`)
 
-42 document fetches attempted this run (0 new/changed, 40 unchanged, 2 failed). Documents (labels, approval letters, review documents, medication guides, ...) are tracked as their own content-version manifest, keyed by `{submission_key}:{doc_id}` with `parent_record_id` pointing back to the submission — never as a field on the submission row itself, so a document fetch failure or a later successful retry never touches the submission's own content-version snapshot.
+223 document fetches attempted this run (183 new/changed, 38 unchanged, 2 failed). Documents (labels, approval letters, review documents, medication guides, ...) are tracked as their own content-version manifest, keyed by `{submission_key}:{doc_id}` with `parent_record_id` pointing back to the submission — never as a field on the submission row itself, so a document fetch failure or a later successful retry never touches the submission's own content-version snapshot.
 
 ## Failed downloads
 

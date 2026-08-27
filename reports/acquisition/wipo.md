@@ -14,7 +14,7 @@ configs/wipo_queries.yaml (5 queries, each verified live to stay under OPS's 200
 
 ## Publications discovered
 
-2510 unique WO publications matched across 5 queries this run.
+2518 unique WO publications matched across 5 queries this run.
 
 - WO0014537A2: DIAGNOSIS OF MULTIDRUG RESISTANCE IN CANCER AND INFECTIOUS LESIONS (family 22274363)
 - WO0064946A2: COMPOSITIONS AND METHODS FOR CANCER TREATMENT BY SELECTIVELY INHIBITING VEGF (family 22449437)
@@ -34,11 +34,11 @@ configs/wipo_queries.yaml (5 queries, each verified live to stay under OPS's 200
 
 ## Materialization this run
 
-2493 never-attempted (fresh), 0 unresolved-retry (backlog), 17 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/wipo/job.py docstring). 150 newly downloaded, 0 failed.
+2351 never-attempted (fresh), 0 unresolved-retry (backlog), 167 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/wipo/job.py docstring). 1918 newly downloaded, 433 failed.
 
 ## Failed downloads
 
-0 (see DATA/logs/wipo_failures.log and wipo_attempts.parquet, status=failed). A failure never occupies a manifest version slot, and is retried on every future run regardless of --resume's date cursor (which never narrows WIPO's search itself — see module docstring).
+433 (see DATA/logs/wipo_failures.log and wipo_attempts.parquet, status=failed). A failure never occupies a manifest version slot, and is retried on every future run regardless of --resume's date cursor (which never narrows WIPO's search itself — see module docstring).
 
 ## Rate/access limitations
 

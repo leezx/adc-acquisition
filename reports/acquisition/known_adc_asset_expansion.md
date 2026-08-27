@@ -8,31 +8,31 @@ ASSET-CENTRIC EXPANSION PASS -- Prompt.md: "another acquisition loop should oper
 
 14 active assets:
 
-- **Gemtuzumab ozogamicin** (gemtuzumab_ozogamicin) — aliases: Mylotarg; dev codes: CMA-676; target: CD33; company: Pfizer
-- **Brentuximab vedotin** (brentuximab_vedotin) — aliases: Adcetris; dev codes: SGN-35; target: CD30; company: Seagen
-- **Trastuzumab emtansine** (trastuzumab_emtansine) — aliases: Kadcyla; dev codes: T-DM1; target: HER2; company: Genentech
-- **Inotuzumab ozogamicin** (inotuzumab_ozogamicin) — aliases: Besponsa; dev codes: CMC-544; target: CD22; company: Pfizer
-- **Polatuzumab vedotin** (polatuzumab_vedotin) — aliases: Polivy; dev codes: DCDS4501A, RG7596; target: CD79b; company: Genentech
-- **Enfortumab vedotin** (enfortumab_vedotin) — aliases: Padcev; dev codes: ASG-22ME; target: Nectin-4; company: Seagen
-- **Trastuzumab deruxtecan** (trastuzumab_deruxtecan) — aliases: Enhertu; dev codes: DS-8201, T-DXd; target: HER2; company: Daiichi Sankyo
+- **Gemtuzumab ozogamicin** (gemtuzumab_ozogamicin) — aliases: Mylotarg; dev codes: CMA-676, WAY-CMA-676; target: CD33; company: Pfizer
+- **Brentuximab vedotin** (brentuximab_vedotin) — aliases: Adcetris; dev codes: SGN-35, SGN-30, cAC10-vcMMAE; target: CD30; company: Seagen
+- **Trastuzumab emtansine** (trastuzumab_emtansine) — aliases: Kadcyla; dev codes: T-DM1, Trastuzumab-DM1, Herceptin-DM1; target: HER2; company: Genentech
+- **Inotuzumab ozogamicin** (inotuzumab_ozogamicin) — aliases: Besponsa; dev codes: CMC-544, PF-05208773; target: CD22; company: Pfizer
+- **Polatuzumab vedotin** (polatuzumab_vedotin) — aliases: Polivy; dev codes: DCDS4501A, DCDS4501S, RG7596; target: CD79b; company: Genentech
+- **Enfortumab vedotin** (enfortumab_vedotin) — aliases: Padcev; dev codes: ASG-22ME, AGS-22ME; target: Nectin-4; company: Seagen
+- **Trastuzumab deruxtecan** (trastuzumab_deruxtecan) — aliases: Enhertu; dev codes: DS-8201, DS-8201a, T-DXd; target: HER2; company: Daiichi Sankyo
 - **Sacituzumab govitecan** (sacituzumab_govitecan) — aliases: Trodelvy; dev codes: IMMU-132; target: Trop-2; company: Gilead Sciences
-- **Belantamab mafodotin** (belantamab_mafodotin) — aliases: Blenrep; dev codes: GSK2857916; target: BCMA; company: GSK
-- **Loncastuximab tesirine** (loncastuximab_tesirine) — aliases: Zynlonta; dev codes: ADCT-402; target: CD19; company: ADC Therapeutics
-- **Tisotumab vedotin** (tisotumab_vedotin) — aliases: Tivdak; dev codes: HuMax-TF-ADC; target: Tissue Factor; company: Genmab
+- **Belantamab mafodotin** (belantamab_mafodotin) — aliases: Blenrep, Belamaf; dev codes: GSK2857916; target: BCMA; company: GSK
+- **Loncastuximab tesirine** (loncastuximab_tesirine) — aliases: Zynlonta; dev codes: ADCT-402, Lonca-T; target: CD19; company: ADC Therapeutics
+- **Tisotumab vedotin** (tisotumab_vedotin) — aliases: Tivdak; dev codes: HuMax-TF-ADC, HuMax-TF; target: Tissue Factor; company: Genmab
 - **Mirvetuximab soravtansine** (mirvetuximab_soravtansine) — aliases: Elahere; dev codes: IMGN853; target: Folate receptor alpha; company: ImmunoGen
-- **Disitamab vedotin** (disitamab_vedotin) — aliases: Aidixi; dev codes: RC48; target: HER2; company: RemeGen
-- **Datopotamab deruxtecan** (datopotamab_deruxtecan) — aliases: Datroway; dev codes: DS-1062, Dato-DXd; target: Trop-2; company: Daiichi Sankyo
+- **Disitamab vedotin** (disitamab_vedotin) — aliases: Aidixi; dev codes: RC48, RC48-ADC; target: HER2; company: RemeGen
+- **Datopotamab deruxtecan** (datopotamab_deruxtecan) — aliases: Datroway; dev codes: DS-1062, DS-1062a, Dato-DXd; target: Trop-2; company: Daiichi Sankyo
 
 ## Per-source execution this run
 
-- **pubmed**: 129 queries generated — 4531 discovered, 25 downloaded, 0 skipped_unchanged, 0 failed
-- **europe_pmc**: 129 queries generated — 4897 discovered, 23 downloaded, 2 skipped_unchanged, 0 failed
-- **wipo**: 45 queries generated — 66 discovered, 25 downloaded, 6 skipped_unchanged, 0 failed
-- **epo**: 45 queries generated — 6 discovered, 5 downloaded, 1 skipped_unchanged, 0 failed
-- **uspto**: 129 queries generated — 83 discovered, 25 downloaded, 0 skipped_unchanged, 0 failed
-- **clinicaltrials**: 45 queries generated — 2688 discovered, 460 downloaded, 502 skipped_unchanged, 0 failed
+- **pubmed**: 143 queries generated — 8532 discovered, 8259 downloaded, 186 skipped_unchanged, 87 failed
+- **europe_pmc**: 143 queries generated — 8656 discovered, 5374 downloaded, 3282 skipped_unchanged, 0 failed
+- **wipo**: 59 queries generated — 67 discovered, 19 downloaded, 48 skipped_unchanged, 0 failed
+- **epo**: 59 queries generated — 6 discovered, 0 downloaded, 6 skipped_unchanged, 0 failed
+- **uspto**: 143 queries generated — 60 discovered, 43 downloaded, 17 skipped_unchanged, 0 failed
+- **clinicaltrials**: 59 queries generated — 4545 discovered, 1503 downloaded, 3042 skipped_unchanged, 0 failed
 
-**Aggregate:** 12271 records discovered across all sources this run, 563 newly downloaded.
+**Aggregate:** 21866 records discovered across all sources this run, 15198 newly downloaded.
 
 Each source's OWN `reports/acquisition/<source>.md` continues to describe ONLY that job's broad-discovery pass, unchanged by this run -- this job explicitly restores it after every sub-invocation (Prompt.md: "do not conflate the two passes" applies to reporting, not just acquisition). Full per-record provenance for what THIS asset-expansion pass discovered lives in each source's OWN `*_discovery.parquet`/`*_attempts.parquet` instead -- every row there is tagged with its own asset-expansion `query_id` (e.g. `PUBMED_ASSETEXP_...`), which is the actual audit trail for "why is this record in our corpus."
 

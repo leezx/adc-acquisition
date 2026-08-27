@@ -21,31 +21,31 @@ since=(no lower bound), until=(no upper bound) (filtered via `AREA[LastUpdatePos
 
 ## Records discovered
 
-830 query-hits across 4 active queries; 715 unique NCT IDs.
+1784 query-hits across 4 active queries; 1157 unique NCT IDs.
 
 ## Records downloaded
 
-600 new/changed trial snapshots, 0 skipped as unchanged (matched checkpoint content hash).
+1157 new/changed trial snapshots, 0 skipped as unchanged (matched checkpoint content hash).
 
 ## Duplicates
 
-107 NCT IDs were discovered by more than one query. As with PubMed/Europe PMC, the content manifest attributes one primary query_id per record; the full multi-query history lives in `clinicaltrials_discovery.parquet`.
+586 NCT IDs were discovered by more than one query. As with PubMed/Europe PMC, the content manifest attributes one primary query_id per record; the full multi-query history lives in `clinicaltrials_discovery.parquet`.
 
 ### Records per query
 
-- CTGOV_ADC_001: 600
-- CTGOV_ADC_002: 100
+- CTGOV_ADC_001: 946
+- CTGOV_ADC_002: 639
 - CTGOV_ADC_003: 30
-- CTGOV_ADC_004: 100
+- CTGOV_ADC_004: 169
 
 ## Missing fields
 
-- official_title missing in 3/721 records
-- start_date missing in 3/721 records
+- official_title missing in 6/1954 records
+- start_date missing in 8/1954 records
 
-- records with at least one phase recorded: 693
-- records with enrollment count: 713
-- overall status distribution: ACTIVE_NOT_RECRUITING: 115, COMPLETED: 199, ENROLLING_BY_INVITATION: 1, NOT_YET_RECRUITING: 24, NO_LONGER_AVAILABLE: 2, RECRUITING: 212, SUSPENDED: 1, TERMINATED: 84, UNKNOWN: 67, WITHDRAWN: 16
+- records with at least one phase recorded: 1879
+- records with enrollment count: 1938
+- overall status distribution: ACTIVE_NOT_RECRUITING: 261, COMPLETED: 484, ENROLLING_BY_INVITATION: 4, NOT_YET_RECRUITING: 161, NO_LONGER_AVAILABLE: 4, RECRUITING: 615, SUSPENDED: 5, TERMINATED: 205, UNKNOWN: 163, WITHDRAWN: 52
 
 ## Failed downloads
 
@@ -69,5 +69,5 @@ No API key or authentication required. No officially published numeric rate limi
 ## Reproduction command
 
 ```bash
-python -m adc_acquisition clinicaltrials --limit 715 --output DATA
+python -m adc_acquisition clinicaltrials --limit 1157 --output DATA
 ```
