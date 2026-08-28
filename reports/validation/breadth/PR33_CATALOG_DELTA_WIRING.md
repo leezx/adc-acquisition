@@ -53,10 +53,14 @@ required NO changes at all; it was already fully generic over
   never collide across fields, since the catalog values only ever appear
   in `catalog_status` and the others only in `validation_status`/`status`),
   **`adc_scope` changes**, **stage changes** (`highest_stage`/
-  `development_status`), **new evidence sources** (`sources`), **alias/
-  dev-code crosswalk merges** (`aliases`/`development_codes` -- this is
-  exactly how a PR #32-style crosswalk merge becomes visible in a future
-  delta), and **new NCT ids** (`nct_ids`) are all watched fields on
+  `development_status`), **new evidence sources** (`sources`), **PR
+  #32-level alias/dev-code crosswalk merges** (`aliases`/
+  `development_codes` -- this is the case where
+  `parenthetical_alias_crosswalk()` merges a dev-code candidate's evidence
+  into an already-discovered suffix candidate's OWN row, in
+  `candidate_queue.py`, BEFORE `build_adc_asset_universe.py` ever runs --
+  the candidate's own key never changes, so this is a genuine same-`asset_id`
+  field change), and **new NCT ids** (`nct_ids`) are all watched fields on
   `adc_asset_universe.tsv` in `STATUS_FIELDS_BY_TABLE` -- the same
   mechanism, not new code, that already surfaces a `candidate_queue.tsv`
   confidence promotion.
@@ -67,7 +71,60 @@ fallback chains gained `asset_id`/`canonical_name` alongside the existing
 row renders with a real label instead of falling through to a raw dict
 dump.
 
-## 3. `DATA/catalog/adc_clinical_development.tsv` deliberately NOT separately tracked
+## 3. Round-1 fix (reviewer-identified correctness blocker): identity-merge detection
+
+The initial version's claim that "alias/identity merge" is visible via
+the field-change mechanism above was WRONG for the one identity event
+that actually matters most: `build_master_rows()`'s own semantics are
+that a candidate LATER found to exact-match a NAR row is folded INTO that
+NAR row (the NAR row's own `evidence_ids` gains the candidate's key) and
+the candidate's OWN `OURS_<key>` row simply STOPS being emitted -- the
+NAR row's `asset_id` never changes, so this is a key disappearing
+entirely, not a field changing on an existing key. `diff_snapshots()`
+only ever iterated over AFTER rows (new-if-absent-from-before,
+changed-if-present-in-both) -- a before-only key was silently invisible
+to every mechanism in the initial version.
+
+Fixed with `IDENTITY_MERGE_EVIDENCE_FIELD` (`{"adc_asset_universe.tsv":
+"evidence_ids"}`) and a new block in `diff_snapshots()`: for a before-only
+key on a table in this map, look up its own evidence-id token(s) against
+every AFTER row's `evidence_ids` field. An exact token match names the
+survivor (`identity_merges_by_table`, `{from_key, to_key}`); no match at
+all is reported honestly as `unresolved_removals_by_table` rather than a
+guessed merge target -- this is a deterministic exact-token lookup,
+reusing `build_master_rows()`'s own evidence-id bookkeeping, never a
+fuzzy label comparison. `diff_snapshots()`'s return signature grew from a
+3-tuple to a 5-tuple; every call site (9 in tests, 1 in `main()`) was
+updated to unpack the two new values.
+
+New `write_identity_merges_tsv()` writes `identity_merges.tsv`
+(`table`/`kind`/`from_key`/`to_key`, `kind` = `IDENTITY_MERGE` or
+`UNRESOLVED_REMOVAL`) alongside the existing `delta_summary.tsv`/
+`status_changes.tsv`. `build_delta_markdown()` gained two new sections,
+"Identity merges" and "Unresolved removals."
+
+**Verified against the real repository's own history, not just the
+reviewer's synthetic regression.** Ran the actual pre-round-2-fix
+`adc_asset_universe.tsv` (commit `45af0d3`, before PR #32's compound-
+identifier fix) as the "before" snapshot against the current real catalog
+as "after" -- the real transition where the two-fragment bug's 6 stray
+`OURS_*` rows (`REGN5093`, `M114`, `C004`, and 3 more) disappeared.
+Result: **0 identity merges, 6 unresolved removals, 4 new assets** -- NOT
+identity merges. This is the CORRECT, honest answer, not a mechanism
+failure: the compound-identifier fix changed how the candidate's own
+label is extracted (e.g. `"M114"` alone vs. the full `"REGN5093-M114"`
+compound), which changes its normalized-label-derived key entirely (per
+`candidate_id_for_name()`), so there is no shared evidence token between
+the old and new rows to find -- a genuinely different transition shape
+than "the same stable candidate later resolves against NAR," which is
+exactly the reviewer's specified scenario and is what the new synthetic
+regression test (`test_diff_snapshots_detects_identity_merge_into_nar_row`)
+verifies directly. Both the positive case (a real merge is found by exact
+evidence-token match) and this honest-negative case (a genuine key change
+is correctly reported as removal + new-asset, never guessed as a merge)
+are now covered.
+
+## 4. `DATA/catalog/adc_clinical_development.tsv` deliberately NOT separately tracked
 
 It is a pure column projection of `adc_asset_universe.tsv` with the exact
 same row set and no information of its own, and — unlike
@@ -80,7 +137,7 @@ key. It is still regenerated every run (via
 wired into `run_derivation_stage()`'s new `build_adc_asset_universe`
 branch), just not separately diffed.
 
-## 4. `--catalog-dir` CLI argument
+## 5. `--catalog-dir` CLI argument
 
 `update_breadth.py` gains `--catalog-dir` (default `DATA/catalog`),
 mirroring the existing `--feasibility-dir` pattern -- decoupled from
@@ -92,7 +149,7 @@ feasibility tables are unaffected; `main()` always passes it.
 `run_derivation_stage()` gained a required third parameter,
 `catalog_output`, used only to construct the new step's command line.
 
-## 5. Verified against the real repository, not just unit tests
+## 6. Verified against the real repository, not just unit tests
 
 Ran `update_breadth.py --skip-acquisition` against the real repo (full
 derivation chain, all 4 steps, real data) to confirm the wiring produces
@@ -109,24 +166,40 @@ upstream inputs haven't changed.
 
 ## Test plan
 
-- 5 new tests: `_tier_for_row`'s catalog_status ladder
+- 7 new tests: `_tier_for_row`'s catalog_status ladder
   (`REFERENCE_CONFIRMED`/`MULTISOURCE_CONFIRMED` -> A,
   `SINGLE_STRONG_SOURCE`/`NEEDS_REVIEW` -> B,
   `EXCLUDED_ADJACENT_MODALITY` -> C); `read_feasibility_snapshot()`
   including/excluding the catalog table depending on whether
   `catalog_dir` is passed; `diff_snapshots()` detecting a new catalog
-  asset, a `catalog_status` Tier A upgrade (with `sources`/`nct_ids`/
+  asset, a genuine `catalog_status` Tier A upgrade on a stable
+  `adc_candidates.tsv`-origin `asset_id` (with `sources`/`nct_ids`/
   `highest_stage` changes on the SAME existing key correctly reported as
-  non-upgrade status changes, not new rows), and an alias-merge +
-  `adc_scope` change scenario.
+  non-upgrade status changes, not new rows), an alias-merge +
+  `adc_scope` change scenario, the reviewer's exact identity-merge
+  regression (`test_diff_snapshots_detects_identity_merge_into_nar_row`),
+  and the honest-unresolved-removal case (no survivor found).
 - 2 existing tests updated for the new required `catalog_output` parameter
   and the 4th derivation step (`run_derivation_stage` skip-chain and
   all-steps-run tests).
 - 1 existing test (`test_main_incomplete_derivation_...`) updated to pass
   an explicit `--catalog-dir` pointing at a tmp path, avoiding accidental
   coupling to the real repo's `DATA/catalog/` during a mocked-failure test.
-- 589 tests passing project-wide, 0 regressions.
-- Real end-to-end dry run against the actual repository (see Section 5).
+- 9 existing `diff_snapshots()` call sites (8 in tests, 1 in `main()`)
+  updated to unpack the new 5-tuple return.
+- 1 existing test's scenario corrected: the original
+  `test_diff_snapshots_detects_catalog_status_upgrade_as_tier_a` used a
+  `NEEDS_REVIEW -> MULTISOURCE_CONFIRMED` transition on the SAME
+  `OURS_<key>` asset_id, which is impossible under `catalog_status_for_
+  ours_only()`'s real logic for a `candidate_queue.tsv`-origin candidate
+  (always `NEEDS_REVIEW` until either promoted or identity-merged into
+  NAR) -- corrected to a `SINGLE_STRONG_SOURCE -> MULTISOURCE_CONFIRMED`
+  transition on a stable `adc_candidates.tsv`-origin `asset_id`, the
+  actual real scenario that mechanism covers.
+- 591 tests passing project-wide, 0 regressions.
+- Real end-to-end dry run against the actual repository (see Section 6),
+  PLUS a real-history identity-merge check against the actual pre-PR-#32-
+  round-2-fix catalog snapshot (see Section 3).
 
 ## What this closes
 

@@ -84,12 +84,31 @@ A, `SINGLE_STRONG_SOURCE`/`NEEDS_REVIEW` -> Tier B,
 `catalog_status`/`adc_scope`/`highest_stage`/`development_status`/
 `sources`/`aliases`/`development_codes`/`nct_ids` changed is a status
 change (same mechanism as `STATUS_FIELDS_BY_TABLE` above) -- this is what
-surfaces an alias/dev-code crosswalk merge (a `development_codes`/
-`aliases` change), a stage advance, a `catalog_status` upgrade into
+surfaces a `candidate_queue.py`-level (PR #32) alias/dev-code crosswalk
+merge (a `development_codes`/`aliases` change on the SAME, still-stable
+`OURS_<key>` asset_id -- that merge happens upstream, before
+`build_adc_asset_universe.py` ever runs, so the candidate's own key never
+changes), a stage advance, a `catalog_status` upgrade into
 `MULTISOURCE_CONFIRMED` (a Tier A event, same `_TIER_A_STATUS_VALUES`
 mechanism), a newly-added evidence source, or a newly-added NCT id, all
 without any new detection code beyond registering the table and its
-watched fields. `DATA/catalog/adc_clinical_development.tsv` is
+watched fields.
+
+**Identity-merge detection (round-1 fix)**: the field-change mechanism
+above cannot see a DIFFERENT, `build_adc_asset_universe.py`-level
+identity event -- when a candidate that was previously `OURS_<key>` (no
+NAR match) is later found to exact-match a NAR row, `build_master_rows()`
+folds its evidence INTO that NAR row and its own `OURS_<key>` row simply
+stops being emitted; the NAR row's `asset_id` never changes, so this is
+not a "field changed on an existing key," it is a key disappearing
+entirely. `IDENTITY_MERGE_EVIDENCE_FIELD` (currently only
+`adc_asset_universe.tsv`) makes this detectable without a fuzzy label
+guess: `build_master_rows()`'s own `evidence_ids` field carries exactly
+the folded-in candidate's own key, so a before-only `asset_id` is looked
+up by its own evidence token against every after-row's `evidence_ids` --
+an exact match names the survivor (`identity_merges_by_table`); no match
+is reported honestly as `unresolved_removals_by_table` rather than a
+guessed target. `DATA/catalog/adc_clinical_development.tsv` is
 DELIBERATELY NOT separately tracked here: it is a pure column projection
 of `adc_asset_universe.tsv` with the exact same row set and no
 information of its own (see `write_clinical_development_view()`'s
@@ -196,6 +215,30 @@ CATALOG_TABLES = [
 # duplicate every event already captured on adc_asset_universe.tsv).
 ALL_TABLE_SPECS = FEASIBILITY_TABLES + CATALOG_TABLES
 
+# PR #33 round-1 fix (reviewer-identified correctness blocker): a before-
+# only asset_id on adc_asset_universe.tsv is NOT necessarily "removed" --
+# build_master_rows()'s own identity-resolution semantics are that a
+# candidate later found to exact-match NAR is folded into that NAR row
+# and its own OURS_<key> row simply stops being emitted, rather than the
+# SAME asset_id's fields changing in place (unlike every other status-
+# change scenario this module tracks). Naively treating a before-only key
+# as a silent disappearance would hide a real, meaningful event: THIS
+# asset was resolved against the reference universe. Maps table -> the
+# evidence-id column whose values are the row's own contributed evidence
+# tokens (build_master_rows(): an OURS row's evidence_ids is exactly its
+# own candidate key; a matched NAR row's evidence_ids gains that SAME
+# candidate key alongside its own nar_adc_id) -- this lets identity-merge
+# detection be a deterministic exact-token lookup, never a fuzzy label
+# guess. Scoped to adc_asset_universe.tsv only: no other tracked table
+# has this fold-into-a-different-key identity semantics.
+IDENTITY_MERGE_EVIDENCE_FIELD = {
+    "adc_asset_universe.tsv": "evidence_ids",
+}
+
+
+def _split_evidence_ids(value: str) -> list[str]:
+    return [v.strip() for v in str(value or "").split(";") if v.strip()]
+
 # Decision-relevant fields to watch for changes on an EXISTING natural key
 # (persistent candidate/entity IDs, per Phase 5a's design, deliberately do
 # NOT change when evidence/confidence changes -- so a promotion like
@@ -265,6 +308,8 @@ class DeltaResult:
     new_rows_by_table: dict = field(default_factory=dict)  # table -> list[dict(row..., tier=...)]
     deepened_by_table: dict = field(default_factory=dict)  # table -> list[key tuples]
     status_changes_by_table: dict = field(default_factory=dict)  # table -> list[dict(key, field, before, after, tier_a_upgrade)]
+    identity_merges_by_table: dict = field(default_factory=dict)  # table -> list[dict(from_key, to_key)]
+    unresolved_removals_by_table: dict = field(default_factory=dict)  # table -> list[dict(key)]
     delta_status: str = "OK"  # or "INCOMPLETE_DERIVATION"
     delta_dir: str = ""
 
@@ -313,8 +358,11 @@ def read_feasibility_snapshot(feasibility_dir: Path, catalog_dir: Path | None = 
     return snapshot
 
 
-def diff_snapshots(before: dict[str, pd.DataFrame], after: dict[str, pd.DataFrame]) -> tuple[dict, dict, dict]:
-    """Returns (new_rows_by_table, deepened_by_table, status_changes_by_table).
+def diff_snapshots(
+    before: dict[str, pd.DataFrame], after: dict[str, pd.DataFrame],
+) -> tuple[dict, dict, dict, dict, dict]:
+    """Returns (new_rows_by_table, deepened_by_table, status_changes_by_table,
+    identity_merges_by_table, unresolved_removals_by_table).
 
     A row is NEW only if its natural key was absent from `before` entirely
     -- never inferred from a changed non-key column. `deepened_by_table`
@@ -327,10 +375,27 @@ def diff_snapshots(before: dict[str, pd.DataFrame], after: dict[str, pd.DataFram
     deliberately stable across such a promotion (Phase 5a) and
     candidate_queue.tsv has no count column at all. All three are mutually
     exclusive per (table, key): a brand-new key is only ever reported as
-    new, never also as deepened/changed."""
+    new, never also as deepened/changed.
+
+    PR #33 round-1 fix: `identity_merges_by_table`/`unresolved_removals_by_table`
+    cover the ONE case none of the above can see -- a before-only key on a
+    table listed in IDENTITY_MERGE_EVIDENCE_FIELD (currently only
+    adc_asset_universe.tsv). build_master_rows()'s own identity-resolution
+    semantics mean a candidate later found to exact-match NAR is folded
+    INTO that NAR row's own asset_id and its OWN OURS_<key> row simply
+    stops being emitted -- the SAME asset_id's fields never change in
+    place the way every other status-change scenario in this module
+    assumes. A before-only key is looked up by its own evidence-id
+    token(s) against every AFTER row's evidence-id field: an exact token
+    match identifies the survivor row it was folded into
+    (`identity_merges_by_table`); no match at all is reported as an
+    honest `unresolved_removals_by_table` entry rather than a guessed
+    merge target."""
     new_rows_by_table: dict[str, list[dict]] = {}
     deepened_by_table: dict[str, list[tuple]] = {}
     status_changes_by_table: dict[str, list[dict]] = {}
+    identity_merges_by_table: dict[str, list[dict]] = {}
+    unresolved_removals_by_table: dict[str, list[dict]] = {}
 
     for filename, key_columns, count_col in ALL_TABLE_SPECS:
         before_df, after_df = before.get(filename, pd.DataFrame()), after.get(filename, pd.DataFrame())
@@ -382,7 +447,45 @@ def diff_snapshots(before: dict[str, pd.DataFrame], after: dict[str, pd.DataFram
             if changes:
                 status_changes_by_table[filename] = changes
 
-    return new_rows_by_table, deepened_by_table, status_changes_by_table
+        evidence_field = IDENTITY_MERGE_EVIDENCE_FIELD.get(filename)
+        if evidence_field and not before_df.empty:
+            after_records = after_df.to_dict("records")
+            after_keys = {_row_key(r, key_columns) for r in after_records}
+            removed_keys = before_keys - after_keys
+            if removed_keys:
+                # Every evidence token appearing in some AFTER row, mapped
+                # to that row's own key -- an exact-token lookup, never a
+                # fuzzy label match.
+                token_to_after_key: dict[str, tuple] = {}
+                for row in after_records:
+                    after_key = _row_key(row, key_columns)
+                    for token in _split_evidence_ids(row.get(evidence_field, "")):
+                        token_to_after_key.setdefault(token, after_key)
+                before_row_by_key = {_row_key(r, key_columns): r for r in before_records}
+                merges, unresolved = [], []
+                for removed_key in removed_keys:
+                    removed_row = before_row_by_key[removed_key]
+                    survivor_key = next(
+                        (
+                            token_to_after_key[token]
+                            for token in _split_evidence_ids(removed_row.get(evidence_field, ""))
+                            if token in token_to_after_key and token_to_after_key[token] != removed_key
+                        ),
+                        None,
+                    )
+                    if survivor_key is not None:
+                        merges.append({"from_key": removed_key, "to_key": survivor_key})
+                    else:
+                        unresolved.append({"key": removed_key})
+                if merges:
+                    identity_merges_by_table[filename] = merges
+                if unresolved:
+                    unresolved_removals_by_table[filename] = unresolved
+
+    return (
+        new_rows_by_table, deepened_by_table, status_changes_by_table,
+        identity_merges_by_table, unresolved_removals_by_table,
+    )
 
 
 def _run_subprocess(label: str, cmd: list[str]) -> JobRunOutcome:
@@ -500,6 +603,30 @@ def write_status_changes_tsv(path: Path, status_changes_by_table: dict) -> None:
     df.to_csv(path, sep="\t", index=False)
 
 
+def write_identity_merges_tsv(
+    path: Path, identity_merges_by_table: dict, unresolved_removals_by_table: dict,
+) -> None:
+    """table/kind/from_key/to_key -- one row per before-only key on a table
+    covered by IDENTITY_MERGE_EVIDENCE_FIELD: `IDENTITY_MERGE` when a
+    surviving row's own evidence-id field contains the removed row's
+    evidence token (`to_key` populated), `UNRESOLVED_REMOVAL` when no
+    survivor could be identified (`to_key` left blank -- never a guessed
+    merge target)."""
+    rows = []
+    for table, merges in identity_merges_by_table.items():
+        for m in merges:
+            rows.append(dict(
+                table=table, kind="IDENTITY_MERGE",
+                from_key="|".join(m["from_key"]), to_key="|".join(m["to_key"]),
+            ))
+    for table, removals in unresolved_removals_by_table.items():
+        for r in removals:
+            rows.append(dict(table=table, kind="UNRESOLVED_REMOVAL", from_key="|".join(r["key"]), to_key=""))
+    df = pd.DataFrame(rows, columns=["table", "kind", "from_key", "to_key"])
+    df.sort_values(["table", "kind", "from_key"], inplace=True) if not df.empty else None
+    df.to_csv(path, sep="\t", index=False)
+
+
 def build_delta_markdown(result: DeltaResult) -> str:
     def _outcome_lines(outcomes: list[JobRunOutcome]) -> str:
         if not outcomes:
@@ -583,6 +710,15 @@ python3 tools/breadth/update_breadth.py --data-dir DATA --delta-output reports/d
         for table, entries in result.deepened_by_table.items()
     ) or "None this run."
 
+    identity_merge_lines = "\n".join(
+        f"- `{table}`: `{'|'.join(m['from_key'])}` -> `{'|'.join(m['to_key'])}`"
+        for table, merges in result.identity_merges_by_table.items() for m in merges
+    ) or "None this run."
+    unresolved_removal_lines = "\n".join(
+        f"- `{table}`: `{'|'.join(r['key'])}`"
+        for table, removals in result.unresolved_removals_by_table.items() for r in removals
+    ) or "None this run."
+
     return header + f"""
 ## New entities this run, by tier
 
@@ -622,6 +758,27 @@ watched -- see STATUS_FIELDS_BY_TABLE.
 ## Evidence deepened (existing entities, not new)
 
 {deepened_lines}
+
+## Identity merges (PR #33 round-1 fix)
+
+A before-only `asset_id` on `adc_asset_universe.tsv` whose own evidence
+token was found inside a SURVIVING row's `evidence_ids` -- e.g. an
+OURS-only candidate later resolved by exact-identifier match against its
+NAR reference row (see `build_master_rows()`), which folds it into that
+NAR row rather than changing its own asset_id's fields in place. Every
+merge here is ALSO already reflected as a `catalog_status`/`sources`
+change on the survivor row above; this section exists so the disappearing
+`asset_id` itself is not silently unaccounted for.
+
+{identity_merge_lines}
+
+## Unresolved removals (before-only key, no survivor identified)
+
+A before-only key on a table covered by identity-merge detection whose
+own evidence token could NOT be found in any surviving row -- reported
+honestly as unresolved rather than guessing a merge target.
+
+{unresolved_removal_lines}
 
 ## Failures this run
 
@@ -675,7 +832,10 @@ def main() -> int:
     derivation_ok = all(o.ok for o in result.derivation_outcomes)
     if derivation_ok:
         after_snapshot = read_feasibility_snapshot(feasibility_dir, catalog_dir)
-        result.new_rows_by_table, result.deepened_by_table, result.status_changes_by_table = diff_snapshots(before_snapshot, after_snapshot)
+        (
+            result.new_rows_by_table, result.deepened_by_table, result.status_changes_by_table,
+            result.identity_merges_by_table, result.unresolved_removals_by_table,
+        ) = diff_snapshots(before_snapshot, after_snapshot)
         result.delta_status = "OK"
     else:
         # Fail closed: a partial derivation chain must never be diffed
@@ -689,6 +849,9 @@ def main() -> int:
 
     write_delta_summary_tsv(delta_dir / "delta_summary.tsv", result.new_rows_by_table)
     write_status_changes_tsv(delta_dir / "status_changes.tsv", result.status_changes_by_table)
+    write_identity_merges_tsv(
+        delta_dir / "identity_merges.tsv", result.identity_merges_by_table, result.unresolved_removals_by_table,
+    )
     (delta_dir / "ADC_BREADTH_DELTA.md").write_text(build_delta_markdown(result), encoding="utf-8")
 
     total_job_failed = sum(1 for o in result.job_outcomes if not o.ok)

@@ -26,7 +26,7 @@ def test_diff_snapshots_detects_new_row_by_natural_key():
         {"entity_id": "A1", "canonical_label": "Existing"},
         {"entity_id": "A2", "canonical_label": "Brand New"},
     ])}
-    new_rows, deepened, status_changes = diff_snapshots(before, after)
+    new_rows, deepened, status_changes, _, _ = diff_snapshots(before, after)
     assert len(new_rows["adc_candidates.tsv"]) == 1
     assert new_rows["adc_candidates.tsv"][0]["entity_id"] == "A2"
     assert "adc_candidates.tsv" not in deepened
@@ -35,7 +35,7 @@ def test_diff_snapshots_detects_new_row_by_natural_key():
 
 def test_diff_snapshots_no_change_produces_no_new_rows():
     same = {"adc_candidates.tsv": _df([{"entity_id": "A1", "canonical_label": "Existing"}])}
-    new_rows, deepened, status_changes = diff_snapshots(same, same)
+    new_rows, deepened, status_changes, _, _ = diff_snapshots(same, same)
     assert new_rows == {}
     assert deepened == {}
     assert status_changes == {}
@@ -46,7 +46,7 @@ def test_diff_snapshots_detects_evidence_deepened_not_as_new_row():
     'deepened', never miscounted as a new-entity event."""
     before = {"adc_platforms.tsv": _df([{"entity_id": "P1", "evidence_count": "3", "status": "OBSERVED"}])}
     after = {"adc_platforms.tsv": _df([{"entity_id": "P1", "evidence_count": "5", "status": "OBSERVED"}])}
-    new_rows, deepened, _ = diff_snapshots(before, after)
+    new_rows, deepened, _, _, _ = diff_snapshots(before, after)
     assert new_rows == {}
     assert deepened["adc_platforms.tsv"] == [(("P1",), 3, 5)]
 
@@ -56,7 +56,7 @@ def test_diff_snapshots_composite_key_for_target_indication():
     after = {"target_indication_feasibility.tsv": _df([
         {"target_entity_id": "T1", "indication": "Breast cancer", "supporting_asset_count": "2"},
     ])}
-    new_rows, _, _ = diff_snapshots(before, after)
+    new_rows, _, _, _, _ = diff_snapshots(before, after)
     assert len(new_rows["target_indication_feasibility.tsv"]) == 1
 
 
@@ -77,7 +77,7 @@ def test_diff_snapshots_detects_status_upgrade_on_existing_candidate_not_as_new_
         "source": "conference_abstract_corpus;clinicaltrials", "confidence": "0.8",
         "validation_status": "AUTO_HIGH_CONFIDENCE", "modality_classification": "ADC",
     }])}
-    new_rows, deepened, status_changes = diff_snapshots(before, after)
+    new_rows, deepened, status_changes, _, _ = diff_snapshots(before, after)
     assert new_rows == {}  # NOT a new entity -- same persistent candidate_id
     assert deepened == {}
     changes = status_changes["candidate_queue.tsv"]
@@ -101,7 +101,7 @@ def test_diff_snapshots_status_change_ignores_unwatched_free_text_fields():
         "source": "s1", "confidence": "0.5", "validation_status": "NEEDS_REVIEW",
         "modality_classification": "ADC",
     }])}
-    _, _, status_changes = diff_snapshots(before, after)
+    _, _, status_changes, _, _ = diff_snapshots(before, after)
     assert status_changes == {}  # `context` is not a watched decision-relevant field
 
 
@@ -113,7 +113,7 @@ def test_diff_snapshots_detects_new_catalog_asset():
         {"asset_id": "NAR_1", "canonical_name": "Existing", "catalog_status": "REFERENCE_CONFIRMED"},
         {"asset_id": "OURS_2", "canonical_name": "Brand New Asset", "catalog_status": "NEEDS_REVIEW"},
     ])}
-    new_rows, deepened, status_changes = diff_snapshots(before, after)
+    new_rows, deepened, status_changes, _, _ = diff_snapshots(before, after)
     assert len(new_rows["adc_asset_universe.tsv"]) == 1
     new_row = new_rows["adc_asset_universe.tsv"][0]
     assert new_row["asset_id"] == "OURS_2"
@@ -123,33 +123,91 @@ def test_diff_snapshots_detects_new_catalog_asset():
 
 
 def test_diff_snapshots_detects_catalog_status_upgrade_as_tier_a():
-    """Exact reviewer scenario this wiring exists for: an OURS-only asset
-    (persistent asset_id, per candidate_id_for_name()'s stability
-    contract) whose catalog_status is independently upgraded into
-    MULTISOURCE_CONFIRMED -- e.g. after the round-2 compound-identifier
-    fix resolved a candidate against its NAR row -- must surface as a
-    Tier A upgrade, not a new row (the asset_id itself never changes)."""
+    """A PROMOTED candidate (adc_candidates.tsv origin -- catalog_status_
+    for_ours_only() keys its catalog_status on source count, and its own
+    asset_id is entity_id-based, stable across evidence growth the same
+    way a NAR row's asset_id is) gains a second independent source and
+    crosses SINGLE_STRONG_SOURCE -> MULTISOURCE_CONFIRMED -- a genuine
+    same-asset_id field change, correctly distinct from the identity-MERGE
+    scenario (a NEEDS_REVIEW candidate_queue.tsv-origin candidate can
+    never reach MULTISOURCE_CONFIRMED in place; catalog_status_for_ours_
+    only() always returns NEEDS_REVIEW for that origin -- reaching
+    MULTISOURCE_CONFIRMED from NEEDS_REVIEW only happens via an identity
+    merge into a NAR row, covered by the identity-merge tests below, or
+    via promotion to adc_candidates.tsv, which changes the asset_id's own
+    key and is therefore also an identity-merge-shaped event, not a
+    same-key field change)."""
     before = {"adc_asset_universe.tsv": _df([
-        {"asset_id": "OURS_1", "canonical_name": "REGN5093-M114", "catalog_status": "NEEDS_REVIEW",
+        {"asset_id": "OURS_ENTITY_1", "canonical_name": "REGN5093-M114", "catalog_status": "SINGLE_STRONG_SOURCE",
          "adc_scope": "PRESUMED_ADC", "sources": "europe_pmc", "aliases": "", "development_codes": "",
          "nct_ids": "", "highest_stage": "", "development_status": ""},
     ])}
     after = {"adc_asset_universe.tsv": _df([
-        {"asset_id": "OURS_1", "canonical_name": "REGN5093-M114", "catalog_status": "MULTISOURCE_CONFIRMED",
+        {"asset_id": "OURS_ENTITY_1", "canonical_name": "REGN5093-M114", "catalog_status": "MULTISOURCE_CONFIRMED",
          "adc_scope": "PRESUMED_ADC", "sources": "clinicaltrials; europe_pmc", "aliases": "", "development_codes": "",
          "nct_ids": "NCT04982224", "highest_stage": "Phase2", "development_status": "Phase 1/2"},
     ])}
-    new_rows, deepened, status_changes = diff_snapshots(before, after)
+    new_rows, deepened, status_changes, identity_merges, unresolved = diff_snapshots(before, after)
     assert new_rows == {}
     assert deepened == {}
+    assert identity_merges == {}
+    assert unresolved == {}
     changes = status_changes["adc_asset_universe.tsv"]
     by_field = {c["field"]: c for c in changes}
-    assert by_field["catalog_status"]["before"] == "NEEDS_REVIEW"
+    assert by_field["catalog_status"]["before"] == "SINGLE_STRONG_SOURCE"
     assert by_field["catalog_status"]["after"] == "MULTISOURCE_CONFIRMED"
     assert by_field["catalog_status"]["tier_a_upgrade"] is True
     assert by_field["sources"]["tier_a_upgrade"] is False  # a new evidence source, not a confirmation-tier upgrade
     assert "nct_ids" in by_field  # a newly-added NCT id
     assert "highest_stage" in by_field  # a clinical-stage advance
+
+
+def test_diff_snapshots_detects_identity_merge_into_nar_row():
+    """Exact reviewer regression: build_master_rows()'s real identity
+    semantics are that a candidate later found to exact-match NAR is
+    folded INTO that NAR row (its evidence_ids gains the candidate's own
+    key) and its own OURS_<key> row simply stops being emitted -- this is
+    NOT the same asset_id's fields changing in place, and the field-change
+    mechanism above cannot see it at all (the OURS_ key disappears from
+    `after` entirely). identity_merges_by_table must name the survivor by
+    an exact evidence-token lookup, never a fuzzy label guess."""
+    before = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "NAR_1", "canonical_name": "REGN5093-M114", "catalog_status": "REFERENCE_CONFIRMED",
+         "evidence_ids": "NAR1"},
+        {"asset_id": "OURS_2", "canonical_name": "REGN5093-M114", "catalog_status": "NEEDS_REVIEW",
+         "evidence_ids": "CAND2"},
+    ])}
+    after = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "NAR_1", "canonical_name": "REGN5093-M114", "catalog_status": "MULTISOURCE_CONFIRMED",
+         "evidence_ids": "NAR1; CAND2"},
+    ])}
+    new_rows, deepened, status_changes, identity_merges, unresolved = diff_snapshots(before, after)
+    assert new_rows == {}
+    assert unresolved == {}
+    merges = identity_merges["adc_asset_universe.tsv"]
+    assert len(merges) == 1
+    assert merges[0]["from_key"] == ("OURS_2",)
+    assert merges[0]["to_key"] == ("NAR_1",)
+    # Also visible as an ordinary status change on the survivor -- both
+    # mechanisms are expected to fire, per the module's own docstring.
+    by_field = {c["field"]: c for c in status_changes["adc_asset_universe.tsv"]}
+    assert by_field["catalog_status"]["after"] == "MULTISOURCE_CONFIRMED"
+
+
+def test_diff_snapshots_reports_unresolved_removal_when_no_survivor_found():
+    """A before-only key whose own evidence token cannot be found in ANY
+    after-row must be reported as an honest unresolved removal, never a
+    guessed merge target."""
+    before = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_1", "canonical_name": "Foo", "catalog_status": "NEEDS_REVIEW", "evidence_ids": "CAND1"},
+        {"asset_id": "OURS_2", "canonical_name": "Bar", "catalog_status": "NEEDS_REVIEW", "evidence_ids": "CAND2"},
+    ])}
+    after = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_2", "canonical_name": "Bar", "catalog_status": "NEEDS_REVIEW", "evidence_ids": "CAND2"},
+    ])}
+    _, _, _, identity_merges, unresolved = diff_snapshots(before, after)
+    assert identity_merges == {}
+    assert unresolved["adc_asset_universe.tsv"] == [{"key": ("OURS_1",)}]
 
 
 def test_diff_snapshots_detects_alias_merge_and_adc_scope_change():
@@ -167,7 +225,7 @@ def test_diff_snapshots_detects_alias_merge_and_adc_scope_change():
          "adc_scope": "PRESUMED_ADC", "sources": "conference_abstract_corpus", "aliases": "",
          "development_codes": "CDX-011", "nct_ids": "", "highest_stage": "", "development_status": ""},
     ])}
-    _, _, status_changes = diff_snapshots(before, after)
+    _, _, status_changes, _, _ = diff_snapshots(before, after)
     by_field = {c["field"]: c for c in status_changes["adc_asset_universe.tsv"]}
     assert by_field["development_codes"]["after"] == "CDX-011"  # alias/dev-code crosswalk merge
     assert by_field["adc_scope"]["before"] == "REFERENCE_UNCLASSIFIED"
