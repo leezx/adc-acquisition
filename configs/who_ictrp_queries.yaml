@@ -1,0 +1,41 @@
+# WHO ICTRP query registry (source-coverage expansion, PR "WHO ICTRP").
+#
+# Unlike every other *_queries.yaml in this repo, this "query" does NOT
+# describe a live, per-run search this job executes itself (see
+# jobs/who_ictrp/job.py's module docstring for why: real automated access
+# to WHO ICTRP requires WHO-issued crawling credentials this project does
+# not have yet). query_text below must be the FULL, VERBATIM search
+# terms/filters a human actually entered into the Search Portal
+# (https://trialsearch.who.int/) UI before clicking "Export results to
+# XML" -- this job has no way to recover that from the export file itself
+# (WHO's XML export does not embed the search query that produced it), so
+# this registry is the ONLY record inside this repo of why these trials
+# are in the corpus at all.
+#
+# *** PENDING USER CONFIRMATION ***: the query_text below is a
+# PLACEHOLDER reconstructed from the real 2026-08-28 export's own content
+# (292 trials; titles/interventions include explicit "ADC"/"antibody drug
+# conjugate" text, but also non-obviously-ADC-named trials like "VBC117",
+# "JNJ-98768111", "DEC003M" that only reveal an ADC connection in a field
+# not visible from title alone) -- it has NOT been verified against what
+# was actually typed into the portal. Do not treat this file as
+# provenance-complete until the exact search terms are confirmed and this
+# placeholder is replaced with the verbatim text (round-1 fix on this PR,
+# not before merge).
+
+queries:
+  - query_id: WHO_ICTRP_001
+    query_version: 1
+    query_text: >-
+      PLACEHOLDER, PENDING CONFIRMATION: free-text search for
+      "antibody drug conjugate" OR "ADC" (exact field(s)/portal filters
+      used not yet confirmed) against the WHO ICTRP Search Portal
+      (https://trialsearch.who.int/), exported via "Export results to
+      XML" on 2026-08-28.
+    purpose: >-
+      Global clinical-trial discovery beyond ClinicalTrials.gov (Job 03) --
+      WHO ICTRP aggregates ClinicalTrials.gov, EU CTIS, ChiCTR, JPRN, CTRI,
+      ANZCTR, ISRCTN, and other national/regional primary registries into
+      one cross-registry search, closing the largest single global-trial
+      blind spot in this repo's acquisition layer.
+    active: true
