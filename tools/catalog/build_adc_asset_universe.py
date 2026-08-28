@@ -349,6 +349,27 @@ def write_universe_tsv(path: Path, rows: list[dict]) -> None:
             writer.writerow({k: row.get(k, "") for k in UNIVERSE_FIELDS})
 
 
+# PR #32: a second, lighter DERIVED view of the same master table -- not
+# a new phase, not a new data source, purely a projection for day-to-day
+# industry-research use (the reviewer's own framing: adc_asset_universe.tsv
+# is the maximal-recall superset; this is the "what would I actually look
+# at daily" clinical-development-oriented subset). Every column here
+# already exists in UNIVERSE_FIELDS; nothing is recomputed or re-derived.
+CLINICAL_DEVELOPMENT_FIELDS = [
+    "canonical_name", "aliases", "development_codes", "target", "company",
+    "highest_stage", "development_status", "nct_ids", "adc_scope", "catalog_status", "sources",
+]
+
+
+def write_clinical_development_view(path: Path, rows: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=CLINICAL_DEVELOPMENT_FIELDS, delimiter="\t")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({k: row.get(k, "") for k in CLINICAL_DEVELOPMENT_FIELDS})
+
+
 def build_coverage_report(master_rows: list[dict], nar_rows: list[dict]) -> str:
     by_status: dict[str, int] = {}
     for row in master_rows:
@@ -510,6 +531,8 @@ def main() -> int:
     parser.add_argument("--output", type=str, default="DATA/catalog/adc_asset_universe.tsv")
     parser.add_argument("--report-output", type=str,
                          default="reports/validation/breadth/ADC_ASSET_UNIVERSE_COVERAGE.md")
+    parser.add_argument("--clinical-development-output", type=str,
+                         default="DATA/catalog/adc_clinical_development.tsv")
     args = parser.parse_args()
 
     nar_rows = load_nar_assets(Path(args.nar_dir))
@@ -517,6 +540,7 @@ def main() -> int:
     master_rows, stats = build_master_rows(nar_rows, our_candidates)
 
     write_universe_tsv(Path(args.output), master_rows)
+    write_clinical_development_view(Path(args.clinical_development_output), master_rows)
     Path(args.report_output).parent.mkdir(parents=True, exist_ok=True)
     Path(args.report_output).write_text(build_coverage_report(master_rows, nar_rows), encoding="utf-8")
 
@@ -529,7 +553,8 @@ def main() -> int:
         f"{stats['n_ours_only']} ours-only, {stats['n_excluded_modality']} excluded-adjacent-modality) "
         f"-- {len(master_rows) - excluded} ADC-oriented superset "
         f"({strict_or_presumed} STRICT/PRESUMED_ADC, {unclassified} REFERENCE_UNCLASSIFIED). "
-        f"Written to {args.output}, report at {args.report_output}",
+        f"Written to {args.output} (+ clinical-development view at "
+        f"{args.clinical_development_output}), report at {args.report_output}",
         file=sys.stderr,
     )
     return 0

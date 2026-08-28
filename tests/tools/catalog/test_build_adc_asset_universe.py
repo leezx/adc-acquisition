@@ -1,6 +1,7 @@
 import pandas as pd
 
 from tools.catalog.build_adc_asset_universe import (
+    CLINICAL_DEVELOPMENT_FIELDS,
     build_coverage_report,
     build_master_rows,
     catalog_status_for_ours_only,
@@ -8,6 +9,7 @@ from tools.catalog.build_adc_asset_universe import (
     load_our_candidates,
     main as universe_main,
     nar_identifiers,
+    write_clinical_development_view,
 )
 
 
@@ -261,12 +263,14 @@ def test_end_to_end_main_writes_universe_tsv_and_report(tmp_path):
 
     output = tmp_path / "adc_asset_universe.tsv"
     report_output = tmp_path / "report.md"
+    clinical_output = tmp_path / "adc_clinical_development.tsv"
     import sys
     argv_backup = sys.argv
     sys.argv = [
         "build_adc_asset_universe.py",
         "--feasibility-dir", str(feas), "--nar-dir", str(nar),
         "--output", str(output), "--report-output", str(report_output),
+        "--clinical-development-output", str(clinical_output),
     ]
     try:
         rc = universe_main()
@@ -284,3 +288,22 @@ def test_end_to_end_main_writes_universe_tsv_and_report(tmp_path):
     report_text = report_output.read_text()
     assert "ADC-ORIENTED SUPERSET" in report_text
     assert "TOTAL UNIQUE ADC UNIVERSE" not in report_text
+    assert clinical_output.exists()
+    clinical_df = pd.read_csv(clinical_output, sep="\t", dtype=str).fillna("")
+    assert len(clinical_df) == 3
+    assert list(clinical_df.columns) == CLINICAL_DEVELOPMENT_FIELDS
+
+
+def test_write_clinical_development_view_projects_only_the_documented_columns(tmp_path):
+    rows = [dict(
+        asset_id="NAR_N1", canonical_name="BAT-8008", aliases="", development_codes="",
+        modality="", adc_scope="REFERENCE_UNCLASSIFIED", target="", company="", highest_stage="Phase1",
+        development_status="Phase 1", nct_ids="", first_seen="", last_seen="", sources="nar_reference",
+        source_count="1", evidence_ids="N1", catalog_status="REFERENCE_CONFIRMED",
+    )]
+    path = tmp_path / "clinical.tsv"
+    write_clinical_development_view(path, rows)
+    df = pd.read_csv(path, sep="\t", dtype=str).fillna("")
+    assert list(df.columns) == CLINICAL_DEVELOPMENT_FIELDS
+    assert "asset_id" not in df.columns  # not part of the lightweight projection
+    assert df.iloc[0]["canonical_name"] == "BAT-8008"

@@ -23,8 +23,8 @@ Investigative:                       263 / 263
 
 ## Gate D — ours-only candidates kept separate, unioned after identity resolution
 
-ours-only assets:                    74
-needs-review assets:                 67
+ours-only assets:                    325
+needs-review assets:                 318
 explicit modality exclusions:        1
 
 ## Gate E — no asset dropped merely for missing payload/linker/target
@@ -33,10 +33,10 @@ PASS by construction — this catalog's schema has no gating requirement on targ
 
 ## Catalog status breakdown
 
-- REFERENCE_CONFIRMED: 617
-- MULTISOURCE_CONFIRMED: 86
-- SINGLE_STRONG_SOURCE: 6
-- NEEDS_REVIEW: 67
+- REFERENCE_CONFIRMED: 461
+- MULTISOURCE_CONFIRMED: 243
+- SINGLE_STRONG_SOURCE: 5
+- NEEDS_REVIEW: 318
 - EXCLUDED_ADJACENT_MODALITY: 1
 
 ## ADC-scope classification (round-1 fix — separate axis from catalog_status)
@@ -44,17 +44,17 @@ PASS by construction — this catalog's schema has no gating requirement on targ
 `catalog_status` measures EVIDENCE STRENGTH (how well-supported is this row's presence in the catalog). `adc_scope` measures ONTOLOGY SCOPE (is this row actually a classical antibody-drug conjugate) -- the two must never be conflated. NAR reference membership alone is NOT an ADC-scope classification: NAR's own 702-asset universe includes non-classical-ADC antibody conjugates (e.g. an antibody-oligonucleotide conjugate, an antibody-STING-agonist conjugate, photoimmunotherapy conjugates) alongside classical ADCs. A NAR row we never independently matched to our own evidence is honestly REFERENCE_UNCLASSIFIED, not assumed STRICT_ADC.
 
 - STRICT_ADC: 14
-- PRESUMED_ADC: 145
-- REFERENCE_UNCLASSIFIED: 617
+- PRESUMED_ADC: 552
+- REFERENCE_UNCLASSIFIED: 461
 - ADJACENT_CONJUGATE_MODALITY: 1
 
-TOTAL CATALOG ROWS:                  777
+TOTAL CATALOG ROWS:                  1028
 EXPLICIT ADJACENT MODALITIES:        1
-ADC-ORIENTED SUPERSET:               776
+ADC-ORIENTED SUPERSET:               1027
   (= all catalog rows minus EXCLUDED_ADJACENT_MODALITY rows -- a high-recall catalog of ADC-and-adjacent-conjugate candidates, NOT a claim that every row is independently confirmed to be a classical ADC.)
 
-STRICT/PRESUMED ADCs:                159
-REFERENCE_UNCLASSIFIED:              617
+STRICT/PRESUMED ADCs:                566
+REFERENCE_UNCLASSIFIED:              461
   (NAR-seeded rows never independently matched to our own modality-classified evidence -- their true ADC-scope status is simply not yet known to us, not defaulted to either answer.)
 
 ## Known, disclosed limitation: exact-identifier resolution does not catch misspellings

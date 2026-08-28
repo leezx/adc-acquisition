@@ -1,13 +1,16 @@
 indication	n_adc_candidates
-Breast Cancer	13
-Ovarian Cancer	9
-Bladder Cancer	8
+Breast Cancer	15
+Ovarian Cancer	10
+Bladder Cancer	9
+Triple Negative Breast Cancer	9
+Melanoma	8
 Metastatic Breast Cancer ( HER2 Negative)	8
 Carcinoma, Non-Small-Cell Lung	8
+Endometrial Cancer	8
+Metastatic Breast Cancer	8
 Cervical Cancer	7
-Melanoma	7
-Triple Negative Breast Cancer	7
-Endometrial Cancer	7
+Advanced Solid Tumor	7
+Breast Neoplasms	7
 Colo-rectal Cancer	6
 Lung Cancer (Non-Small Cell)	6
 Lymphoma	6
@@ -16,52 +19,58 @@ Pancreas Cancer, Duct Cell Adenocarcinoma	6
 Prostate Cancer Castration-resistant Prostate Cancer	6
 Upper Tract Urothelial Carcinoma	6
 ctDNA	6
-Advanced Solid Tumor	6
-Breast Neoplasms	6
-Metastatic Breast Cancer	6
+Advanced Breast Cancer	6
+HER2-negative Breast Cancer	6
 Metastatic Colorectal Cancer	6
 Triple Negative Breast Neoplasms	6
 Prostate Cancer	6
 Diffuse Large B-Cell Lymphoma	5
 Lymphoma, Large B-Cell, Diffuse	5
-Advanced Breast Cancer	5
 Advanced Malignant Solid Neoplasm	5
+Early-stage Breast Cancer	5
 Gastric Cancer	5
 Gastroesophageal Junction Adenocarcinoma	5
+HER2-positive Breast Cancer	5
+HER2-positive Gastric Cancer	5
+HER2-positive Metastatic Breast Cancer	5
 Lung Cancer	5
 Metastatic Malignant Solid Neoplasm	5
 Neoplasm Metastasis	5
+Non Small Cell Lung Cancer	5
 Non-Small Cell Lung Cancer	5
 Solid Tumor	5
+Pancreatic Cancer	5
 Small Cell Lung Cancer	5
+Acute Myeloid Leukemia	4
 CBFB-MYH11	4
 Diffuse Large B-cell Lymphoma	4
 Follicular Lymphoma	4
 Gastric Carcinoma	4
+Neoplasms	4
 Non-Hodgkin Lymphoma	4
 Refractory Non-Hodgkin Lymphoma	4
 Solid Tumors	4
 Anatomic Stage IV Breast Cancer AJCC v8	4
 Breast Cancer Female	4
 Breast Cancer Metastatic	4
+Metastatic	4
+Breast Tumors	4
 Cancer	4
 Colorectal Cancer	4
-Early-stage Breast Cancer	4
 HER2 Gene Mutation	4
 HER2 Positive Breast Neoplasms	4
-HER2-negative Breast Cancer	4
-HER2-positive Breast Cancer	4
-HER2-positive Gastric Cancer	4
-HER2-positive Metastatic Breast Cancer	4
+Hormone Receptor Negative Tumor	4
+Hormone Receptor Positive Tumor	4
+Locally Advanced Breast Cancer	4
+Metastatic Cancer	4
 Metastatic Gastric Cancer	4
-Non Small Cell Lung Cancer	4
+Ovarian Carcinoma	4
 Recurrent Breast Carcinoma	4
 Unresectable Gastric Carcinoma	4
 Urinary Bladder Neoplasms	4
 Urothelial Carcinoma	4
 Gastric Adenocarcinoma	4
-Pancreatic Cancer	4
-Acute Myeloid Leukemia	3
+Squamous Cell Carcinoma of Head and Neck	4
 Blast Phase Chronic Myelogenous Leukemia, BCR-ABL1 Positive	3
 Chronic Lymphocytic Leukemia	3
 Leukemia	3
@@ -72,7 +81,6 @@ Hodgkin Lymphoma	3
 Lymphoma, B-Cell	3
 Lymphoma, Non-Hodgkin	3
 Marginal Zone Lymphoma	3
-Neoplasms	3
 Post-transplant Lymphoproliferative Disorder	3
 Recurrent Mantle Cell Lymphoma	3
 Recurrent Small Lymphocytic Lymphoma	3
@@ -85,8 +93,6 @@ Anatomic Stage III Breast Cancer AJCC v8	3
 Anatomic Stage IIIA Breast Cancer AJCC v8	3
 Brain Metastases	3
 HER2-positive	3
-Metastatic	3
-Breast Tumors	3
 Endometrial Carcinoma	3
 Esophageal Adenocarcinoma	3
 Esophageal Cancer	3
@@ -95,19 +101,15 @@ Gastrointestinal Cancer	3
 HER2 Mutations Breast Neoplasms	3
 HER2 Positive Breast Carcinoma	3
 HER2+ Breast Cancer	3
+HR Positive	3
 Hematopoietic and Lymphoid Cell Neoplasm	3
 Her 2 Positive Breast Cancer	3
-Hormone Receptor Negative Tumor	3
 Hormone Receptor Positive Breast Neoplasms	3
-Hormone Receptor Positive Tumor	3
 Invasive Breast Carcinoma	3
-Locally Advanced Breast Cancer	3
-Metastatic Cancer	3
 Metastatic HER2 Positive Gastroesophageal Junction Cancer	3
 Metastatic Malignant Neoplasm in the Brain	3
 Metastatic Solid Tumor	3
 Multiple Myeloma	3
-Ovarian Carcinoma	3
 Prognostic Stage II Breast Cancer AJCC v8	3
 Prognostic Stage IIA Breast Cancer AJCC v8	3
 Prognostic Stage IIB Breast Cancer AJCC v8	3
@@ -137,7 +139,9 @@ Advanced Solid Tumors	3
 Biliary Tract Cancer	3
 Breast Cancer Stage IV	3
 Drug-Related Side Effects and Adverse Reactions	3
+Gastroesophageal Adenocarcinoma	3
 Glioblastoma	3
+HER-2 Protein Overexpression	3
 HER2-low Breast Cancer	3
 Metastatic Triple-Negative Breast Carcinoma	3
 Pharmacogenetic Variant	3
@@ -145,13 +149,17 @@ Salivary Gland Cancer	3
 Solid Tumor, Adult	3
 Stomach Neoplasms	3
 Thyroid Cancer	3
+Wilms Tumor	3
+Epithelial Ovarian Cancer	3
 Esophageal Squamous Cell Carcinoma	3
 Fallopian Tube Cancer	3
-Squamous Cell Carcinoma of Head and Neck	3
+TNBC - Triple-Negative Breast Cancer	3
 Triple-Negative Breast Carcinoma	3
 Ovary Cancer	3
+Ovarian Neoplasms	3
 Acute Myelogenous Leukemia	2
 RUNX1-RUNX1T1	2
+Myelodysplastic Syndrome	2
 Myelodysplastic Syndromes	2
 Recurrent Acute Myeloid Leukemia	2
 Safety	2
@@ -207,7 +215,6 @@ HER2-Positive Metastatic Breast Cancer	2
 HER2-expressing Non-small Cell Lung Cancer	2
 HER2-positive Colorectal Cancer	2
 HER2-positive Early Breast Cancer	2
-HR Positive	2
 Head and Neck Carcinoma	2
 Heart Failure	2
 Human Epidermal Growth Factor 2 Positive Carcinoma of Breast	2
@@ -344,27 +351,30 @@ Advanced Solid Malignancies	2
 Chemotherapy-induced Alopecia	2
 ER Positive Breast Cancer	2
 Esophagogastric Adenocarcinoma	2
-Gastroesophageal Adenocarcinoma	2
+Estrogen Receptor Positive Tumor	2
 HER 2 Low-expressing Breast Cancer	2
-HER-2 Protein Overexpression	2
 HER2	2
 HER2 + Breast Cancer	2
+HER2 Low Breast Cancer	2
 HER2 Low Breast Carcinoma	2
+HER2 Mutation-Related Tumors	2
 HER2-low or HER2-ultralow	2
 HER2-positive Gastroesophageal Junction Adenocarcinoma	2
 Head and Neck Cancer	2
+Hormone Receptor Negative Breast Carcinoma	2
 Hormone Receptor Positive	2
+Hormone Receptor-positive Breast Cancer	2
 Invasive Breast Cancer	2
+Progesterone Receptor-positive Breast Cancer	2
 Recurrent Glioblastoma	2
 Recurrent Osteosarcoma	2
+Renal Cell Carcinoma	2
 Sarcoma	2
 Stage IV Lung Cancer AJCC v8	2
 Triple-Negative Breast Cancer	2
 Unresectable Breast Carcinoma	2
 Unresectable or Metastatic Breast Cancer	2
-Wilms Tumor	2
 Bladder Urothelial Carcinoma	2
-Epithelial Ovarian Cancer	2
 Fallopian Tube Cancers	2
 Glioblastoma Multiforme	2
 Mesothelioma	2
@@ -372,18 +382,18 @@ Muscle Invasive Bladder Carcinoma	2
 Primary Peritoneal Cancer	2
 Primary Peritoneal Carcinoma	2
 Solid Malignancies	2
-TNBC - Triple-Negative Breast Cancer	2
 Colorectal Neoplasms	2
 Peritoneal Cancer	2
 Estrogen Receptor Negative	2
 HER2/Neu Negative	2
-Ovarian Neoplasms	2
 Progesterone Receptor Negative	2
 Advanced Gastroesophageal Adenocarcinoma	2
 Antibody-drug Conjugates	2
 Gastric Cancer/Gastroesophageal Junction Adenocarcinoma	2
 Ovarian Cancer Recurrent	2
 Rectal Cancer	2
+Angiosarcoma	2
+Triple Negative Breast Cancer (TNBC)	2
 Malignant Neoplasm	2
 Neuroblastoma	2
 AML	1
@@ -448,7 +458,6 @@ Leukemia, Myelocytic, Acute	1
 Leukemia, Myeloid	1
 Leukemia, Myeloid, Acute	1
 Lymphoblastic Leukemia, Acute	1
-Myelodysplastic Syndrome	1
 Myelodysplastic Syndrome With Excess Blasts	1
 Myeloid Sarcoma	1
 Myeloproliferative Neoplasm	1
@@ -1095,7 +1104,6 @@ Colorectal Neoplasm	1
 Desmoplastic Small Round Cell Tumor	1
 Dynamic Tumor Resistance	1
 ER-positive Breast Cancer	1
-Estrogen Receptor Positive Tumor	1
 Gall Bladder Cancer	1
 Gastric Cancer, Adenocarcinoma	1
 Gastric or Gastroesophageal Junction (GEJ) Adenocarcinoma	1
@@ -1103,8 +1111,6 @@ Gastroesophageal-junction Cancer	1
 Gastrointestinal Stromal Tumour	1
 Gastrooesophageal Cancer	1
 HER2 Low Breast Adenocarcinoma	1
-HER2 Low Breast Cancer	1
-HER2 Mutation-Related Tumors	1
 HER2 Negative Breast Cancer	1
 HER2 Overexpression	1
 HER2 Positive Newly Diagnosed Metastatic Esophageal, Gastric, GEJ Cancer Patients With an ECOG Performance Status of 2	1
@@ -1123,9 +1129,7 @@ Hepatocellular Carcinoma (HCC)	1
 Her2 Enriched	1
 Her2/Neu Positive Advanced Solid Tumors	1
 Homologous Recombination Deficiency	1
-Hormone Receptor Negative Breast Carcinoma	1
 Hormone Receptor Positive Breast Carcinoma	1
-Hormone Receptor-positive Breast Cancer	1
 Inflammatory Breast Cancer Stage III	1
 Leptomeningeal Metastasis	1
 Liver Cancer	1
@@ -1163,7 +1167,6 @@ Part 1: Bladder, Biliary Tract, Cervical, Endometrial, Ovarian, Pancreatic Cance
 Part 2: HER2 Expressing/Amplified Solid Tumors Excluding Breast, Gastric, Colorectal Cancer	1
 Platinum-Resistant Ovarian High Grade Serous Adenocarcinoma	1
 Platinum-resistant Ovarian Cancer (PROC)	1
-Progesterone Receptor-positive Breast Cancer	1
 Prostate Cancer Metastatic	1
 Radiomic	1
 Radiomics	1
@@ -1175,7 +1178,6 @@ Recurrent Kidney Wilms Tumor	1
 Recurrent or Metastatic Solid Tumors	1
 Refractory Desmoplastic Small Round Cell Tumor	1
 Refractory Wilms Tumor	1
-Renal Cell Carcinoma	1
 Renal Cell Carcinoma (RCC)	1
 Resectable Colorectal Carcinoma	1
 Residual Invasive Breast Cancer	1
@@ -1483,7 +1485,6 @@ Additional Indications Below for Module 4 and 5	1
 Advanced Non Small Cell Lung Cancer	1
 Advanced Solid Tumors That Are MTAP Deficient	1
 Advanced or Metastatic NSCLC	1
-Angiosarcoma	1
 Biliary Cancer	1
 Breast Cancer (Locally Advanced or Metastatic)	1
 EGFRm Advanced Non-Small Cell Lung Cancer	1
@@ -1500,8 +1501,15 @@ Residual Disease	1
 Small Cell Lung Cancer Only in Module 5	1
 Stage II/III	1
 Stomatitis	1
-Triple Negative Breast Cancer (TNBC)	1
 Unresectable Non-small Lung Cancer	1
+Endometrium Tumor	1
+GastroEsophageal Cancer	1
+HER2 Low	1
+HER2 Low HR Positive	1
+Metastatic Gastrointestinal Carcinoid Tumor	1
+SYD-985	1
+SYD985	1
+Vic-trastuzumab Duocarmazine	1
 Colon Cancer	1
 Recurrent Small Cell Lung Cancer	1
 Small Cell Lung Carcinoma	1
@@ -1522,13 +1530,30 @@ Stage IV Uveal Melanoma AJCC v7	1
 Unresectable Solid Neoplasm	1
 Gliosarcoma	1
 Relapsed Hodgkin Lymphoma	1
+Pleuropulmonary Blastoma	1
+Recurrent Malignant Peripheral Nerve Sheath Tumor	1
+Recurrent Neuroblastoma	1
+Recurrent Rhabdomyosarcoma	1
+Recurrent Synovial Sarcoma	1
 Follicular Lymphoma, Grade 3b	1
 Lymphoma, Follicular, Grade 3b	1
 Transformed Lymphoma / DLBCL	1
+Lung Neoplasms	1
+Mesothelin Positive	1
+Stage III Non-Small Cell Lung Cancer AJCC v7	1
+Stage IIIA Non-Small Cell Lung Cancer AJCC v7	1
+Stage IIIB Non-Small Cell Lung Cancer AJCC v7	1
+Stage IV Non-Small Cell Lung Cancer AJCC v7	1
 Advanced Non-Small Cell Squamous Lung Cancer	1
 EGFR Gene Mutation	1
 Non-Small Cell Lung Carcinoma	1
 Non Small Cell Lung Cancer (NSCLC)	1
+Advanced Solid Tumor, Adult	1
+Castration-Resistant Prostatic Cancer	1
+Hepatocellular Cancer	1
+Malignant Melanoma	1
+Metastatic Castrate Resistant Prostate Cancer	1
+Pancreatic Ductal Carcinoma	1
 Extensive Stage-small Cell Lung Cancer	1
 Extensive-stage Small-cell Lung Cancer	1
 Neuroendocrine Carcinoma	1
@@ -1539,6 +1564,7 @@ Gastroesophageal Junction (GEJ) Cancer	1
 Carcinoma, Non-Small Cell Lung	1
 Carcinoma, Non-Small-Cell Lung (NSCLC)	1
 Ewing Sarcoma	1
+Locally Advanced or Metastatic Triple-negative Breast Cancer	1
 Ovarian Cancer (OvCa)	1
 Ovarian Cancer Metastatic Recurrent	1
 Ovarian Carcinoma, Recurrent	1
