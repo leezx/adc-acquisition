@@ -117,11 +117,14 @@ structurally could not produce, not by adding new acquisition sources.
 
 Of the 6 development codes originally cited as motivating examples
 (`BAT-8008`, `PF-06804103`, `ADCT-901`, `GQ-1001`, `DXC-004A`, `ZL-6201`),
-only `TAK-500` (a 7th real example independently found) is caught by this
-signal. The first version of this report wrongly attributed the other 5
-to "corpus-content limit, not a pattern flaw." **That was incorrect.**
-`reports/validation/breadth/nar702_broad_recall.tsv` already proves 4 of
-these 5 are present in the acquired corpus RIGHT NOW:
+none are caught by this signal. `TAK-500` (a 7th example, found
+independently, not among the original 6) is caught. The first version of
+this report wrongly attributed 5 of the original 6 (`BAT-8008`,
+`PF-06804103`, `ADCT-901`, `GQ-1001`, `ZL-6201` — `DXC-004A` excluded,
+not yet independently verified as corpus-present) to "corpus-content
+limit, not a pattern flaw." **That was incorrect.**
+`reports/validation/breadth/nar702_broad_recall.tsv` already proves ALL 5
+of these are present in the acquired corpus RIGHT NOW:
 
 | Example       | Present in current broad corpus? | PR #31 grammar catches? | Gap                  |
 |----------------|-----------------------------------|--------------------------|-----------------------|
