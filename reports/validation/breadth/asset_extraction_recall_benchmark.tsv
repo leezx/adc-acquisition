@@ -67,7 +67,7 @@ DRG0GJXHJ	HS-20122	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False
 DRG0GKOZH	Mirvetuximab soravtansine	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed; wipo	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
 DRG0GQWJI	M7437	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
 DRG0GXGXB	GenSci139	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
-DRG0GYGUI	FDA022-BB05	Phase1	clinicaltrials	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0GYGUI	FDA022-BB05	Phase1	clinicaltrials	EXACT_NAME	True	
 DRG0GYNBS	XMT-1522	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
 DRG0GZGHN	SAR-566658	Phase2	conference_abstract_corpus; wipo	ALIAS_MATCH; EXACT_NAME	False	DEV_CODE_SHAPED
 DRG0HGHXE	MHB088C	Phase2	conference_abstract_corpus	EXACT_NAME	True	
@@ -120,11 +120,11 @@ DRG0LNVKG	ARX-788	Phase2	clinicaltrials; conference_abstract_corpus; europe_pmc	
 DRG0LQZSE	Naratuximab emtansine	Phase2	conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	True	
 DRG0LVYMB	DEC006	Phase1	clinicaltrials	STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
 DRG0MCWQA	Enapotamab vedotin	Phase2	clinicaltrials; conference_abstract_corpus; epo; europe_pmc	ALIAS_MATCH; EXACT_NAME	True	
-DRG0MGUUX	FDA-022	Phase1	clinicaltrials	EXACT_NAME	True	
+DRG0MGUUX	FDA-022	Phase1	clinicaltrials	EXACT_NAME	False	DEV_CODE_SHAPED
 DRG0MHAHZ	Coltuximab ravtansine	Phase2	epo; pubmed; wipo	ALIAS_MATCH; EXACT_NAME	True	
 DRG0MKREW	SIM0505	Phase1	conference_abstract_corpus	EXACT_NAME	True	
 DRG0MPDIB	ABBV-154	Phase2	europe_pmc; pubmed	EXACT_NAME	True	
-DRG0MRJEG	REGN5093-M114	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0MRJEG	REGN5093-M114	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
 DRG0MSOOX	KH815	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
 DRG0MWSEV	NN-3201	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
 DRG0NDXRU	Belantamab mafodotin	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	

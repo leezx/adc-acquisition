@@ -113,17 +113,22 @@ now a standing, reproducible check, not an ad-hoc one-off analysis.
 ## 4. Real result
 
 ```
-                                Before PR #32   After PR #32
-Extractor recall (Phase1+ BROAD_DISCOVERED)   27.6% (76/275)  68.0% (187/275)
-NAR-matched (independent evidence)                     95            259
-ours-only                                              22            325
-Catalog rows                                          725           1028
-STRICT/PRESUMED ADCs                                   57            566
-REFERENCE_UNCLASSIFIED                                667            461
-candidate_queue.tsv rows                              170            585
+                                Before PR #32   After PR #32 (round 2)
+Extractor recall (Phase1+ BROAD_DISCOVERED)   27.6% (76/275)  68.4% (188/275)
+NAR-matched (independent evidence)                     95            260
+ours-only                                              22            323
+Catalog rows                                          725           1026
+STRICT/PRESUMED ADCs                                   57            565
+REFERENCE_UNCLASSIFIED                                667            460
+candidate_queue.tsv rows                              170            584
 ```
 
-**Stop criterion (>=90%) NOT reached — 68.0%, up from 27.6% (2.5x).**
+("STRICT/PRESUMED ADCs" is `adc_scope`-axis terminology for the row count,
+not a claim that all 565 are independently confirmed classical ADCs —
+`catalog_status` is the separate, orthogonal evidence-strength axis, and
+most of these rows are still `NEEDS_REVIEW` pending human promotion.)
+
+**Stop criterion (>=90%) NOT reached — 68.4%, up from 27.6% (2.5x).**
 Per the reviewer's own explicit instruction ("达到这个水平后就不要继续无限
 优化 regex"), this PR stops here rather than continuing indefinite regex
 iteration. Remaining misses, from `asset_extraction_recall_benchmark.tsv`:
@@ -143,20 +148,45 @@ new problem class — left for a future increment if/when the user wants
 to resume this specific optimization, per their own explicit
 "don't optimize regex forever" instruction.
 
-**Known, disclosed limitation found during this work (not fixed)**:
-some real ADC compound identifiers follow a two-segment
+**Round-2 fix (reviewer-identified identity-correctness blocker, not a
+recall-optimization item)**: round 1 disclosed but did not fix a
+compound-identifier bug — some real ADC identifiers follow a two-segment
 `"<COMPANY_CODE>-<MOLECULE_CODE>"` convention (e.g. `"REGN5093-M114"`,
-`"HRA00129-C004"`). The current fragment only captures the LAST
-hyphen-separated segment (`"M114"`, `"C004"`), which can under-
-differentiate genuinely different molecules that happen to share a
-platform-level suffix (four distinct `HRA*-C004` candidates observed,
-all collapsed to one `"C004"` label). This does not cause incorrect
-merges against existing catalog entries (none of these coincide with an
-existing exact-match identifier), only under-splitting within the
-`NEEDS_REVIEW` pool itself, which requires human review before promotion
-regardless. Flagged for future work, not fixed here — a proper fix needs
-a distinct extraction rule for compound company-code identifiers, a
-different problem shape than anything in this PR's scope.
+`"HRA00129-C004"`), and the dev-code fragment only ever matched ONE
+segment at a time (confirmed: `_DEV_CODE_FRAGMENT.finditer("REGN5093-M114")`
+returned two separate matches, `"REGN5093"` and `"M114"`). This was not a
+recall gap but an identity-correctness bug: it fabricated two incomplete
+candidate entities for one real asset, and left the correct NAR row
+(`REGN5093-M114`) as `REFERENCE_UNCLASSIFIED` instead of enriching it —
+and it collapsed four genuinely DISTINCT real ADCs (`HRA00129-C004`,
+`HRA00184-C004`, `HRA00242-C004`, `HRA00130-C004`) into one shared
+`"C004"` row, since the truncated trailing fragment alone carries no
+company-code half to disambiguate them.
+
+Fixed with a new `_DEV_CODE_COMPOUND_FRAGMENT` alternative
+(`SEGMENT-SEGMENT`, where each segment independently requires its own
+digit run), placed FIRST in `_DEV_CODE_FRAGMENT`'s alternation so the
+regex engine prefers the full compound at a given start position over
+either half alone. Verified this does not affect any existing
+single-hyphen code (`"SHR-A2102"`, `"BAT-8008"`): those prefixes carry no
+digit run of their own, so the compound alternative correctly fails to
+match and falls through to the pre-existing single-segment alternatives,
+unchanged (regression test added). Verified directly against the real
+corpus that every occurrence of `REGN5093`/`M114`/`HRA00129..HRA00130`/
+`C004` is the full compound form — the fix does not invent structure the
+text doesn't already show.
+
+Real result of this one fix, confirmed against the regenerated real
+catalog: `REGN5093-M114` is now a single `NAR_DRG0MRJEG` row with
+`catalog_status=MULTISOURCE_CONFIRMED` (was two incomplete ours-only
+rows, `REGN5093` and `M114`, with the NAR row untouched); the four
+`HRA*-C004` candidates are now four distinct `NEEDS_REVIEW` rows (was one
+merged `C004` row). No bare `M114`/`C004`/`REGN5093` row remains in
+either `candidate_queue.tsv` or `adc_asset_universe.tsv`.
+
+Deliberately NOT extended to three-or-more-segment names (out of the
+reviewer's explicitly stated scope for this fix) — that remains a
+disclosed, deferred limitation.
 
 ## 5. `DATA/catalog/adc_clinical_development.tsv` (new, lightweight derived view)
 
@@ -167,13 +197,21 @@ Per the reviewer's request — not a new phase, purely a projection of
 `catalog_status`/`sources`), nothing recomputed. Generated automatically
 alongside the master catalog by `build_adc_asset_universe.py`'s existing
 `main()`. `adc_asset_universe.tsv` remains the maximal-recall superset
-(1028 rows, including 461 `REFERENCE_UNCLASSIFIED` reference-only rows);
+(1026 rows, including 460 `REFERENCE_UNCLASSIFIED` reference-only rows);
 `adc_clinical_development.tsv` is the same data, reshaped for daily
 industry-research use.
 
+Non-blocking note the reviewer raised: `adc_clinical_development.tsv` is
+currently a straight column projection of every master-catalog row
+(including `REFERENCE_UNCLASSIFIED` reference-only rows), not filtered to
+rows with an actual clinical-development stage — the name could read as
+narrower than what the file contains. Left as-is this round per the
+reviewer's own instruction not to block on it; a real `highest_stage`
+filter (or a rename) is deferred to PR #33 or later.
+
 ## Test plan
 
-- 25 new/updated tests: appositive pattern, hyphenless code, letter-after-
+- 28 new/updated tests: appositive pattern, hyphenless code, letter-after-
   hyphen code, single-letter-prefix code, short-target-symbol exclusion
   regression, CT.gov trial-level context requirement, CT.gov full-match-
   only requirement, parenthetical crosswalk (both directions + multi-
@@ -182,8 +220,11 @@ industry-research use.
   (`soravtansine` vs `ravtansine`), new-suffix recognition, benchmark
   script (`classify_miss_cause` all branches, `compute_benchmark`
   filtering, `build_report` percentage/stop-criterion text), clinical-
-  development view projection
-- 581 tests passing project-wide, 0 regressions
+  development view projection, round-2 compound-identifier fix (keeps
+  `"REGN5093-M114"` whole, keeps the four distinct `HRA*-C004` codes
+  distinct, leaves an ordinary single-hyphen code like `"SHR-A2102"`
+  unaffected)
+- 584 tests passing project-wide, 0 regressions
 - Real end-to-end run: `candidate_queue.py` -> `feasibility_entities.py`
   -> `component_coverage_audit.py` -> `build_adc_asset_universe.py` ->
   `asset_extraction_recall_benchmark.py`, against the real repository

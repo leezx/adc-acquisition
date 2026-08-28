@@ -3,14 +3,14 @@
 Per PR #32 (formalizing `nar702_broad_recall.tsv` as a standing asset-extraction benchmark, per the reviewer's explicit request). Answers: of the NAR Phase1+ assets our ACQUISITION system already proved are present in the corpus (`BROAD_DISCOVERED`), how many did our own ASSET EXTRACTOR (`candidate_queue.py` + `tools/catalog/build_adc_asset_universe.py`) actually turn into a `MULTISOURCE_CONFIRMED` catalog entry? A miss here is an extraction-pattern gap, NEVER an acquisition/source gap -- the target set is restricted to assets already proven corpus-present.
 
 Target set (Phase1+ AND BROAD_DISCOVERED): 275
-Extractor-matched (MULTISOURCE_CONFIRMED): 187
-Extractor recall: 187/275 = 68.0%
+Extractor-matched (MULTISOURCE_CONFIRMED): 188
+Extractor recall: 188/275 = 68.4%
 
 Stop criterion: >= 90% -- NOT YET MET.
 
 ## Remaining misses, by cause
 
-- DEV_CODE_SHAPED: 76
+- DEV_CODE_SHAPED: 75
 - UNCOVERED_SUFFIX: 7
 - SUFFIX_COVERED_BUT_STILL_MISSED: 3
 - OTHER_UNCLASSIFIED: 2

@@ -178,7 +178,7 @@ M7437					Phase1	Phase 1	NCT07311603; NCT07360314	PRESUMED_ADC	MULTISOURCE_CONFI
 Obexelimab-amanitin	Obexelimab amanitin		B-lymphocyte antigen CD19 (CD19)	LegoChem Biosciences, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 GenSci139					Phase1	Phase 1	NCT07230977	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 XB-002	ICON-2; XB 002; XB- 002; XB-002; XB002; XB002 Tissue Factor ADC		Tissue factor (F3)	Iconic Therapeutics, Inc; Exelixis, Inc; Exelis, Inc	Phase1	Phase 1 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
-FDA022-BB05					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
+FDA022-BB05					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
 ESG406					Phase1	Phase 1	NCT06979674	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 XMT-1522	TAK 522; TAK-522; TAK522; XMT 1522; XMT-1522; XMT-1522, TAK-522; XMT1522		Receptor tyrosine-protein kinase erbB-2 (HER2)	Mersana Therapeutics, Inc; Adimab LLC; Takeda Pharmaceutical Co., Ltd	Phase1	Phase 1 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed
 SAR-566658	Anti-CA6-DM4-immunoconjugate-SAR566658; Anti-CA6-antibody-drug-conjugate; HuDS6-DM4; SAR 566658; SAR-566658; SAR56 6658; SAR566658; huDS6-DM4		Carbonic anhydrase 6 (CA6)	Sanofi; ImmunoGen, Inc	Phase2	Phase 2 (Terminated)	NCT01156870; NCT02984683	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -321,7 +321,7 @@ SIM-005A	SIM-005A; SIM 005A		Undisclosed	Systimmune, Inc; Sichuan Baili Pharmace
 Enapotamab vedotin	AXL-107-MMAE; Enapotamab vedotin; HuMax-AXL; HuMax-AXL-ADC; HuMax-Axl-ADC, AXL-107-MMAE; Humax axl adc		Tyrosine-protein kinase receptor UFO (AXL)	Seagen Inc; Genmab A/S	Phase2	Phase 1/2 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
 BC2027					Phase1	Phase 1	NCT07368478	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 CD38-077	CD38 077; CD38077		ADP-ribosyl cyclase/cyclic ADP-ribose hydrolase 1 (CD38)	Concortis Biosystems Corp	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-FDA-022	FDA 022; FDA-022; FDA022		Receptor tyrosine-protein kinase erbB-2 (HER2)	Shanghai Fudan Zhangjiang Bio Pharmaceutical Co., Ltd	Phase1	Phase 1	NCT05564858	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
+FDA-022	FDA 022; FDA-022; FDA022		Receptor tyrosine-protein kinase erbB-2 (HER2)	Shanghai Fudan Zhangjiang Bio Pharmaceutical Co., Ltd	Phase1	Phase 1	NCT05564858	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Coltuximab ravtansine	Anti-CD19 humanized monoclonal antibody conjugated to DM4; Anti-CD19-DM4 immunoconjugate; Coltuximab ravtansine; HUB4-DM4, SAR34 19; HuB4-DM4; Maytansin-loaded anti-CD19 mAb; SAR-3419; SAR3419		B-lymphocyte antigen CD19 (CD19)	ImmunoGen, Inc; Sanofi	Phase2	Phase 2 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
 SIM0505					Phase1	Phase 1	NCT06792552	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 CRB-2107	CRB2107; CRB 2107		Undisclosed	China Resources Biopharmaceutical Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -331,7 +331,7 @@ DAN-222					Phase1	Phase 1	NCT05261269	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRME
 Anvatabart pactil	Anvatabart pactil		Receptor tyrosine-protein kinase erbB-2 (HER2)		Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 ABBV-154	ABBV 154; ABBV-154; ABBV154		Tumor necrosis factor (TNF)	AbbVie, Inc	Phase2	Phase 2 (Terminated)	NCT04888585; NCT04972968; NCT05068284; NCT05556226	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc; pubmed
 Trastuzumab-amanitin 1	Trastuzumab Amanitin1		Receptor tyrosine-protein kinase erbB-2 (HER2)	Heidelberg Pharma AG	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-REGN5093-M114	METxMET ADC - Regeneron Pharmaceuticals; REGN 5093 M114; REGN5093- M114; REGN5093-M114; REGN5093M114		Hepatocyte growth factor receptor (MET)	Regeneron Pharmaceuticals, Inc	Phase2	Phase 1/2		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
+REGN5093-M114	METxMET ADC - Regeneron Pharmaceuticals; REGN 5093 M114; REGN5093- M114; REGN5093-M114; REGN5093M114		Hepatocyte growth factor receptor (MET)	Regeneron Pharmaceuticals, Inc	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
 IKS-04	IKS 04; IKS04		Undisclosed	Iksuda Therapeutics Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 KH815					Phase1	Phase 1	NCT06885645	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 BB-1709	BB 1709; BB-1709; BB1709		5'-nucleotidase (NT5E)	Baili Sikang Biomedicine (Hangzhou) Co., Ltd	Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -765,8 +765,6 @@ NMS-P945								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 huXBR1-402								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
 SMADC001								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 EC112002								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
-REGN5093								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
-M114								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
 ASP1235								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 LFA102								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 CD228A								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
@@ -790,8 +788,7 @@ DS-3939a								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
 MBRC-101								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
 TUB-040								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus; europe_pmc
 BVX001								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
-HRA00129								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
-C004								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
+HRA00129-C004								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 FK002								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 NRTL-24								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 Y101S								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
@@ -832,11 +829,12 @@ BCG016								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 GQ1011								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 MRG006A								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 TCX-101								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
+HRA00184-C004								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 SDP03923								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 AT2604								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 AT65474								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
-HRA00242								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
-HRA00130								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
+HRA00242-C004								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
+HRA00130-C004								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 PL2202								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 ILB-3101								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 LM-317								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus

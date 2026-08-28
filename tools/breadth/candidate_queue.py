@@ -405,8 +405,51 @@ def local_context_for_span(text: str, start: int, end: int, window: int = 300) -
 # relaxed -- this is what excludes all-lowercase/all-digit false
 # positives like page ranges or p-values), then 0-3 more wildcard chars.
 _DEV_CODE_PREFIX = r"[A-Za-z0-9]{0,3}[A-Z][A-Za-z0-9]{0,3}"
+# Round-2-of-PR#32 fix (reviewer-identified identity-correctness blocker):
+# some real ADC identifiers are a TWO-SEGMENT compound
+# "<COMPANY_CODE>-<MOLECULE_CODE>" (e.g. "REGN5093-M114", "HRA00129-C004"
+# -- a company/platform antibody code, a hyphen, then a payload/conjugate-
+# specific molecule code). Each segment on its own is independently
+# dev-code-shaped, so without a dedicated compound alternative the single-
+# segment alternatives below match each half as a SEPARATE fragment
+# (confirmed empirically: `_DEV_CODE_FRAGMENT.finditer("REGN5093-M114")`
+# returned two non-overlapping matches, "REGN5093" and "M114") -- which is
+# an identity-correctness bug, not a recall gap: it fabricates two
+# candidate entities where the real corpus only ever discusses ONE (every
+# "REGN5093"/"M114"/"HRA00129..HRA00130"/"C004" occurrence in the real
+# acquired corpus is the FULL compound form -- verified directly against
+# europe_pmc.parquet/conference_abstract_corpus.parquet before writing this
+# fix), and collapses genuinely DISTINCT compounds that happen to share a
+# molecule-code suffix (four distinct real "HRA*-C004" candidates --
+# HRA00129/HRA00184/HRA00242/HRA00130 -- were all being written as one
+# "C004" row, since normalize_name() strips the hyphen and the truncated
+# trailing fragment alone carries no company-code half to disambiguate).
+#
+# `_DEV_CODE_SEGMENT` requires a digit run be present WITHIN the segment
+# (unlike the hyphenated-single alternative's optional single letter after
+# the hyphen), so the compound alternative can ONLY fire when BOTH halves
+# independently look like a full dev-code segment -- it does not fire for
+# an ordinary single hyphenated code like "SHR-A2102" or "BAT-8008" (the
+# "SHR"/"BAT" half has no digit run of its own, so `_DEV_CODE_SEGMENT`
+# fails to match it, and the alternation falls through to the existing
+# single-segment alternatives exactly as before). Placed FIRST in the
+# alternation so the regex engine's ordered-alternative matching prefers
+# the longest, fully-compound form at a given start position over either
+# single-segment alternative -- this is what makes the full compound
+# ("REGN5093-M114") the atomic candidate label instead of either half, and
+# lets it correctly join the existing exact-identifier NAR-resolution path
+# (NAR's own record for REGN5093-M114 already lists "REGN5093M114"/
+# "REGN 5093 M114"/"REGN5093- M114" as synonyms, all of which normalize
+# to the same string as this compound label).
+#
+# Deliberately NOT extended to three-or-more-segment names (out of scope
+# for this fix, per the reviewer's explicit instruction) -- a name like
+# that remains the disclosed, deferred limitation.
+_DEV_CODE_SEGMENT = rf"{_DEV_CODE_PREFIX}\d{{2,7}}[A-Za-z]{{0,2}}"
+_DEV_CODE_COMPOUND_FRAGMENT = rf"{_DEV_CODE_SEGMENT}-{_DEV_CODE_SEGMENT}"
 _DEV_CODE_FRAGMENT = (
-    rf"(?:{_DEV_CODE_PREFIX}-[A-Za-z]?\d{{2,7}}[A-Za-z]{{0,2}}"
+    rf"(?:{_DEV_CODE_COMPOUND_FRAGMENT}"
+    rf"|{_DEV_CODE_PREFIX}-[A-Za-z]?\d{{2,7}}[A-Za-z]{{0,2}}"
     rf"|{_DEV_CODE_PREFIX}\d{{3,7}}[A-Za-z]{{0,2}})"
 )
 _DEV_CODE_ADC_CODE_FIRST_RE = re.compile(

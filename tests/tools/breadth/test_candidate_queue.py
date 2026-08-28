@@ -506,6 +506,78 @@ def test_build_dev_code_candidates_still_rejects_short_target_symbols():
     assert candidates == {}
 
 
+def test_build_dev_code_candidates_keeps_compound_identifier_whole():
+    """Round-2-of-PR#32 fix (reviewer-identified identity-correctness
+    blocker): a real two-segment compound identifier like
+    "REGN5093-M114" must be extracted as ONE candidate, not split into
+    "REGN5093" and "M114" as two separate (and both wrong/incomplete)
+    candidates."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="epmc:1", title="A study",
+             abstract="Preclinical Study of a Biparatopic METxMET Antibody-Drug Conjugate, "
+                      "REGN5093-M114, Overcomes MET-driven Acquired Resistance to EGFR TKIs.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "europe_pmc", known)
+    assert "regn5093m114" in candidates
+    assert "regn5093" not in candidates
+    assert "m114" not in candidates
+
+
+def test_build_dev_code_candidates_does_not_collapse_distinct_compound_identifiers():
+    """Round-2-of-PR#32 fix: four genuinely DISTINCT real ADCs
+    ("HRA00129-C004", "HRA00184-C004", "HRA00242-C004", "HRA00130-C004")
+    share a molecule-code suffix ("C004") but must remain four separate
+    candidates, not collapse into one "C004" row."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="conf:1", title="A study",
+             abstract="In this study, we developed a new ADC, HRA00129-C004, which consists of a "
+                      "specifically designed humanized antibody.",
+             publication_or_release_date="2024-01-01"),
+        dict(source_record_id="conf:2", title="A study",
+             abstract="HRA00184-C004 is a novel ADC comprising a differentiated TF-targeted antibody.",
+             publication_or_release_date="2024-01-01"),
+        dict(source_record_id="conf:3", title="A study",
+             abstract="Here, we presented a PSMA-directed ADC, HRA00242-C004, which features a "
+                      "differentiated topoisomerase I inhibitor payload.",
+             publication_or_release_date="2024-01-01"),
+        dict(source_record_id="conf:4", title="A study",
+             abstract="Here we presented a DLL3-directed ADC, HRA00130-C004, which features a "
+                      "differentiated topoisomerase I inhibitor payload.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "conference_abstract_corpus", known)
+    assert "c004" not in candidates
+    assert set(candidates) == {"hra00129c004", "hra00184c004", "hra00242c004", "hra00130c004"}
+    assert candidates["hra00129c004"]["label"] == "HRA00129-C004"
+    assert candidates["hra00184c004"]["label"] == "HRA00184-C004"
+    assert candidates["hra00242c004"]["label"] == "HRA00242-C004"
+    assert candidates["hra00130c004"]["label"] == "HRA00130-C004"
+
+
+def test_build_dev_code_candidates_ordinary_single_hyphen_code_unaffected():
+    """Round-2-of-PR#32 fix regression guard: the new compound alternative
+    must not change extraction for an ORDINARY single-hyphen code whose
+    prefix half carries no digit run of its own (e.g. "SHR-A2102",
+    "BAT-8008") -- these must still extract as their existing full label,
+    not be mistaken for a two-segment compound."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="conf:1", title="A study",
+             abstract="SHR-A2102, a nectin-4 directed antibody-drug conjugate, in patients with "
+                      "pretreated advanced solid tumours.",
+             publication_or_release_date="2024-01-01"),
+        dict(source_record_id="conf:2", title="A study",
+             abstract="This study reports the safety and efficacy of BAT-8008, an antibody-drug "
+                      "conjugate, in a cohort of patients.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "conference_abstract_corpus", known)
+    assert set(candidates) == {"shra2102", "bat8008"}
+
+
 def test_build_ctgov_dev_code_candidates_requires_trial_level_adc_context():
     known = known_identifier_set([])
     manifest = pd.DataFrame([
