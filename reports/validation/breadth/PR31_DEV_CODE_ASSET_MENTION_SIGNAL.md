@@ -113,15 +113,51 @@ progress against the freeze-gate target of representing NAR's Phase1+
 universe, driven entirely by a signal the previous architecture
 structurally could not produce, not by adding new acquisition sources.
 
+## Round-1 fix: corrected root-cause diagnosis for the 5 missed motivating examples
+
 Of the 6 development codes originally cited as motivating examples
 (`BAT-8008`, `PF-06804103`, `ADCT-901`, `GQ-1001`, `DXC-004A`, `ZL-6201`),
-only `TAK-500` (a 7th real example independently found) is actually caught
-by this signal in the current corpus — the other 5 are not mentioned with
-this tight grammatical pattern in any of pubmed/europe_pmc/
-conference_abstract_corpus's currently acquired text, so they correctly
-remain `REFERENCE_UNCLASSIFIED`. Disclosed honestly, not overclaimed: this
-signal's recall is bounded by what our corpus actually contains, not by
-the pattern's design.
+only `TAK-500` (a 7th real example independently found) is caught by this
+signal. The first version of this report wrongly attributed the other 5
+to "corpus-content limit, not a pattern flaw." **That was incorrect.**
+`reports/validation/breadth/nar702_broad_recall.tsv` already proves 4 of
+these 5 are present in the acquired corpus RIGHT NOW:
+
+| Example       | Present in current broad corpus? | PR #31 grammar catches? | Gap                  |
+|----------------|-----------------------------------|--------------------------|-----------------------|
+| `BAT-8008`     | YES (conference, `EXACT_NAME`)                          | NO | `PATTERN_RECALL_GAP` |
+| `PF-06804103`  | YES (clinicaltrials + conference, `ALIAS_MATCH`/`EXACT_NAME`) | NO | `PATTERN_RECALL_GAP` |
+| `ADCT-901`     | YES (conference, `ALIAS_MATCH`)                         | NO | `PATTERN_RECALL_GAP` |
+| `GQ-1001`      | YES (clinicaltrials + conference, `EXACT_NAME`/`STRONG_IDENTIFIER_NCT`) | NO | `PATTERN_RECALL_GAP` |
+| `ZL-6201`      | YES (conference, `EXACT_NAME`)                          | NO | `PATTERN_RECALL_GAP` |
+| `TAK-500`      | YES (conference + europe_pmc, `EXACT_NAME`)             | YES | caught |
+| `DXC-004A`     | not in `nar702_broad_recall.tsv`'s `BROAD_DISCOVERED` rows | NO | not yet independently verified as corpus-present |
+
+Spot-checked the actual raw text to confirm WHY each was missed — three
+distinct, real mechanical reasons, all genuine pattern gaps:
+- `BAT-8008`: the acquired text spells it without a hyphen ("BAT8008"),
+  which `_DEV_CODE_FRAGMENT`'s required `-` never matches.
+- `ZL-6201`: *"Discovery of ZL-6201, a novel LRRC15-targeting antibody
+  drug conjugate (ADC) for the treatment of..."* — an appositive
+  construction ("`<code>`, a ... conjugate") with no "is/was" verb, which
+  neither of this PR's two patterns covers.
+- `ADCT-901`/`PF-06804103`/`GQ-1001`: matched in `nar702_broad_recall.tsv`
+  via `ALIAS_MATCH`/`STRONG_IDENTIFIER_NCT`, not the code's own literal
+  string appearing next to "ADC" in the exact form this signal expects.
+
+The correct conclusion: **the tight grammatical signal intentionally
+prioritizes precision and captures only a subset of development-code
+mentions already present in the acquired corpus. The remaining benchmark
+misses demonstrate an asset-extraction pattern-recall gap, not an
+acquisition/source gap** — acquisition recall and asset-extraction recall
+are two different numbers, and this PR only measured/improved the second
+one. The fix is NOT to add more acquisition sources (the evidence is
+already here); it is a future, complementary high-precision extraction
+pattern (e.g. the appositive "`<code>`, a ... ADC" construction, or
+tying development-code extraction to records `broad_recall.py` already
+classifies `BROAD_DISCOVERED` for a NAR asset). Explicitly deferred to a
+future increment, not this PR — regex-widening or new-source work is not
+in scope for PR #31's own revision.
 
 ## Test plan
 
