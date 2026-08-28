@@ -26,7 +26,7 @@ def test_diff_snapshots_detects_new_row_by_natural_key():
         {"entity_id": "A1", "canonical_label": "Existing"},
         {"entity_id": "A2", "canonical_label": "Brand New"},
     ])}
-    new_rows, deepened, status_changes = diff_snapshots(before, after)
+    new_rows, deepened, status_changes, _, _ = diff_snapshots(before, after)
     assert len(new_rows["adc_candidates.tsv"]) == 1
     assert new_rows["adc_candidates.tsv"][0]["entity_id"] == "A2"
     assert "adc_candidates.tsv" not in deepened
@@ -35,7 +35,7 @@ def test_diff_snapshots_detects_new_row_by_natural_key():
 
 def test_diff_snapshots_no_change_produces_no_new_rows():
     same = {"adc_candidates.tsv": _df([{"entity_id": "A1", "canonical_label": "Existing"}])}
-    new_rows, deepened, status_changes = diff_snapshots(same, same)
+    new_rows, deepened, status_changes, _, _ = diff_snapshots(same, same)
     assert new_rows == {}
     assert deepened == {}
     assert status_changes == {}
@@ -46,7 +46,7 @@ def test_diff_snapshots_detects_evidence_deepened_not_as_new_row():
     'deepened', never miscounted as a new-entity event."""
     before = {"adc_platforms.tsv": _df([{"entity_id": "P1", "evidence_count": "3", "status": "OBSERVED"}])}
     after = {"adc_platforms.tsv": _df([{"entity_id": "P1", "evidence_count": "5", "status": "OBSERVED"}])}
-    new_rows, deepened, _ = diff_snapshots(before, after)
+    new_rows, deepened, _, _, _ = diff_snapshots(before, after)
     assert new_rows == {}
     assert deepened["adc_platforms.tsv"] == [(("P1",), 3, 5)]
 
@@ -56,7 +56,7 @@ def test_diff_snapshots_composite_key_for_target_indication():
     after = {"target_indication_feasibility.tsv": _df([
         {"target_entity_id": "T1", "indication": "Breast cancer", "supporting_asset_count": "2"},
     ])}
-    new_rows, _, _ = diff_snapshots(before, after)
+    new_rows, _, _, _, _ = diff_snapshots(before, after)
     assert len(new_rows["target_indication_feasibility.tsv"]) == 1
 
 
@@ -77,7 +77,7 @@ def test_diff_snapshots_detects_status_upgrade_on_existing_candidate_not_as_new_
         "source": "conference_abstract_corpus;clinicaltrials", "confidence": "0.8",
         "validation_status": "AUTO_HIGH_CONFIDENCE", "modality_classification": "ADC",
     }])}
-    new_rows, deepened, status_changes = diff_snapshots(before, after)
+    new_rows, deepened, status_changes, _, _ = diff_snapshots(before, after)
     assert new_rows == {}  # NOT a new entity -- same persistent candidate_id
     assert deepened == {}
     changes = status_changes["candidate_queue.tsv"]
@@ -101,8 +101,136 @@ def test_diff_snapshots_status_change_ignores_unwatched_free_text_fields():
         "source": "s1", "confidence": "0.5", "validation_status": "NEEDS_REVIEW",
         "modality_classification": "ADC",
     }])}
-    _, _, status_changes = diff_snapshots(before, after)
+    _, _, status_changes, _, _ = diff_snapshots(before, after)
     assert status_changes == {}  # `context` is not a watched decision-relevant field
+
+
+def test_diff_snapshots_detects_new_catalog_asset():
+    """PR #33: a brand-new asset_id in adc_asset_universe.tsv is a new-
+    entity event, tiered by its catalog_status."""
+    before = {"adc_asset_universe.tsv": _df([{"asset_id": "NAR_1", "canonical_name": "Existing", "catalog_status": "REFERENCE_CONFIRMED"}])}
+    after = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "NAR_1", "canonical_name": "Existing", "catalog_status": "REFERENCE_CONFIRMED"},
+        {"asset_id": "OURS_2", "canonical_name": "Brand New Asset", "catalog_status": "NEEDS_REVIEW"},
+    ])}
+    new_rows, deepened, status_changes, _, _ = diff_snapshots(before, after)
+    assert len(new_rows["adc_asset_universe.tsv"]) == 1
+    new_row = new_rows["adc_asset_universe.tsv"][0]
+    assert new_row["asset_id"] == "OURS_2"
+    assert new_row["_tier"] == "B"  # NEEDS_REVIEW
+    assert "adc_asset_universe.tsv" not in deepened
+    assert status_changes == {}
+
+
+def test_diff_snapshots_detects_catalog_status_upgrade_as_tier_a():
+    """A PROMOTED candidate (adc_candidates.tsv origin -- catalog_status_
+    for_ours_only() keys its catalog_status on source count, and its own
+    asset_id is entity_id-based, stable across evidence growth the same
+    way a NAR row's asset_id is) gains a second independent source and
+    crosses SINGLE_STRONG_SOURCE -> MULTISOURCE_CONFIRMED -- a genuine
+    same-asset_id field change, correctly distinct from the identity-MERGE
+    scenario (a NEEDS_REVIEW candidate_queue.tsv-origin candidate can
+    never reach MULTISOURCE_CONFIRMED in place; catalog_status_for_ours_
+    only() always returns NEEDS_REVIEW for that origin -- reaching
+    MULTISOURCE_CONFIRMED from NEEDS_REVIEW only happens via an identity
+    merge into a NAR row, covered by the identity-merge tests below, or
+    via promotion to adc_candidates.tsv, which changes the asset_id's own
+    key and is therefore also an identity-merge-shaped event, not a
+    same-key field change)."""
+    before = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_ENTITY_1", "canonical_name": "REGN5093-M114", "catalog_status": "SINGLE_STRONG_SOURCE",
+         "adc_scope": "PRESUMED_ADC", "sources": "europe_pmc", "aliases": "", "development_codes": "",
+         "nct_ids": "", "highest_stage": "", "development_status": ""},
+    ])}
+    after = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_ENTITY_1", "canonical_name": "REGN5093-M114", "catalog_status": "MULTISOURCE_CONFIRMED",
+         "adc_scope": "PRESUMED_ADC", "sources": "clinicaltrials; europe_pmc", "aliases": "", "development_codes": "",
+         "nct_ids": "NCT04982224", "highest_stage": "Phase2", "development_status": "Phase 1/2"},
+    ])}
+    new_rows, deepened, status_changes, identity_merges, unresolved = diff_snapshots(before, after)
+    assert new_rows == {}
+    assert deepened == {}
+    assert identity_merges == {}
+    assert unresolved == {}
+    changes = status_changes["adc_asset_universe.tsv"]
+    by_field = {c["field"]: c for c in changes}
+    assert by_field["catalog_status"]["before"] == "SINGLE_STRONG_SOURCE"
+    assert by_field["catalog_status"]["after"] == "MULTISOURCE_CONFIRMED"
+    assert by_field["catalog_status"]["tier_a_upgrade"] is True
+    assert by_field["sources"]["tier_a_upgrade"] is False  # a new evidence source, not a confirmation-tier upgrade
+    assert "nct_ids" in by_field  # a newly-added NCT id
+    assert "highest_stage" in by_field  # a clinical-stage advance
+
+
+def test_diff_snapshots_detects_identity_merge_into_nar_row():
+    """Exact reviewer regression: build_master_rows()'s real identity
+    semantics are that a candidate later found to exact-match NAR is
+    folded INTO that NAR row (its evidence_ids gains the candidate's own
+    key) and its own OURS_<key> row simply stops being emitted -- this is
+    NOT the same asset_id's fields changing in place, and the field-change
+    mechanism above cannot see it at all (the OURS_ key disappears from
+    `after` entirely). identity_merges_by_table must name the survivor by
+    an exact evidence-token lookup, never a fuzzy label guess."""
+    before = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "NAR_1", "canonical_name": "REGN5093-M114", "catalog_status": "REFERENCE_CONFIRMED",
+         "evidence_ids": "NAR1"},
+        {"asset_id": "OURS_2", "canonical_name": "REGN5093-M114", "catalog_status": "NEEDS_REVIEW",
+         "evidence_ids": "CAND2"},
+    ])}
+    after = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "NAR_1", "canonical_name": "REGN5093-M114", "catalog_status": "MULTISOURCE_CONFIRMED",
+         "evidence_ids": "NAR1; CAND2"},
+    ])}
+    new_rows, deepened, status_changes, identity_merges, unresolved = diff_snapshots(before, after)
+    assert new_rows == {}
+    assert unresolved == {}
+    merges = identity_merges["adc_asset_universe.tsv"]
+    assert len(merges) == 1
+    assert merges[0]["from_key"] == ("OURS_2",)
+    assert merges[0]["to_key"] == ("NAR_1",)
+    # Also visible as an ordinary status change on the survivor -- both
+    # mechanisms are expected to fire, per the module's own docstring.
+    by_field = {c["field"]: c for c in status_changes["adc_asset_universe.tsv"]}
+    assert by_field["catalog_status"]["after"] == "MULTISOURCE_CONFIRMED"
+
+
+def test_diff_snapshots_reports_unresolved_removal_when_no_survivor_found():
+    """A before-only key whose own evidence token cannot be found in ANY
+    after-row must be reported as an honest unresolved removal, never a
+    guessed merge target."""
+    before = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_1", "canonical_name": "Foo", "catalog_status": "NEEDS_REVIEW", "evidence_ids": "CAND1"},
+        {"asset_id": "OURS_2", "canonical_name": "Bar", "catalog_status": "NEEDS_REVIEW", "evidence_ids": "CAND2"},
+    ])}
+    after = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_2", "canonical_name": "Bar", "catalog_status": "NEEDS_REVIEW", "evidence_ids": "CAND2"},
+    ])}
+    _, _, _, identity_merges, unresolved = diff_snapshots(before, after)
+    assert identity_merges == {}
+    assert unresolved["adc_asset_universe.tsv"] == [{"key": ("OURS_1",)}]
+
+
+def test_diff_snapshots_detects_alias_merge_and_adc_scope_change():
+    """PR #32's alias/dev-code crosswalk merges an evidence into an
+    existing asset's own aliases/development_codes fields -- must be
+    visible as a status change, and an independently-resolved adc_scope
+    must be tracked separately from catalog_status."""
+    before = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_3", "canonical_name": "Glembatumumab vedotin", "catalog_status": "SINGLE_STRONG_SOURCE",
+         "adc_scope": "REFERENCE_UNCLASSIFIED", "sources": "conference_abstract_corpus", "aliases": "",
+         "development_codes": "", "nct_ids": "", "highest_stage": "", "development_status": ""},
+    ])}
+    after = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_3", "canonical_name": "Glembatumumab vedotin", "catalog_status": "SINGLE_STRONG_SOURCE",
+         "adc_scope": "PRESUMED_ADC", "sources": "conference_abstract_corpus", "aliases": "",
+         "development_codes": "CDX-011", "nct_ids": "", "highest_stage": "", "development_status": ""},
+    ])}
+    _, _, status_changes, _, _ = diff_snapshots(before, after)
+    by_field = {c["field"]: c for c in status_changes["adc_asset_universe.tsv"]}
+    assert by_field["development_codes"]["after"] == "CDX-011"  # alias/dev-code crosswalk merge
+    assert by_field["adc_scope"]["before"] == "REFERENCE_UNCLASSIFIED"
+    assert by_field["adc_scope"]["after"] == "PRESUMED_ADC"
+    assert "catalog_status" not in by_field  # unchanged in this scenario
 
 
 def test_tier_for_row_candidate_queue_promoted_is_tier_a():
@@ -125,10 +253,33 @@ def test_tier_for_row_indications_is_tier_c():
     assert _tier_for_row("adc_indications.tsv", {"indication": "Breast cancer"}) == "C"
 
 
+def test_tier_for_row_catalog_status_ladder():
+    """PR #33: adc_asset_universe.tsv is tiered by catalog_status (PR
+    #30's evidence-strength axis), not by adc_scope."""
+    assert _tier_for_row("adc_asset_universe.tsv", {"catalog_status": "REFERENCE_CONFIRMED"}) == "A"
+    assert _tier_for_row("adc_asset_universe.tsv", {"catalog_status": "MULTISOURCE_CONFIRMED"}) == "A"
+    assert _tier_for_row("adc_asset_universe.tsv", {"catalog_status": "SINGLE_STRONG_SOURCE"}) == "B"
+    assert _tier_for_row("adc_asset_universe.tsv", {"catalog_status": "NEEDS_REVIEW"}) == "B"
+    assert _tier_for_row("adc_asset_universe.tsv", {"catalog_status": "EXCLUDED_ADJACENT_MODALITY"}) == "C"
+
+
 def test_read_feasibility_snapshot_missing_files_returns_empty_frames(tmp_path):
     snapshot = read_feasibility_snapshot(tmp_path)
     assert all(df.empty for df in snapshot.values())
     assert "adc_candidates.tsv" in snapshot
+    assert "adc_asset_universe.tsv" not in snapshot  # catalog_dir not passed -- not tracked
+
+
+def test_read_feasibility_snapshot_includes_catalog_dir_when_given(tmp_path):
+    feasibility_dir = tmp_path / "feasibility"
+    catalog_dir = tmp_path / "catalog"
+    feasibility_dir.mkdir()
+    catalog_dir.mkdir()
+    (catalog_dir / "adc_asset_universe.tsv").write_text("asset_id\tcanonical_name\nA1\tFoo\n", encoding="utf-8")
+
+    snapshot = read_feasibility_snapshot(feasibility_dir, catalog_dir)
+    assert "adc_asset_universe.tsv" in snapshot
+    assert list(snapshot["adc_asset_universe.tsv"]["asset_id"]) == ["A1"]
 
 
 def test_make_delta_dir_never_overwrites_same_day(tmp_path):
@@ -169,8 +320,9 @@ def test_run_acquisition_stage_isolates_one_jobs_failure_from_others(tmp_path, m
 
 def test_run_derivation_stage_skips_downstream_steps_after_a_failure(tmp_path, monkeypatch):
     """Derivation is a fixed dependency chain, not independent siblings --
-    if candidate_queue.py fails, feasibility_entities.py and
-    component_coverage_audit.py must NOT run against its stale output."""
+    if candidate_queue.py fails, feasibility_entities.py,
+    component_coverage_audit.py, and build_adc_asset_universe.py (PR #33)
+    must NOT run against its stale output."""
     import subprocess
 
     calls = []
@@ -183,7 +335,7 @@ def test_run_derivation_stage_skips_downstream_steps_after_a_failure(tmp_path, m
         return subprocess.CompletedProcess(cmd, returncode=0, stdout="ok", stderr="")
 
     monkeypatch.setattr(subprocess, "run", fake_run)
-    outcomes = run_derivation_stage(tmp_path, tmp_path)
+    outcomes = run_derivation_stage(tmp_path, tmp_path, tmp_path)
 
     assert len(calls) == 1  # only candidate_queue.py was actually invoked
     by_name = {o.name: o for o in outcomes}
@@ -193,6 +345,8 @@ def test_run_derivation_stage_skips_downstream_steps_after_a_failure(tmp_path, m
     assert by_name["feasibility_entities"].ok is False
     assert by_name["component_coverage_audit"].skipped is True
     assert by_name["component_coverage_audit"].ok is False
+    assert by_name["build_adc_asset_universe"].skipped is True
+    assert by_name["build_adc_asset_universe"].ok is False
 
 
 def test_run_derivation_stage_all_steps_run_when_none_fail(tmp_path, monkeypatch):
@@ -201,14 +355,22 @@ def test_run_derivation_stage_all_steps_run_when_none_fail(tmp_path, monkeypatch
     calls = []
 
     def fake_run(cmd, cwd, capture_output, text):
-        calls.append(cmd[1])
+        calls.append(cmd)
         return subprocess.CompletedProcess(cmd, returncode=0, stdout="ok", stderr="")
 
     monkeypatch.setattr(subprocess, "run", fake_run)
-    outcomes = run_derivation_stage(tmp_path, tmp_path)
+    outcomes = run_derivation_stage(tmp_path, tmp_path, tmp_path)
 
-    assert len(calls) == 3
+    assert len(calls) == 4
     assert all(o.ok and not o.skipped for o in outcomes)
+    assert [o.name for o in outcomes] == [
+        "candidate_queue", "feasibility_entities", "component_coverage_audit", "build_adc_asset_universe",
+    ]
+    catalog_cmd = calls[3]
+    assert "build_adc_asset_universe.py" in catalog_cmd[1]
+    assert "--nar-dir" in catalog_cmd
+    assert str(tmp_path / "adc_asset_universe.tsv") in catalog_cmd
+    assert str(tmp_path / "adc_clinical_development.tsv") in catalog_cmd
 
 
 def test_main_incomplete_derivation_returns_nonzero_and_skips_entity_diff(tmp_path, monkeypatch):
@@ -219,6 +381,8 @@ def test_main_incomplete_derivation_returns_nonzero_and_skips_entity_diff(tmp_pa
 
     feasibility_dir = tmp_path / "feasibility"
     feasibility_dir.mkdir()
+    catalog_dir = tmp_path / "catalog"
+    catalog_dir.mkdir()
     delta_output = tmp_path / "delta"
 
     def fake_run(cmd, cwd, capture_output, text):
@@ -231,7 +395,7 @@ def test_main_incomplete_derivation_returns_nonzero_and_skips_entity_diff(tmp_pa
     monkeypatch.setattr(sys, "argv", [
         "update_breadth.py", "--skip-acquisition",
         "--data-dir", str(tmp_path), "--feasibility-dir", str(feasibility_dir),
-        "--delta-output", str(delta_output),
+        "--catalog-dir", str(catalog_dir), "--delta-output", str(delta_output),
     ])
 
     rc = update_breadth_main()

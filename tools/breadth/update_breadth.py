@@ -20,10 +20,17 @@ doesn't already have and independently pass its own tests through:
    normal operation) -- this is Gate 5's "visible/retryable failures"
    requirement.
 2. **Breadth-derivation stage** -- `tools/breadth/candidate_queue.py` ->
-   `feasibility_entities.py` -> `component_coverage_audit.py`, in that
-   fixed dependency order (each reads the previous stage's own output
-   files), re-deriving the feasibility-entity universe from whatever the
-   acquisition stage just added.
+   `feasibility_entities.py` -> `component_coverage_audit.py` ->
+   `tools/catalog/build_adc_asset_universe.py` (PR #33 addition), in that
+   fixed dependency order (each reads an earlier step's own output
+   files), re-deriving the feasibility-entity universe AND the reference-
+   seeded master catalog from whatever the acquisition stage just added.
+   `build_adc_asset_universe.py` itself does not read
+   `component_coverage_audit.tsv` -- it is appended as the chain's LAST
+   step (after, not interleaved with, component_coverage_audit) purely to
+   keep the existing three-step order and its existing tests untouched;
+   ordering it relative to component_coverage_audit has no correctness
+   effect since neither reads the other's output.
 
 **Snapshot-diff, not a second discovery mechanism.** Before stage 1
 starts, every `DATA/feasibility/*.tsv` table (if it already exists) is
@@ -63,15 +70,76 @@ reported in `status_changes.tsv` and in the delta markdown, and a
 transition into PROMOTED/AUTO_HIGH_CONFIDENCE/VALIDATED is surfaced as a
 Tier A event, not buried under "evidence deepened."
 
-**Derivation-chain failures fail closed** (round-1 fix). The acquisition
-stage's jobs are genuinely independent siblings -- one job's failure never
-blocks another. The derivation stage is NOT: candidate_queue ->
-feasibility_entities -> component_coverage_audit is a fixed dependency
-chain where each step reads the previous step's own output. If a step
-fails, every remaining step is recorded as SKIPPED_UPSTREAM_FAILURE rather
-than run against stale upstream output, and no new-entity/deepened/status-
-change diff is computed for that run (`DELTA_STATUS: INCOMPLETE_DERIVATION`,
-`main()` returns nonzero) -- comparing before/partial-after snapshots would
+**Catalog delta tracking** (PR #33). `DATA/catalog/adc_asset_universe.tsv`
+(the reference-seeded master catalog, PR #30) is snapshotted/diffed by the
+exact same mechanism as every `DATA/feasibility/*.tsv` table above --
+`CATALOG_TABLES` names it, keyed by its own persistent `asset_id`
+(`NAR_<id>` for a reference-seeded row, `OURS_<hash>` for an ours-only
+row -- see `candidate_id_for_name()`'s docstring in `candidate_queue.py`
+for why this id is stable across a run even when the row's OWN evidence
+changes). A brand-new `asset_id` is a new-asset event, tiered by its
+`catalog_status` (`REFERENCE_CONFIRMED`/`MULTISOURCE_CONFIRMED` -> Tier
+A, `SINGLE_STRONG_SOURCE`/`NEEDS_REVIEW` -> Tier B,
+`EXCLUDED_ADJACENT_MODALITY` -> Tier C). An EXISTING `asset_id` whose
+`catalog_status`/`adc_scope`/`highest_stage`/`development_status`/
+`sources`/`aliases`/`development_codes`/`nct_ids` changed is a status
+change (same mechanism as `STATUS_FIELDS_BY_TABLE` above) -- this is what
+surfaces a `candidate_queue.py`-level (PR #32) alias/dev-code crosswalk
+merge (a `development_codes`/`aliases` change on the SAME, still-stable
+`OURS_<key>` asset_id -- that merge happens upstream, before
+`build_adc_asset_universe.py` ever runs, so the candidate's own key never
+changes), a stage advance, a `catalog_status` upgrade into
+`MULTISOURCE_CONFIRMED` (a Tier A event, same `_TIER_A_STATUS_VALUES`
+mechanism), a newly-added evidence source, or a newly-added NCT id, all
+without any new detection code beyond registering the table and its
+watched fields.
+
+**Identity-merge detection (round-1 fix)**: the field-change mechanism
+above cannot see a DIFFERENT, `build_adc_asset_universe.py`-level
+identity event -- when a candidate that was previously `OURS_<key>` (no
+NAR match) is later found to exact-match a NAR row, `build_master_rows()`
+folds its evidence INTO that NAR row and its own `OURS_<key>` row simply
+stops being emitted; the NAR row's `asset_id` never changes, so this is
+not a "field changed on an existing key," it is a key disappearing
+entirely. `IDENTITY_MERGE_EVIDENCE_FIELD` (currently only
+`adc_asset_universe.tsv`) makes this detectable without a fuzzy label
+guess: `build_master_rows()`'s own `evidence_ids` field carries exactly
+the folded-in candidate's own key, so a before-only `asset_id` is looked
+up by its own evidence token against every after-row's `evidence_ids` --
+an exact match names the survivor (`identity_merges_by_table`); no match
+is reported honestly as `unresolved_removals_by_table` rather than a
+guessed target. `DATA/catalog/adc_clinical_development.tsv` is
+DELIBERATELY NOT separately tracked here: it is a pure column projection
+of `adc_asset_universe.tsv` with the exact same row set and no
+information of its own (see `write_clinical_development_view()`'s
+docstring) and, unlike `adc_asset_universe.tsv`, carries no independent
+persistent id column (only `canonical_name`, which is not guaranteed
+stable across an alias merge the way `asset_id` is) -- diffing it
+separately would duplicate every event already captured on
+`adc_asset_universe.tsv` while adding a less-reliable key.
+
+No artificial baseline flood on the first tracked run: the "before"
+snapshot is read from whatever `adc_asset_universe.tsv` already contains
+ON DISK at run start, regardless of whether any prior `update_breadth`
+run ever diffed it -- since the real committed catalog (~1,026 rows,
+built by PR #30/#31/#32) already exists before this wiring ships,
+verified directly: running `update_breadth.py --skip-acquisition`
+against the real repo immediately after wiring this in reports 0 new
+catalog entities, not ~1,026, because before and after both read the
+same already-current file. The next REAL cadence run (new acquisition
+data changes `candidate_queue.tsv`, which changes the rebuilt catalog)
+is what produces the first genuine catalog delta.
+
+**Derivation-chain failures fail closed** (round-1 fix, extended in PR
+#33). The acquisition stage's jobs are genuinely independent siblings --
+one job's failure never blocks another. The derivation stage is NOT:
+candidate_queue -> feasibility_entities -> component_coverage_audit ->
+build_adc_asset_universe is a fixed dependency chain where each step
+reads an earlier step's own output. If a step fails, every remaining step
+is recorded as SKIPPED_UPSTREAM_FAILURE rather than run against stale
+upstream output, and no new-entity/deepened/status-change diff is
+computed for that run (`DELTA_STATUS: INCOMPLETE_DERIVATION`, `main()`
+returns nonzero) -- comparing before/partial-after snapshots would
 misattribute stale-vs-new state.
 
 **Immutability discipline for delta output itself**: `reports/delta/
@@ -112,6 +180,7 @@ DERIVATION_STEPS = [
     ("candidate_queue", REPO_ROOT / "tools" / "breadth" / "candidate_queue.py"),
     ("feasibility_entities", REPO_ROOT / "tools" / "breadth" / "feasibility_entities.py"),
     ("component_coverage_audit", REPO_ROOT / "tools" / "breadth" / "component_coverage_audit.py"),
+    ("build_adc_asset_universe", REPO_ROOT / "tools" / "catalog" / "build_adc_asset_universe.py"),
 ]
 
 # (filename, key_columns, count_column_for_evidence-deepened_detection)
@@ -126,6 +195,49 @@ FEASIBILITY_TABLES = [
     ("target_indication_feasibility.tsv", ["target_entity_id", "indication"], "supporting_asset_count"),
     ("adc_indications.tsv", ["indication"], "n_adc_candidates"),
 ]
+
+# PR #33: the reference-seeded master catalog (PR #30), tracked by the same
+# snapshot-diff mechanism as FEASIBILITY_TABLES above -- lives in its own
+# `DATA/catalog/` directory, not `DATA/feasibility/`, so it is read
+# separately in read_feasibility_snapshot() but diffed via the SAME
+# generic diff_snapshots() logic (ALL_TABLE_SPECS below). No count column:
+# "evidence deepened" for a catalog row is exactly a `sources`/`nct_ids`
+# growth, which STATUS_FIELDS_BY_TABLE already watches as a status change,
+# not a separate count-column mechanism.
+CATALOG_TABLES = [
+    ("adc_asset_universe.tsv", ["asset_id"], None),
+]
+
+# Combined spec list diff_snapshots() iterates over -- deliberately NOT
+# including adc_clinical_development.tsv (see this module's docstring for
+# why: it is a pure projection of adc_asset_universe.tsv with no
+# independent persistent id column, so tracking it separately would
+# duplicate every event already captured on adc_asset_universe.tsv).
+ALL_TABLE_SPECS = FEASIBILITY_TABLES + CATALOG_TABLES
+
+# PR #33 round-1 fix (reviewer-identified correctness blocker): a before-
+# only asset_id on adc_asset_universe.tsv is NOT necessarily "removed" --
+# build_master_rows()'s own identity-resolution semantics are that a
+# candidate later found to exact-match NAR is folded into that NAR row
+# and its own OURS_<key> row simply stops being emitted, rather than the
+# SAME asset_id's fields changing in place (unlike every other status-
+# change scenario this module tracks). Naively treating a before-only key
+# as a silent disappearance would hide a real, meaningful event: THIS
+# asset was resolved against the reference universe. Maps table -> the
+# evidence-id column whose values are the row's own contributed evidence
+# tokens (build_master_rows(): an OURS row's evidence_ids is exactly its
+# own candidate key; a matched NAR row's evidence_ids gains that SAME
+# candidate key alongside its own nar_adc_id) -- this lets identity-merge
+# detection be a deterministic exact-token lookup, never a fuzzy label
+# guess. Scoped to adc_asset_universe.tsv only: no other tracked table
+# has this fold-into-a-different-key identity semantics.
+IDENTITY_MERGE_EVIDENCE_FIELD = {
+    "adc_asset_universe.tsv": "evidence_ids",
+}
+
+
+def _split_evidence_ids(value: str) -> list[str]:
+    return [v.strip() for v in str(value or "").split(";") if v.strip()]
 
 # Decision-relevant fields to watch for changes on an EXISTING natural key
 # (persistent candidate/entity IDs, per Phase 5a's design, deliberately do
@@ -146,17 +258,33 @@ STATUS_FIELDS_BY_TABLE = {
     "target_indication_feasibility.tsv": ["status", "confidence"],
     # adc_indications.tsv intentionally excluded: it is a raw count
     # aggregate with no decision-relevant status field of its own.
+    # PR #33: catalog_status/adc_scope cover "confirmed vs. presumed vs.
+    # needs-review vs. excluded"; highest_stage/development_status cover
+    # clinical-stage advances; sources/aliases/development_codes/nct_ids
+    # cover a new evidence source, an alias/dev-code crosswalk merge (PR
+    # #32), and a newly-added NCT id, respectively -- exactly the six
+    # change types the reviewer asked this wiring to surface.
+    "adc_asset_universe.tsv": [
+        "catalog_status", "adc_scope", "highest_stage", "development_status",
+        "sources", "aliases", "development_codes", "nct_ids",
+    ],
 }
 
-# A status/validation_status field landing on one of these values is a
-# Tier A event even when it is not a new row -- surfaced separately from
-# "evidence deepened" per the reviewer's explicit requirement.
-_TIER_A_STATUS_VALUES = {"PROMOTED", "AUTO_HIGH_CONFIDENCE", "VALIDATED"}
+# A status/validation_status/catalog_status field landing on one of these
+# values is a Tier A event even when it is not a new row -- surfaced
+# separately from "evidence deepened" per the reviewer's explicit
+# requirement. REFERENCE_CONFIRMED/MULTISOURCE_CONFIRMED (PR #33) only
+# ever appear in the catalog_status field, so this single combined set
+# does not create any cross-field ambiguity.
+_TIER_A_STATUS_VALUES = {
+    "PROMOTED", "AUTO_HIGH_CONFIDENCE", "VALIDATED",
+    "REFERENCE_CONFIRMED", "MULTISOURCE_CONFIRMED",
+}
 
 
 def _is_tier_a_upgrade(field: str, before_val: str, after_val: str) -> bool:
     return (
-        field in ("validation_status", "status")
+        field in ("validation_status", "status", "catalog_status")
         and after_val in _TIER_A_STATUS_VALUES
         and before_val not in _TIER_A_STATUS_VALUES
     )
@@ -180,6 +308,8 @@ class DeltaResult:
     new_rows_by_table: dict = field(default_factory=dict)  # table -> list[dict(row..., tier=...)]
     deepened_by_table: dict = field(default_factory=dict)  # table -> list[key tuples]
     status_changes_by_table: dict = field(default_factory=dict)  # table -> list[dict(key, field, before, after, tier_a_upgrade)]
+    identity_merges_by_table: dict = field(default_factory=dict)  # table -> list[dict(from_key, to_key)]
+    unresolved_removals_by_table: dict = field(default_factory=dict)  # table -> list[dict(key)]
     delta_status: str = "OK"  # or "INCOMPLETE_DERIVATION"
     delta_dir: str = ""
 
@@ -198,19 +328,41 @@ def _tier_for_row(table_name: str, row: dict) -> str:
         return "A" if status == "VALIDATED" else ("B" if status == "OBSERVED" else "C")
     if table_name == "target_indication_feasibility.tsv":
         return "B"
+    if table_name == "adc_asset_universe.tsv":
+        # PR #33: tiered by catalog_status (PR #30's evidence-strength
+        # axis), the same "confirmed vs. presumed vs. excluded" ladder
+        # STATUS_FIELDS_BY_TABLE/_TIER_A_STATUS_VALUES already use for
+        # existing-row status-change detection.
+        catalog_status = row.get("catalog_status")
+        if catalog_status in ("REFERENCE_CONFIRMED", "MULTISOURCE_CONFIRMED"):
+            return "A"
+        if catalog_status == "EXCLUDED_ADJACENT_MODALITY":
+            return "C"
+        return "B"  # SINGLE_STRONG_SOURCE, NEEDS_REVIEW
     return "C"  # adc_indications.tsv and anything not explicitly tiered above
 
 
-def read_feasibility_snapshot(feasibility_dir: Path) -> dict[str, pd.DataFrame]:
+def read_feasibility_snapshot(feasibility_dir: Path, catalog_dir: Path | None = None) -> dict[str, pd.DataFrame]:
     snapshot = {}
     for filename, _keys, _count_col in FEASIBILITY_TABLES:
         path = feasibility_dir / filename
         snapshot[filename] = pd.read_csv(path, sep="\t", dtype=str).fillna("") if path.exists() else pd.DataFrame()
+    # PR #33: catalog tables live in their own directory (DATA/catalog/),
+    # not DATA/feasibility/ -- `catalog_dir` is optional so existing
+    # callers/tests that only care about the feasibility tables are
+    # unaffected; main() always passes it.
+    if catalog_dir is not None:
+        for filename, _keys, _count_col in CATALOG_TABLES:
+            path = catalog_dir / filename
+            snapshot[filename] = pd.read_csv(path, sep="\t", dtype=str).fillna("") if path.exists() else pd.DataFrame()
     return snapshot
 
 
-def diff_snapshots(before: dict[str, pd.DataFrame], after: dict[str, pd.DataFrame]) -> tuple[dict, dict, dict]:
-    """Returns (new_rows_by_table, deepened_by_table, status_changes_by_table).
+def diff_snapshots(
+    before: dict[str, pd.DataFrame], after: dict[str, pd.DataFrame],
+) -> tuple[dict, dict, dict, dict, dict]:
+    """Returns (new_rows_by_table, deepened_by_table, status_changes_by_table,
+    identity_merges_by_table, unresolved_removals_by_table).
 
     A row is NEW only if its natural key was absent from `before` entirely
     -- never inferred from a changed non-key column. `deepened_by_table`
@@ -223,12 +375,29 @@ def diff_snapshots(before: dict[str, pd.DataFrame], after: dict[str, pd.DataFram
     deliberately stable across such a promotion (Phase 5a) and
     candidate_queue.tsv has no count column at all. All three are mutually
     exclusive per (table, key): a brand-new key is only ever reported as
-    new, never also as deepened/changed."""
+    new, never also as deepened/changed.
+
+    PR #33 round-1 fix: `identity_merges_by_table`/`unresolved_removals_by_table`
+    cover the ONE case none of the above can see -- a before-only key on a
+    table listed in IDENTITY_MERGE_EVIDENCE_FIELD (currently only
+    adc_asset_universe.tsv). build_master_rows()'s own identity-resolution
+    semantics mean a candidate later found to exact-match NAR is folded
+    INTO that NAR row's own asset_id and its OWN OURS_<key> row simply
+    stops being emitted -- the SAME asset_id's fields never change in
+    place the way every other status-change scenario in this module
+    assumes. A before-only key is looked up by its own evidence-id
+    token(s) against every AFTER row's evidence-id field: an exact token
+    match identifies the survivor row it was folded into
+    (`identity_merges_by_table`); no match at all is reported as an
+    honest `unresolved_removals_by_table` entry rather than a guessed
+    merge target."""
     new_rows_by_table: dict[str, list[dict]] = {}
     deepened_by_table: dict[str, list[tuple]] = {}
     status_changes_by_table: dict[str, list[dict]] = {}
+    identity_merges_by_table: dict[str, list[dict]] = {}
+    unresolved_removals_by_table: dict[str, list[dict]] = {}
 
-    for filename, key_columns, count_col in FEASIBILITY_TABLES:
+    for filename, key_columns, count_col in ALL_TABLE_SPECS:
         before_df, after_df = before.get(filename, pd.DataFrame()), after.get(filename, pd.DataFrame())
         if after_df.empty:
             continue
@@ -278,7 +447,45 @@ def diff_snapshots(before: dict[str, pd.DataFrame], after: dict[str, pd.DataFram
             if changes:
                 status_changes_by_table[filename] = changes
 
-    return new_rows_by_table, deepened_by_table, status_changes_by_table
+        evidence_field = IDENTITY_MERGE_EVIDENCE_FIELD.get(filename)
+        if evidence_field and not before_df.empty:
+            after_records = after_df.to_dict("records")
+            after_keys = {_row_key(r, key_columns) for r in after_records}
+            removed_keys = before_keys - after_keys
+            if removed_keys:
+                # Every evidence token appearing in some AFTER row, mapped
+                # to that row's own key -- an exact-token lookup, never a
+                # fuzzy label match.
+                token_to_after_key: dict[str, tuple] = {}
+                for row in after_records:
+                    after_key = _row_key(row, key_columns)
+                    for token in _split_evidence_ids(row.get(evidence_field, "")):
+                        token_to_after_key.setdefault(token, after_key)
+                before_row_by_key = {_row_key(r, key_columns): r for r in before_records}
+                merges, unresolved = [], []
+                for removed_key in removed_keys:
+                    removed_row = before_row_by_key[removed_key]
+                    survivor_key = next(
+                        (
+                            token_to_after_key[token]
+                            for token in _split_evidence_ids(removed_row.get(evidence_field, ""))
+                            if token in token_to_after_key and token_to_after_key[token] != removed_key
+                        ),
+                        None,
+                    )
+                    if survivor_key is not None:
+                        merges.append({"from_key": removed_key, "to_key": survivor_key})
+                    else:
+                        unresolved.append({"key": removed_key})
+                if merges:
+                    identity_merges_by_table[filename] = merges
+                if unresolved:
+                    unresolved_removals_by_table[filename] = unresolved
+
+    return (
+        new_rows_by_table, deepened_by_table, status_changes_by_table,
+        identity_merges_by_table, unresolved_removals_by_table,
+    )
 
 
 def _run_subprocess(label: str, cmd: list[str]) -> JobRunOutcome:
@@ -304,18 +511,20 @@ def run_acquisition_stage(job_names: list[str], output_dir: Path) -> list[JobRun
     return outcomes
 
 
-def run_derivation_stage(data_dir: Path, feasibility_output: Path) -> list[JobRunOutcome]:
+def run_derivation_stage(data_dir: Path, feasibility_output: Path, catalog_output: Path) -> list[JobRunOutcome]:
     """Fixed DEPENDENCY order, not independent siblings -- candidate_queue
-    -> feasibility_entities -> component_coverage_audit, each reading the
-    previous step's own output files. Unlike the acquisition stage (whose
-    jobs are genuinely independent and must all be attempted regardless of
-    a sibling's failure), a derivation step failure must fail the REST OF
-    THE CHAIN closed: running feasibility_entities against a stale
+    -> feasibility_entities -> component_coverage_audit ->
+    build_adc_asset_universe (PR #33), each reading an earlier step's own
+    output files. Unlike the acquisition stage (whose jobs are genuinely
+    independent and must all be attempted regardless of a sibling's
+    failure), a derivation step failure must fail the REST OF THE CHAIN
+    closed: running feasibility_entities against a stale
     candidate_queue.tsv (because candidate_queue.py itself failed) would
     silently blend new acquisition manifests with an old derived queue,
-    producing a coverage_audit that looks normal but rests on mixed-
-    generation state. Once a step fails, every remaining step is recorded
-    as SKIPPED_UPSTREAM_FAILURE rather than run."""
+    producing a coverage_audit/master-catalog rebuild that looks normal
+    but rests on mixed-generation state. Once a step fails, every
+    remaining step is recorded as SKIPPED_UPSTREAM_FAILURE rather than
+    run."""
     outcomes = []
     upstream_failed = False
     for label, script_path in DERIVATION_STEPS:
@@ -331,6 +540,15 @@ def run_derivation_stage(data_dir: Path, feasibility_output: Path) -> list[JobRu
                 "--feasibility-dir", str(feasibility_output),
                 "--nar-dir", str(data_dir / "reference" / "nar_adcdb"),
                 "--output", str(REPO_ROOT / "reports" / "validation" / "breadth" / "component_coverage_audit.tsv"),
+            ]
+        elif label == "build_adc_asset_universe":
+            cmd = [
+                sys.executable, str(script_path),
+                "--feasibility-dir", str(feasibility_output),
+                "--nar-dir", str(data_dir / "reference" / "nar_adcdb"),
+                "--output", str(catalog_output / "adc_asset_universe.tsv"),
+                "--report-output", str(REPO_ROOT / "reports" / "validation" / "breadth" / "ADC_ASSET_UNIVERSE_COVERAGE.md"),
+                "--clinical-development-output", str(catalog_output / "adc_clinical_development.tsv"),
             ]
         outcome = _run_subprocess(label, cmd)
         outcomes.append(outcome)
@@ -358,8 +576,12 @@ def write_delta_summary_tsv(path: Path, new_rows_by_table: dict) -> None:
     rows = []
     for table, entries in new_rows_by_table.items():
         for entry in entries:
-            key_repr = entry.get("entity_id") or entry.get("candidate_id") or entry.get("indication") or str(entry)
-            rows.append(dict(table=table, tier=entry["_tier"], key=key_repr, canonical_label=entry.get("canonical_label", "")))
+            key_repr = (
+                entry.get("entity_id") or entry.get("candidate_id") or entry.get("asset_id")
+                or entry.get("indication") or str(entry)
+            )
+            canonical_label = entry.get("canonical_label") or entry.get("canonical_name") or ""
+            rows.append(dict(table=table, tier=entry["_tier"], key=key_repr, canonical_label=canonical_label))
     df = pd.DataFrame(rows, columns=["table", "tier", "key", "canonical_label"])
     df.sort_values(["tier", "table", "key"], inplace=True) if not df.empty else None
     df.to_csv(path, sep="\t", index=False)
@@ -378,6 +600,30 @@ def write_status_changes_tsv(path: Path, status_changes_by_table: dict) -> None:
             ))
     df = pd.DataFrame(rows, columns=["table", "key", "field", "before", "after", "tier_a_upgrade"])
     df.sort_values(["table", "key", "field"], inplace=True) if not df.empty else None
+    df.to_csv(path, sep="\t", index=False)
+
+
+def write_identity_merges_tsv(
+    path: Path, identity_merges_by_table: dict, unresolved_removals_by_table: dict,
+) -> None:
+    """table/kind/from_key/to_key -- one row per before-only key on a table
+    covered by IDENTITY_MERGE_EVIDENCE_FIELD: `IDENTITY_MERGE` when a
+    surviving row's own evidence-id field contains the removed row's
+    evidence token (`to_key` populated), `UNRESOLVED_REMOVAL` when no
+    survivor could be identified (`to_key` left blank -- never a guessed
+    merge target)."""
+    rows = []
+    for table, merges in identity_merges_by_table.items():
+        for m in merges:
+            rows.append(dict(
+                table=table, kind="IDENTITY_MERGE",
+                from_key="|".join(m["from_key"]), to_key="|".join(m["to_key"]),
+            ))
+    for table, removals in unresolved_removals_by_table.items():
+        for r in removals:
+            rows.append(dict(table=table, kind="UNRESOLVED_REMOVAL", from_key="|".join(r["key"]), to_key=""))
+    df = pd.DataFrame(rows, columns=["table", "kind", "from_key", "to_key"])
+    df.sort_values(["table", "kind", "from_key"], inplace=True) if not df.empty else None
     df.to_csv(path, sep="\t", index=False)
 
 
@@ -401,8 +647,9 @@ def build_delta_markdown(result: DeltaResult) -> str:
 
 Per `reports/validation/BREADTH_PLAN.md` Phase 6 (Parts 12-13). Generated by
 `tools/breadth/update_breadth.py` -- snapshot-diff of `DATA/feasibility/*.tsv`
-before/after this run's acquisition + breadth-derivation stages. Never
-overwrites a prior day's delta (see this directory's own creation rule).
+and `DATA/catalog/adc_asset_universe.tsv` (PR #33) before/after this run's
+acquisition + breadth-derivation stages. Never overwrites a prior day's
+delta (see this directory's own creation rule).
 
 **DELTA_STATUS: {result.delta_status}**
 
@@ -441,7 +688,10 @@ python3 tools/breadth/update_breadth.py --data-dir DATA --delta-output reports/d
     for table, entries in result.new_rows_by_table.items():
         for e in entries:
             tier_counts[e["_tier"]] += 1
-            label = e.get("canonical_label") or e.get("candidate_label") or e.get("entity_id") or e.get("candidate_id") or e.get("indication", "")
+            label = (
+                e.get("canonical_label") or e.get("candidate_label") or e.get("canonical_name")
+                or e.get("entity_id") or e.get("candidate_id") or e.get("asset_id") or e.get("indication", "")
+            )
             tier_sections[e["_tier"]].append(f"- `{table}`: {label}")
 
     upgrade_lines = []
@@ -458,6 +708,15 @@ python3 tools/breadth/update_breadth.py --data-dir DATA --delta-output reports/d
     deepened_lines = "\n".join(
         f"- `{table}`: {len(entries)} existing entities gained more evidence"
         for table, entries in result.deepened_by_table.items()
+    ) or "None this run."
+
+    identity_merge_lines = "\n".join(
+        f"- `{table}`: `{'|'.join(m['from_key'])}` -> `{'|'.join(m['to_key'])}`"
+        for table, merges in result.identity_merges_by_table.items() for m in merges
+    ) or "None this run."
+    unresolved_removal_lines = "\n".join(
+        f"- `{table}`: `{'|'.join(r['key'])}`"
+        for table, removals in result.unresolved_removals_by_table.items() for r in removals
     ) or "None this run."
 
     return header + f"""
@@ -500,6 +759,27 @@ watched -- see STATUS_FIELDS_BY_TABLE.
 
 {deepened_lines}
 
+## Identity merges (PR #33 round-1 fix)
+
+A before-only `asset_id` on `adc_asset_universe.tsv` whose own evidence
+token was found inside a SURVIVING row's `evidence_ids` -- e.g. an
+OURS-only candidate later resolved by exact-identifier match against its
+NAR reference row (see `build_master_rows()`), which folds it into that
+NAR row rather than changing its own asset_id's fields in place. Every
+merge here is ALSO already reflected as a `catalog_status`/`sources`
+change on the survivor row above; this section exists so the disappearing
+`asset_id` itself is not silently unaccounted for.
+
+{identity_merge_lines}
+
+## Unresolved removals (before-only key, no survivor identified)
+
+A before-only key on a table covered by identity-merge detection whose
+own evidence token could NOT be found in any surviving row -- reported
+honestly as unresolved rather than guessing a merge target.
+
+{unresolved_removal_lines}
+
 ## Failures this run
 
 {'None.' if not (failed_jobs or failed_derivation) else ''}
@@ -526,11 +806,13 @@ def main() -> int:
     parser.add_argument("--skip-acquisition", action="store_true", help="Skip the acquisition stage entirely (derivation-only re-run).")
     parser.add_argument("--data-dir", type=str, default="DATA")
     parser.add_argument("--feasibility-dir", type=str, default="DATA/feasibility")
+    parser.add_argument("--catalog-dir", type=str, default="DATA/catalog")
     parser.add_argument("--delta-output", type=str, default="reports/delta")
     args = parser.parse_args()
 
     data_dir = Path(args.data_dir)
     feasibility_dir = Path(args.feasibility_dir)
+    catalog_dir = Path(args.catalog_dir)
     delta_output_root = Path(args.delta_output)
 
     job_names = [j.strip() for j in args.jobs.split(",")] if args.jobs else list(JOBS.keys())
@@ -541,16 +823,19 @@ def main() -> int:
     now = datetime.now(timezone.utc).isoformat()
     result = DeltaResult(run_started_at=now)
 
-    before_snapshot = read_feasibility_snapshot(feasibility_dir)
+    before_snapshot = read_feasibility_snapshot(feasibility_dir, catalog_dir)
 
     if not args.skip_acquisition:
         result.job_outcomes = run_acquisition_stage(job_names, data_dir)
-    result.derivation_outcomes = run_derivation_stage(data_dir, feasibility_dir)
+    result.derivation_outcomes = run_derivation_stage(data_dir, feasibility_dir, catalog_dir)
 
     derivation_ok = all(o.ok for o in result.derivation_outcomes)
     if derivation_ok:
-        after_snapshot = read_feasibility_snapshot(feasibility_dir)
-        result.new_rows_by_table, result.deepened_by_table, result.status_changes_by_table = diff_snapshots(before_snapshot, after_snapshot)
+        after_snapshot = read_feasibility_snapshot(feasibility_dir, catalog_dir)
+        (
+            result.new_rows_by_table, result.deepened_by_table, result.status_changes_by_table,
+            result.identity_merges_by_table, result.unresolved_removals_by_table,
+        ) = diff_snapshots(before_snapshot, after_snapshot)
         result.delta_status = "OK"
     else:
         # Fail closed: a partial derivation chain must never be diffed
@@ -564,6 +849,9 @@ def main() -> int:
 
     write_delta_summary_tsv(delta_dir / "delta_summary.tsv", result.new_rows_by_table)
     write_status_changes_tsv(delta_dir / "status_changes.tsv", result.status_changes_by_table)
+    write_identity_merges_tsv(
+        delta_dir / "identity_merges.tsv", result.identity_merges_by_table, result.unresolved_removals_by_table,
+    )
     (delta_dir / "ADC_BREADTH_DELTA.md").write_text(build_delta_markdown(result), encoding="utf-8")
 
     total_job_failed = sum(1 for o in result.job_outcomes if not o.ok)
