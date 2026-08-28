@@ -2,7 +2,9 @@ import numpy as np
 import pandas as pd
 
 from tools.breadth.candidate_queue import (
+    apply_alias_crosswalk,
     build_conference_suffix_candidates,
+    build_ctgov_dev_code_candidates,
     build_ctgov_suffix_candidates,
     build_dev_code_candidates,
     candidate_id_for_name,
@@ -16,6 +18,7 @@ from tools.breadth.candidate_queue import (
     merge_dev_code_candidates,
     merge_suffix_candidates,
     normalize_name,
+    parenthetical_alias_crosswalk,
     status_and_confidence_for_sources,
 )
 
@@ -425,3 +428,264 @@ def test_merge_dev_code_candidates_combines_sources_for_same_code():
     assert entry["sources"] == {"pubmed", "europe_pmc"}
     assert entry["conference_ids"] == {"pmid:1", "pmid:2"}
     assert entry["first_seen"] == "2023-06-01"  # earliest of the two
+
+
+# --- PR #32: appositive pattern, hyphen-optional fragment, CT.gov signal, alias crosswalk, new suffixes ---
+
+
+def test_build_dev_code_candidates_finds_appositive_pattern():
+    """Round-1-of-PR#31-fix regression: 'ZL-6201, a novel LRRC15-
+    targeting antibody drug conjugate (ADC)' -- an appositive construction
+    with no is/was verb, which PR #31's two patterns did not cover."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="conf:1", title="Discovery of ZL-6201",
+             abstract="Discovery of ZL-6201, a novel LRRC15-targeting antibody drug conjugate (ADC) for "
+                      "the treatment of sarcomas and epithelial solid tumors.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "conference_abstract_corpus", known)
+    assert "zl6201" in candidates
+    assert candidates["zl6201"]["label"] == "ZL-6201"
+
+
+def test_build_dev_code_candidates_finds_hyphenless_code():
+    """Round-1-of-PR#31-fix regression: the real acquired text spells
+    BAT-8008 without its hyphen ("BAT8008")."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="conf:1", title="A study",
+             abstract="This study reports the safety and efficacy of BAT8008, an antibody-drug conjugate, "
+                      "in a cohort of patients.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "conference_abstract_corpus", known)
+    assert "bat8008" in candidates
+
+
+def test_build_dev_code_candidates_finds_letter_after_hyphen_code():
+    """SHR-A2102 -- a letter directly after the hyphen, before the digit
+    run, a shape the original fragment (hyphen then digits only) missed."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="conf:1", title="A study",
+             abstract="SHR-A2102, a nectin-4 directed antibody-drug conjugate, in patients with "
+                      "pretreated advanced solid tumours.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "conference_abstract_corpus", known)
+    assert "shra2102" in candidates
+
+
+def test_build_dev_code_candidates_finds_single_letter_hyphenless_prefix():
+    """M7437 -- a single-uppercase-letter-only prefix, shorter than the
+    original hyphenless fragment's 2-character minimum."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="conf:1", title="A study",
+             abstract="M7437, a novel anti-Ly6E antibody-drug conjugate (ADC) with topoisomerase 1 "
+                      "inhibitor payload: preclinical antitumor activity and safety.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "conference_abstract_corpus", known)
+    assert "m7437" in candidates
+
+
+def test_build_dev_code_candidates_still_rejects_short_target_symbols():
+    """The broadened fragment must still exclude common 1-2-digit target/
+    biomarker symbols (HER2, CD30) -- the >=3-digit floor for the
+    hyphenless branch is the guard."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="conf:1", title="A study",
+             abstract="HER2 is a well-established target. CD30 is an antibody-drug conjugate target "
+                      "in Hodgkin lymphoma.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "conference_abstract_corpus", known)
+    assert candidates == {}
+
+
+def test_build_dev_code_candidates_keeps_compound_identifier_whole():
+    """Round-2-of-PR#32 fix (reviewer-identified identity-correctness
+    blocker): a real two-segment compound identifier like
+    "REGN5093-M114" must be extracted as ONE candidate, not split into
+    "REGN5093" and "M114" as two separate (and both wrong/incomplete)
+    candidates."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="epmc:1", title="A study",
+             abstract="Preclinical Study of a Biparatopic METxMET Antibody-Drug Conjugate, "
+                      "REGN5093-M114, Overcomes MET-driven Acquired Resistance to EGFR TKIs.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "europe_pmc", known)
+    assert "regn5093m114" in candidates
+    assert "regn5093" not in candidates
+    assert "m114" not in candidates
+
+
+def test_build_dev_code_candidates_does_not_collapse_distinct_compound_identifiers():
+    """Round-2-of-PR#32 fix: four genuinely DISTINCT real ADCs
+    ("HRA00129-C004", "HRA00184-C004", "HRA00242-C004", "HRA00130-C004")
+    share a molecule-code suffix ("C004") but must remain four separate
+    candidates, not collapse into one "C004" row."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="conf:1", title="A study",
+             abstract="In this study, we developed a new ADC, HRA00129-C004, which consists of a "
+                      "specifically designed humanized antibody.",
+             publication_or_release_date="2024-01-01"),
+        dict(source_record_id="conf:2", title="A study",
+             abstract="HRA00184-C004 is a novel ADC comprising a differentiated TF-targeted antibody.",
+             publication_or_release_date="2024-01-01"),
+        dict(source_record_id="conf:3", title="A study",
+             abstract="Here, we presented a PSMA-directed ADC, HRA00242-C004, which features a "
+                      "differentiated topoisomerase I inhibitor payload.",
+             publication_or_release_date="2024-01-01"),
+        dict(source_record_id="conf:4", title="A study",
+             abstract="Here we presented a DLL3-directed ADC, HRA00130-C004, which features a "
+                      "differentiated topoisomerase I inhibitor payload.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "conference_abstract_corpus", known)
+    assert "c004" not in candidates
+    assert set(candidates) == {"hra00129c004", "hra00184c004", "hra00242c004", "hra00130c004"}
+    assert candidates["hra00129c004"]["label"] == "HRA00129-C004"
+    assert candidates["hra00184c004"]["label"] == "HRA00184-C004"
+    assert candidates["hra00242c004"]["label"] == "HRA00242-C004"
+    assert candidates["hra00130c004"]["label"] == "HRA00130-C004"
+
+
+def test_build_dev_code_candidates_ordinary_single_hyphen_code_unaffected():
+    """Round-2-of-PR#32 fix regression guard: the new compound alternative
+    must not change extraction for an ORDINARY single-hyphen code whose
+    prefix half carries no digit run of its own (e.g. "SHR-A2102",
+    "BAT-8008") -- these must still extract as their existing full label,
+    not be mistaken for a two-segment compound."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="conf:1", title="A study",
+             abstract="SHR-A2102, a nectin-4 directed antibody-drug conjugate, in patients with "
+                      "pretreated advanced solid tumours.",
+             publication_or_release_date="2024-01-01"),
+        dict(source_record_id="conf:2", title="A study",
+             abstract="This study reports the safety and efficacy of BAT-8008, an antibody-drug "
+                      "conjugate, in a cohort of patients.",
+             publication_or_release_date="2024-01-01"),
+    ])
+    candidates = build_dev_code_candidates(manifest, "conference_abstract_corpus", known)
+    assert set(candidates) == {"shra2102", "bat8008"}
+
+
+def test_build_ctgov_dev_code_candidates_requires_trial_level_adc_context():
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(nct_id="NCT1", intervention_names=["STRO-002"],
+             brief_title="Study of STRO-002, an Anti-Folate Receptor Alpha Antibody Drug Conjugate",
+             official_title="", conditions=["Ovarian Cancer"], study_first_post_date="2020-01-01"),
+        dict(nct_id="NCT2", intervention_names=["PF-06804103"],
+             brief_title="PF-06804103 Dose Escalation in HER2 Positive Solid Tumors",
+             official_title="", conditions=["Breast Neoplasms"], study_first_post_date="2020-01-01"),
+    ])
+    candidates = build_ctgov_dev_code_candidates(manifest, known)
+    assert "stro002" in candidates  # trial title itself says "Antibody Drug Conjugate"
+    assert "pf06804103" not in candidates  # this trial's own title/conditions never say ADC
+
+
+def test_build_ctgov_dev_code_candidates_full_match_only_not_embedded():
+    """A dev-code-shaped SUBSTRING of a longer intervention_names entry
+    (e.g. a combination-regimen label) must not match -- only an entry
+    that IS, in its entirety, development-code-shaped."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(nct_id="NCT1", intervention_names=["Pembrolizumab + STRO-002"],
+             brief_title="A study of an antibody-drug conjugate", official_title="",
+             conditions=[], study_first_post_date="2020-01-01"),
+    ])
+    candidates = build_ctgov_dev_code_candidates(manifest, known)
+    assert candidates == {}
+
+
+def test_parenthetical_alias_crosswalk_finds_code_in_parens_after_name():
+    df = pd.DataFrame([
+        dict(title="GPNMB-targeted ADC",
+             abstract="cells to killing by CDX-011 (glembatumumab vedotin), a GPNMB-targeted "
+                      "antibody-drug conjugate."),
+    ])
+    aliases = parenthetical_alias_crosswalk([(df, ["title", "abstract"])], ["glembatumumab vedotin"])
+    assert aliases == {"glembatumumabvedotin": {"CDX-011"}}
+
+
+def test_parenthetical_alias_crosswalk_finds_name_in_parens_after_code():
+    df = pd.DataFrame([
+        dict(title="Management of metastatic breast cancer",
+             abstract="second-generation antibody-drug conjugates: focus on glembatumumab vedotin "
+                      "(CDX-011, CR011-vcMMAE)."),
+    ])
+    aliases = parenthetical_alias_crosswalk([(df, ["title", "abstract"])], ["glembatumumab vedotin"])
+    assert aliases == {"glembatumumabvedotin": {"CDX-011"}}
+
+
+def test_parenthetical_alias_crosswalk_finds_multi_alias_group():
+    """'Bulumtatug Fuvedotin (BFv, 9MW2821)' -- a comma-separated group
+    inside the parens, only the dev-code-shaped piece is kept."""
+    df = pd.DataFrame([
+        dict(title="Bulumtatug Fuvedotin (BFv, 9MW2821), a next-generation Nectin-4 targeting ADC",
+             abstract="in patients with advanced solid tumors."),
+    ])
+    aliases = parenthetical_alias_crosswalk([(df, ["title", "abstract"])], ["Bulumtatug Fuvedotin"])
+    assert aliases == {"bulumtatugfuvedotin": {"9MW2821"}}
+
+
+def test_parenthetical_alias_crosswalk_empty_when_no_candidate_labels():
+    df = pd.DataFrame([dict(title="x (CDX-011)", abstract="")])
+    assert parenthetical_alias_crosswalk([(df, ["title", "abstract"])], []) == {}
+
+
+def test_apply_alias_crosswalk_merges_dev_code_into_suffix_candidate_not_double_listed():
+    suffix_candidates = {
+        "glembatumumabvedotin": dict(
+            label="glembatumumab vedotin", suffix="vedotin", nct_ids=set(), conference_ids={"epmc:1"},
+            phases=set(), contexts={"x"}, first_seen="2020-01-01", sources={"conference_abstract_corpus"},
+            adjacent_modalities=set(),
+        ),
+    }
+    dev_code_candidates = {
+        "cdx011": dict(
+            label="CDX-011", nct_ids=set(), conference_ids={"pmid:9"}, phases=set(),
+            contexts={"y"}, first_seen="2015-01-01", sources={"pubmed"}, adjacent_modalities=set(),
+        ),
+    }
+    alias_crosswalk = {"glembatumumabvedotin": {"CDX-011"}}
+    updated_suffix, remaining_dev = apply_alias_crosswalk(suffix_candidates, dev_code_candidates, alias_crosswalk)
+    assert remaining_dev == {}  # not double-listed
+    merged = updated_suffix["glembatumumabvedotin"]
+    assert merged["sources"] == {"conference_abstract_corpus", "pubmed"}  # evidence merged, not dropped
+    assert merged["first_seen"] == "2015-01-01"  # earliest of the two
+
+
+def test_apply_alias_crosswalk_leaves_unrelated_dev_code_untouched():
+    suffix_candidates = {"a": dict(label="A vedotin", suffix="vedotin", nct_ids=set(), conference_ids=set(),
+                                    phases=set(), contexts=set(), first_seen=None, sources={"pubmed"},
+                                    adjacent_modalities=set())}
+    dev_code_candidates = {"tak500": dict(label="TAK-500", nct_ids=set(), conference_ids=set(), phases=set(),
+                                           contexts=set(), first_seen=None, sources={"europe_pmc"},
+                                           adjacent_modalities=set())}
+    updated_suffix, remaining_dev = apply_alias_crosswalk(suffix_candidates, dev_code_candidates, alias_crosswalk={})
+    assert "tak500" in remaining_dev
+    assert updated_suffix["a"]["sources"] == {"pubmed"}  # untouched
+
+
+def test_find_suffix_matches_new_suffixes_do_not_collide_with_soravtansine():
+    """'Mirvetuximab soravtansine' must still match the more specific
+    'soravtansine' suffix, not the newly-added 'ravtansine' (which
+    'soravtansine' ends with as a substring)."""
+    assert find_suffix_matches("Mirvetuximab soravtansine") == "soravtansine"
+    assert find_suffix_matches("Indatuximab ravtansine") == "ravtansine"
+
+
+def test_find_suffix_matches_recognizes_new_pr32_suffixes():
+    assert find_suffix_matches("Bivatuzumab mertansine") == "mertansine"
+    assert find_suffix_matches("Serclutamab talirine") == "talirine"
+    assert find_suffix_matches("Vobramitamab duocarmazine") == "duocarmazine"

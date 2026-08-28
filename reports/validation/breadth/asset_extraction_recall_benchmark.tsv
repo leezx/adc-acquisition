@@ -1,0 +1,276 @@
+nar_adc_id	canonical_name	phase_bucket	broad_sources	match_basis	extractor_matched	miss_cause
+DRG0AHKIO	MTX-13	Phase1	clinicaltrials	STRONG_IDENTIFIER_NCT	True	
+DRG0AJCCS	BAT-8008	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0ANRPC	JSKN021	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0ARHOG	BIIB-015	Phase1	epo; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0ATULB	Laprituximab emtansine	Phase1	clinicaltrials	ALIAS_MATCH; STRONG_IDENTIFIER_NCT	False	SUFFIX_COVERED_BUT_STILL_MISSED
+DRG0AUAOQ	ZL-6201	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0AWQJG	PF-06804103	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0AWUIJ	Indatuximab ravtansine	Phase2	wipo	ALIAS_MATCH	True	
+DRG0BBQSE	Enfortumab vedotin	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0BBWPI	SYS6023	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0BBYHA	Bivatuzumab mertansine	Phase1	europe_pmc; pubmed; wipo	EXACT_NAME	False	SUFFIX_COVERED_BUT_STILL_MISSED
+DRG0BFNMH	GQ-1001	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0BGJNX	TAK-500	Phase2	conference_abstract_corpus; europe_pmc	EXACT_NAME	True	
+DRG0BGQOD	ADCT-901	Phase1	conference_abstract_corpus	ALIAS_MATCH	False	DEV_CODE_SHAPED
+DRG0BKLSW	SLV-324	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0BSQPI	Sacituzumab tirumotecan	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	True	
+DRG0BWCTV	ARX-305	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0CBLIJ	BGB-C354	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0CCEQO	ABBV-400	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	EXACT_NAME	True	
+DRG0CDYJL	MYTX-011	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0CECRA	Trastuzumab rezetecan	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0CEJDT	DB-1317	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0CIZWI	AMT-676	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0CKSWS	CMG-901	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc	ALIAS_MATCH; EXACT_NAME	True	
+DRG0CMUPE	BG-C0902	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0COMTY	Telisotuzumab vedotin	Approved	clinicaltrials; conference_abstract_corpus; epo; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0CRDKL	HKT-288	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0CRYVT	DP-303c	Phase3	clinicaltrials	EXACT_NAME	True	
+DRG0CXFTH	Serclutamab talirine	Phase1	conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0CXRVR	JSKN022	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0CYMEB	Trastuzumab emtansine	Approved	clinicaltrials; conference_abstract_corpus; epo; europe_pmc; pubmed; wipo	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0DAKKB	Patritumab deruxtecan	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	True	
+DRG0DEGEG	Vobramitamab duocarmazine	Phase2	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0DIWSF	Cantuzumab mertansine	Phase1	epo; europe_pmc; pubmed; wipo	ALIAS_MATCH; EXACT_NAME	False	SUFFIX_COVERED_BUT_STILL_MISSED
+DRG0DLKUH	DB-1305	Phase2	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0DOTIX	CUSP06	Phase1	conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0EGQMP	BAT-8006	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0EJBII	BL-M07D1	Phase3	conference_abstract_corpus; pubmed	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0EKTUN	Sacituzumab govitecan	Approved	clinicaltrials; conference_abstract_corpus; epo; europe_pmc; pubmed; uspto; wipo	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0ELYWP	Tusamitamab ravtansine	Phase3	conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	True	
+DRG0EMQPK	SYD-1875	Phase1	clinicaltrials; conference_abstract_corpus; epo; wipo	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0ENYRQ	DB-1303	Phase3	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0ENYXZ	MRG-002	Phase2	clinicaltrials; conference_abstract_corpus; pubmed	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0EOBLX	HDM2017	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0EOMCN	BL-M02D1	Phase2	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0EPHMC	Anetumab ravtansine	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0EPYFC	SAR-428926	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0ERKBH	Trastuzumab deruxtecan	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed; wipo	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0ERYUF	SGN-B7H4V	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0EWQKX	Ozuriftamab vedotin	Phase2	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0EWYVN	ADCE-B05	Phase1	clinicaltrials	STRONG_IDENTIFIER_NCT	True	
+DRG0EZVZS	BYON-4413	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0FBKIO	ABBV-3373	Phase2	europe_pmc	EXACT_NAME	True	
+DRG0FGLFW	ATG-022	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0FKZGF	XNW-27011	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0FMCLF	JSKN-003	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc	EXACT_NAME	True	
+DRG0FPQOM	XMT-1660	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0FSHWJ	Indusatumab vedotin	Phase2	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0FUFBP	Camidanlumab tesirine	Phase2	clinicaltrials; conference_abstract_corpus; epo; wipo	ALIAS_MATCH; EXACT_NAME	True	
+DRG0FWSXF	BG-C0979	Phase1	clinicaltrials	STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0GCCJJ	LM-302	Phase3	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0GCHQJ	PF-08046033	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0GDLEY	STI-6129	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0GGKEV	NBE-002	Phase2	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0GJXHJ	HS-20122	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0GKOZH	Mirvetuximab soravtansine	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed; wipo	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0GQWJI	M7437	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0GXGXB	GenSci139	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0GYGUI	FDA022-BB05	Phase1	clinicaltrials	EXACT_NAME	True	
+DRG0GYNBS	XMT-1522	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0GZGHN	SAR-566658	Phase2	conference_abstract_corpus; wipo	ALIAS_MATCH; EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0HGHXE	MHB088C	Phase2	conference_abstract_corpus	EXACT_NAME	True	
+DRG0HOBUN	OMTX-705	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0HPUIL	Farletuzumab ecteribulin	Phase2	clinicaltrials; conference_abstract_corpus; europe_pmc	ALIAS_MATCH; EXACT_NAME	True	
+DRG0HQVXQ	TORL-3-600	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0HTJXN	TQB2103	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0HVSBG	BDC-1001	Phase2	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0ICRYT	Oportuzumab monatox	Phase3	wipo	ALIAS_MATCH	False	UNCOVERED_SUFFIX
+DRG0IMAKZ	Mecbotamab vedotin	Phase2	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0IOMGE	JNJ-89862175	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0IOSTB	PLB-002	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0IPCHO	TAK-164	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0IRZIB	Glembatumumab vedotin	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0IVDIV	TQB2102	Phase2	clinicaltrials; conference_abstract_corpus; europe_pmc	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0JBKMD	Labetuzumab govitecan	Phase2	clinicaltrials; conference_abstract_corpus; epo	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0JCGJZ	ABBV-291	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0JCWGF	TRPH-222	Phase1	clinicaltrials; conference_abstract_corpus; pubmed	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0JEVIM	Disitamab vedotin	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0JFYCH	KK2845	Phase1	europe_pmc	EXACT_NAME	True	
+DRG0JGJDN	HBM9033	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0JJEUT	Aprutumab ixadotin	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; STRONG_IDENTIFIER_NCT	True	
+DRG0JMXQX	HDM2012	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0JNXDB	XMT-1592	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0JNZLF	PCA-062	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0JOHND	Gemtuzumab ozogamicin	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed; wipo	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME	True	
+DRG0JQAJB	MGTA-117	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0JQHJW	AGX101	Phase1	clinicaltrials	EXACT_NAME	True	
+DRG0JQWJI	BG-C137	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0JSPJR	ZL-1310	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0JTQDR	FS-1502	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH	True	
+DRG0JUOJJ	MHB036C	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0JWBNH	Brentuximab vedotin	Approved	clinicaltrials; conference_abstract_corpus; epo; europe_pmc; pubmed; wipo	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0JYNCF	CX-2029	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0KHFFZ	PF-06263507	Phase1	conference_abstract_corpus; pubmed	ALIAS_MATCH	False	DEV_CODE_SHAPED
+DRG0KJHHN	IMGN-779	Phase1	conference_abstract_corpus; epo	EXACT_NAME	True	
+DRG0KKATK	SHR-A2102	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc	EXACT_NAME	True	
+DRG0KMHHU	TRS-005	Phase1	conference_abstract_corpus; europe_pmc; pubmed	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0KNAHQ	BL-M14D1	Phase1	conference_abstract_corpus; pubmed	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0KTRKE	PF-06664178	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0KTTFS	XMT-2056	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0KYHQN	CMB-401	Phase2	europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0KYOBC	TORL-1-23	Phase1	clinicaltrials; conference_abstract_corpus; europe_pmc	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0LCOWD	MRG-004A	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0LFZFX	ABBV-319	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0LHZWB	ASN-004	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0LJGJX	IBI3028	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0LLSDP	9MW-2921	Phase2	conference_abstract_corpus	EXACT_NAME	True	
+DRG0LNVKG	ARX-788	Phase2	clinicaltrials; conference_abstract_corpus; europe_pmc	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0LQZSE	Naratuximab emtansine	Phase2	conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	True	
+DRG0LVYMB	DEC006	Phase1	clinicaltrials	STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0MCWQA	Enapotamab vedotin	Phase2	clinicaltrials; conference_abstract_corpus; epo; europe_pmc	ALIAS_MATCH; EXACT_NAME	True	
+DRG0MGUUX	FDA-022	Phase1	clinicaltrials	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0MHAHZ	Coltuximab ravtansine	Phase2	epo; pubmed; wipo	ALIAS_MATCH; EXACT_NAME	True	
+DRG0MKREW	SIM0505	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0MPDIB	ABBV-154	Phase2	europe_pmc; pubmed	EXACT_NAME	True	
+DRG0MRJEG	REGN5093-M114	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0MSOOX	KH815	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0MWSEV	NN-3201	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0NDXRU	Belantamab mafodotin	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0NEMOV	Losatuxizumab vedotin	Phase1	conference_abstract_corpus	ALIAS_MATCH	True	
+DRG0NMCNK	ZV0203	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0NMCNN	SGN-CD48A	Phase1	clinicaltrials	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0NNKAQ	Ifinatamab deruxtecan	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0NOFEI	BB-1712	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0NTFBR	MEDI-3726	Phase1	conference_abstract_corpus; epo; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	True	
+DRG0OAWRK	SHR-A1403	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0OGZEE	Mirzotamab clezutoclax	Phase1	europe_pmc	EXACT_NAME	False	UNCOVERED_SUFFIX
+DRG0OJHEN	AVID-100	Phase2	conference_abstract_corpus	EXACT_NAME	True	
+DRG0OMIWX	BA1301	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0OMORU	FZ-AD004	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0OMVBK	Azintuxizumab vedotin	Phase1	clinicaltrials	STRONG_IDENTIFIER_NCT	True	
+DRG0OPFVY	Samrotamab vedotin	Phase1	conference_abstract_corpus	ALIAS_MATCH	True	
+DRG0OVQWP	HDM2024	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0OYGNU	KIVU-107	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0OZSZX	Upifitamab rilsodotin	Phase3	clinicaltrials; conference_abstract_corpus; epo	ALIAS_MATCH; EXACT_NAME	True	
+DRG0PCDHO	LY4175408	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0PEVVH	FDA-018	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0PFKFR	Pinatuzumab vedotin	Phase1	epo; wipo	ALIAS_MATCH	True	
+DRG0PHKMG	TORL-4-500	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0PLPNX	SGN-ALPV	Phase1	conference_abstract_corpus	EXACT_NAME	False	OTHER_UNCLASSIFIED
+DRG0PNJIT	Tisotumab vedotin	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed; wipo	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0PQJDH	MEDI-2228	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0PWAOJ	SGN-CD228A	Phase1	conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0PXQWR	Depatuxizumab mafodotin	Phase2	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	True	
+DRG0QAHFT	DS3610	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0QBQKB	EBC-129	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0QDCHN	PRO-1160	Phase2	conference_abstract_corpus	EXACT_NAME	True	
+DRG0QMIBK	FOR-46	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0QQSDO	SGN-PDL1V	Phase3	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0QQUXG	SMP-656	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0QRDUT	AGS-16C3F	Phase2	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0QTTWI	Praluzatamab ravtansine	Phase2	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; STRONG_IDENTIFIER_NCT	True	
+DRG0QWZIT	Polatuzumab vedotin	Approved	clinicaltrials; conference_abstract_corpus; epo; europe_pmc; pubmed; wipo	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME	True	
+DRG0QZHYU	Sirtratumab vedotin	Phase1	conference_abstract_corpus; epo	ALIAS_MATCH	True	
+DRG0RARRJ	MEN-1309	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0RCFPY	BL-M11D1	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0RCHSE	SKB-315	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0RFWQY	ADRX-0706	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0RHAZG	Ladiratuzumab vedotin	Phase2	clinicaltrials; conference_abstract_corpus; europe_pmc	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0RIPVI	Becotatug vedotin	Approved	clinicaltrials; conference_abstract_corpus; pubmed	ALIAS_MATCH; EXACT_NAME	True	
+DRG0RJKWE	STRO-001	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0RLKMU	IBI343	Phase3	conference_abstract_corpus	EXACT_NAME	True	
+DRG0RMBUN	IMGC-936	Phase2	conference_abstract_corpus; europe_pmc	EXACT_NAME	True	
+DRG0RMWCH	SOT-102	Phase2	conference_abstract_corpus; europe_pmc	ALIAS_MATCH; EXACT_NAME	True	
+DRG0RRDEF	Luveltamab tazevibulin	Phase3	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0RSBMJ	Sofituzumab vedotin	Phase1	conference_abstract_corpus	ALIAS_MATCH	True	
+DRG0RVOYG	GenSci140	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0RZJIL	Tamrintamab pamozirine	Phase1	clinicaltrials	ALIAS_MATCH; STRONG_IDENTIFIER_NCT	False	UNCOVERED_SUFFIX
+DRG0SACUI	BB-1705	Phase2	conference_abstract_corpus	EXACT_NAME	True	
+DRG0SARIF	HDM2020	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0SBFHC	GR1017	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0SDZSF	Lorvotuzumab mertansine	Phase2	europe_pmc; pubmed; wipo	ALIAS_MATCH; EXACT_NAME	True	
+DRG0SEAFV	PYX-201	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0SGCAF	BG-C477	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0SGUGL	Ispectamab debotansine	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH	True	
+DRG0SHGPV	PF-06647263	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0SIMLV	ESG-401	Phase3	clinicaltrials	ALIAS_MATCH	True	
+DRG0SMAPS	PF-08052667	Phase1	conference_abstract_corpus; europe_pmc	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0SNURI	OBI-999	Phase2	clinicaltrials; conference_abstract_corpus; pubmed	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0SQXAL	ARX-517	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0SURHR	PF-08046031	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0SXFSY	Inotuzumab ozogamicin	Approved	clinicaltrials; conference_abstract_corpus; epo; europe_pmc; pubmed; wipo	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME	True	
+DRG0SZKXH	BYON-3521	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0SZXVK	PF-08046032	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0TBCEQ	HS-20093	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc	EXACT_NAME	True	
+DRG0TGZKY	AMT-151	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0THGAW	Trastuzumab duocarmazine	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc; wipo	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0TJYIW	ORM-6151	Phase3	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0TKVCB	Loncastuximab tesirine	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	True	
+DRG0TNQTB	DXC1002	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0TPQUN	9MW-2821	Phase2	clinicaltrials; conference_abstract_corpus; europe_pmc	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0TSLDF	SHR-A1921	Phase2	clinicaltrials; conference_abstract_corpus; europe_pmc	EXACT_NAME	True	
+DRG0TTTUA	SHR-A2009	Phase3	clinicaltrials	EXACT_NAME	True	
+DRG0TZZNJ	Mipasetamab uzoptirine	Phase1	conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; EXACT_NAME	True	
+DRG0UEVLW	TGW101	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0UFAIG	SBE303	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0UHEOR	HS-20089	Phase3	clinicaltrials; conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0UHUMZ	IBI-354	Phase3	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0UHXQK	SYS6041	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0ULCEQ	Rovalpituzumab tesirine	Phase3	clinicaltrials; conference_abstract_corpus; pubmed	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0UPZCS	MGC026	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0UQTJG	Lifastuzumab vedotin	Phase2	conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0USIEY	DA-3501	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0UUEEH	SC-002	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0VHVOA	TUB-030	Phase2	conference_abstract_corpus	EXACT_NAME	True	
+DRG0VHXYA	GQ-1005	Phase3	clinicaltrials; conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0VIMVV	ALX2004	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0VJOET	Moxetumomab pasudotox	Approved	epo; pubmed	EXACT_NAME	False	UNCOVERED_SUFFIX
+DRG0VJROY	SGN-B6A	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc	ALIAS_MATCH; EXACT_NAME	True	
+DRG0VULUJ	TQB2101	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0VVKYV	FZ-AD005	Phase1	clinicaltrials	STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0VYGGK	BMS-986148	Phase2	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0VYKSA	LM-305	Phase2	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0WCTHL	Pivekimab sunirine	Phase2	clinicaltrials; conference_abstract_corpus; epo	ALIAS_MATCH; EXACT_NAME	True	
+DRG0WCYUM	Lupartumab amadotin	Phase1	conference_abstract_corpus	ALIAS_MATCH	False	UNCOVERED_SUFFIX
+DRG0WGVKF	FS-1502	Phase3	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH	False	DEV_CODE_SHAPED
+DRG0WIBDT	HDP-101	Phase2	conference_abstract_corpus	EXACT_NAME	True	
+DRG0WJKRI	DS-6157a	Phase1	conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0WJWEG	AGS-67E	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0WLYOR	MLN2704	Phase2	europe_pmc; pubmed; wipo	EXACT_NAME	True	
+DRG0WNVBV	ICP-B794	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0WOBTH	DS-3939	Phase2	conference_abstract_corpus; europe_pmc	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0WOJVL	BB-1701	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0WRFYU	PF-06650808	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0WWBVZ	BC3195	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0WWZAS	SYS6010	Phase3	conference_abstract_corpus	EXACT_NAME	True	
+DRG0WXNKG	JBH-492	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0WXQJL	Vadastuximab talirine	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0XBJHU	LY-3076226	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0XCWMD	Cantuzumab ravtansine	Phase2	conference_abstract_corpus; europe_pmc; wipo	ALIAS_MATCH; EXACT_NAME	True	
+DRG0XEXPT	SGN-STNV	Phase1	conference_abstract_corpus	EXACT_NAME	False	OTHER_UNCLASSIFIED
+DRG0XFQVE	SYSA-1801	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0XHZLG	Cofetuzumab pelidotin	Phase1	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	False	UNCOVERED_SUFFIX
+DRG0XJLTL	JNJ-95298177	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0XKMVA	SYS6002	Phase2	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0XLSWN	SC-006	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0XPPOZ	Vorsetuzumab mafodotin	Phase1	clinicaltrials	ALIAS_MATCH	True	
+DRG0XRAON	LOP-628	Phase1	clinicaltrials; europe_pmc	EXACT_NAME	True	
+DRG0XSBGL	PF-08046876	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0YANSF	BL-B01D1	Phase3	conference_abstract_corpus; europe_pmc	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0YBSML	AK146D1	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0YDBZU	SHR-4602	Phase2	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0YFOJD	SGN-35C	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0YKHCA	AbGn-107	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0YLNPN	BRY-812	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0YMRIE	JSKN016	Phase2	conference_abstract_corpus; europe_pmc	EXACT_NAME	True	
+DRG0YODKD	BIO-106	Phase2	clinicaltrials	STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED
+DRG0YPVKH	Pertuzumab zuvotolimod	Phase1	clinicaltrials	ALIAS_MATCH; STRONG_IDENTIFIER_NCT	False	UNCOVERED_SUFFIX
+DRG0YQAIX	SHR-A1904	Phase3	conference_abstract_corpus	EXACT_NAME	True	
+DRG0YRJDY	ALT-P7	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0YWAHM	DS-6000	Phase3	clinicaltrials; conference_abstract_corpus; europe_pmc	ALIAS_MATCH; EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0YWYJJ	IMGN151	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME	True	
+DRG0YXBEH	SHR-A1912	Phase1	conference_abstract_corpus	EXACT_NAME	True	
+DRG0YXZQL	SGN-15	Phase2	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed; wipo	ALIAS_MATCH; EXACT_NAME	True	
+DRG0YZGPN	CDX-014	Phase1	clinicaltrials	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0YZPWM	SGN-CD352A	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0ZBCCA	MGC028	Phase1	conference_abstract_corpus; europe_pmc	EXACT_NAME	True	
+DRG0ZBXTV	TJ101	Phase1	clinicaltrials; conference_abstract_corpus	EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0ZIFBH	GenSci143	Phase1	conference_abstract_corpus; europe_pmc; pubmed	EXACT_NAME	True	
+DRG0ZLJPV	SKB-410	Phase2	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0ZMZUD	Zilovertamab vedotin	Phase2	clinicaltrials; conference_abstract_corpus	ALIAS_MATCH; EXACT_NAME	True	
+DRG0ZOYQV	Datopotamab deruxtecan	Approved	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed	ALIAS_MATCH; BRAND_MATCH; EXACT_NAME; STRONG_IDENTIFIER_NCT	True	
+DRG0ZQBSG	MRG-001	Phase2	europe_pmc; pubmed	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0ZQLZD	TR1801-ADC	Phase1	conference_abstract_corpus	EXACT_NAME	False	DEV_CODE_SHAPED
+DRG0ZQORV	DEC008	Phase1	clinicaltrials	STRONG_IDENTIFIER_NCT	False	DEV_CODE_SHAPED

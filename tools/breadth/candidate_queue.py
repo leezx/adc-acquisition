@@ -88,6 +88,23 @@ ADC_SUFFIX_PAYLOAD_CLASS = {
     "govitecan": "SN-38 (topoisomerase-1 inhibitor, irinotecan metabolite)",
     "tesirine": "a PBD (pyrrolobenzodiazepine) dimer",
     "deruxtecan": "an exatecan derivative (topoisomerase-1 inhibitor)",
+    # PR #32 additions -- each confirmed empirically against MULTIPLE
+    # distinct NAR reference-universe canonical names (same discipline as
+    # the original 8), not a single one-off: "ravtansine" (6 NAR assets,
+    # e.g. Indatuximab ravtansine, Anetumab ravtansine, Tusamitamab
+    # ravtansine), "mertansine" (3, e.g. Cantuzumab mertansine, Bivatuzumab
+    # mertansine -- earlier-generation ImmunoGen DM1 conjugates, publicly
+    # documented as using a disulfide-based linker rather than emtansine's
+    # later SMCC linker), "talirine" (3, e.g. vadastuximab talirine,
+    # Serclutamab talirine), "duocarmazine" (2, e.g. Vobramitamab
+    # duocarmazine). Inserted AFTER "soravtansine" so a name ending in
+    # "...soravtansine" is still matched to that MORE SPECIFIC suffix
+    # first (find_suffix_matches() returns the first dict-order match, and
+    # "soravtansine" itself ends in "ravtansine" as a substring).
+    "ravtansine": "DM4 (maytansinoid)",
+    "mertansine": "DM1 (maytansinoid)",
+    "talirine": "a PBD (pyrrolobenzodiazepine) dimer",
+    "duocarmazine": "a duocarmycin analog (DNA minor-groove alkylating agent)",
 }
 ADC_SUFFIX_LINKER_CLASS = {
     "vedotin": "valine-citrulline cleavable linker (typical)",
@@ -98,6 +115,10 @@ ADC_SUFFIX_LINKER_CLASS = {
     "govitecan": "cleavable CL2A linker (typical)",
     "tesirine": "cleavable linker (typical)",
     "deruxtecan": "cleavable GGFG peptide linker (typical)",
+    "ravtansine": "SPDB-based cleavable linker (typical)",
+    "mertansine": "disulfide-based cleavable linker (typical for earlier -mertansine-class conjugates)",
+    "talirine": "cleavable linker (typical)",
+    "duocarmazine": "cleavable linker (typical)",
 }
 
 NON_DRUG_INTERVENTION_TERMS = {
@@ -349,22 +370,101 @@ def local_context_for_span(text: str, start: int, end: int, window: int = 300) -
 # shape) -- a loose same-sentence/window co-occurrence with "ADC"/
 # "antibody-drug conjugate" was tried FIRST and rejected: verified against
 # the real corpus, it produced 542 candidate tokens, the large majority of
-# which were exactly this class of false positive. The pattern below
-# instead requires a TIGHT grammatical relationship -- the code must
+# which were exactly this class of false positive. The patterns below
+# instead require a TIGHT grammatical relationship -- the code must
 # either be the explicit subject of "<code> is/was a(n) ... ADC" (e.g.
-# "TAK-500 is a novel immune cell-directed antibody-drug conjugate"), or
+# "TAK-500 is a novel immune cell-directed antibody-drug conjugate"),
 # immediately follow "ADC"/"antibody-drug conjugate" as its named referent
-# (e.g. "the ADC candidate BAT-8008") -- verified against the real corpus
-# to cut the same scan down to 117 tokens, spot-checked as essentially all
-# genuine development codes (no clinical trial names, cell lines, or
-# target symbols observed in this tighter set).
-_DEV_CODE_FRAGMENT = r"[A-Za-z0-9]{1,4}[A-Z][A-Za-z0-9]{0,3}-\d{2,7}[A-Za-z]{0,2}"
+# (e.g. "the ADC candidate BAT-8008"), or appear in an APPOSITIVE
+# construction with no is/was verb (e.g. "ZL-6201, a novel LRRC15-
+# targeting antibody drug conjugate (ADC)" -- PR #32 addition, a real,
+# common conference-abstract-title construction the original two patterns
+# did not cover) -- verified against the real corpus to cut the loose scan
+# down to 117 tokens (original two patterns) / 463 tokens (with the
+# appositive pattern + hyphen-optional fragment below), spot-checked as
+# essentially all genuine development codes.
+#
+# PR #32: the fragment itself now also matches WITHOUT a hyphen (e.g.
+# "BAT8008", the exact real-text spelling that caused BAT-8008 to be
+# missed in PR #31 -- confirmed via reports/validation/breadth/
+# nar702_broad_recall.tsv that BAT-8008 is genuinely present in the
+# acquired corpus, just spelled without its hyphen there). The hyphenless
+# branch requires >=3 digits (vs. >=2 for the hyphenated branch) as the
+# false-positive guard a hyphen boundary would otherwise provide --
+# verified empirically this excludes "HER2"/"CD30"/"IL15"/"COVID19"-class
+# target/biomarker symbols (1-2 digits) while still matching genuine
+# hyphenless codes like "BAT8008"/"GQ1001"/"HKT288" (3+ digits).
+# Round-1-of-PR#32 fix: two more real dev-code shapes found in the real
+# corpus but missed by the original fragment -- a single letter directly
+# after the hyphen, before the digit run (e.g. "SHR-A2102", "BG-C0902",
+# "ADCE-B05"), and a single-UPPERCASE-LETTER-ONLY hyphenless prefix (e.g.
+# "M7437" -- the original hyphenless prefix required >=2 characters, one
+# wildcard + one mandatory uppercase, so a bare single letter never
+# matched). `_DEV_CODE_PREFIX` unifies both fragments' prefix shape: 0-3
+# wildcard alnum chars, exactly one MANDATORY uppercase letter (never
+# relaxed -- this is what excludes all-lowercase/all-digit false
+# positives like page ranges or p-values), then 0-3 more wildcard chars.
+_DEV_CODE_PREFIX = r"[A-Za-z0-9]{0,3}[A-Z][A-Za-z0-9]{0,3}"
+# Round-2-of-PR#32 fix (reviewer-identified identity-correctness blocker):
+# some real ADC identifiers are a TWO-SEGMENT compound
+# "<COMPANY_CODE>-<MOLECULE_CODE>" (e.g. "REGN5093-M114", "HRA00129-C004"
+# -- a company/platform antibody code, a hyphen, then a payload/conjugate-
+# specific molecule code). Each segment on its own is independently
+# dev-code-shaped, so without a dedicated compound alternative the single-
+# segment alternatives below match each half as a SEPARATE fragment
+# (confirmed empirically: `_DEV_CODE_FRAGMENT.finditer("REGN5093-M114")`
+# returned two non-overlapping matches, "REGN5093" and "M114") -- which is
+# an identity-correctness bug, not a recall gap: it fabricates two
+# candidate entities where the real corpus only ever discusses ONE (every
+# "REGN5093"/"M114"/"HRA00129..HRA00130"/"C004" occurrence in the real
+# acquired corpus is the FULL compound form -- verified directly against
+# europe_pmc.parquet/conference_abstract_corpus.parquet before writing this
+# fix), and collapses genuinely DISTINCT compounds that happen to share a
+# molecule-code suffix (four distinct real "HRA*-C004" candidates --
+# HRA00129/HRA00184/HRA00242/HRA00130 -- were all being written as one
+# "C004" row, since normalize_name() strips the hyphen and the truncated
+# trailing fragment alone carries no company-code half to disambiguate).
+#
+# `_DEV_CODE_SEGMENT` requires a digit run be present WITHIN the segment
+# (unlike the hyphenated-single alternative's optional single letter after
+# the hyphen), so the compound alternative can ONLY fire when BOTH halves
+# independently look like a full dev-code segment -- it does not fire for
+# an ordinary single hyphenated code like "SHR-A2102" or "BAT-8008" (the
+# "SHR"/"BAT" half has no digit run of its own, so `_DEV_CODE_SEGMENT`
+# fails to match it, and the alternation falls through to the existing
+# single-segment alternatives exactly as before). Placed FIRST in the
+# alternation so the regex engine's ordered-alternative matching prefers
+# the longest, fully-compound form at a given start position over either
+# single-segment alternative -- this is what makes the full compound
+# ("REGN5093-M114") the atomic candidate label instead of either half, and
+# lets it correctly join the existing exact-identifier NAR-resolution path
+# (NAR's own record for REGN5093-M114 already lists "REGN5093M114"/
+# "REGN 5093 M114"/"REGN5093- M114" as synonyms, all of which normalize
+# to the same string as this compound label).
+#
+# Deliberately NOT extended to three-or-more-segment names (out of scope
+# for this fix, per the reviewer's explicit instruction) -- a name like
+# that remains the disclosed, deferred limitation.
+_DEV_CODE_SEGMENT = rf"{_DEV_CODE_PREFIX}\d{{2,7}}[A-Za-z]{{0,2}}"
+_DEV_CODE_COMPOUND_FRAGMENT = rf"{_DEV_CODE_SEGMENT}-{_DEV_CODE_SEGMENT}"
+_DEV_CODE_FRAGMENT = (
+    rf"(?:{_DEV_CODE_COMPOUND_FRAGMENT}"
+    rf"|{_DEV_CODE_PREFIX}-[A-Za-z]?\d{{2,7}}[A-Za-z]{{0,2}}"
+    rf"|{_DEV_CODE_PREFIX}\d{{3,7}}[A-Za-z]{{0,2}})"
+)
 _DEV_CODE_ADC_CODE_FIRST_RE = re.compile(
     rf"\b({_DEV_CODE_FRAGMENT})\b,?\s+(?:is|was)\s+(?:an?\s+)?"
-    r"(?:novel\s+|investigational\s+|first-in-class\s+)*(?:antibody[- ]drug conjugate|ADC)\b"
+    r"(?:novel\s+|investigational\s+|first-in-class\s+)*(?:(?i:antibody[- ]drug conjugate)|ADC)\b"
 )
 _DEV_CODE_ADC_TERM_FIRST_RE = re.compile(
-    rf"\b(?:antibody[- ]drug conjugate|ADC)\b(?:\s+candidate)?,?\s+({_DEV_CODE_FRAGMENT})\b"
+    rf"\b(?:(?i:antibody[- ]drug conjugate)|ADC)\b(?:\s+candidate)?,?\s+({_DEV_CODE_FRAGMENT})\b"
+)
+# PR #32: appositive construction, no is/was verb -- the word-count cap
+# ({0,6} words between "a/an" and the ADC term) bounds the match to a
+# short descriptive phrase (e.g. "a novel LRRC15-targeting"), not an
+# arbitrary run-on across unrelated sentence content.
+_DEV_CODE_ADC_APPOSITIVE_RE = re.compile(
+    rf"\b({_DEV_CODE_FRAGMENT})\b,\s+(?:a|an)\s+(?:[A-Za-z0-9/-]+\s+){{0,6}}?(?:(?i:antibody[- ]drug conjugate)|ADC)\b"
 )
 # A prefix like "5E"/"1E" in "5E-33"/"1E-32" is scientific notation (a
 # p-value), not a development code -- the only false-positive CLASS the
@@ -374,13 +474,17 @@ _SCI_NOTATION_PREFIX_RE = re.compile(r"^\d*[Ee]$")
 
 def _iter_dev_code_adc_mentions(text: str):
     """Yields (code, start, end) for every developement-code+ADC-context
-    match in `text`, deduplicated by character span (the two regexes can
+    match in `text`, deduplicated by character span (the patterns can
     both match the same code at the same position from opposite
     directions in some phrasings)."""
     seen_spans: set[tuple[int, int]] = set()
-    for pattern in (_DEV_CODE_ADC_CODE_FIRST_RE, _DEV_CODE_ADC_TERM_FIRST_RE):
+    for pattern in (_DEV_CODE_ADC_CODE_FIRST_RE, _DEV_CODE_ADC_TERM_FIRST_RE, _DEV_CODE_ADC_APPOSITIVE_RE):
         for m in pattern.finditer(text):
             code = m.group(1)
+            # Scientific-notation guard only applies to the hyphenated
+            # form ("5E-33"/"1E-32", a p-value) -- the hyphenless fragment
+            # already requires >=3 trailing digits, which no realistic
+            # scientific-notation exponent in this corpus's prose has.
             prefix = code.split("-", 1)[0]
             if _SCI_NOTATION_PREFIX_RE.match(prefix):
                 continue
@@ -407,16 +511,12 @@ def build_dev_code_candidates(manifest: pd.DataFrame, source_name: str, known_id
     (normalize_name -> "sgn35") slip through unsuppressed even though it
     is exactly Brentuximab vedotin's own registered dev_code.
 
-    KNOWN, DISCLOSED LIMITATION (not fixed here): this only suppresses
-    codes belonging to the 14 curated known-registry assets. A dev code
-    belonging to an already-discovered SUFFIX-matched candidate (e.g.
-    "CDX-011" is glembatumumab vedotin's own dev code, and "IMMU-130" is
-    labetuzumab govitecan's) is NOT suppressed, since suffix-discovered
-    candidates' dev codes are not currently tracked anywhere in this
-    pipeline's own data -- these will appear as separate, likely-
-    duplicate candidates. Same category of gap as PR #30's disclosed
-    alias-resolution limitation (e.g. "bulumtatug fuvedotin" / "9MW-2821"),
-    not solved here to avoid scope creep."""
+    PR #32 fix: a dev code belonging to an already-discovered SUFFIX-
+    matched candidate (e.g. "CDX-011" is glembatumumab vedotin's own dev
+    code) is now caught by `parenthetical_alias_crosswalk()` below and
+    merged into that candidate rather than appearing here as a separate
+    entry -- this function itself is unchanged, the caller in main()
+    applies the crosswalk before/after this function runs."""
     candidates: dict[str, dict] = {}
     for _, row in manifest.iterrows():
         title = row.get("title") or ""
@@ -461,6 +561,173 @@ def merge_dev_code_candidates(*candidate_dicts: dict[str, dict]) -> dict[str, di
             if c["first_seen"] and (entry["first_seen"] is None or c["first_seen"] < entry["first_seen"]):
                 entry["first_seen"] = c["first_seen"]
     return merged
+
+
+_DEV_CODE_FULL_MATCH_RE = re.compile(rf"^{_DEV_CODE_FRAGMENT}$")
+# "antibody[- ]drug conjugate" is matched case-insensitively (CT.gov
+# titles are often title-cased, e.g. "Antibody Drug Conjugate"); the bare
+# "ADC" abbreviation stays case-SENSITIVE (uppercase-only) to avoid
+# matching a stray lowercase "adc" substring inside an unrelated word.
+_ADC_PHRASE_RE = re.compile(r"antibody[- ]drug conjugate", re.IGNORECASE)
+_ADC_ABBREVIATION_RE = re.compile(r"\bADC\b")
+
+
+def _has_adc_context(text: str) -> bool:
+    return bool(_ADC_PHRASE_RE.search(text) or _ADC_ABBREVIATION_RE.search(text))
+
+
+def build_ctgov_dev_code_candidates(ct_manifest: pd.DataFrame, known_ids: set[str]) -> dict[str, dict]:
+    """PR #32: a THIRD path to the same dev-code candidate shape, using
+    CT.gov's clean, structured `intervention_names` field instead of free
+    prose. Unlike build_dev_code_candidates() (which requires a TIGHT
+    grammatical relationship because free text is noisy), a controlled
+    field entry that is ITSELF exactly development-code-shaped (a full-
+    string match, not embedded in a sentence) only needs the SAME trial's
+    own brief_title/official_title/conditions to independently establish
+    ADC context -- verified against the real corpus (669 dev-code-shaped
+    intervention_names entries total, 55 with real ADC context in the
+    same trial's own title/conditions fields, spot-checked as genuine
+    -- e.g. STRO-002, SKB264 -- not clinical-trial-acronym noise, since
+    intervention_names is a controlled drug-name field, not free prose)."""
+    candidates: dict[str, dict] = {}
+    for _, row in ct_manifest.iterrows():
+        names = row.get("intervention_names")
+        if names is None:
+            continue
+        conditions = row.get("conditions")
+        cond_text = " ".join(str(c) for c in conditions) if conditions is not None else ""
+        trial_context = f"{row.get('brief_title') or ''} {row.get('official_title') or ''} {cond_text}"
+        if not _has_adc_context(trial_context):
+            continue
+        for raw_name in names:
+            if not raw_name:
+                continue
+            code = str(raw_name).strip()
+            if not _DEV_CODE_FULL_MATCH_RE.match(code):
+                continue
+            if normalize_name(code) in known_ids:
+                continue
+            key = normalize_name(code)
+            entry = candidates.setdefault(key, dict(
+                label=code, nct_ids=set(), conference_ids=set(), phases=set(),
+                first_seen=None, contexts=set(), sources={"clinicaltrials"}, adjacent_modalities=set(),
+            ))
+            entry["nct_ids"].add(row["nct_id"])
+            entry["contexts"].add(str(row.get("brief_title") or "")[:150])
+            entry["adjacent_modalities"] |= detect_adjacent_modalities(trial_context)
+            posted = _clean_date_string(row.get("study_first_post_date"))
+            if posted and (entry["first_seen"] is None or posted < entry["first_seen"]):
+                entry["first_seen"] = posted
+    return candidates
+
+
+_CODE_BEFORE_PAREN_RE = re.compile(rf"\b({_DEV_CODE_FRAGMENT})\s*\(([^)]{{1,80}})\)")
+
+
+def parenthetical_alias_crosswalk(
+    text_corpora: list[tuple[pd.DataFrame, list[str]]], candidate_labels: list[str],
+) -> dict[str, set[str]]:
+    """PR #32 (deterministic alias/dev-code crosswalk, per the reviewer's
+    explicit request): scientific text overwhelmingly cross-references an
+    already-named ADC and its development code via direct parenthetical
+    co-reference -- "glembatumumab vedotin (CDX-011)" / "CDX-011
+    (glembatumumab vedotin)" -- verified against the real corpus for
+    exactly this case (7 real europe_pmc/conference_abstract_corpus
+    occurrences found). This is TEXT-EVIDENCE-derived, never a hardcoded
+    external pharma-knowledge crosswalk: `candidate_labels` is every
+    label ALREADY discovered by the suffix/known-registry signals (never
+    guessed), and only a dev-code-shaped token found directly adjacent in
+    parentheses to one of those labels is recorded as its alias.
+
+    Performance note: an earlier version compiled one `label\\s*\\(...\\)
+    |...\\s*\\(label\\)` regex PER candidate label and ran all of them
+    against every row -- the second (code-comes-first) branch has no
+    literal anchor before its bounded `[^)]{1,80}` quantifier, so the
+    engine retries it at every character position, costing ~1.5ms per
+    (label, row) pair regardless of match -- with dozens of labels across
+    tens of thousands of rows this took 10+ minutes. Fixed by making
+    exactly ONE pass per row: one combined-alternation regex anchored on
+    the (fast, literal) label text for the "label (code)" direction, and
+    one regex anchored on the (fast, bounded) dev-code fragment for the
+    "code (label)" direction, checking the parenthetical content against
+    the label set via an O(1) dict lookup in Python instead of a second
+    per-label regex.
+
+    Returns {normalize_name(candidate_label): {alias_code, ...}}. Does
+    NOT resolve typo/misspelling duplicates (e.g. "Trastuzmab
+    deruxtecan") -- those have no parenthetical co-reference to exploit
+    and remain the disclosed, deferred limitation from PR #30/#31."""
+    aliases: dict[str, set[str]] = {}
+    if not candidate_labels:
+        return aliases
+    normalized_label_keys = {normalize_name(label) for label in candidate_labels}
+    label_before_paren_re = re.compile(
+        r"\b(" + "|".join(re.escape(label) for label in candidate_labels) + r")\s*\(([^)]{1,80})\)",
+        re.IGNORECASE,
+    )
+
+    for df, cols in text_corpora:
+        if df.empty:
+            continue
+        for row in df.itertuples(index=False):
+            text = " ".join(str(getattr(row, c, "") or "") for c in cols)
+            for m in label_before_paren_re.finditer(text):
+                key = normalize_name(m.group(1))
+                for piece in re.split(r"[;,]", m.group(2)):
+                    piece = piece.strip()
+                    if _DEV_CODE_FULL_MATCH_RE.match(piece):
+                        aliases.setdefault(key, set()).add(piece)
+            for m in _CODE_BEFORE_PAREN_RE.finditer(text):
+                code = m.group(1)
+                if _SCI_NOTATION_PREFIX_RE.match(code.split("-", 1)[0]):
+                    continue
+                for piece in re.split(r"[;,]", m.group(2)):
+                    piece_key = normalize_name(piece.strip())
+                    if piece_key in normalized_label_keys:
+                        aliases.setdefault(piece_key, set()).add(code)
+    return aliases
+
+
+def apply_alias_crosswalk(
+    suffix_candidates: dict[str, dict], dev_code_candidates: dict[str, dict], alias_crosswalk: dict[str, set[str]],
+) -> tuple[dict[str, dict], dict[str, dict]]:
+    """Merges every dev-code candidate whose key is a discovered alias of
+    an existing suffix candidate (per parenthetical_alias_crosswalk())
+    INTO that suffix candidate's own evidence (sources/nct_ids/
+    conference_ids/contexts/adjacent_modalities/first_seen), then removes
+    it from dev_code_candidates so it is never emitted as a separate,
+    duplicate row. Returns (updated_suffix_candidates,
+    remaining_dev_code_candidates) -- both new dicts, inputs untouched.
+
+    This can genuinely upgrade a suffix candidate's own validation_status
+    (e.g. a conference-only NEEDS_REVIEW candidate whose dev-code alias
+    was independently found in clinicaltrials.parquet gains a
+    "clinicaltrials" source), which is correct: it IS new, independent
+    evidence for that same real asset, not a coincidence."""
+    code_to_owner_key = {
+        normalize_name(alias): owner_key
+        for owner_key, aliases in alias_crosswalk.items() for alias in aliases
+    }
+    suffix_candidates = {k: dict(v) for k, v in suffix_candidates.items()}
+    for k, v in suffix_candidates.items():
+        for field in ("nct_ids", "conference_ids", "phases", "contexts", "sources", "adjacent_modalities"):
+            suffix_candidates[k][field] = set(v[field])
+
+    remaining_dev_code: dict[str, dict] = {}
+    for dev_key, dev_entry in dev_code_candidates.items():
+        owner_key = code_to_owner_key.get(dev_key)
+        if owner_key is None or owner_key not in suffix_candidates:
+            remaining_dev_code[dev_key] = dev_entry
+            continue
+        owner = suffix_candidates[owner_key]
+        owner["sources"] |= dev_entry["sources"]
+        owner["nct_ids"] |= dev_entry["nct_ids"]
+        owner["conference_ids"] |= dev_entry["conference_ids"]
+        owner["contexts"] |= dev_entry["contexts"]
+        owner["adjacent_modalities"] |= dev_entry["adjacent_modalities"]
+        if dev_entry["first_seen"] and (owner["first_seen"] is None or dev_entry["first_seen"] < owner["first_seen"]):
+            owner["first_seen"] = dev_entry["first_seen"]
+    return suffix_candidates, remaining_dev_code
 
 
 def _clean_date_string(value) -> str | None:
@@ -685,10 +952,13 @@ def main() -> int:
     conf_path = Path(args.data_dir) / "manifests" / "conference_abstract_corpus.parquet"
     pubmed_path = Path(args.data_dir) / "manifests" / "pubmed.parquet"
     epmc_path = Path(args.data_dir) / "manifests" / "europe_pmc.parquet"
-    ct_candidates = build_ctgov_suffix_candidates(pd.read_parquet(ct_path), known_ids) if ct_path.exists() else {}
-    conf_candidates = (
-        build_conference_suffix_candidates(pd.read_parquet(conf_path), known_ids) if conf_path.exists() else {}
-    )
+    ct_df = pd.read_parquet(ct_path) if ct_path.exists() else pd.DataFrame()
+    conf_df = pd.read_parquet(conf_path) if conf_path.exists() else pd.DataFrame()
+    pubmed_df = pd.read_parquet(pubmed_path) if pubmed_path.exists() else pd.DataFrame()
+    epmc_df = pd.read_parquet(epmc_path) if epmc_path.exists() else pd.DataFrame()
+
+    ct_candidates = build_ctgov_suffix_candidates(ct_df, known_ids) if not ct_df.empty else {}
+    conf_candidates = build_conference_suffix_candidates(conf_df, known_ids) if not conf_df.empty else {}
     suffix_candidates = merge_suffix_candidates(ct_candidates, conf_candidates)
     overlap = len(set(ct_candidates) & set(conf_candidates))
     print(
@@ -697,6 +967,46 @@ def main() -> int:
         f"{overlap} found by both)",
         file=sys.stderr,
     )
+
+    # PR #31/#32: second, independent discovery signal -- development-code
+    # named assets, which the USAN/INN suffix signal above structurally
+    # cannot find (see build_dev_code_candidates()'s docstring). Scanned
+    # across every source with inline title+abstract text in its
+    # committed manifest, PLUS CT.gov's structured intervention_names
+    # field (PR #32 addition, build_ctgov_dev_code_candidates()).
+    pubmed_dev = build_dev_code_candidates(pubmed_df, "pubmed", known_ids) if not pubmed_df.empty else {}
+    epmc_dev = build_dev_code_candidates(epmc_df, "europe_pmc", known_ids) if not epmc_df.empty else {}
+    conf_dev = build_dev_code_candidates(conf_df, "conference_abstract_corpus", known_ids) if not conf_df.empty else {}
+    ctgov_dev = build_ctgov_dev_code_candidates(ct_df, known_ids) if not ct_df.empty else {}
+    dev_code_candidates = merge_dev_code_candidates(pubmed_dev, epmc_dev, conf_dev, ctgov_dev)
+    # Safety net: never double-list a name the suffix signal already
+    # found under the same normalized key (not expected to collide in
+    # practice -- the two signals operate on structurally different label
+    # shapes -- but cheap to guard explicitly rather than assume).
+    dev_code_candidates = {k: v for k, v in dev_code_candidates.items() if k not in suffix_candidates}
+    n_dev_before_crosswalk = len(dev_code_candidates)
+
+    # PR #32: deterministic alias/dev-code crosswalk (parenthetical
+    # co-reference, e.g. "glembatumumab vedotin (CDX-011)") -- merges a
+    # dev-code candidate that is really just an ALIAS of an already-
+    # discovered suffix candidate into that candidate's own evidence,
+    # instead of emitting it as a separate, duplicate row.
+    alias_crosswalk = parenthetical_alias_crosswalk(
+        [(pubmed_df, ["title", "abstract"]), (epmc_df, ["title", "abstract"]), (conf_df, ["title", "abstract"])],
+        [c["label"] for c in suffix_candidates.values()],
+    )
+    suffix_candidates, dev_code_candidates = apply_alias_crosswalk(suffix_candidates, dev_code_candidates, alias_crosswalk)
+    n_aliases_merged = n_dev_before_crosswalk - len(dev_code_candidates)
+    print(
+        f"Found {len(dev_code_candidates)} distinct new candidate development codes via explicit "
+        f"'<code> is/was a(n) ADC' / 'ADC <code>' / appositive grammatical co-occurrence or CT.gov "
+        f"structured provenance ({len(pubmed_dev)} pubmed, {len(epmc_dev)} europe_pmc, "
+        f"{len(conf_dev)} conference_abstract_corpus, {len(ctgov_dev)} clinicaltrials, before merge; "
+        f"{n_aliases_merged} merged into an existing suffix candidate as a deterministic alias, not "
+        "double-listed)",
+        file=sys.stderr,
+    )
+
     for c in suffix_candidates.values():
         payload_class = ADC_SUFFIX_PAYLOAD_CLASS[c["suffix"]]
         evidence_ids = sorted(c["nct_ids"])[:10] + sorted(c["conference_ids"])[:10]
@@ -750,30 +1060,6 @@ def main() -> int:
             modality_detail=modality_detail,
         ))
 
-    # PR #31: second, independent discovery signal -- development-code
-    # named assets, which the USAN/INN suffix signal above structurally
-    # cannot find (see build_dev_code_candidates()'s docstring). Scanned
-    # across every source with inline title+abstract text in its
-    # committed manifest.
-    pubmed_dev = build_dev_code_candidates(pd.read_parquet(pubmed_path), "pubmed", known_ids) if pubmed_path.exists() else {}
-    epmc_dev = build_dev_code_candidates(pd.read_parquet(epmc_path), "europe_pmc", known_ids) if epmc_path.exists() else {}
-    conf_dev = (
-        build_dev_code_candidates(pd.read_parquet(conf_path), "conference_abstract_corpus", known_ids)
-        if conf_path.exists() else {}
-    )
-    dev_code_candidates = merge_dev_code_candidates(pubmed_dev, epmc_dev, conf_dev)
-    # Safety net: never double-list a name the suffix signal already
-    # found under the same normalized key (not expected to collide in
-    # practice -- the two signals operate on structurally different label
-    # shapes -- but cheap to guard explicitly rather than assume).
-    dev_code_candidates = {k: v for k, v in dev_code_candidates.items() if k not in suffix_candidates}
-    print(
-        f"Found {len(dev_code_candidates)} distinct new candidate development codes via explicit "
-        f"'<code> is/was a(n) ADC' / 'ADC <code>' grammatical co-occurrence "
-        f"({len(pubmed_dev)} from pubmed, {len(epmc_dev)} from europe_pmc, "
-        f"{len(conf_dev)} from conference_abstract_corpus, before cross-source merge)",
-        file=sys.stderr,
-    )
     for c in dev_code_candidates.values():
         evidence_ids = sorted(c["conference_ids"])[:10]
         example_context = sorted(c["contexts"])[0] if c["contexts"] else ""
