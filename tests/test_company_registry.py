@@ -46,3 +46,25 @@ companies:
     assert companies[0].pipeline_urls == []
     assert companies[0].active is True
     assert companies[0].investor_relations_url is None
+    assert companies[0].parent_company_id is None
+
+
+def test_load_companies_reads_parent_company_id(tmp_path):
+    """An acquired company records ITS OWN acquirer's company_id
+    structurally, not just in free-text notes -- lets downstream audit
+    tooling resolve 'this asset's real current owner' without parsing
+    prose."""
+    path = tmp_path / "registry.yaml"
+    path.write_text(
+        """
+companies:
+  - company_id: acme_sub
+    canonical_name: Acme Subsidiary Inc.
+    parent_company_id: acme_parent
+  - company_id: acme_parent
+    canonical_name: Acme Parent Inc.
+"""
+    )
+    companies = {c.company_id: c for c in load_companies(path)}
+    assert companies["acme_sub"].parent_company_id == "acme_parent"
+    assert companies["acme_parent"].parent_company_id is None
