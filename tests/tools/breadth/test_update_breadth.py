@@ -105,6 +105,76 @@ def test_diff_snapshots_status_change_ignores_unwatched_free_text_fields():
     assert status_changes == {}  # `context` is not a watched decision-relevant field
 
 
+def test_diff_snapshots_detects_new_catalog_asset():
+    """PR #33: a brand-new asset_id in adc_asset_universe.tsv is a new-
+    entity event, tiered by its catalog_status."""
+    before = {"adc_asset_universe.tsv": _df([{"asset_id": "NAR_1", "canonical_name": "Existing", "catalog_status": "REFERENCE_CONFIRMED"}])}
+    after = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "NAR_1", "canonical_name": "Existing", "catalog_status": "REFERENCE_CONFIRMED"},
+        {"asset_id": "OURS_2", "canonical_name": "Brand New Asset", "catalog_status": "NEEDS_REVIEW"},
+    ])}
+    new_rows, deepened, status_changes = diff_snapshots(before, after)
+    assert len(new_rows["adc_asset_universe.tsv"]) == 1
+    new_row = new_rows["adc_asset_universe.tsv"][0]
+    assert new_row["asset_id"] == "OURS_2"
+    assert new_row["_tier"] == "B"  # NEEDS_REVIEW
+    assert "adc_asset_universe.tsv" not in deepened
+    assert status_changes == {}
+
+
+def test_diff_snapshots_detects_catalog_status_upgrade_as_tier_a():
+    """Exact reviewer scenario this wiring exists for: an OURS-only asset
+    (persistent asset_id, per candidate_id_for_name()'s stability
+    contract) whose catalog_status is independently upgraded into
+    MULTISOURCE_CONFIRMED -- e.g. after the round-2 compound-identifier
+    fix resolved a candidate against its NAR row -- must surface as a
+    Tier A upgrade, not a new row (the asset_id itself never changes)."""
+    before = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_1", "canonical_name": "REGN5093-M114", "catalog_status": "NEEDS_REVIEW",
+         "adc_scope": "PRESUMED_ADC", "sources": "europe_pmc", "aliases": "", "development_codes": "",
+         "nct_ids": "", "highest_stage": "", "development_status": ""},
+    ])}
+    after = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_1", "canonical_name": "REGN5093-M114", "catalog_status": "MULTISOURCE_CONFIRMED",
+         "adc_scope": "PRESUMED_ADC", "sources": "clinicaltrials; europe_pmc", "aliases": "", "development_codes": "",
+         "nct_ids": "NCT04982224", "highest_stage": "Phase2", "development_status": "Phase 1/2"},
+    ])}
+    new_rows, deepened, status_changes = diff_snapshots(before, after)
+    assert new_rows == {}
+    assert deepened == {}
+    changes = status_changes["adc_asset_universe.tsv"]
+    by_field = {c["field"]: c for c in changes}
+    assert by_field["catalog_status"]["before"] == "NEEDS_REVIEW"
+    assert by_field["catalog_status"]["after"] == "MULTISOURCE_CONFIRMED"
+    assert by_field["catalog_status"]["tier_a_upgrade"] is True
+    assert by_field["sources"]["tier_a_upgrade"] is False  # a new evidence source, not a confirmation-tier upgrade
+    assert "nct_ids" in by_field  # a newly-added NCT id
+    assert "highest_stage" in by_field  # a clinical-stage advance
+
+
+def test_diff_snapshots_detects_alias_merge_and_adc_scope_change():
+    """PR #32's alias/dev-code crosswalk merges an evidence into an
+    existing asset's own aliases/development_codes fields -- must be
+    visible as a status change, and an independently-resolved adc_scope
+    must be tracked separately from catalog_status."""
+    before = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_3", "canonical_name": "Glembatumumab vedotin", "catalog_status": "SINGLE_STRONG_SOURCE",
+         "adc_scope": "REFERENCE_UNCLASSIFIED", "sources": "conference_abstract_corpus", "aliases": "",
+         "development_codes": "", "nct_ids": "", "highest_stage": "", "development_status": ""},
+    ])}
+    after = {"adc_asset_universe.tsv": _df([
+        {"asset_id": "OURS_3", "canonical_name": "Glembatumumab vedotin", "catalog_status": "SINGLE_STRONG_SOURCE",
+         "adc_scope": "PRESUMED_ADC", "sources": "conference_abstract_corpus", "aliases": "",
+         "development_codes": "CDX-011", "nct_ids": "", "highest_stage": "", "development_status": ""},
+    ])}
+    _, _, status_changes = diff_snapshots(before, after)
+    by_field = {c["field"]: c for c in status_changes["adc_asset_universe.tsv"]}
+    assert by_field["development_codes"]["after"] == "CDX-011"  # alias/dev-code crosswalk merge
+    assert by_field["adc_scope"]["before"] == "REFERENCE_UNCLASSIFIED"
+    assert by_field["adc_scope"]["after"] == "PRESUMED_ADC"
+    assert "catalog_status" not in by_field  # unchanged in this scenario
+
+
 def test_tier_for_row_candidate_queue_promoted_is_tier_a():
     assert _tier_for_row("candidate_queue.tsv", {"validation_status": "PROMOTED"}) == "A"
     assert _tier_for_row("candidate_queue.tsv", {"validation_status": "AUTO_HIGH_CONFIDENCE"}) == "A"
@@ -125,10 +195,33 @@ def test_tier_for_row_indications_is_tier_c():
     assert _tier_for_row("adc_indications.tsv", {"indication": "Breast cancer"}) == "C"
 
 
+def test_tier_for_row_catalog_status_ladder():
+    """PR #33: adc_asset_universe.tsv is tiered by catalog_status (PR
+    #30's evidence-strength axis), not by adc_scope."""
+    assert _tier_for_row("adc_asset_universe.tsv", {"catalog_status": "REFERENCE_CONFIRMED"}) == "A"
+    assert _tier_for_row("adc_asset_universe.tsv", {"catalog_status": "MULTISOURCE_CONFIRMED"}) == "A"
+    assert _tier_for_row("adc_asset_universe.tsv", {"catalog_status": "SINGLE_STRONG_SOURCE"}) == "B"
+    assert _tier_for_row("adc_asset_universe.tsv", {"catalog_status": "NEEDS_REVIEW"}) == "B"
+    assert _tier_for_row("adc_asset_universe.tsv", {"catalog_status": "EXCLUDED_ADJACENT_MODALITY"}) == "C"
+
+
 def test_read_feasibility_snapshot_missing_files_returns_empty_frames(tmp_path):
     snapshot = read_feasibility_snapshot(tmp_path)
     assert all(df.empty for df in snapshot.values())
     assert "adc_candidates.tsv" in snapshot
+    assert "adc_asset_universe.tsv" not in snapshot  # catalog_dir not passed -- not tracked
+
+
+def test_read_feasibility_snapshot_includes_catalog_dir_when_given(tmp_path):
+    feasibility_dir = tmp_path / "feasibility"
+    catalog_dir = tmp_path / "catalog"
+    feasibility_dir.mkdir()
+    catalog_dir.mkdir()
+    (catalog_dir / "adc_asset_universe.tsv").write_text("asset_id\tcanonical_name\nA1\tFoo\n", encoding="utf-8")
+
+    snapshot = read_feasibility_snapshot(feasibility_dir, catalog_dir)
+    assert "adc_asset_universe.tsv" in snapshot
+    assert list(snapshot["adc_asset_universe.tsv"]["asset_id"]) == ["A1"]
 
 
 def test_make_delta_dir_never_overwrites_same_day(tmp_path):
@@ -169,8 +262,9 @@ def test_run_acquisition_stage_isolates_one_jobs_failure_from_others(tmp_path, m
 
 def test_run_derivation_stage_skips_downstream_steps_after_a_failure(tmp_path, monkeypatch):
     """Derivation is a fixed dependency chain, not independent siblings --
-    if candidate_queue.py fails, feasibility_entities.py and
-    component_coverage_audit.py must NOT run against its stale output."""
+    if candidate_queue.py fails, feasibility_entities.py,
+    component_coverage_audit.py, and build_adc_asset_universe.py (PR #33)
+    must NOT run against its stale output."""
     import subprocess
 
     calls = []
@@ -183,7 +277,7 @@ def test_run_derivation_stage_skips_downstream_steps_after_a_failure(tmp_path, m
         return subprocess.CompletedProcess(cmd, returncode=0, stdout="ok", stderr="")
 
     monkeypatch.setattr(subprocess, "run", fake_run)
-    outcomes = run_derivation_stage(tmp_path, tmp_path)
+    outcomes = run_derivation_stage(tmp_path, tmp_path, tmp_path)
 
     assert len(calls) == 1  # only candidate_queue.py was actually invoked
     by_name = {o.name: o for o in outcomes}
@@ -193,6 +287,8 @@ def test_run_derivation_stage_skips_downstream_steps_after_a_failure(tmp_path, m
     assert by_name["feasibility_entities"].ok is False
     assert by_name["component_coverage_audit"].skipped is True
     assert by_name["component_coverage_audit"].ok is False
+    assert by_name["build_adc_asset_universe"].skipped is True
+    assert by_name["build_adc_asset_universe"].ok is False
 
 
 def test_run_derivation_stage_all_steps_run_when_none_fail(tmp_path, monkeypatch):
@@ -201,14 +297,22 @@ def test_run_derivation_stage_all_steps_run_when_none_fail(tmp_path, monkeypatch
     calls = []
 
     def fake_run(cmd, cwd, capture_output, text):
-        calls.append(cmd[1])
+        calls.append(cmd)
         return subprocess.CompletedProcess(cmd, returncode=0, stdout="ok", stderr="")
 
     monkeypatch.setattr(subprocess, "run", fake_run)
-    outcomes = run_derivation_stage(tmp_path, tmp_path)
+    outcomes = run_derivation_stage(tmp_path, tmp_path, tmp_path)
 
-    assert len(calls) == 3
+    assert len(calls) == 4
     assert all(o.ok and not o.skipped for o in outcomes)
+    assert [o.name for o in outcomes] == [
+        "candidate_queue", "feasibility_entities", "component_coverage_audit", "build_adc_asset_universe",
+    ]
+    catalog_cmd = calls[3]
+    assert "build_adc_asset_universe.py" in catalog_cmd[1]
+    assert "--nar-dir" in catalog_cmd
+    assert str(tmp_path / "adc_asset_universe.tsv") in catalog_cmd
+    assert str(tmp_path / "adc_clinical_development.tsv") in catalog_cmd
 
 
 def test_main_incomplete_derivation_returns_nonzero_and_skips_entity_diff(tmp_path, monkeypatch):
@@ -219,6 +323,8 @@ def test_main_incomplete_derivation_returns_nonzero_and_skips_entity_diff(tmp_pa
 
     feasibility_dir = tmp_path / "feasibility"
     feasibility_dir.mkdir()
+    catalog_dir = tmp_path / "catalog"
+    catalog_dir.mkdir()
     delta_output = tmp_path / "delta"
 
     def fake_run(cmd, cwd, capture_output, text):
@@ -231,7 +337,7 @@ def test_main_incomplete_derivation_returns_nonzero_and_skips_entity_diff(tmp_pa
     monkeypatch.setattr(sys, "argv", [
         "update_breadth.py", "--skip-acquisition",
         "--data-dir", str(tmp_path), "--feasibility-dir", str(feasibility_dir),
-        "--delta-output", str(delta_output),
+        "--catalog-dir", str(catalog_dir), "--delta-output", str(delta_output),
     ])
 
     rc = update_breadth_main()
