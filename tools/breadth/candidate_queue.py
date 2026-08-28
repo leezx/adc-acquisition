@@ -29,6 +29,18 @@ present among our own 14 active known assets' canonical names. This list
 is NOT claimed to be exhaustive; newer/rarer stems will still be missed by
 design.
 
+PR #31 (BREADTH_PLAN.md addendum) adds a SECOND, independent discovery
+signal alongside (b)/(c) above: development-code-named assets (e.g.
+"BAT-8008", "TAK-500"), found via a tight grammatical co-occurrence with
+"antibody-drug conjugate"/"ADC" in pubmed.parquet/europe_pmc.parquet/
+conference_abstract_corpus.parquet free text -- see
+build_dev_code_candidates()'s docstring for why this is a categorically
+different (and structurally necessary) signal from the USAN/INN suffix
+match: a development code carries no payload/linker-class-identifying
+suffix at all, so signal (b)/(c) cannot find it by construction, no matter
+how many more sources are added. Like (c), this is free-text co-occurrence
+and is therefore ALWAYS routed to NEEDS_REVIEW, never auto-promoted.
+
 ROUND-1 FIX: raw CT.gov intervention strings are not clean single-drug
 names -- they can be combination-regimen labels ("Pembrolizumab +
 Enfortumab Vedotin"), trial-arm labels ("Arm A: Belantamab Mafodotin"), or
@@ -316,6 +328,141 @@ def local_context_for_span(text: str, start: int, end: int, window: int = 300) -
     return text[lo:hi]
 
 
+# PR #31 (BREADTH_PLAN.md addendum): a SECOND, INDEPENDENT discovery
+# signal, alongside the USAN/INN suffix signal above -- catches ADC assets
+# whose name is an alphanumeric DEVELOPMENT CODE (e.g. "BAT-8008",
+# "TAK-500", "ADCT-901", "GQ-1001", "DXC-004A", "ZL-6201" -- all real NAR
+# reference-universe assets the suffix signal structurally cannot find,
+# since none end in a documented USAN/INN payload-class stem). Reused
+# across pubmed.parquet/europe_pmc.parquet/conference_abstract_corpus.parquet
+# title+abstract text (the only sources with inline text in their committed
+# manifests -- company_press_release/company_pipeline/company_scientific_
+# presentations reference raw_file_path on disk, not inline text, and
+# DATA/raw/ is gitignored/not reproducible from a fresh clone, so scanning
+# those is explicitly deferred pending a materialized full-text companion
+# table, same pattern as europe_pmc_fulltext.parquet).
+#
+# A development-code-shaped token is extremely common and mostly NOT a
+# drug (clinical trial acronyms like "KEYNOTE-057"/"TROPiCS-02", cell
+# lines like "MB-231"/"HCT-116", target/biomarker symbols like
+# "CD-30"/"PSMA-617"/"COVID-19" all match the same alphanumeric-code
+# shape) -- a loose same-sentence/window co-occurrence with "ADC"/
+# "antibody-drug conjugate" was tried FIRST and rejected: verified against
+# the real corpus, it produced 542 candidate tokens, the large majority of
+# which were exactly this class of false positive. The pattern below
+# instead requires a TIGHT grammatical relationship -- the code must
+# either be the explicit subject of "<code> is/was a(n) ... ADC" (e.g.
+# "TAK-500 is a novel immune cell-directed antibody-drug conjugate"), or
+# immediately follow "ADC"/"antibody-drug conjugate" as its named referent
+# (e.g. "the ADC candidate BAT-8008") -- verified against the real corpus
+# to cut the same scan down to 117 tokens, spot-checked as essentially all
+# genuine development codes (no clinical trial names, cell lines, or
+# target symbols observed in this tighter set).
+_DEV_CODE_FRAGMENT = r"[A-Za-z0-9]{1,4}[A-Z][A-Za-z0-9]{0,3}-\d{2,7}[A-Za-z]{0,2}"
+_DEV_CODE_ADC_CODE_FIRST_RE = re.compile(
+    rf"\b({_DEV_CODE_FRAGMENT})\b,?\s+(?:is|was)\s+(?:an?\s+)?"
+    r"(?:novel\s+|investigational\s+|first-in-class\s+)*(?:antibody[- ]drug conjugate|ADC)\b"
+)
+_DEV_CODE_ADC_TERM_FIRST_RE = re.compile(
+    rf"\b(?:antibody[- ]drug conjugate|ADC)\b(?:\s+candidate)?,?\s+({_DEV_CODE_FRAGMENT})\b"
+)
+# A prefix like "5E"/"1E" in "5E-33"/"1E-32" is scientific notation (a
+# p-value), not a development code -- the only false-positive CLASS the
+# tight grammatical pattern above did not already rule out empirically.
+_SCI_NOTATION_PREFIX_RE = re.compile(r"^\d*[Ee]$")
+
+
+def _iter_dev_code_adc_mentions(text: str):
+    """Yields (code, start, end) for every developement-code+ADC-context
+    match in `text`, deduplicated by character span (the two regexes can
+    both match the same code at the same position from opposite
+    directions in some phrasings)."""
+    seen_spans: set[tuple[int, int]] = set()
+    for pattern in (_DEV_CODE_ADC_CODE_FIRST_RE, _DEV_CODE_ADC_TERM_FIRST_RE):
+        for m in pattern.finditer(text):
+            code = m.group(1)
+            prefix = code.split("-", 1)[0]
+            if _SCI_NOTATION_PREFIX_RE.match(prefix):
+                continue
+            span = m.span(1)
+            if span in seen_spans:
+                continue
+            seen_spans.add(span)
+            yield code, span[0], span[1]
+
+
+def build_dev_code_candidates(manifest: pd.DataFrame, source_name: str, known_ids: set[str]) -> dict[str, dict]:
+    """Same output shape as build_ctgov_suffix_candidates()/
+    build_conference_suffix_candidates() (nct_ids/conference_ids/phases/
+    contexts/first_seen/sources/adjacent_modalities), so it can flow
+    through the SAME merge/promotion pipeline below, keyed by the
+    development code itself rather than a generic two-word name.
+
+    known-asset suppression here is EXACT normalized match, not
+    mentions_known_asset()'s substring containment: a development code
+    (e.g. "SGN-35") is the candidate's ENTIRE label, not a longer wrapper
+    string a known name might be embedded in, and containment's >=6-char
+    safety threshold (needed there to avoid short-fragment false matches
+    against a longer name) would let a 5-character code like "SGN-35"
+    (normalize_name -> "sgn35") slip through unsuppressed even though it
+    is exactly Brentuximab vedotin's own registered dev_code.
+
+    KNOWN, DISCLOSED LIMITATION (not fixed here): this only suppresses
+    codes belonging to the 14 curated known-registry assets. A dev code
+    belonging to an already-discovered SUFFIX-matched candidate (e.g.
+    "CDX-011" is glembatumumab vedotin's own dev code, and "IMMU-130" is
+    labetuzumab govitecan's) is NOT suppressed, since suffix-discovered
+    candidates' dev codes are not currently tracked anywhere in this
+    pipeline's own data -- these will appear as separate, likely-
+    duplicate candidates. Same category of gap as PR #30's disclosed
+    alias-resolution limitation (e.g. "bulumtatug fuvedotin" / "9MW-2821"),
+    not solved here to avoid scope creep."""
+    candidates: dict[str, dict] = {}
+    for _, row in manifest.iterrows():
+        title = row.get("title") or ""
+        abstract = row.get("abstract") or ""
+        text = f"{title} {abstract}"
+        for code, start, end in _iter_dev_code_adc_mentions(text):
+            if normalize_name(code) in known_ids:
+                continue
+            key = normalize_name(code)
+            entry = candidates.setdefault(key, dict(
+                label=code, nct_ids=set(), conference_ids=set(), phases=set(),
+                first_seen=None, contexts=set(), sources=set(), adjacent_modalities=set(),
+            ))
+            entry["sources"].add(source_name)
+            entry["conference_ids"].add(row["source_record_id"])
+            entry["contexts"].add(str(title)[:150])
+            local_context = local_context_for_span(text, start, end)
+            entry["adjacent_modalities"] |= detect_adjacent_modalities(local_context)
+            date = _clean_date_string(row.get("publication_or_release_date"))
+            if date and (entry["first_seen"] is None or date < entry["first_seen"]):
+                entry["first_seen"] = date
+    return candidates
+
+
+def merge_dev_code_candidates(*candidate_dicts: dict[str, dict]) -> dict[str, dict]:
+    """Same idea as merge_suffix_candidates(), for dev-code candidates
+    (no `suffix` field to carry, so kept as its own small function rather
+    than overloading that one with an optional field)."""
+    merged: dict[str, dict] = {}
+    for candidates in candidate_dicts:
+        for key, c in candidates.items():
+            entry = merged.setdefault(key, dict(
+                label=c["label"], nct_ids=set(), conference_ids=set(),
+                phases=set(), contexts=set(), first_seen=None, sources=set(), adjacent_modalities=set(),
+            ))
+            entry["sources"] |= c["sources"]
+            entry["nct_ids"] |= c["nct_ids"]
+            entry["conference_ids"] |= c["conference_ids"]
+            entry["phases"] |= c["phases"]
+            entry["contexts"] |= c["contexts"]
+            entry["adjacent_modalities"] |= c["adjacent_modalities"]
+            if c["first_seen"] and (entry["first_seen"] is None or c["first_seen"] < entry["first_seen"]):
+                entry["first_seen"] = c["first_seen"]
+    return merged
+
+
 def _clean_date_string(value) -> str | None:
     """round-1 fix: a parquet column's missing value can be a float NaN,
     not None or an empty string -- `if value:` treats NaN as TRUTHY
@@ -536,6 +683,8 @@ def main() -> int:
 
     ct_path = Path(args.data_dir) / "manifests" / "clinicaltrials.parquet"
     conf_path = Path(args.data_dir) / "manifests" / "conference_abstract_corpus.parquet"
+    pubmed_path = Path(args.data_dir) / "manifests" / "pubmed.parquet"
+    epmc_path = Path(args.data_dir) / "manifests" / "europe_pmc.parquet"
     ct_candidates = build_ctgov_suffix_candidates(pd.read_parquet(ct_path), known_ids) if ct_path.exists() else {}
     conf_candidates = (
         build_conference_suffix_candidates(pd.read_parquet(conf_path), known_ids) if conf_path.exists() else {}
@@ -601,6 +750,62 @@ def main() -> int:
             modality_detail=modality_detail,
         ))
 
+    # PR #31: second, independent discovery signal -- development-code
+    # named assets, which the USAN/INN suffix signal above structurally
+    # cannot find (see build_dev_code_candidates()'s docstring). Scanned
+    # across every source with inline title+abstract text in its
+    # committed manifest.
+    pubmed_dev = build_dev_code_candidates(pd.read_parquet(pubmed_path), "pubmed", known_ids) if pubmed_path.exists() else {}
+    epmc_dev = build_dev_code_candidates(pd.read_parquet(epmc_path), "europe_pmc", known_ids) if epmc_path.exists() else {}
+    conf_dev = (
+        build_dev_code_candidates(pd.read_parquet(conf_path), "conference_abstract_corpus", known_ids)
+        if conf_path.exists() else {}
+    )
+    dev_code_candidates = merge_dev_code_candidates(pubmed_dev, epmc_dev, conf_dev)
+    # Safety net: never double-list a name the suffix signal already
+    # found under the same normalized key (not expected to collide in
+    # practice -- the two signals operate on structurally different label
+    # shapes -- but cheap to guard explicitly rather than assume).
+    dev_code_candidates = {k: v for k, v in dev_code_candidates.items() if k not in suffix_candidates}
+    print(
+        f"Found {len(dev_code_candidates)} distinct new candidate development codes via explicit "
+        f"'<code> is/was a(n) ADC' / 'ADC <code>' grammatical co-occurrence "
+        f"({len(pubmed_dev)} from pubmed, {len(epmc_dev)} from europe_pmc, "
+        f"{len(conf_dev)} from conference_abstract_corpus, before cross-source merge)",
+        file=sys.stderr,
+    )
+    for c in dev_code_candidates.values():
+        evidence_ids = sorted(c["conference_ids"])[:10]
+        example_context = sorted(c["contexts"])[0] if c["contexts"] else ""
+        reason = (
+            "development-code-shaped name found in explicit tight grammatical relationship with "
+            "'antibody-drug conjugate'/'ADC' (e.g. '<code> is a novel antibody-drug conjugate' or "
+            "'the ADC candidate <code>') in free-text title/abstract -- no structured field confirms "
+            "this, and a development code alone (unlike a USAN/INN suffix) carries no independent "
+            "payload/linker class evidence; needs a human check before promotion, not auto-promoted "
+            "regardless of how many sources mention it."
+        )
+        if c["adjacent_modalities"]:
+            modality_classification = "ADJACENT_CONJUGATE_MODALITY"
+            modality_detail = "; ".join(sorted(c["adjacent_modalities"]))
+        else:
+            modality_classification = "PRESUMED_STRICT_ADC"
+            modality_detail = ""
+        rows.append(dict(
+            candidate_id=candidate_id_for_name(c["label"]),
+            candidate_type="ADC_CANDIDATE",
+            candidate_label=c["label"],
+            source="; ".join(sorted(c["sources"])),
+            evidence_id="; ".join(evidence_ids),
+            context=f"development-code + explicit ADC-context match; example: {example_context}",
+            first_seen=c["first_seen"] or "",
+            confidence="medium",
+            validation_status="NEEDS_REVIEW",
+            reason=reason,
+            modality_classification=modality_classification,
+            modality_detail=modality_detail,
+        ))
+
     write_tsv(output_dir / "candidate_queue.tsv", rows, CANDIDATE_QUEUE_FIELDS)
     n_promoted = sum(1 for r in rows if r["validation_status"] == "PROMOTED")
     n_auto = sum(1 for r in rows if r["validation_status"] == "AUTO_HIGH_CONFIDENCE")
@@ -608,10 +813,10 @@ def main() -> int:
     n_adjacent = sum(1 for r in rows if r["modality_classification"] == "ADJACENT_CONJUGATE_MODALITY")
     print(f"candidate_queue.tsv: {len(rows)} total ({n_promoted} PROMOTED from known registry, "
           f"{n_auto} AUTO_HIGH_CONFIDENCE via a structured field, {n_review} NEEDS_REVIEW "
-          "via free-text conference co-occurrence only)", file=sys.stderr)
+          "via free-text co-occurrence only -- USAN/INN suffix or development-code+ADC-context)", file=sys.stderr)
     print(f"modality_classification: {n_adjacent} ADJACENT_CONJUGATE_MODALITY (positive keyword evidence, "
           "see ADC_MODALITY_TAXONOMY.md), rest STRICT_ADC (known registry) or PRESUMED_STRICT_ADC "
-          "(suffix-matched, no adjacent-modality evidence found)", file=sys.stderr)
+          "(suffix- or development-code-matched, no adjacent-modality evidence found)", file=sys.stderr)
     return 0
 
 

@@ -22,11 +22,11 @@ https://data.sec.gov/submissions/ — https://www.sec.gov/Archives/edgar/data/ �
 
 ## Records discovered
 
-2332 relevant-form filings across 9 companies; 2332 unique accession numbers.
+2338 relevant-form filings across 9 companies; 2338 unique accession numbers.
 
 ## Records downloaded
 
-0 new/changed filing snapshots, 12 skipped as unchanged (matched checkpoint content hash).
+2236 new/changed filing snapshots, 12 skipped as unchanged (matched checkpoint content hash).
 
 ## Duplicates
 
@@ -34,30 +34,30 @@ https://data.sec.gov/submissions/ — https://www.sec.gov/Archives/edgar/data/ �
 
 ### Filings per company query
 
-- SEC_FILINGS_ABBVIE_0001551152: 256
-- SEC_FILINGS_ADC_THERAPEUTICS_0001771910: 173
+- SEC_FILINGS_ABBVIE_0001551152: 257
+- SEC_FILINGS_ADC_THERAPEUTICS_0001771910: 175
 - SEC_FILINGS_IMMUNOGEN_0000855654: 482
 - SEC_FILINGS_MERSANA_0001442836: 149
 - SEC_FILINGS_PFIZER_0000078003: 489
 - SEC_FILINGS_SEAGEN_0001060736: 349
-- SEC_FILINGS_SUTRO_BIOPHARMA_0001382101: 125
+- SEC_FILINGS_SUTRO_BIOPHARMA_0001382101: 127
 - SEC_FILINGS_ZYMEWORKS_0001403752: 216
-- SEC_FILINGS_ZYMEWORKS_0001937653: 93
+- SEC_FILINGS_ZYMEWORKS_0001937653: 94
 
 ## Missing fields
 
 - none observed in this run
 
-- filing type distribution: 10-Q: 5, 10-Q/A: 1, 8-K: 6
-- company distribution: Pfizer Inc.: 12
+- filing type distribution: 10-K: 110, 10-K/A: 8, 10-Q: 344, 10-Q/A: 14, 20-F: 3, 6-K: 153, 6-K/A: 1, 8-K: 1579, 8-K/A: 24, S-1: 4, S-1/A: 8
+- company distribution: ADC Therapeutics SA: 175, AbbVie Inc.: 257, ImmunoGen, Inc.: 443, Mersana Therapeutics, Inc.: 149, Pfizer Inc.: 438, Seagen Inc.: 349, Sutro Biopharma, Inc.: 127, Zymeworks Inc.: 310
 
 ## Exhibits (independent artifact, see `sec_exhibits.parquet`)
 
-14 exhibit fetches attempted this run (0 new/changed, 3 unchanged, 11 failed). Exhibits are tracked as their own content-version manifest, keyed by `{accession_number}:{filename}` with `parent_record_id` pointing back to the filing — never as a field on the filing row itself, so an exhibit fetch failure or a later successful retry never touches the filing's own content-version snapshot. A document only counts as an exhibit if SEC's own filing index page types it `EX-*` (parsed from the `{accession-number}-index.htm` "Document Format Files" table, `exhibit_type`/`exhibit_description` columns) — GRAPHIC/embedded-image and XBRL support files in the same directory are not exhibits and are not captured here. Exhibit acquisition is attempted for every target filing regardless of whether that filing's own primary document succeeded, failed, or was unchanged.
+4878 exhibit fetches attempted this run (4862 new/changed, 3 unchanged, 13 failed). Exhibits are tracked as their own content-version manifest, keyed by `{accession_number}:{filename}` with `parent_record_id` pointing back to the filing — never as a field on the filing row itself, so an exhibit fetch failure or a later successful retry never touches the filing's own content-version snapshot. A document only counts as an exhibit if SEC's own filing index page types it `EX-*` (parsed from the `{accession-number}-index.htm` "Document Format Files" table, `exhibit_type`/`exhibit_description` columns) — GRAPHIC/embedded-image and XBRL support files in the same directory are not exhibits and are not captured here. Exhibit acquisition is attempted for every target filing regardless of whether that filing's own primary document succeeded, failed, or was unchanged.
 
 ## Failed downloads
 
-8 (see DATA/logs/sec_failures.log and sec_attempts.parquet (status=failed)). Failed attempts never occupy a content-manifest version slot.
+90 (see DATA/logs/sec_failures.log and sec_attempts.parquet (status=failed)). Failed attempts never occupy a content-manifest version slot.
 
 ## Rate/access limitations
 
@@ -80,5 +80,5 @@ Officially documented: max 10 req/s, mandatory identifying `User-Agent` header (
 ## Reproduction command
 
 ```bash
-python -m adc_acquisition sec --limit 2332 --output DATA
+python -m adc_acquisition sec --limit 2338 --output DATA
 ```

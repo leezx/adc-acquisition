@@ -14,7 +14,7 @@ configs/epo_queries.yaml (5 queries, each verified live to stay under OPS's 2000
 
 ## Publications discovered
 
-561 unique EP publications matched across 5 queries this run.
+566 unique EP publications matched across 5 queries this run.
 
 - EP0222360A2: A method of producing a patient-specific cytotoxic reagent and composition. (family 25170824)
 - EP0271918A2: Stable formulations of ricin  toxin A chain and of RTA-immunoconjugates and stabilizer screening methods therefor. (family 25481236)
@@ -34,11 +34,11 @@ configs/epo_queries.yaml (5 queries, each verified live to stay under OPS's 2000
 
 ## Materialization this run
 
-514 never-attempted (fresh), 0 unresolved-retry (backlog), 47 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/epo/job.py docstring). 150 newly downloaded, 0 failed.
+369 never-attempted (fresh), 0 unresolved-retry (backlog), 197 already successful and skipped with NO OPS request this run (OPS bibliographic data CAN change via corrections, so this is a default-run efficiency skip, not permanent — run with `--refresh` periodically to re-verify already-successful publications; see jobs/epo/job.py docstring). 304 newly downloaded, 65 failed.
 
 ## Failed downloads
 
-0 (see DATA/logs/epo_failures.log and epo_attempts.parquet, status=failed). A failure never occupies a manifest version slot, and is retried on every future run regardless of --resume's date cursor (which never narrows EPO's search itself — see module docstring).
+65 (see DATA/logs/epo_failures.log and epo_attempts.parquet, status=failed). A failure never occupies a manifest version slot, and is retried on every future run regardless of --resume's date cursor (which never narrows EPO's search itself — see module docstring).
 
 ## Rate/access limitations
 

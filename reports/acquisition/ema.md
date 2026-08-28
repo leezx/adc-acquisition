@@ -18,7 +18,7 @@ configs/ema_adc_substance_patterns.yaml matches standardized WHO INN stems for A
 
 ## Medicines downloaded
 
-0 new/changed medicine snapshots, 3 skipped as unchanged (matched checkpoint content hash). Status distribution: Application withdrawn: 1, Authorised: 13, Expired: 1, Refused: 1.
+1 new/changed medicine snapshots, 15 skipped as unchanged (matched checkpoint content hash). Status distribution: Application withdrawn: 1, Authorised: 14, Expired: 1, Refused: 1.
 
 - EMEA/H/C/000705: Mylotarg (gemtuzumab ozogamicin), status: Refused
 - EMEA/H/C/002389: Kadcyla (trastuzumab emtansine), status: Authorised
@@ -35,11 +35,12 @@ configs/ema_adc_substance_patterns.yaml matches standardized WHO INN stems for A
 - EMEA/H/C/005685: Zynlonta (loncastuximab tesirine), status: Authorised
 - EMEA/H/C/006081: Datopotamab deruxtecan Daiichi Sankyo (datopotamab deruxtecan), status: Application withdrawn
 - EMEA/H/C/006511: Blenrep (belantamab mafodotin), status: Authorised
+- EMEA/H/C/006511: Blenrep (belantamab mafodotin), status: Authorised
 - EMEA/H/C/006547: Datroway (datopotamab deruxtecan), status: Authorised
 
 ## Documents (independent artifact, see `ema_documents.parquet`)
 
-147 documents considered this run (0 newly fetched/changed, 147 unchanged, 0 failed). EPAR documents (product information, assessment reports, public assessment reports, procedural steps, ...) are tracked as their own content-version manifest, keyed by `{product_number}:{doc_id}` (EMA's own stable numeric document id) with `parent_record_id` pointing back to the medicine. Documents are discovered from the bulk documents feed for every ADC-candidate medicine on every run, independent of which medicines `--limit`/`--since`/`--until`/`--resume` selected for materialization — a medicine outside this run's scope can still have a new or updated document discovered. Fetching itself is metadata-driven: a document is only re-downloaded when it's new, its last attempt failed, or the bulk feed's own `last_updated`/`url` changed since the last success — an unchanged, previously-successful document makes NO HTTP request at all this run.
+147 documents considered this run (2 newly fetched/changed, 145 unchanged, 0 failed). EPAR documents (product information, assessment reports, public assessment reports, procedural steps, ...) are tracked as their own content-version manifest, keyed by `{product_number}:{doc_id}` (EMA's own stable numeric document id) with `parent_record_id` pointing back to the medicine. Documents are discovered from the bulk documents feed for every ADC-candidate medicine on every run, independent of which medicines `--limit`/`--since`/`--until`/`--resume` selected for materialization — a medicine outside this run's scope can still have a new or updated document discovered. Fetching itself is metadata-driven: a document is only re-downloaded when it's new, its last attempt failed, or the bulk feed's own `last_updated`/`url` changed since the last success — an unchanged, previously-successful document makes NO HTTP request at all this run.
 
 ## Raw bulk snapshots (see `ema_bulk.parquet`)
 

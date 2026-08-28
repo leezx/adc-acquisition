@@ -14,12 +14,15 @@ No official API exists for these pages — "fundamentally different from databas
 
 ## Materialization this run
 
-5 registered (company, pipeline_url) pairs. 0 never-attempted (fresh), 1 unresolved-retry (backlog), 4 already-resolved reverify candidates. 0 newly downloaded (new or changed content), 4 unchanged, 1 failed. Every pair is refetched and hash-compared every run (Prompt.md: "company pipeline pages change over time... snapshots are essential") — there is no skip-by-default the way Job 08/WIPO and Job 10/EPO have.
+5 registered (company, pipeline_url) pairs. 0 never-attempted (fresh), 1 unresolved-retry (backlog), 4 already-resolved reverify candidates. 3 newly downloaded (new or changed content), 1 unchanged, 1 failed. Every pair is refetched and hash-compared every run (Prompt.md: "company pipeline pages change over time... snapshots are essential") — there is no skip-by-default the way Job 08/WIPO and Job 10/EPO have.
 
 - ADC Therapeutics SA: Pipeline | ADC Therapeutics (https://www.adctherapeutics.com/our-pipeline1-1/, version 1)
 - Pfizer Inc.: Oncology: Cancer Drug Pipeline and Clinical Trials | Pfizer (https://www.pfizer.com/science/oncology-cancer/pipeline, version 1)
+- Pfizer Inc.: Oncology: Cancer Drug Pipeline and Clinical Trials | Pfizer (https://www.pfizer.com/science/oncology-cancer/pipeline, version 2)
 - Sutro Biopharma, Inc.: Pipeline Draft | Sutro Biopharma, Inc. (https://www.sutrobio.com/pipeline/, version 1)
+- Sutro Biopharma, Inc.: Pipeline Draft | Sutro Biopharma, Inc. (https://www.sutrobio.com/pipeline/, version 2)
 - Zymeworks Inc.: Pipeline — Zymeworks (https://www.zymeworks.com/pipeline/, version 1)
+- Zymeworks Inc.: Pipeline — Zymeworks (https://www.zymeworks.com/pipeline/, version 2)
 
 ## Failed downloads
 

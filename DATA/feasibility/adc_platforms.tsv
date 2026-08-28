@@ -1,30 +1,30 @@
 entity_id	entity_type	canonical_label	aliases	first_seen	last_seen	evidence_count	evidence_sources	confidence	status	associated_adc_candidates
-ADC_PLATFORM_GLYCOCONNECT	ADC_PLATFORM	GlycoConnect	GlycoConnect; Glycoconnect			55	conference_abstract_corpus; europe_pmc	high	VALIDATED	
+ADC_PLATFORM_GLYCOCONNECT	ADC_PLATFORM	GlycoConnect	GlycoConnect; Glycoconnect			75	conference_abstract_corpus; crossref; europe_pmc; pubmed	high	VALIDATED	
+ADC_PLATFORM_DOLAFLEXIN	ADC_PLATFORM	Dolaflexin	Dolaflexin			32	conference_abstract_corpus; crossref; europe_pmc; pubmed	high	VALIDATED	
+ADC_PLATFORM_DOLASYNTHEN	ADC_PLATFORM	Dolasynthen	Dolasynthen			31	conference_abstract_corpus; crossref; europe_pmc	high	VALIDATED	
 ADC_PLATFORM_TMALIN	ADC_PLATFORM	TMALIN	TMALIN			30	conference_abstract_corpus	medium	OBSERVED	
+ADC_PLATFORM_HYDRASPACE	ADC_PLATFORM	HydraSpace	HydraSpace			28	conference_abstract_corpus; crossref; europe_pmc; pubmed	high	VALIDATED	
 ADC_PLATFORM_SERIMAB	ADC_PLATFORM	SeriMab	SeriMab			22	conference_abstract_corpus	medium	OBSERVED	
-ADC_PLATFORM_DOLAFLEXIN	ADC_PLATFORM	Dolaflexin	Dolaflexin			21	conference_abstract_corpus	medium	OBSERVED	
-ADC_PLATFORM_DOLASYNTHEN	ADC_PLATFORM	Dolasynthen	Dolasynthen			19	conference_abstract_corpus	medium	OBSERVED	
-ADC_PLATFORM_HYDRASPACE	ADC_PLATFORM	HydraSpace	HydraSpace			18	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_LIGASEDEPENDENTCONJUGATIONILDC	ADC_PLATFORM	Ligase-Dependent Conjugation (iLDC)	Ligase-Dependent Conjugation; iLDC			18	conference_abstract_corpus	medium	OBSERVED	
+ADC_PLATFORM_SYNTECANE	ADC_PLATFORM	SYNtecan E	SYNtecan E; SyntecanE			17	conference_abstract_corpus; crossref; europe_pmc	high	VALIDATED	
 ADC_PLATFORM_CONJUALL	ADC_PLATFORM	ConjuAll	ConjuAll			16	conference_abstract_corpus	medium	OBSERVED	
-ADC_PLATFORM_SYNTECANE	ADC_PLATFORM	SYNtecan E	SYNtecan E; SyntecanE			16	conference_abstract_corpus; europe_pmc	high	VALIDATED	
+ADC_PLATFORM_THIOBRIDGE	ADC_PLATFORM	ThioBridge	ThioBridge			14	conference_abstract_corpus; crossref; europe_pmc	high	VALIDATED	
 ADC_PLATFORM_BRICKADC	ADC_PLATFORM	BrickADC	BrickADC			11	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_CONDITIONALLYACTIVEBIOLOGICSCAB	ADC_PLATFORM	Conditionally Active Biologics (CAB)	CAB technology; Conditionally Active Biologics			11	conference_abstract_corpus	medium	OBSERVED	
+ADC_PLATFORM_FLEXIMER	ADC_PLATFORM	Fleximer	Fleximer			9	conference_abstract_corpus; crossref; europe_pmc	high	VALIDATED	
 ADC_PLATFORM_IMMUNOSYNTHEN	ADC_PLATFORM	Immunosynthen	Immunosynthen			9	conference_abstract_corpus	medium	OBSERVED	
+ADC_PLATFORM_CAPAC	ADC_PLATFORM	CAPAC	CAPAC			7	conference_abstract_corpus; europe_pmc	high	VALIDATED	
 ADC_PLATFORM_TMEALINKER	ADC_PLATFORM	TMEAlinker	TMEAlinker			7	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_CROSSCONJU	ADC_PLATFORM	CROSSCONJU	CROSSCONJU; CrossConju			6	conference_abstract_corpus	medium	OBSERVED	
-ADC_PLATFORM_CAPAC	ADC_PLATFORM	CAPAC	CAPAC			5	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_PERMALINK	ADC_PLATFORM	PermaLink	PermaLink			5	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_AXCYNCYS	ADC_PLATFORM	AxcynCYS	AxcynCYS			4	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_AZYMETRIC	ADC_PLATFORM	Azymetric	AzymetricTM; Azymetric™			4	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_STARLINKER	ADC_PLATFORM	StarLinker	StarLinkerTM; StarLinker™			4	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_MTOXIN	ADC_PLATFORM	Mtoxin	MtoxinTm			3	conference_abstract_corpus	medium	OBSERVED	
-ADC_PLATFORM_THIOBRIDGE	ADC_PLATFORM	ThioBridge	ThioBridge			3	conference_abstract_corpus; europe_pmc	high	VALIDATED	
+ADC_PLATFORM_TUBTAG	ADC_PLATFORM	Tub-Tag	Tub-Tag			3	crossref; europe_pmc; pubmed	high	VALIDATED	
 ADC_PLATFORM_MUSC	ADC_PLATFORM	MuSC	MuSC™			2	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_NANOLATTIXBIOLATTIX	ADC_PLATFORM	Nanolattix Biolattix	Nanolattix Biolattix			2	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_CLOCK	ADC_PLATFORM	C-LOCK	C-LOCK			1	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_EUCODE	ADC_PLATFORM	EuCODE	EuCODE			1	conference_abstract_corpus	medium	OBSERVED	
-ADC_PLATFORM_FLEXIMER	ADC_PLATFORM	Fleximer	Fleximer			1	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_SMAC	ADC_PLATFORM	SMAC	SMACTM			1	conference_abstract_corpus	medium	OBSERVED	
 ADC_PLATFORM_SYNTHEMER	ADC_PLATFORM	Synthemer	Synthemer			1	conference_abstract_corpus	medium	OBSERVED	
-ADC_PLATFORM_TUBTAG	ADC_PLATFORM	Tub-Tag	Tub-Tag			1	europe_pmc	medium	OBSERVED	
