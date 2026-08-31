@@ -126,18 +126,54 @@ exact known-alias/dev-code crosswalk against `configs/known_adc_assets.yaml`,
 using Chinese aliases if added there) extraction path for this one source
 -- deliberately deferred, not silently dropped.
 
+## Round-1 fix (reviewer-flagged): maintenance-cadence default Crossref window
+
+The V1.1 freeze baseline this PR reports (1,477 records, 3 new master
+assets, 53 cross-confirmations, 5 `catalog_status` upgrades) was acquired
+with `conference_crossref_search --since 2022-01-01`. `update_breadth`'s
+ordinary 14-day maintenance cadence calls every job with NO `--since` at
+all -- without a fix, the first ordinary cadence run after this freeze
+would silently become an undeclared full-history backfill (a materially
+larger effective query, with its own brand-new `query_id`s under PR #37's
+own provenance design) instead of an incremental maintenance run.
+
+Fixed in the SOURCE's own config, not as a special case in
+`update_breadth.py` (which must stay source-agnostic per its own
+orchestrator design): `configs/conference_crossref_search.yaml` now
+declares `default_since: "2022-01-01"`; `job.py`'s `run()` resolves
+`effective_since = args.since or default_since` and uses it EVERYWHERE
+(the Crossref `from-pub-date` filter, the effective query_text/query_id,
+the acquisition report, and the reproduction command). Verified against
+LIVE Crossref: running `python -m adc_acquisition conference_crossref_search
+--output DATA` (no `--since`) reproduced the committed baseline exactly --
+`records_discovered=1477`, `records_skipped_unchanged=1477`, and the
+resulting manifest content is byte-for-byte identical (sorted) to the
+committed one. 2 new regression tests: a no-`--since` run vs. an explicit
+`--since 2022-01-01` run produce the identical query_id/query_text/date
+filter, and an explicit `--since` still overrides the config default for
+a deliberate future historical backfill.
+
+**Two non-blocking nits also fixed in passing (as requested, not a
+separate round):** (1) `update_breadth.py`'s committed
+`ADC_BREADTH_DELTA.md` reproduction command now reflects the actual flags
+used for that run (e.g. `--skip-acquisition`) instead of always printing
+the bare acquisition-included default -- `DeltaResult` gained a
+`reproduction_command` field computed from the real parsed args in
+`main()`; 1 new regression test. (2) Test-count documentation below is the
+current, re-verified number.
+
 ## Tests
 
-5 new tests in `tests/tools/breadth/test_candidate_queue.py`:
-`source_name` parameterization (custom + default-unchanged),
-missing-`abstract`-column tolerance (the exact conference_crossref_search
-shape), the china_drug_trials concatenated-text reuse pattern, and a
-regression locking in that a china_drug_trials-only candidate always
-stays `NEEDS_REVIEW` (never auto-promotes, since
-`status_and_confidence_for_sources()` only upgrades on `"clinicaltrials"`
-membership -- no special-casing needed, this test just proves it).
+8 new tests total: 5 in `tests/tools/breadth/test_candidate_queue.py`
+(`source_name` parameterization, missing-`abstract`-column tolerance, the
+china_drug_trials concatenated-text reuse pattern, and the
+china_drug_trials-only-stays-`NEEDS_REVIEW` regression), 2 in
+`tests/jobs/conference_crossref_search/test_job.py` (the
+`default_since` round-1 fix above), 1 in
+`tests/tools/breadth/test_update_breadth.py` (the reproduction-command
+nit fix above).
 
-Full suite: 682 passed.
+Full suite: 685 passed.
 
 ## Live verification
 

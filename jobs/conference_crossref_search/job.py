@@ -77,6 +77,25 @@ Wiley's own EHA Congress abstract-book archive -- see
 configs/conference_crossref_search.yaml's EHA entry for the full mapping
 and citations.
 
+## Round-2 fix (reviewer-flagged, PR #38): maintenance-cadence default window
+
+`update_breadth`'s ordinary 14-day maintenance cadence calls every job
+with NO `--since` at all. Without a source-level default, the first
+ordinary cadence run after the V1.1 freeze baseline (`--since 2022-01-01`,
+1,477 records) would silently become an undeclared full-history backfill
+instead of an incremental maintenance run -- a materially different,
+much larger effective query, with its own brand-new query_ids under PR
+#37's own provenance design. Fixed: `configs/conference_crossref_search.yaml`
+now declares `default_since`, and `run()` resolves
+`effective_since = args.since or default_since`, used EVERYWHERE (the
+Crossref filter, the effective query_text/query_id, the acquisition
+report, and the reproduction command) -- so a plain, flag-less
+`python -m adc_acquisition conference_crossref_search` is truly
+equivalent to the committed frozen baseline, and `--since` remains a real
+override for a deliberate future historical backfill. This lives in the
+source's own config, not a special case in `update_breadth.py` (which
+must stay source-agnostic per its own orchestrator design).
+
 ## Disclosed limitations
 
 See configs/conference_crossref_search.yaml's own file header: (1)
@@ -145,12 +164,21 @@ class ConferenceSpec:
     purpose: str
 
 
-def load_conference_specs(path: Path) -> tuple[list[ConferenceSpec], list[str]]:
+def load_conference_specs(path: Path) -> tuple[list[ConferenceSpec], list[str], str | None]:
+    """Returns (specs, terms, default_since). `default_since` (PR #38
+    round-1 fix) is this SOURCE's own declared default acquisition window
+    -- see this config file's own header for why: without it,
+    `update_breadth`'s ordinary no-`--since` maintenance cadence would
+    silently become an undeclared full-history backfill the first time it
+    runs after the V1.1 freeze. Deliberately read here (source config),
+    not hardcoded in job.py or special-cased in update_breadth.py, which
+    must stay source-agnostic."""
     with Path(path).open("r", encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
     specs = [ConferenceSpec(**entry) for entry in data.get("conferences", [])]
     terms = list(data.get("adc_query_terms", []))
-    return specs, terms
+    default_since = data.get("default_since")
+    return specs, terms, default_since
 
 
 def _now_iso() -> str:
@@ -221,18 +249,34 @@ class ConferenceCrossrefSearchJob(AcquisitionJob):
                 "against the checkpoint regardless of when it was first discovered"
             )
 
-        date_filters = []
-        if args.since:
-            date_filters.append(f"from-pub-date:{args.since}")
-        if args.until:
-            date_filters.append(f"until-pub-date:{args.until}")
-
-        specs, terms = load_conference_specs(Path(args.config_file))
+        specs, terms, default_since = load_conference_specs(Path(args.config_file))
         active_specs = [s for s in specs if s.active]
         if not active_specs:
             raise RuntimeError(f"no active conferences in {args.config_file}")
         if not terms:
             raise RuntimeError(f"no adc_query_terms configured in {args.config_file}")
+
+        # PR #38 round-1 fix: --since falls back to the source's own
+        # declared default_since, never to "no lower bound at all" -- see
+        # load_conference_specs()'s and configs/conference_crossref_search.yaml's
+        # own docstrings. effective_since is used EVERYWHERE below (the
+        # Crossref filter itself, the effective query_text/query_id, and
+        # the acquisition report/reproduction command) so a plain
+        # `--since`-less run is truly equivalent to the committed baseline,
+        # not a silent full-history backfill.
+        effective_since = args.since or default_since
+        if args.since is None and default_since:
+            result.notes.append(
+                f"--since not given: falling back to this source's own default_since={default_since!r} "
+                "(configs/conference_crossref_search.yaml) -- pass --since explicitly to override, "
+                "e.g. for a deliberate historical backfill"
+            )
+
+        date_filters = []
+        if effective_since:
+            date_filters.append(f"from-pub-date:{effective_since}")
+        if args.until:
+            date_filters.append(f"until-pub-date:{args.until}")
 
         message_by_doi: dict[str, dict] = {}
         doi_first_query: dict[str, tuple[str, int, str]] = {}  # doi -> (query_id, query_version, query_text)
@@ -243,7 +287,7 @@ class ConferenceCrossrefSearchJob(AcquisitionJob):
 
         for conf in active_specs:
             for idx, term in enumerate(terms):
-                effective_text = _effective_query_text(term, conf, args.since, args.until)
+                effective_text = _effective_query_text(term, conf, effective_since, args.until)
                 query_id = _effective_query_id(conf, idx, effective_text)
                 seen_this_query: set[str] = set()
                 cursor = "*"
@@ -401,7 +445,7 @@ class ConferenceCrossrefSearchJob(AcquisitionJob):
             result=result, manifest_df=manifest_df, all_ids=all_ids,
             active_specs=active_specs, terms=terms,
             signature_rejected_counts=signature_rejected_counts,
-            output_dir=output_dir, since=args.since, until=args.until,
+            output_dir=output_dir, since=effective_since, until=args.until,
         )
         report_path = output_dir.parent / "reports" / "acquisition" / f"{self.name}.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)

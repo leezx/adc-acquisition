@@ -408,6 +408,39 @@ def test_main_incomplete_derivation_returns_nonzero_and_skips_entity_diff(tmp_pa
     assert "SKIPPED_UPSTREAM_FAILURE" in md
 
 
+def test_main_reproduction_command_reflects_actual_flags_used(tmp_path, monkeypatch):
+    """Non-blocking nit fixed (PR #38 round-1): a committed delta report's
+    own Reproduction command must match the REAL invocation, not always
+    the bare default -- otherwise a reader following it would silently
+    re-run a fuller (e.g. acquisition-included) invocation than the one
+    that actually produced this report."""
+    import subprocess
+
+    feasibility_dir = tmp_path / "feasibility"
+    feasibility_dir.mkdir()
+    catalog_dir = tmp_path / "catalog"
+    catalog_dir.mkdir()
+    delta_output = tmp_path / "delta"
+
+    monkeypatch.setattr(subprocess, "run", lambda cmd, cwd, capture_output, text: subprocess.CompletedProcess(cmd, returncode=0, stdout="ok", stderr=""))
+    monkeypatch.setattr(sys, "argv", [
+        "update_breadth.py", "--skip-acquisition",
+        "--data-dir", str(tmp_path), "--feasibility-dir", str(feasibility_dir),
+        "--catalog-dir", str(catalog_dir), "--delta-output", str(delta_output),
+    ])
+
+    rc = update_breadth_main()
+    assert rc == 0
+
+    delta_dirs = list(delta_output.iterdir())
+    md = (delta_dirs[0] / "ADC_BREADTH_DELTA.md").read_text()
+    assert "--skip-acquisition" in md
+    assert f"--data-dir {tmp_path}" in md
+    # The bare, acquisition-INCLUDED default command must NOT appear as
+    # the reproduction command for a --skip-acquisition run.
+    assert "python3 tools/breadth/update_breadth.py --data-dir DATA --delta-output reports/delta" not in md
+
+
 def test_build_delta_markdown_incomplete_derivation_omits_entity_sections():
     result = DeltaResult(
         run_started_at="2026-08-25T00:00:00Z",

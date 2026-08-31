@@ -57,6 +57,26 @@
 # numbered issue (pre-"Supplement"-labeling convention, e.g. DOI shape
 # `10.1182/blood.vNNN.NN....`) are NOT captured by this signature -- a
 # disclosed historical-recall gap, not fixed this round.
+#
+# `default_since` (PR #38 round-1 fix, reviewer-flagged): the V1.1 freeze
+# baseline this repo committed to (PR #37/#38's real run, 1,477 records,
+# 3 new master assets, 53 cross-confirmations, 5 catalog_status upgrades)
+# used `--since 2022-01-01`. `update_breadth`'s ordinary 14-day
+# maintenance cadence calls every job with NO --since at all
+# (`python -m adc_acquisition <job> --output DATA`) -- without this
+# default, the first ordinary cadence run after this freeze would silently
+# become an undeclared full-history backfill instead of an incremental
+# maintenance run (a materially different, much larger effective query,
+# with its own new query_ids per PR #37's own provenance design). This
+# value is the SOURCE's own declared default window, not a special case in
+# `update_breadth.py` itself (which must stay source-agnostic) -- job.py's
+# `run()` resolves `effective_since = args.since or default_since` and
+# uses it EVERYWHERE (the Crossref `from-pub-date` filter, the effective
+# query_text/query_id, the acquisition report, and the reproduction
+# command), so `--since` remains a real, working override for a
+# deliberate future historical backfill (e.g. `--since 2016-01-01`).
+
+default_since: "2022-01-01"
 
 conferences:
   - conference_id: ESMO

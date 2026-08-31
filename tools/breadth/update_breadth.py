@@ -312,6 +312,7 @@ class DeltaResult:
     unresolved_removals_by_table: dict = field(default_factory=dict)  # table -> list[dict(key)]
     delta_status: str = "OK"  # or "INCOMPLETE_DERIVATION"
     delta_dir: str = ""
+    reproduction_command: str = "python3 tools/breadth/update_breadth.py --data-dir DATA --delta-output reports/delta"
 
 
 def _row_key(row: dict, key_columns: list[str]) -> tuple:
@@ -679,7 +680,7 @@ re-run `update_breadth`.
 ## Reproduction
 
 ```bash
-python3 tools/breadth/update_breadth.py --data-dir DATA --delta-output reports/delta
+{result.reproduction_command}
 ```
 """
 
@@ -795,7 +796,7 @@ are NOT independent siblings.
 ## Reproduction
 
 ```bash
-python3 tools/breadth/update_breadth.py --data-dir DATA --delta-output reports/delta
+{result.reproduction_command}
 ```
 """
 
@@ -821,7 +822,24 @@ def main() -> int:
         raise SystemExit(f"unknown job name(s): {sorted(unknown)} -- must be a subset of {sorted(JOBS.keys())}")
 
     now = datetime.now(timezone.utc).isoformat()
-    result = DeltaResult(run_started_at=now)
+    # Reflects the ACTUAL flags this run used (non-blocking nit, PR #38
+    # round-1 fix) -- a committed delta report's own reproduction command
+    # must match the real invocation (e.g. --skip-acquisition), not always
+    # the bare default, or a reader following it would silently re-run a
+    # DIFFERENT (fuller) invocation than the one that actually produced
+    # this report.
+    repro_parts = ["python3 tools/breadth/update_breadth.py"]
+    if args.jobs:
+        repro_parts.append(f"--jobs {args.jobs}")
+    if args.skip_acquisition:
+        repro_parts.append("--skip-acquisition")
+    repro_parts.append(f"--data-dir {args.data_dir}")
+    if args.feasibility_dir != "DATA/feasibility":
+        repro_parts.append(f"--feasibility-dir {args.feasibility_dir}")
+    if args.catalog_dir != "DATA/catalog":
+        repro_parts.append(f"--catalog-dir {args.catalog_dir}")
+    repro_parts.append(f"--delta-output {args.delta_output}")
+    result = DeltaResult(run_started_at=now, reproduction_command=" ".join(repro_parts))
 
     before_snapshot = read_feasibility_snapshot(feasibility_dir, catalog_dir)
 
