@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import sys
 
+from jobs.china_drug_trials.job import ChinaDrugTrialsJob
 from jobs.clinicaltrials.job import ClinicalTrialsJob
 from jobs.company_pipeline.job import CompanyPipelineJob
 from jobs.company_press_release.job import CompanyPressReleaseJob
@@ -47,6 +48,7 @@ JOBS = {
     "publication_bioactivity_corpus": PublicationBioactivityCorpusJob,
     "known_adc_asset_expansion": KnownADCAssetExpansionJob,
     "who_ictrp": WHOICTRPJob,
+    "china_drug_trials": ChinaDrugTrialsJob,
 }
 
 
