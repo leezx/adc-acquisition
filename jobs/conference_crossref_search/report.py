@@ -31,6 +31,8 @@ def build_report(
     terms: list[str],
     signature_rejected_counts,
     output_dir: Path,
+    since: str | None = None,
+    until: str | None = None,
 ) -> str:
     run_df = manifest_df[manifest_df["source_record_id"].isin(all_ids)] if not manifest_df.empty else manifest_df
 
@@ -66,6 +68,13 @@ def build_report(
         for c in active_specs
     )
 
+    repro_flags = ""
+    if since:
+        repro_flags += f" --since {since}"
+    if until:
+        repro_flags += f" --until {until}"
+    repro_command = f"python -m adc_acquisition conference_crossref_search{repro_flags} --output DATA"
+
     return f"""# Conference Crossref Search (live ESMO/ASH/EHA/SABCS discovery)
 
 ## Acquisition mechanism
@@ -78,6 +87,14 @@ unusable for unrestricted whole-of-Crossref topic discovery (see
 `configs/crossref_reconciliation_sources.yaml`).
 
 Query terms this run ({len(terms)}): {", ".join(f'"{t}"' for t in terms)}
+
+Effective date window this run: since={since or 'none (no lower bound)'},
+until={until or 'none (no upper bound)'} -- this is part of the EFFECTIVE
+query sent to Crossref (`from-pub-date`/`until-pub-date`), and this run's
+`query_id`/`query_text` in the discovery ledger are derived from the full
+effective query (term + ISSN + this date window), so a differently-windowed
+run of the same conference/term is never conflated with this one's
+provenance (reviewer-flagged, round-1 fix).
 
 Conferences searched:
 {conference_defs}
@@ -152,6 +169,6 @@ first) -- deferred to a follow-up increment.
 ## Reproduction command
 
 ```bash
-python -m adc_acquisition conference_crossref_search --output DATA
+{repro_command}
 ```
 """

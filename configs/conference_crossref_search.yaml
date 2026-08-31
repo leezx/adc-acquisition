@@ -103,15 +103,36 @@ conferences:
     query_version: 1
     container_title: "HemaSphere"
     issn: ["2572-9241"]
-    signature_type: issue_starts_with_s
-    signature_value: null
+    signature_type: volume_issue_map
+    signature_value:
+      - "6:S3"   # 2022 EHA2022 Hybrid Congress
+      - "7:S3"   # 2023 EHA Congress
+      - "8:S1"   # 2024 EHA2024 Hybrid Congress
+      - "9:S1"   # 2025 EHA Congress
+      - "10:S1"  # 2026 EHA Congress
     active: true
     purpose: >-
-      EHA Congress abstracts are published as a HemaSphere supplement
-      issue. Live-verified 2026-08-31: supplement abstracts carry an
-      `issue` value starting with "S" (e.g. "S1", "S2", "S3") and a title
-      starting with a poster/session code (e.g. "PS1401", "P548"). Example:
-      DOI 10.1097/01.hs9.0000969100.45170.e9, issue "S3".
+      REVISED (round-1 fix, reviewer-flagged): the prior signature
+      (`issue_starts_with_s`, "any HemaSphere issue starting with S") wrongly
+      attributed EVERY HemaSphere S-numbered supplement to EHA. HemaSphere
+      also publishes OTHER societies' abstracts under the same S-numbered
+      supplement shape in the SAME congress year -- e.g. 2024: S1=EHA2024
+      Hybrid Congress, S2=International Symposium on Hodgkin Lymphoma,
+      S3/S4=Annual Sickle Cell & Thalassaemia Conference; 2022: S1=Sickle
+      Cell & Thalassaemia Conference, S2=European Myeloma Network,
+      S3=EHA2022 Hybrid Congress, S4=Global Congress on Sickle Cell
+      Disease, S5=International Symposium on Hodgkin Lymphoma (source:
+      Wiley's HemaSphere issue archive and the ISSN Portal's own per-issue
+      listing, live-verified by the reviewer 2026-08-31). Fixed: EHA
+      attribution now uses an explicit (volume, issue) allowlist taken
+      directly from Wiley's own EHA Congress abstract-book archive
+      (https://onlinelibrary.wiley.com/doi/toc/10.1002/(ISSN)2572-9241.EHA-congress-abstract-books):
+      volume 6->S3 (2022), 7->S3 (2023), 8->S1 (2024), 9->S1 (2025),
+      10->S1 (2026). DISCLOSED LIMITATION: this allowlist must be manually
+      extended for congress years beyond 2026 -- a HemaSphere item from an
+      unmapped future volume correctly fails this signature (fails closed)
+      rather than being guessed. Example still-passing case: DOI
+      10.1097/01.hs9.0000969100.45170.e9, volume 7, issue "S3" (2023 EHA).
 
   - conference_id: SABCS
     query_id_prefix: CONFERENCE_CROSSREF_SABCS

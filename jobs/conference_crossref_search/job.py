@@ -55,6 +55,28 @@ job's `/works?` search response already contains full bibliographic
 metadata (title, issue, page, container-title, publisher, published date)
 for every hit -- there is no second network call per record.
 
+## Round-1 fixes (reviewer-flagged)
+
+**Effective query provenance.** `--since`/`--until` are real, live filters
+sent to Crossref (see below) -- so two runs of the same conference/term
+with DIFFERENT date windows are materially different queries. `query_id`/
+`query_text` are now derived from the FULL effective query (term + ISSN +
+date window), via `_effective_query_text`/`_effective_query_id`, so the
+same query_id never maps to two different query_texts and a committed
+run's provenance is reproducible from its own discovery ledger (previously,
+query_id/query_text only encoded the term, silently conflating e.g. a
+`--since 2016-01-01` run with a `--since 2022-01-01` run of the same
+conference/term).
+
+**EHA conference attribution.** The prior `issue_starts_with_s` signature
+wrongly attributed every HemaSphere S-numbered supplement to EHA --
+HemaSphere also publishes several OTHER societies' abstracts under the
+same S-numbered supplement shape in the same congress year. Fixed:
+`volume_issue_map`, an explicit (volume, issue) allowlist sourced from
+Wiley's own EHA Congress abstract-book archive -- see
+configs/conference_crossref_search.yaml's EHA entry for the full mapping
+and citations.
+
 ## Disclosed limitations
 
 See configs/conference_crossref_search.yaml's own file header: (1)
@@ -63,7 +85,8 @@ even within one journal is not guaranteed exhaustive (same shape as this
 repo's existing ASCO Stage-1 disclosed limitation); (2) ASH's signature is
 verified against the current "Supplement N" issue-labeling convention
 (confirmed live back through 2018) -- older, differently-labeled ASH
-annual-meeting abstracts are not captured this round.
+annual-meeting abstracts are not captured this round; (3) EHA's
+volume_issue_map must be manually extended for congress years beyond 2026.
 
 ## Scope: acquisition foundation only
 
@@ -117,7 +140,7 @@ class ConferenceSpec:
     container_title: str
     issn: list[str]
     signature_type: str
-    signature_value: str | None
+    signature_value: str | list[str] | None
     active: bool
     purpose: str
 
@@ -140,6 +163,30 @@ def _evidence_note(conf: ConferenceSpec, message: dict, doi: str) -> str:
         f"{f'(value={conf.signature_value!r})' if conf.signature_value else ''}"
         f" issue={message.get('issue')!r} page={message.get('page')!r} doi={doi!r}"
     )
+
+
+def _effective_query_text(term: str, conf: ConferenceSpec, since: str | None, until: str | None) -> str:
+    """The FULL effective Crossref query this run actually issues --
+    reviewer-flagged (round-1): `--since`/`--until` are real, live filters
+    sent to Crossref (see this module's docstring), so two runs with
+    different date windows are materially DIFFERENT queries and must never
+    share a query_id/query_text -- otherwise the discovery ledger cannot
+    tell a `--since 2016-01-01` run apart from a `--since 2022-01-01` run
+    for the same conference/term, making a committed run's provenance
+    unreproducible."""
+    return (
+        f'query.bibliographic="{term}" issn={"+".join(conf.issn)} '
+        f'from-pub-date={since or "none"} until-pub-date={until or "none"}'
+    )
+
+
+def _effective_query_id(conf: ConferenceSpec, idx: int, effective_text: str) -> str:
+    """Deterministically derived FROM the effective query text (same
+    pattern as jobs/crossref's own --doi ad hoc lookup query_id) -- this
+    guarantees the same query_id never maps to two materially different
+    query_texts, and a differing date window always gets its own id."""
+    digest = sha256_bytes(effective_text.encode("utf-8"))[:10]
+    return f"{conf.query_id_prefix}_{idx + 1:03d}_{digest}"
 
 
 class ConferenceCrossrefSearchJob(AcquisitionJob):
@@ -196,7 +243,8 @@ class ConferenceCrossrefSearchJob(AcquisitionJob):
 
         for conf in active_specs:
             for idx, term in enumerate(terms):
-                query_id = f"{conf.query_id_prefix}_{idx + 1:03d}"
+                effective_text = _effective_query_text(term, conf, args.since, args.until)
+                query_id = _effective_query_id(conf, idx, effective_text)
                 seen_this_query: set[str] = set()
                 cursor = "*"
                 filters = [f"issn:{i}" for i in conf.issn] + date_filters
@@ -221,10 +269,10 @@ class ConferenceCrossrefSearchJob(AcquisitionJob):
                         message_by_doi[doi] = message
                         doi_conference[doi] = conf
                         if doi not in doi_first_query:
-                            doi_first_query[doi] = (query_id, conf.query_version, term)
+                            doi_first_query[doi] = (query_id, conf.query_version, effective_text)
                         if (doi, query_id) not in seen_this_query:
                             seen_this_query.add((doi, query_id))
-                            observations.append((doi, query_id, conf.query_version, term))
+                            observations.append((doi, query_id, conf.query_version, effective_text))
 
                     if not page.next_cursor or not page.items:
                         break
@@ -353,7 +401,7 @@ class ConferenceCrossrefSearchJob(AcquisitionJob):
             result=result, manifest_df=manifest_df, all_ids=all_ids,
             active_specs=active_specs, terms=terms,
             signature_rejected_counts=signature_rejected_counts,
-            output_dir=output_dir,
+            output_dir=output_dir, since=args.since, until=args.until,
         )
         report_path = output_dir.parent / "reports" / "acquisition" / f"{self.name}.md"
         report_path.parent.mkdir(parents=True, exist_ok=True)

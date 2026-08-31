@@ -16,8 +16,10 @@ conferences:
     query_version: 1
     container_title: "Fake Journal A"
     issn: ["1111-1111"]
-    signature_type: issue_starts_with_s
-    signature_value: null
+    signature_type: volume_issue_map
+    signature_value:
+      - "1:S1"
+      - "1:S2"
     active: true
     purpose: test
   - conference_id: FAKE_B
@@ -46,8 +48,10 @@ conferences:
     query_version: 1
     container_title: "Fake Journal A"
     issn: ["1111-1111"]
-    signature_type: issue_starts_with_s
-    signature_value: null
+    signature_type: volume_issue_map
+    signature_value:
+      - "1:S1"
+      - "1:S2"
     active: true
     purpose: test
 
@@ -55,19 +59,21 @@ adc_query_terms: []
 """
 
 
-def _item(doi, title, issue=None, page=None, container_title="Fake Journal", published_year=2026):
+def _item(doi, title, issue=None, page=None, container_title="Fake Journal", published_year=2026, volume=None):
     msg = {"DOI": doi, "title": [title], "container-title": [container_title], "publisher": "Pub",
            "published": {"date-parts": [[published_year, 5]]}}
     if issue is not None:
         msg["issue"] = issue
     if page is not None:
         msg["page"] = page
+    if volume is not None:
+        msg["volume"] = volume
     return msg
 
 
-A1 = _item("10.9/a1", "A1 term1", issue="S1", page="10-11")
-A2_REJECTED = _item("10.9/a2", "A2 rejected", issue="7", page="1-2")
-A3 = _item("10.9/a3", "A3 term2 only", issue="S2", page="20-21")
+A1 = _item("10.9/a1", "A1 term1", issue="S1", page="10-11", volume="1")
+A2_REJECTED = _item("10.9/a2", "A2 rejected", issue="7", page="1-2", volume="1")
+A3 = _item("10.9/a3", "A3 term2 only", issue="S2", page="20-21", volume="1")
 B1_CONFB = _item("10.9/confb-1", "B1 confb", issue="9_Supplement", page="5-5")
 B2_REJECTED = _item("10.9/other-2", "B2 not confb", issue="9_Supplement", page="6-6")
 
@@ -150,8 +156,12 @@ def test_same_doi_found_by_two_terms_keeps_both_discovery_observations_but_one_m
     assert (manifest["source_record_id"] == "10.9/a1").sum() == 1
     a1_discoveries = discovery[discovery["source_record_id"] == "10.9/a1"]
     assert len(a1_discoveries) == 2
-    assert set(a1_discoveries["query_id"]) == {
-        "CONFERENCE_CROSSREF_FAKE_A_001", "CONFERENCE_CROSSREF_FAKE_A_002",
+    query_ids = set(a1_discoveries["query_id"])
+    assert len(query_ids) == 2
+    assert all(qid.startswith("CONFERENCE_CROSSREF_FAKE_A_") for qid in query_ids)
+    assert set(a1_discoveries["query_text"]) == {
+        'query.bibliographic="term1" issn=1111-1111 from-pub-date=none until-pub-date=none',
+        'query.bibliographic="term2" issn=1111-1111 from-pub-date=none until-pub-date=none',
     }
 
 
@@ -261,6 +271,50 @@ def test_since_and_until_are_sent_as_date_filters(tmp_path):
         _base_args(tmp_path, since="2026-01-01", until="2026-12-31")
     )
     assert result.records_downloaded == 1
+
+
+@responses.activate
+def test_different_since_windows_produce_distinguishable_query_provenance(tmp_path):
+    """Reviewer-flagged (round-1): --since/--until are real, live filters,
+    so two runs of the same conference/term with different date windows
+    are materially different queries and must never collide in the
+    discovery ledger's query_id/query_text."""
+    args_2022 = _base_args(tmp_path, config_text=CONFIG_YAML_ONE_TERM, since="2022-01-01")
+    fixtures_2022 = {
+        ("issn:1111-1111,from-pub-date:2022-01-01", "term1", "*"): [A1],
+        ("issn:2222-2222,from-pub-date:2022-01-01", "term1", "*"): [],
+    }
+    _register_search(fixtures_2022)
+    ConferenceCrossrefSearchJob().run(args_2022)
+
+    responses.reset()
+    args_2024 = _base_args(tmp_path, config_text=CONFIG_YAML_ONE_TERM, since="2024-01-01")
+    fixtures_2024 = {
+        ("issn:1111-1111,from-pub-date:2024-01-01", "term1", "*"): [A1],
+        ("issn:2222-2222,from-pub-date:2024-01-01", "term1", "*"): [],
+    }
+    _register_search(fixtures_2024)
+    ConferenceCrossrefSearchJob().run(args_2024)
+
+    discovery = _discovery_df(tmp_path)
+    a1 = discovery[discovery["source_record_id"] == "10.9/a1"]
+    assert len(a1) == 2
+    assert a1["query_id"].nunique() == 2
+    texts = set(a1["query_text"])
+    assert any("from-pub-date=2022-01-01" in t for t in texts)
+    assert any("from-pub-date=2024-01-01" in t for t in texts)
+
+    # Same effective query re-run with the SAME date window must reuse the
+    # same query_id (deterministic, not a fresh id every run).
+    responses.reset()
+    _register_search(fixtures_2022)
+    ConferenceCrossrefSearchJob().run(args_2022)
+    discovery2 = _discovery_df(tmp_path)
+    a1_2022_ids = discovery2[
+        (discovery2["source_record_id"] == "10.9/a1")
+        & (discovery2["query_text"].str.contains("from-pub-date=2022-01-01"))
+    ]["query_id"].unique()
+    assert len(a1_2022_ids) == 1
 
 
 @responses.activate

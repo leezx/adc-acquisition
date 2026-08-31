@@ -11,10 +11,18 @@ unusable for unrestricted whole-of-Crossref topic discovery (see
 
 Query terms this run (4): "antibody-drug conjugate", "antibody drug conjugate", "ADC", "ADCs"
 
+Effective date window this run: since=2022-01-01,
+until=none (no upper bound) -- this is part of the EFFECTIVE
+query sent to Crossref (`from-pub-date`/`until-pub-date`), and this run's
+`query_id`/`query_text` in the discovery ledger are derived from the full
+effective query (term + ISSN + this date window), so a differently-windowed
+run of the same conference/term is never conflated with this one's
+provenance (reviewer-flagged, round-1 fix).
+
 Conferences searched:
 - **ESMO**: Annals of Oncology (ISSN 0923-7534), signature=`no_issue_and_s_page`
 - **ASH**: Blood (ISSN 0006-4971), signature=`issue_contains_supplement`
-- **EHA**: HemaSphere (ISSN 2572-9241), signature=`issue_starts_with_s`
+- **EHA**: HemaSphere (ISSN 2572-9241), signature=`volume_issue_map`(value=['6:S3', '7:S3', '8:S1', '9:S1', '10:S1'])
 - **SABCS**: Cancer Research (ISSN 0008-5472, 1538-7445), signature=`doi_suffix_contains`(value='sabcs')
 
 ## Records by conference
@@ -22,7 +30,7 @@ Conferences searched:
 - ASH: 772
 - ESMO: 540
 - SABCS: 111
-- EHA: 64
+- EHA: 54
 
 ## Conference-attribution signature rejections (NOT ADC-relevance filtering)
 
@@ -36,7 +44,7 @@ imprecision is handled elsewhere in this repo:
 
 - ESMO: 57 candidates matched the ISSN/query search but failed the conference's own signature check
 - ASH: 172 candidates matched the ISSN/query search but failed the conference's own signature check
-- EHA: 142 candidates matched the ISSN/query search but failed the conference's own signature check
+- EHA: 163 candidates matched the ISSN/query search but failed the conference's own signature check
 - SABCS: 5770 candidates matched the ISSN/query search but failed the conference's own signature check
 
 ## Disclosed finding -- most materialized titles don't contain a
@@ -45,7 +53,7 @@ imprecision is handled elsewhere in this repo:
 Title-only diagnostic (NOT a precision measurement -- see
 `_ADC_TITLE_HINT_RE`'s own caveat in this job's report.py; a title missing
 every listed term can still be substantively about ADCs): only
-306 of 1487 (21%) of this run's materialized titles contain a recognizable
+303 of 1477 (21%) of this run's materialized titles contain a recognizable
 ADC-relevant term at all. This is the concrete, in-the-wild confirmation
 of `configs/crossref_reconciliation_sources.yaml`'s own documented warning
 that Crossref's `query.bibliographic` is relevance-ranked, NOT a
@@ -78,8 +86,8 @@ first) -- deferred to a follow-up increment.
 
 ## Materialization this run
 
-1487 unique candidate works discovered and signature-confirmed
-(deduplicated by DOI). 1487 newly materialized,
+1477 unique candidate works discovered and signature-confirmed
+(deduplicated by DOI). 1477 newly materialized,
 0 skipped_unchanged this run.
 
 ## Sample materialized works
@@ -112,5 +120,5 @@ first) -- deferred to a follow-up increment.
 ## Reproduction command
 
 ```bash
-python -m adc_acquisition conference_crossref_search --output DATA
+python -m adc_acquisition conference_crossref_search --since 2022-01-01 --output DATA
 ```

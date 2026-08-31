@@ -46,7 +46,7 @@ congress:
 |---|---|---|
 | ESMO | Annals of Oncology | no `issue` field + S-prefixed `page` |
 | ASH | Blood | `issue` contains "Supplement" |
-| EHA | HemaSphere | `issue` starts with "S" |
+| EHA | HemaSphere | explicit (volume, issue) allowlist (round-1 fix, see below) |
 | SABCS | Cancer Research | DOI suffix contains "sabcs" (the only way to separate it from AACR Annual Meeting abstracts sharing the same journal/issue shape) |
 
 A candidate that matches the ISSN/query-term search but fails its
@@ -80,10 +80,55 @@ run after the fix showed `records_skipped_unchanged=1487,
 records_downloaded=0`. Regression test:
 `test_volatile_relevance_score_change_alone_does_not_bump_version`.
 
+## Round-1 fixes (reviewer-flagged)
+
+**Blocker 1 -- effective query provenance was not reproducible.** The
+committed run used `--since 2022-01-01`, and `--since`/`--until` were
+genuinely sent to Crossref as `from-pub-date`/`until-pub-date` filters --
+but `query_id`/`query_text` in the discovery ledger only encoded the term
+(e.g. `"antibody-drug conjugate"`), so two runs of the same
+conference/term with DIFFERENT date windows would have shared identical
+provenance, and the acquisition report's own reproduction command omitted
+`--since` entirely. Fixed: `query_id`/`query_text` are now derived from
+the FULL effective query (term + ISSN + date window) via
+`_effective_query_text`/`_effective_query_id` (query_id is a deterministic
+hash of the effective text, same pattern as `jobs/crossref`'s own ad hoc
+`--doi` lookup) -- the same query_id never maps to two different
+query_texts, and a different date window always gets its own id. The
+acquisition report now states the effective date window explicitly and
+prints the actually-reproducible command. New tests:
+`test_different_since_windows_produce_distinguishable_query_provenance`
+(also asserts the SAME window re-run reuses the SAME query_id,
+deterministically).
+
+**Blocker 2 -- EHA's signature was not conference-specific.** The prior
+`issue_starts_with_s` check attributed EVERY HemaSphere S-numbered
+supplement to EHA, but HemaSphere also publishes the International
+Symposium on Hodgkin Lymphoma, European Myeloma Network, Annual Sickle
+Cell & Thalassaemia Conference, and Global Congress on Sickle Cell Disease
+under the same S-numbered-supplement shape, in the SAME congress years
+(e.g. 2024: S1=EHA2024, S2=Hodgkin Lymphoma Symposium, S3/S4=Sickle Cell &
+Thalassaemia Conference). Fixed: a new `volume_issue_map` signature type,
+an explicit (volume, issue) allowlist sourced from Wiley's own EHA
+Congress abstract-book archive (volume 6->S3 [2022], 7->S3 [2023],
+8->S1 [2024], 9->S1 [2025], 10->S1 [2026]); an unmapped future
+volume/issue fails closed rather than being guessed (disclosed limitation:
+must be manually extended past 2026). Re-running against real data: EHA
+dropped from 64 to 54 records (the 10 removed were genuinely other
+societies' abstracts, e.g. volume 7/S3 items now correctly recognized as
+2023 EHA while other volume/S-issue combinations outside the allowlist are
+excluded). New tests: `test_eha_signature_rejects_same_year_other_society_supplement`
+(the exact HemaSphere-2024-volume-8-issue-S4/ASCAT scenario) and
+`test_eha_signature_rejects_unmapped_future_volume_fails_closed`.
+
+Full real corpus regenerated after both fixes: **1,477** records (772 ASH,
+540 ESMO, 111 SABCS, 54 EHA), re-verified idempotent
+(`skipped_unchanged=1477`) on a second live run.
+
 ## Disclosed finding -- most materialized titles don't contain a recognizable ADC term
 
 Real-run diagnostic (title-only, NOT a precision measurement -- see
-`_ADC_TITLE_HINT_RE`'s own caveat): only 306 of 1487 (21%) of this run's
+`_ADC_TITLE_HINT_RE`'s own caveat): only 303 of 1477 (21%) of this run's
 materialized titles contain a recognizable ADC-relevant term at all. This
 is the concrete, in-the-wild confirmation of
 `configs/crossref_reconciliation_sources.yaml`'s own documented warning
@@ -119,23 +164,25 @@ through for real, not a documented no-op.
 
 Ran the real job against live Crossref with `--since 2022-01-01` (a
 practical initial window, not exhaustive back to 2016 -- can be widened in
-a future run; disclosed in the acquisition report, not silently narrowed):
-1,487 unique candidate works discovered and signature-confirmed (772 ASH,
-540 ESMO, 111 SABCS, 64 EHA), all newly materialized on a clean first run,
-then confirmed fully idempotent (`skipped_unchanged=1487`) on a second
-live run after the `score`-leak fix. `DATA/manifests/
+a future run; disclosed in the acquisition report, not silently narrowed).
+Final state after both round-1 fixes: **1,477** unique candidate works
+discovered and signature-confirmed (772 ASH, 540 ESMO, 111 SABCS, 54 EHA),
+all newly materialized on a clean run, then confirmed fully idempotent
+(`skipped_unchanged=1477`) on a second live run. `DATA/manifests/
 conference_crossref_search*.parquet` and `reports/acquisition/
-conference_crossref_search.md` committed with this PR.
+conference_crossref_search.md` committed with this PR reflect this final,
+post-fix state.
 
 ## Tests
 
-29 new tests (5 client + 10 signatures + 14 job), including the
+32 new tests (5 client + 12 signatures + 15 job), including the
 cross-term discovery-observation regression, the signature-rejection
 regression (Cancer Research's AACR-vs-SABCS disambiguation), pagination
-cursor-following, a page-fetch-failure-degrades-gracefully test, and the
-`score`-leak regression described above.
+cursor-following, a page-fetch-failure-degrades-gracefully test, the
+`score`-leak regression, and both round-1 regressions (distinguishable
+date-window provenance; EHA's same-year-other-society rejection).
 
-Full suite: 674 passed.
+Full suite: 677 passed.
 
 ## Reproduction command
 
