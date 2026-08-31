@@ -1,0 +1,111 @@
+# China CDE (chinadrugtrials.org.cn) query registry (source-coverage
+# expansion, PR "China CDE/NMPA").
+#
+# Unlike every other *_queries.yaml in this repo, this "query" does NOT
+# describe a live, per-run search this job executes itself (see
+# jobs/china_drug_trials/job.py's module docstring for why: this domain's
+# automation-permission status is UNKNOWN). query_text below must be the
+# FULL, VERBATIM search term a human actually typed into the platform's
+# search box before clicking "下载" (download) -- this job has no way to
+# recover that from the export file itself, so this registry is the ONLY
+# record inside this repo of why these trials are in the corpus at all.
+#
+# `exports` (list of {filename, export_date}) maps each specific downloaded
+# file to the query that produced it -- see jobs/china_drug_trials/job.py's
+# `_load_export_filename_query_map`/`_query_for` for why this is per-FILE,
+# never a single job-wide constant: unlike WHO ICTRP's own default download
+# filename (which self-encodes a date), CDE's downloaded file has no
+# project-meaningful default name, so a human must name each file AND
+# explicitly state the date they downloaded it on. Every `*.xls` file
+# present under `--corpus-dir` that isn't registered here is a hard
+# RuntimeError, never a silent guess.
+
+# IMPORTANT DISCLOSED FINDING (2026-08-31, verified by inspecting all 41
+# real downloaded rows across both searches below): BOTH search terms
+# produced substantial false-positive rates, and NEITHER can be called
+# "the clean one." The bare "ADC" search matches an internal drug-code
+# numbering prefix used by some sponsor(s) for entirely unrelated products
+# ("ADC189"/"ADC118"/"ADC308" -- an influenza antiviral, an HIV drug, and
+# an endometriosis drug, none of them antibody-drug conjugates) and the
+# acronym "AADC" (aromatic L-amino acid decarboxylase deficiency, an
+# unrelated genetic disease). More surprisingly, the TARGETED Chinese
+# phrase "抗体药物偶联物" ALSO returned results with NO plausible textual
+# connection to ADCs at all -- "盐酸乙胺丁醇片" (ethambutol, a decades-old
+# anti-tuberculosis drug) and a dolutegravir/lamivudine/tenofovir HIV
+# combination pill both appear in that search's export. This cannot be
+# explained by acronym ambiguity (ethambutol's name shares no substring
+# with "ADC" or "抗体药物偶联物") -- it indicates chinadrugtrials.org.cn's
+# search engine matches against a field not visible in the list-page
+# columns (most likely a protocol/reference number rather than drug
+# content), affecting BOTH queries, not just the bare acronym. This
+# project therefore does NOT claim either query is precise -- both are
+# registered, both are believed genuinely searched (per the human's own
+# report), and relevance filtering is left entirely to a downstream
+# consumer, per this repo's "acquire broadly, filter downstream"
+# principle. A recommended IMPROVED strategy for a future round: search by
+# known ADC asset names/development codes and known ADC company/applicant
+# names instead of relying on a single broad term -- see this job's
+# module docstring.
+
+queries:
+  - query_id: CHINADRUGTRIALS_001
+    query_version: 1
+    query_text: "ADC"
+    purpose: >-
+      Bare-acronym search, run 2026-08-31. Live-verified false positives:
+      an internal drug-code numbering prefix ("ADC189"/"ADC118"/"ADC308",
+      unrelated products) and the "AADC" enzyme-deficiency acronym. See
+      the file-level disclosed finding above -- this query is NOT
+      confirmed less precise than CHINADRUGTRIALS_002 despite being the
+      "broader-looking" term; marked active: false only because it is the
+      less semantically-targeted of the two terms tried, not because its
+      actual measured precision was confirmed worse.
+    active: false
+    exports:
+      - filename: "chinadrugtrials-Aug31-2.xls"
+        export_date: "20260831"
+
+  - query_id: CHINADRUGTRIALS_002
+    query_version: 1
+    query_text: "抗体药物偶联物"
+    purpose: >-
+      Targeted Chinese-language search term ("antibody-drug conjugate"),
+      run 2026-08-31. See the file-level disclosed finding above: this
+      query ALSO returned results with no plausible ADC connection
+      (ethambutol, an HIV combination pill) -- it is NOT confirmed clean,
+      only more semantically targeted in intent than the bare acronym.
+      Still the better starting point for a future round, closing the
+      largest remaining structural China blind spot in this repo's
+      acquisition layer: WHO ICTRP aggregates ChiCTR, but ChiCTR is a
+      SEPARATE registry from CDE's own mandatory drug-trial disclosure
+      platform (disjoint ID namespaces, confirmed live) -- ADC development
+      is heavily China-weighted, and an asset can enter Phase 1/2,
+      priority review, or approval in China before it appears on
+      ClinicalTrials.gov or at a Western conference.
+    active: true
+    exports:
+      - filename: "chinadrugtrials-Aug31.xls"
+        export_date: "20260831"
+
+  - query_id: CHINADRUGTRIALS_LEGACY_UNKNOWN_001
+    query_version: 1
+    query_text: "UNKNOWN/UNVERIFIED"
+    purpose: >-
+      Round-1 fix (2026-08-31): chinadrugtrials-Aug31-3.xls's exact
+      originating search among the two confirmed terms above was NOT
+      independently reconfirmed by the human who downloaded it. An
+      earlier version of this registry attributed this file to
+      CHINADRUGTRIALS_002 by inferring provenance FROM THE RECORD'S OWN
+      CONTENT (its title names "TROP2 抗体药物偶联物") -- reviewer-flagged
+      as a direct violation of this file's own "query_text must be the
+      FULL, VERBATIM search term a human actually typed ... this job does
+      not re-derive or guess it" rule: content-based inference IS a
+      guess, however plausible-looking. This entry records the honest
+      state instead -- the single record in this file (CTR20262727 /
+      BY101921) is retained as historical observed evidence with
+      genuinely unknown search provenance, matching the precedent already
+      established by WHO ICTRP's own WHO_ICTRP_001 legacy-unknown entry.
+    active: true
+    exports:
+      - filename: "chinadrugtrials-Aug31-3.xls"
+        export_date: "20260831"
