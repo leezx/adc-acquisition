@@ -62,7 +62,7 @@ _SIGNATURE_FUNCS = {
 }
 
 
-def matches_signature(message: dict, signature_type: str, signature_value: str | None) -> bool:
+def matches_signature(message: dict, signature_type: str, signature_value: str | list[str] | None) -> bool:
     try:
         func = _SIGNATURE_FUNCS[signature_type]
     except KeyError:
