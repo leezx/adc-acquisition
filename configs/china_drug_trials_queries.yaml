@@ -86,10 +86,26 @@ queries:
     exports:
       - filename: "chinadrugtrials-Aug31.xls"
         export_date: "20260831"
+
+  - query_id: CHINADRUGTRIALS_LEGACY_UNKNOWN_001
+    query_version: 1
+    query_text: "UNKNOWN/UNVERIFIED"
+    purpose: >-
+      Round-1 fix (2026-08-31): chinadrugtrials-Aug31-3.xls's exact
+      originating search among the two confirmed terms above was NOT
+      independently reconfirmed by the human who downloaded it. An
+      earlier version of this registry attributed this file to
+      CHINADRUGTRIALS_002 by inferring provenance FROM THE RECORD'S OWN
+      CONTENT (its title names "TROP2 抗体药物偶联物") -- reviewer-flagged
+      as a direct violation of this file's own "query_text must be the
+      FULL, VERBATIM search term a human actually typed ... this job does
+      not re-derive or guess it" rule: content-based inference IS a
+      guess, however plausible-looking. This entry records the honest
+      state instead -- the single record in this file (CTR20262727 /
+      BY101921) is retained as historical observed evidence with
+      genuinely unknown search provenance, matching the precedent already
+      established by WHO ICTRP's own WHO_ICTRP_001 legacy-unknown entry.
+    active: true
+    exports:
       - filename: "chinadrugtrials-Aug31-3.xls"
         export_date: "20260831"
-        # Single-record file (CTR20262727 / BY101921, a TROP2 ADC). Its
-        # exact originating search among the two confirmed terms was NOT
-        # independently reconfirmed by the human -- attributed here based
-        # on content review (its own title explicitly names "TROP2 抗体药
-        # 物偶联物"). Disclosed, not asserted as independently confirmed.

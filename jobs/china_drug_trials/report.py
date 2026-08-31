@@ -16,8 +16,20 @@ def _overlap_with_existing_sources(all_ids: list, output_dir: Path) -> dict[str,
     check is a direct measurement of that claim, not an assumption: it
     counts how many of this run's registration numbers happen to also
     appear as a source_record_id in either existing manifest -- expected
-    to be ~0, demonstrating genuinely new coverage rather than a
-    duplicate of a source this repo already has."""
+    to be ~0.
+
+    IMPORTANT SCOPE LIMIT (reviewer-flagged, round-1 fix): this is an
+    ID-NAMESPACE overlap diagnostic, NOT an ADC-asset novelty measurement.
+    Zero source_record_id overlap only proves this run acquired records
+    from a registry namespace this repo didn't already have a
+    source_record_id for -- it says nothing about whether any given
+    record's underlying DRUG is a genuinely new ADC asset (that requires
+    a real identity crosswalk against DATA/catalog/adc_asset_universe.tsv
+    by canonical name/alias/dev-code, deliberately not attempted here).
+    A record can score 0 ID overlap while describing an ADC this repo
+    already tracks under a different identifier (e.g. Loncastuximab
+    tesirine is already known via ADC Therapeutics's own registered
+    entries) -- this function cannot and does not distinguish that case."""
     overlaps = {}
     for other_source in ("clinicaltrials", "who_ictrp"):
         path = output_dir / "manifests" / f"{other_source}.parquet"
@@ -98,20 +110,28 @@ full writeup and a recommended improved search strategy for a future
 round (known ADC asset names/development codes and known ADC company/
 applicant names, rather than a single broad term).
 
-## Why this source: measured overlap with existing acquisition sources
+## Registry-ID namespace overlap diagnostic (NOT an asset-novelty metric)
 
-Of {len(all_ids)} distinct China CDE registration numbers in this run:
+{len(all_ids)} new China-CDE registry records acquired from a previously
+uncovered registry namespace this run:
 
 {_overlap_line('clinicaltrials')}
 {_overlap_line('who_ictrp')}
 
-Near-zero overlap is EXPECTED and is this source's own motivating case:
-CDE's registration numbers live in a completely different ID namespace
-from ClinicalTrials.gov's NCT numbers and WHO ICTRP's own cross-registry
-TrialIDs (a ChiCTR-sourced WHO ICTRP trial is a DIFFERENT Chinese registry
-from CDE's own mandatory drug-trial disclosure platform) -- any nonzero
-overlap here would itself be a surprising finding worth investigating, not
-routine double-counting.
+Near-zero overlap is EXPECTED: CDE's registration numbers live in a
+completely different ID namespace from ClinicalTrials.gov's NCT numbers
+and WHO ICTRP's own cross-registry TrialIDs (a ChiCTR-sourced WHO ICTRP
+trial is a DIFFERENT Chinese registry from CDE's own mandatory drug-trial
+disclosure platform) -- any nonzero overlap here would itself be a
+surprising finding worth investigating, not routine double-counting.
+**This measures registry-ID coverage only** -- it does NOT establish that
+any given record's underlying drug is a genuinely new ADC asset (that
+would require a real identity crosswalk against
+`DATA/catalog/adc_asset_universe.tsv`, not attempted here; see
+`_overlap_with_existing_sources`'s own docstring). ADC-relevant records
+observed in this run's export include RC48-ADC, F0002-ADC, loncastuximab
+tesirine, ATG-022, STI-6129, and SSGJ-612 -- reported as observed content,
+not asserted as novel assets.
 
 ## Known, disclosed limitations (not silently narrowed)
 

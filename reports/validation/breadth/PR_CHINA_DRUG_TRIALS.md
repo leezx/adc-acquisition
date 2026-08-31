@@ -74,23 +74,25 @@ full writeup. Recommended improved strategy for a future round: search by
 known ADC asset names/development codes and known ADC company/applicant
 names, rather than a single broad term.
 
-## Result: genuinely new assets found (not raw record counts)
+## Result: registry-ID namespace coverage (not an asset-novelty claim)
 
-Real, confirmed ADCs surfaced despite the noisy search terms:
-- **RC48-ADC** (disitamab vedotin) -- multiple trials across bladder,
-  gastric, breast cancer, and NSCLC
-- **F0002-ADC**
-- **Loncastuximab tesirine** (already known via ADC Therapeutics, but now
-  independently confirmed with its own China CDE registration)
-- **ATG-022** (Claudin 18.2 ADC), **STI-6129**, **SSGJ-612**
-
+41 new China-CDE registry records acquired from a previously uncovered
+registry namespace (20 + 20 + 1 across 3 downloaded files, deduplicated).
 Measured via `_overlap_with_existing_sources` in `jobs/china_drug_trials/
 report.py`: near-zero expected overlap with `clinicaltrials.parquet`/
 `who_ictrp.parquet` source_record_ids (different ID namespaces) -- any
 nonzero overlap would itself be a surprising finding worth investigating.
 
-41 registration numbers materialized this round (20 + 20 + 1 across 3
-downloaded files, deduplicated).
+**This is a registry-ID coverage measurement, not an ADC-asset-novelty
+claim** -- zero source_record_id overlap only proves these records came
+from a namespace this repo didn't already track, not that each record's
+underlying drug is a new ADC asset (that requires a real identity
+crosswalk against `DATA/catalog/adc_asset_universe.tsv`, not attempted
+this round). ADC-relevant records observed in the export include RC48-ADC
+(disitamab vedotin, multiple trials across bladder/gastric/breast/NSCLC),
+F0002-ADC, loncastuximab tesirine (a drug this repo already tracks via
+ADC Therapeutics -- reported here only as an observed CDE registration,
+not a new asset), ATG-022, STI-6129, and SSGJ-612.
 
 ## Per-export-file query attribution (reusing the WHO ICTRP round-1 fix)
 
@@ -105,14 +107,38 @@ directly reusing the exact mechanism (`_load_export_filename_query_map`/
 `_query_for`) just built for WHO ICTRP's own round-1 fix, generalized
 from date-keyed to filename-keyed.
 
+**Round-1 fix #1 (reviewer-flagged, this PR)**: `chinadrugtrials-Aug31-3.xls`'s
+single record was originally attributed to `CHINADRUGTRIALS_002` by
+inferring its search provenance FROM THE RECORD'S OWN CONTENT (its title
+names "TROP2 抗体药物偶联物") -- a direct violation of this file's own
+"never re-derive or guess `query_text`" rule. Fixed: this file now gets
+its own `CHINADRUGTRIALS_LEGACY_UNKNOWN_001` query
+(`query_text: "UNKNOWN/UNVERIFIED"`), matching the precedent WHO ICTRP's
+own `WHO_ICTRP_001` legacy entry already established.
+
+**Round-1 fix #2 (reviewer-flagged, this PR)**: the discovery ledger was
+built from the content-deduped `trial_by_regnum` dict, so a registration
+number discovered via TWO DIFFERENT queries' export files would silently
+collapse to only the WINNING file's query in the discovery ledger --
+erasing the other query's own real discovery of that record. Fixed:
+`_load_all_trials` now also returns `observations`, a list of every
+`(registration_number, export_filename)` pair actually seen (deduped only
+within a single file, never across files/queries), and the discovery
+ledger is built from that -- content dedup (one current manifest snapshot
+per registration number) and discovery-ledger completeness (every real
+observation retained) are now correctly separate concerns. Two new
+regression tests cover this exact scenario plus the within-file-duplicate
+non-inflation case.
+
 ## Tests
 
-29 new tests (8 parser + 21 job), including a regression test mirroring
-WHO ICTRP's content-hash lesson: a registration number re-downloaded
+31 new tests (8 parser + 23 job), including a regression test mirroring
+WHO ICTRP's content-hash lesson (a registration number re-downloaded
 under a new filename/export_date with unchanged real content stays
-`skipped_unchanged`, never spuriously version-bumped.
+`skipped_unchanged`, never spuriously version-bumped) and the two round-1
+regression tests for the discovery-ledger fix described above.
 
-Full suite: 643 passed.
+Full suite: 645 passed.
 
 ## Live verification
 

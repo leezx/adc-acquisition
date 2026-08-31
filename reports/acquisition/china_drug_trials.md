@@ -17,8 +17,9 @@ Corpus dir this run: `DATA/raw/chinadrugtrials` (3 export file(s) read).
 
 ## Records by query
 
-- CHINADRUGTRIALS_002: 21
 - CHINADRUGTRIALS_001: 20
+- CHINADRUGTRIALS_002: 20
+- CHINADRUGTRIALS_LEGACY_UNKNOWN_001: 1
 
 **Disclosed finding -- neither query is confirmed precise**: the bare
 "ADC" query matches an internal drug-code numbering prefix used for
@@ -36,20 +37,28 @@ full writeup and a recommended improved search strategy for a future
 round (known ADC asset names/development codes and known ADC company/
 applicant names, rather than a single broad term).
 
-## Why this source: measured overlap with existing acquisition sources
+## Registry-ID namespace overlap diagnostic (NOT an asset-novelty metric)
 
-Of 41 distinct China CDE registration numbers in this run:
+41 new China-CDE registry records acquired from a previously
+uncovered registry namespace this run:
 
 - clinicaltrials: 0 of 41 registration numbers also appear there
 - who_ictrp: 0 of 41 registration numbers also appear there
 
-Near-zero overlap is EXPECTED and is this source's own motivating case:
-CDE's registration numbers live in a completely different ID namespace
-from ClinicalTrials.gov's NCT numbers and WHO ICTRP's own cross-registry
-TrialIDs (a ChiCTR-sourced WHO ICTRP trial is a DIFFERENT Chinese registry
-from CDE's own mandatory drug-trial disclosure platform) -- any nonzero
-overlap here would itself be a surprising finding worth investigating, not
-routine double-counting.
+Near-zero overlap is EXPECTED: CDE's registration numbers live in a
+completely different ID namespace from ClinicalTrials.gov's NCT numbers
+and WHO ICTRP's own cross-registry TrialIDs (a ChiCTR-sourced WHO ICTRP
+trial is a DIFFERENT Chinese registry from CDE's own mandatory drug-trial
+disclosure platform) -- any nonzero overlap here would itself be a
+surprising finding worth investigating, not routine double-counting.
+**This measures registry-ID coverage only** -- it does NOT establish that
+any given record's underlying drug is a genuinely new ADC asset (that
+would require a real identity crosswalk against
+`DATA/catalog/adc_asset_universe.tsv`, not attempted here; see
+`_overlap_with_existing_sources`'s own docstring). ADC-relevant records
+observed in this run's export include RC48-ADC, F0002-ADC, loncastuximab
+tesirine, ATG-022, STI-6129, and SSGJ-612 -- reported as observed content,
+not asserted as novel assets.
 
 ## Known, disclosed limitations (not silently narrowed)
 

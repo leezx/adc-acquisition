@@ -194,17 +194,36 @@ def _load_export_filename_query_map(
 
 def _load_all_trials(
     corpus_dir: Path, filename_to_query: dict[str, tuple[QuerySpec, str]],
-) -> tuple[dict[str, dict], Counter]:
-    """Returns (trial_by_registration_number, export_file_counts). A
-    registration_number present in more than one export file keeps the
-    MOST RECENTLY DATED file's version (same "later export is a more
-    current snapshot" rationale as WHO ICTRP) -- files are processed in
-    ascending export_date order (from the query registry, NOT filename
-    lexical order, since CDE filenames carry no reliable date)."""
+) -> tuple[dict[str, dict], Counter, list[tuple[str, str]]]:
+    """Returns (trial_by_registration_number, export_file_counts, observations).
+
+    `trial_by_registration_number` is the CONTENT snapshot: a registration
+    number present in more than one export file keeps the MOST RECENTLY
+    DATED file's version (same "later export is a more current snapshot"
+    rationale as WHO ICTRP) -- files are processed in ascending export_date
+    order (from the query registry, NOT filename lexical order, since CDE
+    filenames carry no reliable date). Content dedup across files is
+    correct here -- there is only ONE current state per registration
+    number to materialize.
+
+    `observations` is a SEPARATE, NEVER-DEDUPED-ACROSS-FILES list of every
+    (registration_number, export_filename) pair actually seen -- round-1
+    fix (reviewer-flagged): if the same registration number appears in
+    TWO DIFFERENT queries' export files (e.g. discovered by both the bare
+    "ADC" search and the targeted "抗体药物偶联物" search), that is TWO
+    real discovery observations under two different queries, not one --
+    collapsing to a single winning file's query before building the
+    discovery ledger would silently erase the other query's own
+    discovery of that record. A within-file duplicate row (same
+    registration number appearing twice in the SAME file) is deduped to
+    one observation, since a file re-listing its own row twice is not a
+    second genuine discovery event."""
     files = [f for f in _find_export_files(corpus_dir) if f.name in filename_to_query]
     files.sort(key=lambda f: filename_to_query[f.name][1])
     trial_by_regnum: dict[str, dict] = {}
     export_file_counts: Counter = Counter()
+    observations: list[tuple[str, str]] = []
+    seen_observations: set[tuple[str, str]] = set()
     for path in files:
         _, export_date = filename_to_query[path.name]
         export_file_counts["files"] += 1
@@ -212,10 +231,14 @@ def _load_all_trials(
             regnum = trial["registration_number"]
             if not regnum:
                 continue  # defensive: a malformed row with no registration number has no usable identity
+            observation = (regnum, path.name)
+            if observation not in seen_observations:
+                seen_observations.add(observation)
+                observations.append(observation)
             trial["export_filename"] = path.name
             trial["export_date"] = export_date
             trial_by_regnum[regnum] = trial  # later (more recent) file wins, files iterated oldest-first
-    return trial_by_regnum, export_file_counts
+    return trial_by_regnum, export_file_counts, observations
 
 
 def _record_row(
@@ -306,7 +329,7 @@ class ChinaDrugTrialsJob(AcquisitionJob):
                 "job can attribute its trials (never guessing which query a file came from)."
             )
 
-        trial_by_regnum, export_file_counts = _load_all_trials(corpus_dir, filename_to_query)
+        trial_by_regnum, export_file_counts, observations = _load_all_trials(corpus_dir, filename_to_query)
         if not trial_by_regnum:
             raise RuntimeError(
                 f"0 trials found under {corpus_dir} -- confirm --corpus-dir is correct and "
@@ -326,9 +349,18 @@ class ChinaDrugTrialsJob(AcquisitionJob):
 
         now = _now_iso()
         run_id = now
+        # Round-1 fix (reviewer-flagged): built from `observations`, NOT
+        # `all_ids` -- a registration number discovered via TWO DIFFERENT
+        # queries' export files must produce TWO discovery rows, one per
+        # query. Building this from the content-deduped `all_ids` (via
+        # `_query_for`, which only knows the single winning file) would
+        # silently erase every non-winning query's own discovery of that
+        # record. Content dedup (one current snapshot per registration
+        # number) and discovery-ledger completeness (every real
+        # observation retained) are deliberately different concerns.
         discovery_rows = []
-        for regnum in all_ids:
-            q = _query_for(regnum)
+        for regnum, filename in observations:
+            q, _ = filename_to_query[filename]
             discovery_rows.append(dict(
                 source=self.name, source_record_id=regnum, query_id=q.query_id,
                 query_version=q.query_version, query_text=q.query_text,

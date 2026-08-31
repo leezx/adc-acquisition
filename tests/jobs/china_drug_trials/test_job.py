@@ -170,6 +170,46 @@ def test_content_change_bumps_version(tmp_path):
     assert rows.iloc[-1]["trial_status"] == "已完成"
 
 
+def test_same_registration_number_discovered_by_two_queries_keeps_both_discovery_observations(tmp_path):
+    """Regression (reviewer-flagged round-1 fix): a registration number
+    found in TWO DIFFERENT queries' export files must produce TWO
+    discovery-ledger rows, one per query -- content dedup (one current
+    manifest row) is correct, but collapsing the discovery ledger to only
+    the winning file's query would silently erase the other query's own
+    real discovery of that record."""
+    corpus_dir = tmp_path / "corpus"
+    _write_export(corpus_dir, "export_a.xls", _data_row(status="进行中"))
+    _write_export(corpus_dir, "export_b.xls", _data_row(status="进行中"))
+    queries_file = _write_queries(tmp_path, {
+        "Q1": ("ADC", True, [("export_a.xls", "20260831")]),
+        "Q2": ("抗体药物偶联物", True, [("export_b.xls", "20260831")]),
+    })
+
+    result = ChinaDrugTrialsJob().run(_base_args(tmp_path, corpus_dir, queries_file))
+
+    assert result.records_discovered == 1  # one distinct registration number
+
+    manifest = pd.read_parquet(tmp_path / "DATA" / "manifests" / "china_drug_trials.parquet")
+    assert len(manifest) == 1  # content dedup: one current snapshot
+
+    discovery = pd.read_parquet(tmp_path / "DATA" / "manifests" / "china_drug_trials_discovery.parquet")
+    rows = discovery[discovery["source_record_id"] == "CTR20262727"]
+    assert len(rows) == 2  # both discovery observations retained
+    assert set(rows["query_id"]) == {"Q1", "Q2"}
+
+
+def test_duplicate_row_within_same_file_is_not_double_counted_as_discovery(tmp_path):
+    corpus_dir = tmp_path / "corpus"
+    _write_export(corpus_dir, "export.xls", _data_row() + _data_row())  # same regnum twice, same file
+    queries_file = _write_queries(tmp_path, {"Q1": ("ADC", True, [("export.xls", "20260831")])})
+
+    ChinaDrugTrialsJob().run(_base_args(tmp_path, corpus_dir, queries_file))
+
+    discovery = pd.read_parquet(tmp_path / "DATA" / "manifests" / "china_drug_trials_discovery.parquet")
+    rows = discovery[discovery["source_record_id"] == "CTR20262727"]
+    assert len(rows) == 1  # a file re-listing its own row twice is not a second discovery event
+
+
 def test_unchanged_trial_in_new_export_file_stays_skipped_unchanged(tmp_path):
     """Regression (same lesson as WHO ICTRP): content_hash must NOT depend
     on export_filename/export_date -- a human re-downloading the same
