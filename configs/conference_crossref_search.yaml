@@ -1,0 +1,161 @@
+# Live Crossref conference-abstract discovery (V1.1 PR #37).
+#
+# Unlike configs/crossref_reconciliation_sources.yaml (DOI-exact
+# reconciliation of DOIs already discovered by other jobs) and
+# configs/conference_abstract_corpus_queries.yaml (passive reuse of an
+# externally pre-computed AACR/ASCO corpus), this registry drives LIVE
+# Crossref `/works?` collection queries -- the first job in this repo to
+# make its own live Crossref discovery search rather than reconciling or
+# reusing. This is tractable specifically because each congress below
+# publishes its abstracts as a supplement issue of one specific,
+# ISSN-identified journal (see jobs/conference_crossref_search/job.py's
+# module docstring for the live-verified research behind this), which
+# narrows Crossref's own relevance-ranked free-text search to a
+# single-journal collection -- categorically different from an
+# unrestricted whole-of-Crossref topic search (860,937 hits for a bare
+# title search, see crossref_reconciliation_sources.yaml's own warning),
+# which remains out of scope and unused anywhere in this repo.
+#
+# CRITICAL: container-title/ISSN match alone is NOT conference attribution.
+# Every journal below also carries regular (non-congress) research
+# articles, and Cancer Research specifically carries AACR Annual Meeting
+# AND SABCS abstracts (and other congresses') side by side in the same
+# supplement issues. `signature_type` (+ `signature_value` where needed)
+# below is a deterministic, LOCALLY-applied, structural check (verified
+# live against real examples, 2026-08-31) confirming a candidate work is
+# actually attributable to THIS congress -- see
+# jobs/conference_crossref_search/signatures.py. A candidate that matches
+# the ISSN/query-term search but FAILS its conference's own signature is
+# out of this job's scope entirely: it is a different document type (a
+# regular journal article, or another congress's abstract), not a
+# low-relevance ADC match to be acquired-and-disclosed under this repo's
+# usual "acquire broadly, filter downstream" principle -- that principle
+# governs ADC-relevance filtering (deliberately NOT applied here beyond the
+# query terms themselves), not document-identity/conference-attribution
+# filtering (which this job must get right to avoid mislabeling a regular
+# article or a different congress's abstract as belonging to this one).
+#
+# adc_query_terms are the query.bibliographic search terms this job itself
+# constructs and issues, every run, against each conference's
+# ISSN-filtered collection -- deterministic and fully controlled by this
+# job's own code. There is no "guessing" concern here the way there is for
+# WHO ICTRP/China CDE's own *_queries.yaml (which record a HUMAN's
+# manually-typed search after the fact, for a source this job cannot query
+# live at all) -- this registry's query_text is instead the literal,
+# reproducible term this job's own code sends to Crossref.
+#
+# DISCLOSED LIMITATION: Crossref's `query.bibliographic` is a
+# relevance-ranked free-text search, not a phrase/boolean search -- even
+# within a single-journal collection, this cannot guarantee exhaustive
+# recall of every genuinely ADC-relevant abstract in that journal (the
+# same disclosed recall-ceiling shape as this repo's existing ASCO
+# Stage-1 candidate-fetch limitation; see
+# configs/conference_abstract_corpus_queries.yaml). Also disclosed: ASH's
+# `issue_contains_supplement` signature is verified against the current
+# ("Supplement 1") issue-labeling convention (confirmed live back through
+# 2018); older Blood annual-meeting abstracts published under a bare
+# numbered issue (pre-"Supplement"-labeling convention, e.g. DOI shape
+# `10.1182/blood.vNNN.NN....`) are NOT captured by this signature -- a
+# disclosed historical-recall gap, not fixed this round.
+
+conferences:
+  - conference_id: ESMO
+    query_id_prefix: CONFERENCE_CROSSREF_ESMO
+    query_version: 1
+    container_title: "Annals of Oncology"
+    issn: ["0923-7534"]
+    signature_type: no_issue_and_s_page
+    signature_value: null
+    active: true
+    purpose: >-
+      ESMO Congress abstracts are published as an Annals of Oncology
+      supplement. Live-verified 2026-08-31: a supplement abstract carries
+      NO `issue` field at all (a regular article always has one) and an
+      S-prefixed `page` range, plus a `special_numbering` field regular
+      articles never have. Example: DOI 10.1016/j.annonc.2024.07.705
+      ("ME15 Antibody-drug conjugate and novel therapy in lung cancer"),
+      page "S1310-S1311", no `issue` field -- vs. a real regular article in
+      the same journal, DOI 10.1016/j.annonc.2026.04.008, issue "7",
+      page "n/a" (not S-prefixed).
+
+  - conference_id: ASH
+    query_id_prefix: CONFERENCE_CROSSREF_ASH
+    query_version: 1
+    container_title: "Blood"
+    issn: ["0006-4971"]
+    signature_type: issue_contains_supplement
+    signature_value: null
+    active: true
+    purpose: >-
+      ASH Annual Meeting abstracts are published as a Blood supplement
+      issue. Live-verified 2026-08-31 (confirmed back through 2018):
+      supplement abstracts carry an `issue` value containing the literal
+      word "Supplement" (e.g. "Supplement 1") -- distinct from Blood's
+      regular numbered issues (e.g. "20", "2"). Example: DOI
+      10.1182/blood-2024-193278 ("Potent Effects of Lenalidomide-Conjugated
+      Anti-CD38 Antibody-Drug Conjugate..."), issue "Supplement 1" -- vs. a
+      real regular Blood article, DOI 10.1182/blood.2024024442, issue "2".
+      See this file's own DISCLOSED LIMITATION note above re: older,
+      pre-"Supplement"-labeled ASH abstracts not being captured.
+
+  - conference_id: EHA
+    query_id_prefix: CONFERENCE_CROSSREF_EHA
+    query_version: 1
+    container_title: "HemaSphere"
+    issn: ["2572-9241"]
+    signature_type: volume_issue_map
+    signature_value:
+      - "6:S3"   # 2022 EHA2022 Hybrid Congress
+      - "7:S3"   # 2023 EHA Congress
+      - "8:S1"   # 2024 EHA2024 Hybrid Congress
+      - "9:S1"   # 2025 EHA Congress
+      - "10:S1"  # 2026 EHA Congress
+    active: true
+    purpose: >-
+      REVISED (round-1 fix, reviewer-flagged): the prior signature
+      (`issue_starts_with_s`, "any HemaSphere issue starting with S") wrongly
+      attributed EVERY HemaSphere S-numbered supplement to EHA. HemaSphere
+      also publishes OTHER societies' abstracts under the same S-numbered
+      supplement shape in the SAME congress year -- e.g. 2024: S1=EHA2024
+      Hybrid Congress, S2=International Symposium on Hodgkin Lymphoma,
+      S3/S4=Annual Sickle Cell & Thalassaemia Conference; 2022: S1=Sickle
+      Cell & Thalassaemia Conference, S2=European Myeloma Network,
+      S3=EHA2022 Hybrid Congress, S4=Global Congress on Sickle Cell
+      Disease, S5=International Symposium on Hodgkin Lymphoma (source:
+      Wiley's HemaSphere issue archive and the ISSN Portal's own per-issue
+      listing, live-verified by the reviewer 2026-08-31). Fixed: EHA
+      attribution now uses an explicit (volume, issue) allowlist taken
+      directly from Wiley's own EHA Congress abstract-book archive
+      (https://onlinelibrary.wiley.com/doi/toc/10.1002/(ISSN)2572-9241.EHA-congress-abstract-books):
+      volume 6->S3 (2022), 7->S3 (2023), 8->S1 (2024), 9->S1 (2025),
+      10->S1 (2026). DISCLOSED LIMITATION: this allowlist must be manually
+      extended for congress years beyond 2026 -- a HemaSphere item from an
+      unmapped future volume correctly fails this signature (fails closed)
+      rather than being guessed. Example still-passing case: DOI
+      10.1097/01.hs9.0000969100.45170.e9, volume 7, issue "S3" (2023 EHA).
+
+  - conference_id: SABCS
+    query_id_prefix: CONFERENCE_CROSSREF_SABCS
+    query_version: 1
+    container_title: "Cancer Research"
+    issn: ["0008-5472", "1538-7445"]
+    signature_type: doi_suffix_contains
+    signature_value: "sabcs"
+    active: true
+    purpose: >-
+      SABCS abstracts are published as a Cancer Research supplement issue
+      -- the SAME journal/issue shape (e.g. "9_Supplement") also carries
+      the AACR Annual Meeting's own abstracts (DOI suffix ".amYYYY-...")
+      and other congresses (e.g. ".prcaYYYY-..." for the Prostate Cancer
+      Foundation), so `issue` alone cannot distinguish SABCS -- this is the
+      live evidence behind this file's own CRITICAL note above. Live-
+      verified 2026-08-31: only a SABCS abstract's DOI suffix itself
+      contains the literal substring "sabcs" (e.g.
+      10.1158/1538-7445.sabcs23-po3-05-14) -- the one signature in this
+      registry keyed off the DOI itself, not off issue/page metadata.
+
+adc_query_terms:
+  - "antibody-drug conjugate"
+  - "antibody drug conjugate"
+  - "ADC"
+  - "ADCs"
