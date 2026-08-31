@@ -1,0 +1,209 @@
+company_name	phase1_plus_asset_count	in_registry	matched_company_id	example_assets
+AbbVie, Inc	19	True	abbvie	ABBV-400; Telisotuzumab vedotin; Serclutamab talirine; SC-007; ABBV-3373
+ImmunoGen, Inc	17	True	immunogen	Laprituximab emtansine; Bivatuzumab mertansine; Cantuzumab mertansine; Tusamitamab ravtansine; SAR-428926
+Seagen Inc	17	True	seagen	Enfortumab vedotin; SGN-B7H4V; Indusatumab vedotin; Brentuximab vedotin; Enapotamab vedotin
+Pfizer Inc	11	True	pfizer	CMD-193; PF-06804103; Gemtuzumab ozogamicin; PF-06263507; PF-06664178
+AstraZeneca PLC	8	True	astrazeneca	CMG-901; Patritumab deruxtecan; Trastuzumab deruxtecan; MEDI-3726; MEDI-2228
+Roche Holding AG	7	True	roche	Iladatuzumab vedotin; Trastuzumab emtansine; Polatuzumab vedotin; Sofituzumab vedotin; Lifastuzumab vedotin
+Bristol Myers Squibb Co	6	True	bristol_myers_squibb	Farletuzumab ecteribulin; MDX-1203; AVID-100; Ispectamab debotansine; BMS-986148
+Genentech, Inc	6	True	genentech	Trastuzumab emtansine; Pinatuzumab vedotin; Polatuzumab vedotin; Sofituzumab vedotin; Lifastuzumab vedotin
+Jiangsu Hengrui Pharmaceuticals Co., Ltd	6	True	hengrui	Trastuzumab rezetecan; SHR-A1403; SHR-A1201; SHR-4602; SHR-A1904
+Shanghai Hengrui Pharmaceutical Co., Ltd	6	True	hengrui	SHR-A2102; SHR-A1403; SHR-A1201; SHR-A1921; SHR-A1904
+ADC Therapeutics SA	5	True	adc_therapeutics	ADCT-901; Camidanlumab tesirine; ADCT-602; Loncastuximab tesirine; Mipasetamab uzoptirine
+BSP Pharmaceuticals SpA	5	False		Telisotuzumab vedotin; Patritumab deruxtecan; Sacituzumab govitecan; Brentuximab vedotin; Loncastuximab tesirine
+Baxter Oncology GmbH	5	False		Enfortumab vedotin; Patritumab deruxtecan; Trastuzumab deruxtecan; Oportuzumab monatox; Datopotamab deruxtecan
+Lepu Biopharma Co., Ltd	5	True	lepu_biopharma	CMG-901; MRG-002; MRG-004A; Becotatug vedotin; MRG-001
+Mersana Therapeutics, Inc	5	True	mersana	XMT-1660; XMT-1522; XMT-1592; XMT-2056; Upifitamab rilsodotin
+RemeGen Co., Ltd	5	True	remegen	RC-118; Disitamab vedotin; Disitamab vedotin; RC-88; RC-108
+Shanghai Miracogen Inc	5	False		CMG-901; MRG-002; MRG-004A; Becotatug vedotin; MRG-001
+Sichuan Baili Pharmaceutical Co., Ltd	5	True	systimmune	BL-M07D1; BL-M02D1; BL-M11D1; BL-B01D1; BL-M08D1
+Takeda Pharmaceutical Co., Ltd	5	True	takeda	TAK-500; Indusatumab vedotin; XMT-1522; TAK-164; Brentuximab vedotin
+Agensys, Inc	4	False		AGS-16C3F; Sirtratumab vedotin; AGS-67E; Vandortuzumab vedotin
+Bayer AG	4	False		Anetumab ravtansine; BAY-1862864; Aprutumab ixadotin; Lupartumab amadotin
+Byondis BV	4	True	byondis	SYD-1875; BYON-4413; BYON-3521; Trastuzumab duocarmazine
+CSPC Pharmaceutical Group Ltd	4	True	cspc	DP-303c; CPO-204; SYS6010; SYSA-1801
+Chengdu Bailidote Biological Pharmaceutical Co., Ltd	4	True	systimmune	BL-M07D1; BL-M02D1; BL-M11D1; BL-B01D1
+Daiichi Sankyo Co., Ltd	4	True	daiichi_sankyo	Patritumab deruxtecan; Ifinatamab deruxtecan; DS-6000; Datopotamab deruxtecan
+F. Hoffmann-La Roche Ltd	4	True	roche	Iladatuzumab vedotin; Trastuzumab emtansine; Polatuzumab vedotin; Ladiratuzumab vedotin
+Hangzhou DAC Biotech Co., Ltd	4	True	hangzhou_dac_biotech	DXC-004A; DXC-009; DX126-262; DXC-005
+Sanofi	4	True	sanofi	Tusamitamab ravtansine; SAR-428926; SAR-566658; Coltuximab ravtansine
+Shanghai Fudan Zhangjiang Bio Pharmaceutical Co., Ltd	4	True	fudan_zhangjiang	F0002-ADC; FDA-022; FZ-AD004; FDA-018
+Stemcentrx, Inc	4	False		SC-007; Tamrintamab pamozirine; SC-002; Cofetuzumab pelidotin
+Sutro Biopharma, Inc	4	True	sutro_biopharma	M-1231; STRO-001; Luveltamab tazevibulin; Ispectamab debotansine
+TORL Biotherapeutics LLC	4	True	torl_biotherapeutics	TORL-3-600; TORL-1-23; TORL-4-500; TORL-2-307-ADC
+Ambrx, Inc	3	True	ambrx	ARX-305; ARX-788; ARX-517
+Astellas Pharma, Inc	3	True	astellas_pharma	Enfortumab vedotin; AGS-16C3F; Vandortuzumab vedotin
+Baili Sikang Biomedicine (Hangzhou) Co., Ltd	3	True	systimmune	BB-1709; BB-1705; BB-1701
+CytomX Therapeutics, Inc	3	True	cytomx_therapeutics	CX-2029; CX-2051; Praluzatamab ravtansine
+Duality Biologics	3	True	duality_biologics	DB-1305; DB-1303; DB-1202
+GeneQuantum Healthcare (Suzhou) Co. Ltd	3	True	genequantum	GQ-1001; GQ-1007; GQ-1005
+KLUS Pharma, Inc	3	False		Sacituzumab tirumotecan; SKB-315; Trastuzumab botidotin
+Multitude Therapeutics, Inc	3	True	multitude_therapeutics	AMT-676; CUSP06; AMT-151
+Novartis AG	3	False		HKT-288; PCA-062; LOP-628
+Novartis Pharma AG	3	False		HKT-288; NJH-395; LOP-628
+Suzhou Suncadia Biopharmaceuticals Co., Ltd	3	False		Trastuzumab rezetecan; SHR-A1921; SHR-A2009
+Systimmune, Inc	3	True	systimmune	BL-M07D1; BL-M02D1; BL-B01D1
+ARS Pharmaceuticals, Inc	2	False		SBT-6290; Pertuzumab zuvotolimod
+Amgen, Inc	2	False		AMG-224; CDX-014
+BioAtla, Inc	2	False		Ozuriftamab vedotin; Mecbotamab vedotin
+BioIntegrator LLC	2	False		CON-4619; BI-CON-02
+Biocytogen Pharmaceuticals (Beijing) Co., Ltd	2	False		RC-118; DM001
+Chugai Pharmaceutical Co., Ltd	2	False		Trastuzumab emtansine; Polatuzumab vedotin
+Daiichi Sankyo Inc	2	True	daiichi_sankyo	Trastuzumab deruxtecan; DS-6157a
+EMD Serono Research & Development Institute, Inc	2	False		M-1231; M-9140
+Genmab A/S	2	True	genmab	Enapotamab vedotin; Tisotumab vedotin
+Gilead Sciences, Inc	2	True	gilead	Sacituzumab govitecan; Labetuzumab govitecan
+Hangzhou Zhongmeihuadong Pharmaceutical Co., Ltd	2	False		Mirvetuximab soravtansine; HDP-101
+Heidelberg Pharma AG	2	True	heidelberg_pharma	MGTA-117; HDP-101
+Iksuda Therapeutics	2	True	iksuda_therapeutics	FS-1502; FS-1502
+Immunomedics, Inc	2	False		Sacituzumab govitecan; Labetuzumab govitecan
+LaNova Medicines Ltd	2	True	lanova_medicines	LM-302; LM-305
+Mabwell (Shanghai) Bioscience Co., Ltd	2	True	mabwell	9MW-2921; 9MW-2821
+MacroGenics, Inc	2	True	macrogenics	Vobramitamab duocarmazine; IMGC-936
+MedImmune LLC	2	False		MEDI-3726; MEDI-2228
+Merck & Co., Inc	2	True	merck_and_co	Sacituzumab tirumotecan; Zilovertamab vedotin
+MorphoSys AG	2	False		Anetumab ravtansine; PCA-062
+Nanjing Shunxin Pharmaceutical Co., Ltd	2	False		TQB2103; TQB2102
+Novocodex Biopharmaceuticals Co., Ltd	2	False		ARX-305; ARX-788
+Overland Pharmaceutical (Shanghai) Co., Ltd	2	False		Loncastuximab tesirine; Mipasetamab uzoptirine
+Rakuten Medical, Inc	2	False		Cetuximab sarotalocan; RM-1995
+Shanghai Fosun Pharmaceutical	2	True	henlius_biotech	FS-1502; FS-1502
+Shanghai Hansoh Biomedical Co. Ltd	2	True	hansoh	HS-20093; HS-20089
+Sichuan Kelun Pharmaceutical Co., Ltd	2	False		Sacituzumab tirumotecan; Trastuzumab botidotin
+Sichuan Kelun-Biotech Biopharmaceutical Co., Ltd	2	True	kelun_biotech	SKB-315; SKB-410
+Silverback Therapeutics, Inc	2	False		SBT-6290; Pertuzumab zuvotolimod
+Sino Biopharmaceutical Ltd	2	True	sino_biopharmaceutical	TQB2103; TQB2102
+Synthon BV	2	False		SYD-1875; Trastuzumab duocarmazine
+Tallac Therapeutics, Inc	2	False		TAC-001; ALTA-002
+Wyeth Pharmaceuticals LLC	2	False		Gemtuzumab ozogamicin; Inotuzumab ozogamicin
+Zai Lab Ltd	2	False		ZL-1310; Tisotumab vedotin
+Zhejiang Medicine Co., Ltd	2	False		ARX-305; ARX-788
+A. Menarini Industrie Farmaceutiche Riunite SRL	1	False		MEN-1309
+ALX Oncology, Inc	1	False		ALTA-002
+AbGenomics International, Inc	1	False		AbGn-107
+Actinium Pharmaceuticals, Inc	1	False		Lintuzumab Ac-225
+Adcentrx Therapeutics, Inc	1	True	adcentrx_therapeutics	ADRX-0706
+Adimab LLC	1	False		XMT-1522
+Alphamab Australia Co. Pty Ltd	1	True	alphamab	JSKN-003
+Alphamab Oncology	1	True	alphamab	JSKN-003
+Angiex, Inc	1	True	angiex	AGX101
+Antengene Corporation Co., Ltd	1	True	antengene	ATG-022
+Asana BioSciences LLC	1	False		ASN-004
+Astellas Pharma Global Development, Inc	1	True	astellas_pharma	Sirtratumab vedotin
+Avidity Biosciences, Inc	1	False		AOC-1020
+BeiGene Ltd	1	False		Zanidatamab zovodotin
+BiOneCure Therapeutics, Inc	1	False		BIO-106
+BioNTech SE	1	True	biontech	DB-1303
+BioNova Pharmaceuticals (Shanghai) Ltd	1	False		STRO-001
+BioRay Biopharmaceutical Co., Ltd	1	True	bioray	BRY-812
+Biogen, Inc	1	False		BIIB-015
+Biotest AG	1	False		Indatuximab ravtansine
+Biotest Pharma GmbH	1	False		Indatuximab ravtansine
+Boehringer Ingelheim GmbH	1	False		Bivatuzumab mertansine
+Bolt Biotherapeutics, Inc	1	False		BDC-1001
+Borui Biomedical Technology (Suzhou) Co., Ltd	1	True	genequantum	GQ-1007
+CSPC Zhongqi Pharmaceutical Technology Shijiazhuang Co., Ltd	1	True	cspc	DP-303c
+Catalent, Inc	1	False		TRPH-222
+Celgene Corp	1	False		Ispectamab debotansine
+Celldex Therapeutics, Inc	1	False		CDX-014
+Celltech Oy	1	False		CMB-401
+CuraGen Corp	1	False		CDX-014
+Debiopharm International SA	1	False		Naratuximab emtansine
+Eisai Co., Ltd	1	True	eisai	Farletuzumab ecteribulin
+Elevation Oncology, Inc	1	False		SYSA-1801
+Eli Lilly & Co	1	True	eli_lilly	LY-3076226
+Eucure (Beijing) Biopharma Co., Ltd	1	False		RC-118
+Everest Medicines (Singapore) Pte. Ltd	1	False		Sacituzumab govitecan
+Exelis, Inc	1	False		XB-002
+Exelixis, Inc	1	True	exelixis	XB-002
+Experimental Drug Development Centre, PAREXEL International Corp	1	False		EBC-129
+Formation Biologics	1	False		AVID-100
+Fortis Therapeutics, Inc	1	False		FOR-46
+Fudan University	1	False		Trastuzumab botidotin
+GSK Plc	1	True	gsk	Belantamab mafodotin
+GlaxoSmithKline (Ireland) Ltd	1	False		Belantamab mafodotin
+Glaxosmithkline Intellectual Property Development Ltd	1	False		Belantamab mafodotin
+Harbour Biomed Therapeutics Ltd	1	True	harbour_biomed	HBM9033
+Heidelberg Pharma Research GmbH	1	True	heidelberg_pharma	HDP-101
+Huadong Medicine Co., Ltd	1	True	huadong_medicine	HDP-101
+IBC Pharmaceuticals, Inc	1	False		Labetuzumab govitecan
+Iconic Therapeutics, Inc	1	False		XB-002
+Iksuda Therapeutics Ltd	1	True	iksuda_therapeutics	IKS-03
+Innovent Biologics (Suzhou) Co. Ltd	1	True	innovent	IBI-354
+Innovent Biologics, Inc	1	True	innovent	Tusamitamab ravtansine
+InxMed (Hong Kong) Limited	1	False		OMTX-705
+Inxmed (Nanjing) Co., Ltd	1	False		OMTX-705
+Jiangsu Maiweikang New Drug R & D Co., Ltd	1	False		9MW-2821
+Kaibos (Shanghai) Biomedical Co., Ltd	1	False		Ozuriftamab vedotin
+Keymed Biosciences, Inc	1	False		CMG-901
+Levena Biopharma US, Inc	1	False		Trastuzumab botidotin
+Ligand Pharmaceuticals, Inc	1	False		SGN-CD352A
+Luye Pharma Group Ltd	1	True	boan_biotech	BA-1302
+Mayo Clinic	1	False		AB-160
+Medarex, Inc	1	False		MDX-1203
+Memorial Sloan-Kettering Cancer Center	1	False		PF-06688992
+Merck KGaA	1	True	merck_kgaa	M-9140
+Merck Sharp & Dohme Corp	1	True	merck_and_co	Ladiratuzumab vedotin
+Merck Sharp & Dohme LLC	1	True	merck_and_co	Disitamab vedotin
+Merrimack Pharmaceuticals, Inc	1	False		MM-310
+Millennium Pharmaceuticals, Inc	1	False		Indusatumab vedotin
+Molecular Templates, Inc	1	False		MT-5111
+Mythic Therapeutics, Inc	1	True	mythic_therapeutics	MYTX-011
+NBE-Therapeutics AG	1	False		NBE-002
+National Cancer Institute	1	False		LMB-7
+NewBio Therapeutics	1	False		GB-251
+Novartis Pharmaceuticals Corp	1	False		JBH-492
+Novelty Nobility, Inc	1	True	novelty_nobility	NN-3201
+OBI Pharma, Inc	1	True	obi_pharma	OBI-999
+OnCusp Therapeutics	1	True	oncusp_therapeutics	CUSP06
+Oncomatryx Biopharma SL	1	True	oncomatryx	OMTX-705
+Orum Therapeutics, Inc	1	False		ORM-6151
+Overland Pharmaceuticals	1	False		ADCT-901
+Oxford BioTherapeutics Ltd	1	False		MEN-1309
+Oxford Biomedica Plc	1	False		PF-06263507
+PDL BioPharma, Inc	1	False		Lintuzumab Ac-225
+Pheon Therapeutics Ltd	1	True	pheon_therapeutics	PHN-010
+Pierre Fabre SA,	1	False		Lonigutamab ugodotin
+Piramal Pharma Solutions, Inc	1	False		STRO-001
+ProfoundBio (Suzhou) Co., Ltd	1	True	profoundbio	PRO-1160
+Pyxis Oncology, Inc	1	True	pyxis_oncology	PYX-201
+Qilu Pharmaceutical Co., Ltd	1	True	qilu_pharmaceutical	Oportuzumab monatox
+Regeneron Pharmaceuticals, Inc	1	False		REGN5093-M114
+Rps Medical Technology (Beijing) Co., Ltd	1	False		Tisotumab vedotin
+SCTbio as	1	False		SOT-102
+Salubris Biotherapeutics, Inc	1	True	salubris_biotherapeutics	JK-06
+Sesen Bio	1	False		Oportuzumab monatox
+Shandong Boan Biotechnology Co., Ltd	1	True	boan_biotech	BA-1302
+Shanghai Escugen Biotechnology	1	True	escugen_biotechnology	ESG-401
+Shanghai Fosun Pharmaceutical (Group) Co., Ltd	1	True	henlius_biotech	HLX-43
+Shanghai Henlius Biotech, Inc	1	True	henlius_biotech	HLX-43
+Shanghai Jiaolian Drug Development Co. Ltd	1	False		B-003
+Shanghai Junshi Biosciences Co., Ltd	1	True	junshi_biosciences	JS107
+Shanghai Pharmaceuticals Holding Co., Ltd	1	False		B-003
+Shanghai Sinovent Biopharmaceutical Co., Ltd	1	False		XNW-27011
+Sichuan Biokin Pharmaceutical Co., Ltd	1	True	systimmune	BL-M11D1
+Sorrento Therapeutics, Inc	1	False		STI-6129
+Suzhou Alphamab Co. Ltd	1	True	alphamab	JSKN016
+Suzhou Sinovent Pharmaceuticals Co.,Ltd	1	False		XNW-27011
+Syntarga BV	1	False		BYON-3521
+Tanabe Research Laboratories U.S.A., Inc	1	False		TR1801-ADC
+Tasly Biopharmaceuticals Co., Ltd	1	False		Luveltamab tazevibulin
+The University of Texas MD Anderson Cancer Center	1	False		M-1231
+Tot Biopharm Co. Ltd	1	False		TAA-013
+Translational Research In Oncology US, Inc	1	False		TORL-3-600
+Triphase Accelerator Corp	1	False		TRPH-222
+Triphase Research and Development III Corp	1	False		TRPH-222
+Tubulis GmbH	1	True	tubulis	TUB-030
+Turning Point Therapeutics, Inc	1	False		LM-302
+University of California San Diego	1	False		FOR-46
+Viventia Bio, Inc	1	False		Oportuzumab monatox
+Wuxi Biocity Biopharmaceutics Co., Ltd	1	True	biocity_biopharma	BC3195
+Wyeth AB	1	False		CMD-193
+Xadcera Biopharmaceutical (Suzhou) Co., Ltd	1	True	xadcera_biopharmaceutical	DM001
+Xiling Lab Pharmaceutical Co., Ltd	1	True	xiling_lab	SMP-656
+Xuanzhu Biopharmaceutical Co., Ltd	1	True	xuanzhu_biopharmaceutical	KM501
+Zhejiang ACEA Pharmaceutical Co., Ltd	1	False		STI-6129
+Zhejiang Hisun Pharmaceutical Co., Ltd	1	False		ZV0203
+Zhejiang Teruisi Pharmaceutical Inc	1	False		TRS-005
+Zhejiang Zova Biotherapeutics Inc	1	False		ZV0203
+Zymeworks BC, Inc	1	True	zymeworks	Zanidatamab zovodotin

@@ -111,6 +111,7 @@ companies:
     pipeline_urls: []
     investor_relations_url: null
     press_release_url: null
+    parent_company_id: pfizer
     notes: >
       Acquired by Pfizer, December 2023. Delisted; CIK retained for
       historical filings (name change only, same CIK throughout). No
@@ -129,6 +130,7 @@ companies:
     pipeline_urls: []
     investor_relations_url: null
     press_release_url: null
+    parent_company_id: abbvie
     notes: >
       Acquired by AbbVie, February 2024. Delisted; CIK retained for
       historical filings. No standalone pipeline page as of 2026-08-14 --
@@ -147,18 +149,19 @@ companies:
     pipeline_urls: []
     investor_relations_url: null
     press_release_url: null
+    parent_company_id: day_one_biopharmaceuticals
     notes: >
       Acquired by Day One Biopharmaceuticals, completed 2026-01-06.
       mersana.com/pipeline/ now 302-redirects to dayonebio.com; Mersana's
       lead ADC asset (Emi-Le / emiltatug ledadotin) moved to Day One's own
-      pipeline. Day One is NOT yet a registered company in this file --
-      tracking its pipeline page would require adding it as a new entry,
-      a scope decision left for a future round rather than assumed here.
+      pipeline. Day One Biopharmaceuticals is now a registered company in
+      this file (company_id: day_one_biopharmaceuticals) as part of the
+      2026-08-28 source-coverage expansion round.
 
   - company_id: zymeworks
     canonical_name: Zymeworks Inc.
     ciks: ["0001937653", "0001403752"]
-    aliases: []
+    aliases: ['Zymeworks BC, Inc']
     tickers: ["ZYME"]
     active: true
     official_domain: zymeworks.com
@@ -341,3 +344,1875 @@ companies:
       Therapeutics'/AbbVie's Workiva template, which genuinely empties
       out) -- handled by the job's own already-discovered-URL stop
       condition rather than relying on an empty-page signal.
+
+# EXTENDED 2026-08-28: V1.1 source-coverage expansion (company-universe
+# round, DATA/raw/company_list.md). Every entry below was live-verified via
+# WebFetch against the company's own official domain by a research agent
+# following the same "never guess a URL, write NONE_FOUND instead" rule as
+# the rest of this file -- see each entry's own notes for exactly how it was
+# verified and any access limitations hit (bot-protection timeouts, expired/
+# self-signed TLS certs, Cloudflare challenges, WebSearch budget exhaustion
+# forcing a WebFetch-only strategy for a few Chinese-biotech entries). CIKs
+# were only added when a specific "CIK <number>" was explicitly confirmed in
+# an agent's own verification notes -- NOT backfilled from outside knowledge,
+# so several well-known SEC-reporting companies below still show `ciks: []`
+# pending a future incremental pass that actually re-verifies each one live
+# via EDGAR (matching this file's existing discipline of not asserting a CIK
+# that wasn't independently checked in-session). `tickers` is similarly
+# best-effort text extracted from each agent's free-form ticker field --
+# unlike `ciks`, no job currently keys off `tickers`, so it is documentary
+# only. A few companies could not be reached by any research method tried
+# (PrimeLink BioTherapeutics has no discoverable web presence at all;
+# Chengdu Kanghong's kanghong.com was unreachable via 7+ distinct fetch
+# methods) -- these are still registered with whatever was confirmed (often
+# nothing) so `tools/validation/company_registry_gap_analysis.py`'s
+# `REGISTERED_INCOMPLETE` status correctly flags them for a future retry,
+# rather than silently dropping them from tracking.
+
+  - company_id: astellas_pharma
+    canonical_name: 'Astellas Pharma Inc.'
+    ciks: []
+    aliases: ['Astellas Pharma Global Development, Inc']
+    tickers: ["ALPMY"]
+    active: true
+    official_domain: astellas.com
+    pipeline_urls: ['https://www.astellas.com/en/science/research-and-development/pipeline']
+    investor_relations_url: 'https://www.astellas.com/en/investors'
+    press_release_url: 'https://newsroom.astellas.com/'
+    notes: >
+      Verified via curl+grep on the rendered pipeline page source, which contains
+      an "Antibody-drug conjugate (ADC)" filter category and references to ADC
+      candidate XNW27011 (in-licensed from Evopoint, targeting CLDN18.2); plain
+      WebFetch under-reported this page because the pipeline table is client-side
+      rendered. IR homepage and newsroom.astellas.com (global press releases,
+      includes ASCO/ESMO presentation announcements) both confirmed loading. No
+      separate scientific-congress presentations archive found distinct from the
+      newsroom, so presentations_url is NONE_FOUND. Astellas markets Padcev
+      (enfortumab vedotin) jointly with Seagen/Pfizer, and has ADC-platform
+      collaborations with Sutro Biopharma and Sony.
+
+  - company_id: astrazeneca
+    canonical_name: 'AstraZeneca PLC'
+    ciks: []
+    aliases: []
+    tickers: ["AZN"]
+    active: true
+    official_domain: astrazeneca.com
+    pipeline_urls: ['https://www.astrazeneca.com/our-therapy-areas/pipeline.html']
+    investor_relations_url: 'https://www.astrazeneca.com/investor-relations.html'
+    press_release_url: 'https://www.astrazeneca.com/media-centre/press-releases.html'
+    presentations_url: 'https://medicalinformation.astrazeneca-us.com/home/congress-library.html'
+    notes: >
+      astrazeneca.com blocks the WebFetch tool outright (403), so verification
+      used curl+pandoc instead. Pipeline page confirmed to list Enhertu, Datroway,
+      and other ADC-suffix candidates (sonesitatug vedotin, puxitatug samrotecan,
+      torvutatug samrotecan). IR homepage and press-releases page both confirmed
+      distinct and functional. presentations_url is a genuine, separate "Congress
+      Library" hosted on the AZ-affiliated US medical-information subdomain
+      astrazeneca-us.com, but sits behind an HCP click-through attestation gate —
+      an automated scraper would need to handle that interstitial. Enhertu and
+      Datroway are co-developed/co-commercialized with Daiichi Sankyo (DXd ADC
+      technology).
+
+  - company_id: bristol_myers_squibb
+    canonical_name: 'Bristol-Myers Squibb Company'
+    ciks: []
+    aliases: ['Bristol Myers Squibb Co']
+    tickers: ["BMY"]
+    active: true
+    official_domain: bms.com
+    pipeline_urls: ['https://www.bms.com/research-and-development/pipeline.html']
+    investor_relations_url: 'https://www.bms.com/investors.html'
+    press_release_url: 'https://news.bms.com/'
+    notes: >
+      Verified via WebFetch — pipeline page lists a CD33-GSPT1 ADC program (Phase
+      1, AML) confirming genuine ADC content; investors.bms.com redirects (301) to
+      bms.com/investors.html; news.bms.com is the distinct press-release/news hub.
+      bms.com/investors/events-and-presentations.html exists but is for
+      investor/financial conference presentations, not scientific congress
+      posters, and is currently empty — no separate scientific-presentations
+      archive was found, so presentations_url is NONE_FOUND; BMS announces
+      conference data via ordinary press releases.
+
+  - company_id: daiichi_sankyo
+    canonical_name: 'Daiichi Sankyo Company, Limited'
+    ciks: []
+    aliases: ['Daiichi Sankyo Co., Ltd', 'Daiichi Sankyo Inc']
+    tickers: ["DSNKY"]
+    active: true
+    official_domain: daiichisankyo.com
+    pipeline_urls: ['https://www.daiichisankyo.com/alias/pc/rd/pipeline/']
+    investor_relations_url: 'https://www.daiichisankyo.com/investors/'
+    press_release_url: 'https://www.daiichisankyo.com/media/press_release/'
+    notes: >
+      Verified via WebFetch — pipeline page explicitly defines "ADC: antibody-drug
+      conjugate" and lists T-DXd (Enhertu), Dato-DXd (Datroway), HER3-DXd, I-DXd,
+      R-DXd; investors page confirmed distinct from the filterable press-release
+      listing. No standalone scientific-congress presentations archive found —
+      conference disclosures are announced via press releases and IR-library
+      decks, not a dedicated page, so presentations_url is NONE_FOUND.
+      Enhertu/Datroway are co-developed with AstraZeneca; HER3-DXd, I-DXd, and
+      R-DXd are co-developed with Merck & Co.
+
+  - company_id: roche
+    canonical_name: 'F. Hoffmann-La Roche Ltd (Roche Holding AG, Basel, Switzerland)'
+    ciks: []
+    aliases: ['Roche Holding AG', 'F. Hoffmann-La Roche Ltd']
+    tickers: ["RHHBY", "ROG"]
+    active: true
+    official_domain: roche.com
+    pipeline_urls: ['https://www.roche.com/solutions/pipeline']
+    investor_relations_url: 'https://www.roche.com/investors'
+    press_release_url: 'https://www.roche.com/media/releases'
+    notes: >
+      Verified via WebFetch and raw-HTML checks. roche.com/solutions/pipeline
+      links to a downloadable Group pipeline PDF confirming ADC entries (Polivy,
+      Kadcyla). IR and press-release hubs both confirmed legitimate. No dedicated
+      scientific/congress presentations archive found (medically.roche.com is a
+      non-promotional HCP portal, not a centralized poster archive;
+      investors/downloads only has investor-facing earnings decks), so
+      presentations_url is NONE_FOUND. Treated as SEPARATE from Genentech because
+      Roche's own pipeline page does not itself list ADC programs and explicitly
+      links out to a distinct "Genentech Pipeline" tile (gene.com) rather than
+      duplicating that content. Roche trades in the US only as an unsponsored OTC
+      ADR (RHHBY/RHHBF) with no SEC-reporting obligation (files with Swiss/SIX
+      regulators instead).
+
+  - company_id: genentech
+    canonical_name: 'Genentech, Inc. (a wholly-owned member of the Roche Group)'
+    ciks: []
+    aliases: ['Genentech, Inc']
+    tickers: []
+    active: true
+    official_domain: gene.com
+    pipeline_urls: ['https://www.gene.com/medical-professionals/pipeline']
+    investor_relations_url: null
+    press_release_url: 'https://www.gene.com/media/press-releases'
+    notes: >
+      Verified distinct from Roche. gene.com/media/press-releases loads with 500+
+      dated, gene.com-hosted news items — a genuinely separate feed from
+      roche.com/media/releases. Raw HTML of the JS-rendered pipeline page
+      confirmed embedded JSON entries explicitly labeled "B7H3-ADC" (RG6919),
+      "cMET ADC" (RG6648), "DLL3 ADC" (RG6810), a "CDH17 ADC" program, and
+      trastuzumab emtansine (Kadcyla) — a genuine ADC-rich pipeline distinct from
+      Roche's page. gene.com/about-us/investors 302-redirects to
+      roche.com/investors/us-investors/, confirming Genentech has no independent
+      IR presence (private, not separately SEC-registered), so
+      investor_relations_url is NONE_FOUND for this entity (use Roche's IR entry
+      instead). No separate presentations archive found (congress news folded into
+      press releases).
+
+  - company_id: gilead
+    canonical_name: 'Gilead Sciences, Inc.'
+    ciks: []
+    aliases: []
+    tickers: ["GILD"]
+    active: true
+    official_domain: gilead.com
+    pipeline_urls: ['https://www.gilead.com/science/therapeutic-areas/oncology']
+    investor_relations_url: 'https://investors.gilead.com'
+    press_release_url: 'https://www.gilead.com/news'
+    notes: >
+      The oncology therapeutic-area page (verified via rendered fetch and raw
+      HTML) contains the phrase "antibody-drug conjugate"; the broader
+      gilead.com/science/pipeline page's ADC/Trodelvy content is entirely client-
+      side rendered with no drug names in raw HTML, so the oncology page was used
+      instead. IR homepage and gilead.com/news both confirmed to load as
+      legitimate pages, though gilead.com/news's article list loads via client-
+      side JS (raw HTML shows "No Results" placeholder) — a scraping-access caveat
+      for the pipeline job. No distinct congress-presentations archive found
+      separate from ordinary press releases, so presentations_url is NONE_FOUND.
+      Gilead's flagship ADC, Trodelvy (sacituzumab govitecan), came via its 2020
+      acquisition of Immunomedics; Gilead also recently acquired Tubulis GmbH
+      (2026), adding ADC candidate TUB-040 and an ADC platform — both are fully
+      integrated into Gilead's own pipeline/oncology pages, so no separate
+      subsidiary registry entries are needed.
+
+  - company_id: gsk
+    canonical_name: 'GSK plc'
+    ciks: []
+    aliases: []
+    tickers: ["GSK"]
+    active: true
+    official_domain: gsk.com
+    pipeline_urls: ['https://medical.gsk.com/content/cf-pharma/medicalaffairs/master/home/oncology-portal/pipeline.html']
+    investor_relations_url: 'https://www.gsk.com/en-gb/investors/'
+    press_release_url: 'https://www.gsk.com/en-gb/media/press-releases/'
+    presentations_url: 'https://medical.gsk.com/en-pm/oncology/congress-presentations/'
+    notes: >
+      All URLs WebFetch-verified. The corporate gsk.com/en-gb/innovation/pipeline/
+      page only links to a downloadable XLSX/PDF pipeline list, so the oncology-
+      specific medical.gsk.com HCP portal (legitimate GSK subdomain) was used
+      instead — it explicitly discusses "antibody-drug conjugates (ADCs)"; GSK's
+      marketed ADC is Blenrep (belantamab mafodotin, DREAMM program). The
+      medical.gsk.com congress-presentations page is a genuine dedicated archive
+      of AACR/ASCO/ESMO/ASH oral and poster presentations by conference, distinct
+      from ordinary press releases. GSK also runs an ephemeral per-congress
+      poster/QR-code site that was not used as the canonical presentations_url
+      since it is withdrawn after each congress.
+
+  - company_id: merck_and_co
+    canonical_name: 'Merck & Co., Inc.'
+    ciks: []
+    aliases: ['Merck Sharp & Dohme LLC', 'Merck Sharp & Dohme Corp']
+    tickers: ["MRK"]
+    active: true
+    official_domain: merck.com
+    pipeline_urls: ['https://www.merck.com/research/product-pipeline/']
+    investor_relations_url: 'https://www.merck.com/investor-relations/'
+    press_release_url: 'https://www.merck.com/media/news/'
+    notes: >
+      All URLs WebFetch-verified. Pipeline page explicitly lists late-stage ADC
+      programs: zilovertamab vedotin (MK-2140), sacituzumab tirumotecan (MK-2870),
+      and three Daiichi Sankyo-partnered DXd ADCs (raludotatug deruxtecan/MK-5909,
+      patritumab deruxtecan/MK-1022, ifinatamab deruxtecan/MK-2400). No dedicated
+      congress-presentations archive found distinct from ordinary press releases,
+      so presentations_url is NONE_FOUND. Caution: MerckGroupOncology.com belongs
+      to Merck KGaA (Germany), a completely separate company, and was excluded.
+      Notable ADC-relevant deals: exclusive license/collaboration with Kelun-
+      Biotech (7 ADC candidates) and collaboration with Daiichi Sankyo (3 DXd
+      ADCs).
+
+  - company_id: sanofi
+    canonical_name: 'Sanofi'
+    ciks: []
+    aliases: []
+    tickers: ["SNY", "SAN"]
+    active: true
+    official_domain: sanofi.com
+    pipeline_urls: ['https://www.sanofi.com/en/our-science/our-pipeline']
+    investor_relations_url: 'https://www.sanofi.com/en/investors'
+    press_release_url: 'https://www.sanofi.com/en/media-room/press-releases'
+    notes: >
+      Verified via WebFetch. Pipeline page lists 61 clinical-stage projects and
+      explicitly names SAR445953 ("CEACAM5-Topo1 ADC") in Phase 3 for colorectal
+      cancer. Sanofi's prior clinical-stage ADC, tusamitamab ravtansine (CEACAM5,
+      ex-Immunomedics), was discontinued in Dec 2023 after a Phase 3 failure. IR
+      and press-release pages both confirmed populated and current. No separate
+      scientific-congress-presentations archive exists; congress data is only
+      announced via ordinary press releases, so presentations_url is NONE_FOUND.
+
+  - company_id: takeda
+    canonical_name: 'Takeda Pharmaceutical Company Limited'
+    ciks: []
+    aliases: ['Takeda Pharmaceutical Co., Ltd']
+    tickers: ["TAK"]
+    active: true
+    official_domain: takeda.com
+    pipeline_urls: ['https://www.takedaoncology.com/science/pipeline/']
+    investor_relations_url: 'https://www.takeda.com/investors/overview/'
+    press_release_url: 'https://www.takeda.com/newsroom/press-releases/'
+    notes: >
+      Verified via WebFetch. Chose the oncology-specific takedaoncology.com
+      pipeline page (footer-confirmed as an official "Takeda Pharmaceuticals
+      U.S.A., Inc." site) over the general takeda.com/science/pipeline/ page
+      because it explicitly names ADC programs — mirvetuximab soravtansine-gynx
+      (TAK-853) and TAK-921 — whereas the general page's visible text did not
+      mention ADCs. IR overview and newsroom press-release pages both confirmed as
+      legitimate listing pages. Notable: Takeda's Oct 2025 licensing deal with
+      Innovent Biologics added ADC candidates IBI343 (CLDN18.2 ADC) and an option
+      on IBI3001 (EGFR/B7H3 ADC), relevant for future ADC tracking even though not
+      yet reflected on the public pipeline page. No separate scientific-congress-
+      presentations archive found; presentations_url is NONE_FOUND.
+
+  - company_id: eli_lilly
+    canonical_name: 'Eli Lilly and Company'
+    ciks: ["0000059478"]
+    aliases: ['Eli Lilly & Co']
+    tickers: ["LLY"]
+    active: true
+    official_domain: lilly.com
+    pipeline_urls: ['https://www.lilly.com/science/pipeline']
+    investor_relations_url: 'https://investor.lilly.com'
+    press_release_url: 'https://investor.lilly.com'
+    notes: >
+      investor.lilly.com was content-verified (HTTP 200, title "Investors | Eli
+      Lilly and Company"). lilly.com/science/pipeline is Cloudflare bot-protected
+      (returns a "Just a moment..." challenge to both WebFetch and curl after 2
+      attempts) — reporting as nav-extracted, not independently content-verified.
+      Independently confirmed via ClinicalTrials.gov (NCT07046923, "A Study of
+      LY4175408 in Participants With Advanced Cancer") that LY4175408 is an active
+      Lilly clinical compound. SEC CIK 0000059478.
+
+  - company_id: johnson_and_johnson
+    canonical_name: 'Johnson & Johnson'
+    ciks: ["0000200406"]
+    aliases: []
+    tickers: ["JNJ"]
+    active: true
+    official_domain: jnj.com
+    pipeline_urls: ['https://www.jnj.com/innovative-medicine/pipeline']
+    investor_relations_url: 'https://investor.jnj.com'
+    press_release_url: 'https://www.jnj.com/media-center'
+    notes: >
+      jnj.com is bot-protected: repeated fetch attempts returned either HTTP 403
+      "Just a moment..." (investor.jnj.com) or an HTTP 200 decoy "Site
+      Maintenance" page for every jnj.com path tested — none of the URLs above
+      could be content-verified; reporting as nav-extracted only. Ambrx Biopharma
+      has NO standalone web presence: ambrx.com and www.ambrx.com both return
+      NXDOMAIN (confirmed via nslookup/dig/curl — domain fully decommissioned),
+      consistent with full absorption into J&J Innovative Medicine after the 2024
+      acquisition close. SEC CIK 0000200406.
+
+  - company_id: genmab
+    canonical_name: 'Genmab A/S'
+    ciks: ["0001434265"]
+    aliases: []
+    tickers: ["GMAB"]
+    active: true
+    official_domain: genmab.com
+    pipeline_urls: ['https://www.genmab.com/antibody-science/pipeline']
+    investor_relations_url: 'https://ir.genmab.com'
+    press_release_url: 'https://ir.genmab.com'
+    presentations_url: 'https://ir.genmab.com/events-and-presentations'
+    notes: >
+      genmab.com/pipeline redirects (200) to /antibody-science/pipeline, a
+      Salesforce Experience Cloud app; raw HTML contains an embedded "ADC"
+      content-filter tag confirming ADC is a tracked pipeline category, but
+      "rinatabart sesutecan/Rina-S" text is client-side-JS-rendered and could not
+      be grepped from static HTML — partially verified, not fully content-
+      confirmed. ir.genmab.com/events-and-presentations was content-verified (HTTP
+      200, title "Events & Presentations - Genmab A/S"), distinct from ordinary
+      press releases. ir.genmab.com is intermittently Akamai bot-protected — treat
+      as nav-extracted with partial verification. SEC CIK 0001434265 (foreign
+      private issuer). Rina-S originates from Genmab's 2024 acquisition of
+      ProfoundBio.
+
+  - company_id: profoundbio
+    canonical_name: 'ProfoundBio, Inc.'
+    ciks: []
+    aliases: ['ProfoundBio (Suzhou) Co., Ltd']
+    tickers: []
+    active: true
+    official_domain: null
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    parent_company_id: genmab
+    notes: >
+      profoundbio.com has no standalone site — verified via WebFetch that it
+      issues an HTTP 301 permanent redirect straight to https://www.genmab.com/,
+      confirming full absorption into Genmab following the 2024 acquisition (no
+      legacy/archived content served). ProfoundBio was privately held before
+      acquisition, so it has no ticker or SEC CIK of its own.
+
+  - company_id: biontech
+    canonical_name: 'BioNTech SE'
+    ciks: []
+    aliases: []
+    tickers: ["BNTX"]
+    active: true
+    official_domain: biontech.com
+    pipeline_urls: ['https://www.biontech.com/us/en/home/pipeline-and-products/pipeline.html']
+    investor_relations_url: 'https://investors.biontech.de/'
+    press_release_url: 'https://www.biontech.com/us/en/home/media.html'
+    notes: >
+      Domain and pipeline page confirmed live via WebFetch, but the pipeline table
+      is JavaScript-rendered so static fetch could not surface individual program
+      codes — BNT323/DB-1303's presence is nav-extracted/plausible but not
+      literally content-verified by name. Ticker BNTX (Nasdaq) confirmed via
+      stockanalysis.com. A dedicated "publications" page exists but covers peer-
+      reviewed journal papers, not congress presentations, so presentations_url is
+      NONE_FOUND. investors.biontech.de consistently timed out (60s) across
+      multiple attempts — flagged as unverified rather than guessed.
+
+  - company_id: day_one_biopharmaceuticals
+    canonical_name: 'Day One Biopharmaceuticals, Inc.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: dayonebio.com
+    pipeline_urls: ['https://www.dayonebio.com/our-science/pipeline/']
+    investor_relations_url: 'https://ir.dayonebio.com/'
+    press_release_url: 'https://ir.dayonebio.com/news-releases/'
+    presentations_url: 'https://www.dayonebio.com/our-science/publications-posters/'
+    notes: >
+      IMPORTANT CORRECTION to task premise — Day One itself was acquired by
+      Servier (deal completed ~April 21, 2026, ~$2.5B); DAWN was delisted from
+      Nasdaq per stockanalysis.com, and dayonebio.com now displays a footer notice
+      "Day One Biopharmaceuticals is now a part of Servier Group." So Day One is
+      NOT currently Nasdaq-listed. Its pipeline page is still live and confirms
+      emiltatug ledadotin (Emi-Le), a B7-H4-targeted ADC (Phase 2), alongside
+      tovorafenib/OJEMDA and DAY301. Mersana Therapeutics has no standalone web
+      presence: mersana.com 302-redirects directly to www.dayonebio.com.
+
+  - company_id: tubulis
+    canonical_name: 'Tubulis GmbH'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: tubulis.com
+    pipeline_urls: ['https://tubulis.com/our-pipeline/']
+    investor_relations_url: null
+    press_release_url: 'https://tubulis.com/newsevents/'
+    notes: >
+      Tubulis is privately held (no ticker/IR page). Pipeline page verified live
+      and explicitly lists TUB-040 (Phase 1/2a, NaPi2b-targeted ADC, platinum-
+      resistant ovarian cancer/NSCLC) plus TUB-030 and preclinical assets. Gilead
+      acquisition announced April 7, 2026 ($3.15B upfront + up to $1.85B
+      milestones), stated to expect closing "in Q2 2026" subject to regulatory
+      clearance. As of the newsevents page's most recent item (April 21, 2026, an
+      ASCO-presentation announcement), no closing/completion press release was
+      visible — despite the Q2 2026 target having passed, the deal's actual
+      closing could NOT be independently confirmed as of today; treat status as
+      "announced, closing not yet confirmed" rather than assuming completion. The
+      newsevents page serves as a combined press-release/conference-announcement
+      hub, so there is no separate presentations_url.
+
+  - company_id: merck_kgaa
+    canonical_name: 'Merck KGaA, Darmstadt, Germany'
+    ciks: []
+    aliases: ['Merck KGaA']
+    tickers: ["MRK", "MKGAF", "MKGAY"]
+    active: true
+    official_domain: emdgroup.com
+    pipeline_urls: ['https://www.emdgroup.com/en/research/healthcare-pipeline.html']
+    investor_relations_url: 'https://www.emdgroup.com/en/investors.html'
+    press_release_url: 'https://www.emdgroup.com/en/news.html'
+    presentations_url: 'https://www.emdgroup.com/en/investors/events-and-presentations.html'
+    notes: >
+      Verified by reading the pipeline chart image embedded in the healthcare-
+      pipeline.html page (dated Aug 6, 2026); it lists "precemtabart tocentecan
+      (anti-CEACAM5 Antibody drug conjugate)" in Phase 1/2/3 — this is M9140's INN
+      name, confirming the program is on the official pipeline. Legacy domain
+      merckgroup.com now 301-redirects entirely to emdgroup.com (Merck KGaA trades
+      as EMD/EMD Serono/MilliporeSigma in US/Canada due to trademark conflict with
+      the separate Merck & Co., whose own ticker is also "MRK" on NYSE). The
+      presentations_url found is an investor-events page (earnings calls/AGM), not
+      a dedicated scientific-congress archive.
+
+  - company_id: eisai
+    canonical_name: 'Eisai Co., Ltd.'
+    ciks: []
+    aliases: []
+    tickers: ["ESALY"]
+    active: true
+    official_domain: eisai.com
+    pipeline_urls: ['https://www.eisai.com/innovation/research/pipeline/index.html']
+    investor_relations_url: 'https://www.eisai.com/ir/index.html'
+    press_release_url: 'https://www.eisai.com/news/index.html'
+    notes: >
+      Verified via WebFetch — the pipeline page (title "Latest Major R&D
+      Pipeline") explicitly contains both "farletuzumab ecteribulin" and
+      "MORAb-202". eisai.com is a single-page-app style site; IR content is
+      surfaced via query params rather than fully separate static pages. The IR
+      "presentations" area contains only investor financial-results briefings, not
+      scientific/medical-congress presentations, so presentations_url is
+      NONE_FOUND as expected. Press release page verified with live, dated 2026
+      headlines.
+
+  - company_id: duality_biologics
+    canonical_name: 'Duality Biotherapeutics Inc (Cayman Islands holding company; Shanghai R&D operations)'
+    ciks: ["0002085208"]
+    aliases: ['Duality Biologics']
+    tickers: ["DYBTY"]
+    active: true
+    official_domain: null
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      Ticker/CIK claim CONFIRMED via SEC EDGAR (CIK 0002085208, legal name
+      "Duality Biotherapeutics Inc/ADR", ticker DYBTY, OTC; business address No.
+      868 Yinghua Road, Tower A, Datang International Plaza, Pudong, Shanghai) via
+      the underlying F-6EF filing. This is an F-6 (unsponsored) ADR program with
+      Citibank, N.A. as depositary — established by the bank, not necessarily
+      company-initiated IR. Could NOT find a working official corporate website:
+      dualitybio.com now redirects to a domain-resale/parking marketplace;
+      dualitybiologics.com resolves in DNS (China-hosted) but connections stall
+      during TLS handshake on every attempt (bot-protection or GFW-style blocking)
+      — content could not be verified either way, so no URL is reported. A follow-
+      up with a live search tool or manual browser check is recommended to locate
+      the current official site/pipeline page. NOTABLE FLAGS: Day One
+      Biopharmaceuticals was itself acquired by Servier (completed ~April 2026)
+      and DAWN is now delisted — contradicts the original task premise that it's
+      "currently Nasdaq-listed." Tubulis->Gilead deal status could not be
+      confirmed as closed despite the stated Q2 2026 target having passed — treat
+      as "announced, not confirmed closed." Duality Biologics has no verifiable
+      official website at all — flagged as a gap requiring manual follow-up before
+      registry entry.
+
+  - company_id: hengrui
+    canonical_name: 'Jiangsu Hengrui Pharmaceuticals Co., Ltd.'
+    ciks: []
+    aliases: ['Shanghai Hengrui Pharmaceutical Co., Ltd']
+    tickers: []
+    active: true
+    official_domain: hengrui.com
+    pipeline_urls: ['https://www.hengrui.com/en/pipeline.html']
+    investor_relations_url: 'https://www.hengrui.com/en/investor.html'
+    press_release_url: 'https://www.hengrui.com/en/media/index.html'
+    notes: >
+      Verified via direct fetch of hengrui.com; pipeline page's chart images
+      confirm SHR-A1811 (HER2 ADC), SHR-A1904 (Claudin18.2 ADC), and SHR-A2102
+      (Nectin-4 ADC); SHR-A1921 was not visible on the current chart. Dual-listed
+      SSE 600276 / HKEX 1276 confirmed on the IR page. Also has a US SEC-
+      registered ADR (JHPCY/JNGHF) separate from this primary corporate site. No
+      standalone conference-presentations archive found; presentation news appears
+      only via press wires.
+
+  - company_id: kelun_biotech
+    canonical_name: 'Sichuan Kelun-Biotech Biopharmaceutical Co., Ltd.'
+    ciks: []
+    aliases: []
+    tickers: ["6990.HK"]
+    active: true
+    official_domain: kelun-biotech.com
+    pipeline_urls: ['https://en.kelun-biotech.com/product.aspx?mid=165']
+    investor_relations_url: 'https://en.kelun-biotech.com/news.aspx?mid=157'
+    press_release_url: 'https://en.kelun-biotech.com/newsCenter.aspx?mid=18'
+    notes: >
+      Verified via direct fetch (curl) of en.kelun-biotech.com; pipeline page
+      explicitly lists sac-TMT, A166, SKB315, and SKB410 among many other SKB-
+      numbered candidates. IR page (news.aspx?mid=157, containing Listing
+      Documents/Financial Reports/Announcements) confirms stock code 6990.HK;
+      Newsroom (newsCenter.aspx?mid=18) shows dated 2023-2026 news items. Related
+      US ADR entity is "KLUS Pharma" (ticker SKBBY); no separate presentations
+      archive found.
+
+  - company_id: remegen
+    canonical_name: 'RemeGen Co., Ltd. (荣昌生物制药)'
+    ciks: []
+    aliases: []
+    tickers: ["9995.HK", "688331.SH"]
+    active: true
+    official_domain: remegen.com
+    pipeline_urls: ['https://www.remegen.com/?v=listing&cid=92']
+    investor_relations_url: 'https://www.remegen.com/?v=listing&cid=112'
+    press_release_url: 'https://www.remegen.com/?v=listing&cid=114'
+    notes: >
+      Verified via direct WebFetch of remegen.com. Pipeline page (cid=92) confirms
+      disitamab vedotin (RC48/Aidixi) across multiple indications and RC118
+      (Claudin18.2); RC88/RC108 were not found as named programs on the current
+      page. Investors page (cid=112) shows financial reports, circulars, and an
+      "Activities and Presentations" sub-section under Events, but no distinct
+      standalone presentations-archive URL could be isolated, so presentations_url
+      is reported NONE_FOUND. News page (cid=114) shows dated company news plus a
+      separate minor "Press Release" sub-list.
+
+  - company_id: hansoh
+    canonical_name: 'Jiangsu Hansoh Pharmaceutical Group Co., Ltd. (parent: Hansoh Pharmaceutical Group Company Limited)'
+    ciks: []
+    aliases: ['Shanghai Hansoh Biomedical Co. Ltd']
+    tickers: ["3692.HK", "HNPHY", "HNSPF"]
+    active: true
+    official_domain: hansoh.cn
+    pipeline_urls: []
+    investor_relations_url: 'https://www.hansoh.cn/en/investment/investor-relations.htm'
+    press_release_url: 'https://www.hansoh.cn/en/news/company-news.jsp'
+    notes: >
+      Verified via WebFetch: hansoh.cn/en/ states it is "a principal subsidiary of
+      Hansoh Pharma (03692.HK)"; the press-release page directly names "RISVUTATUG
+      REZETECAN (HS-20093)" in dated news (e.g. ARTEMIS-011/ARTEMIS-008 trial
+      results, July 2026). No standalone pipeline page or conference-presentations
+      archive with named drug codes could be confirmed (only aggregate stats
+      appear on Innovation/Products pages), so both are NONE_FOUND. A related
+      domain hspharm.com appeared in search results with similar content but could
+      not be independently verified (persistent connection errors).
+
+  - company_id: innovent
+    canonical_name: 'Innovent Biologics, Inc.'
+    ciks: []
+    aliases: ['Innovent Biologics (Suzhou) Co. Ltd']
+    tickers: ["1801.HK", "IVBXF"]
+    active: true
+    official_domain: innoventbio.com
+    pipeline_urls: ['https://en.innoventbio.com/ScienceAndProducts/Pipeline']
+    investor_relations_url: 'https://investor.innoventbio.com/en/'
+    press_release_url: 'https://en.innoventbio.com/InvestorsAndMedia/PressRelease'
+    notes: >
+      Verified via headless-browser rendering of the JS-driven main site. Pipeline
+      page explicitly lists "IBI-343 CLDN18.2 ADC" and "IBI-354 HER2 ADC";
+      investor.innoventbio.com/en/ is a distinct server-rendered IR homepage. A
+      "Webcasts & Presentations" page exists but contains IR earnings/JPM-
+      conference material rather than a scientific-conference (ASCO/ESMO poster)
+      archive, so presentations_url is NONE_FOUND per instructions. IBI343 is co-
+      developed with Takeda outside Greater China.
+
+  - company_id: cspc
+    canonical_name: 'CSPC Pharmaceutical Group Limited (石药集团有限公司)'
+    ciks: []
+    aliases: ['CSPC Pharmaceutical Group Ltd', 'CSPC Zhongqi Pharmaceutical Technology Shijiazhuang Co., Ltd']
+    tickers: ["1093.HK"]
+    active: true
+    official_domain: e-cspc.com
+    pipeline_urls: []
+    investor_relations_url: 'https://en.e-cspc.com/investors/'
+    press_release_url: 'https://en.e-cspc.com/news/'
+    notes: >
+      Verified en.e-cspc.com as the official corporate domain; its /news/ archive
+      contains dated announcements explicitly naming both SYS6010 (breakthrough-
+      therapy-designation article) and SYS6002 (clinical-trial-approval article).
+      No general pipeline-listing page on this site actually names SYS6010/SYS6002
+      (pipeline pages instead name DP303c and SYSA1801), so pipeline_url is
+      NONE_FOUND. A separate HKEX-hosted IR site (www.cspc.com.hk) is referenced
+      from the main site but returned persistent SSL/connection errors from this
+      environment and could not be verified, so it was not reported.
+
+  - company_id: systimmune
+    canonical_name: 'SystImmune, Inc. (US entity); Sichuan Baili Pharmaceutical Co., Ltd. / Sichuan Biokin Pharmaceutical Co., Ltd. (Chinese originator entity)'
+    ciks: []
+    aliases: ['Systimmune, Inc', 'Sichuan Baili Pharmaceutical Co., Ltd', 'Chengdu Bailidote Biological Pharmaceutical Co., Ltd', 'Baili Sikang Biomedicine (Hangzhou) Co., Ltd', 'Sichuan Biokin Pharmaceutical Co., Ltd']
+    tickers: []
+    active: true
+    official_domain: systimmune.com
+    pipeline_urls: ['https://www.systimmune.com/pipeline']
+    investor_relations_url: null
+    press_release_url: 'https://www.systimmune.com/news/1'
+    notes: >
+      Verified via direct fetch (curl, since WebFetch returned 403 for this
+      domain) of systimmune.com. Homepage meta description explicitly references
+      "SystImmune, ADC, BL-B01D1, BMS, Bristol Myers Squibb"; /pipeline lists
+      BL-B01D1, iza-bren (izalontamab brengitecan), and multiple other BL-M0xD1
+      ADC candidates; /news/1 is a dated (2025-2026) news feed covering iza-
+      bren/BL-B01D1/BMS developments. No investor-relations page exists for
+      SystImmune itself (private, VC/BMS-partnered) and no distinct presentations
+      archive was found. SystImmune Inc. (Redmond, WA, US) holds the global (ex-
+      China, per BMS deal) license from Chinese originator Sichuan Baili
+      Pharmaceutical, affiliated with the publicly listed Sichuan Biokin
+      Pharmaceutical Co., Ltd. (688506.SH). No separate Chinese-language official
+      domain could be verified.
+
+  - company_id: medilink_therapeutics
+    canonical_name: 'Jiangsu MediLink Therapeutics Co., Ltd.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: medilinkthera.com
+    pipeline_urls: ['https://www.medilinkthera.com/pipeline']
+    investor_relations_url: null
+    press_release_url: 'https://www.medilinkthera.com/news/1'
+    notes: >
+      Verified via WebFetch: /pipeline lists YL201 (B7H3, TMALIN platform)
+      alongside YL202/YL205/YL211/YL212/YL413/YL252; /news/1 is an active press-
+      release listing. MediLink is privately held (VC-backed), so no ticker and no
+      distinct IR page exist. No separate conference-presentations archive found.
+
+  - company_id: akeso
+    canonical_name: 'Akeso, Inc.'
+    ciks: []
+    aliases: []
+    tickers: ["9926.HK"]
+    active: true
+    official_domain: akesobio.com
+    pipeline_urls: []
+    investor_relations_url: 'https://www.akesobio.com/en/investor-relations/'
+    press_release_url: 'https://www.akesobio.com/en/media/akeso-news/'
+    presentations_url: 'https://www.akesobio.com/en/investor-relations/presentations/'
+    notes: >
+      Domain, IR page, press-release listing, and presentations archive were all
+      directly fetched and confirmed live; presentations page lists dated
+      conference decks for SITC/ESMO/ASCO/AACR/JPM (a rare case where a genuine
+      separate presentations archive exists). No dedicated pipeline/pipeline-chart
+      page currently exists in the site's live navigation; AK146D1/AK138D1
+      confirmed only via specific dated press releases.
+
+  - company_id: mabwell
+    canonical_name: 'Mabwell (Shanghai) Bioscience Co., Ltd.'
+    ciks: []
+    aliases: []
+    tickers: ["688062.SH", "02493.HK"]
+    active: true
+    official_domain: mabwell.com
+    pipeline_urls: ['https://mabwell.com/en/rd.html']
+    investor_relations_url: 'https://www.mabwell.com/en/investors.html'
+    press_release_url: 'https://mabwell.com/en/news.html'
+    notes: >
+      Verified via WebFetch — rd.html Pipeline section names 9MW2821 (Bulumtatug
+      Fuvedotin, Nectin-4 ADC) plus other ADCs (7MW3711, 7MW4911); investors.html
+      shows dual-listing stock quotes and IR contact; news.html is a chronological
+      press-release archive. No dedicated conference-presentations archive page
+      exists.
+
+  - company_id: alphamab
+    canonical_name: 'Jiangsu Alphamab Biopharmaceutics Co., Ltd. / Alphamab Oncology (HKEX-listed subsidiary)'
+    ciks: []
+    aliases: ['Alphamab Oncology', 'Alphamab Australia Co. Pty Ltd', 'Suzhou Alphamab Co. Ltd']
+    tickers: ["9966.HK"]
+    active: true
+    official_domain: alphamab.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      Every WebFetch attempt against www.alphamab.com, alphamab.com,
+      alphamab.com.cn, and ir.alphamab.com returned "Socket is closed" (consistent
+      connection refusal/bot-blocking), despite the domain being the widely
+      publicized official one for this company. Could not independently verify any
+      page content. Report all URLs as unverified/nav-extracted-only; recommend a
+      retry from a different network or via cached search snippets.
+
+  - company_id: lanova_medicines
+    canonical_name: 'LaNova Medicines Limited (礼新医药科技（上海）有限公司)'
+    ciks: []
+    aliases: ['LaNova Medicines Ltd']
+    tickers: []
+    active: true
+    official_domain: lanovamedicines.com
+    pipeline_urls: ['https://www.lanovamedicines.com/en/pipeline']
+    investor_relations_url: null
+    press_release_url: 'https://www.lanovamedicines.com/en/news-center/press-release'
+    notes: >
+      Verified via WebFetch — pipeline page explicitly lists LM-302 (anti-
+      Claudin18.2 ADC) across 3 indications; press-release page confirmed live
+      with recent LM-302 Phase III enrollment-completion headline (Feb 2026). No
+      distinct investor-relations section exists (company is private). Domain also
+      confirmed independently via Sino Biopharmaceutical's "friendly links"
+      footer. LM-302 was out-licensed by LaNova; Sino Biopharmaceutical/related
+      Nanjing operations are commercialization/licensing partners (see Sino
+      Biopharmaceutical entry).
+
+  - company_id: escugen_biotechnology
+    canonical_name: 'Escugen Biotechnology (无锡宜康生物 / Escugen Biotechnology Co., Ltd.)'
+    ciks: []
+    aliases: ['Shanghai Escugen Biotechnology']
+    tickers: []
+    active: true
+    official_domain: escugen.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      escugen.com resolves and loads (no DNS/connection error), but the page is a
+      JavaScript-rendered single-page app that returns no server-side HTML content
+      to WebFetch — could not verify any specific page or the ESG401 mention.
+      escugen.cn does not resolve. Reporting domain as nav-extracted-only, not
+      independently content-verified; all sub-page URLs NONE_FOUND pending a JS-
+      capable fetch.
+
+  - company_id: lepu_biopharma
+    canonical_name: 'Shanghai LEPU Biopharma Co., Ltd. (上海乐普生物科技股份有限公司)'
+    ciks: []
+    aliases: ['Lepu Biopharma Co., Ltd']
+    tickers: ["2157.HK"]
+    active: true
+    official_domain: lepubiopharma.com
+    pipeline_urls: ['https://www.lepubiopharma.com/technology']
+    investor_relations_url: 'https://www.lepubiopharma.com/investor'
+    press_release_url: 'https://www.lepubiopharma.com/news'
+    notes: >
+      Verified via WebFetch — the /technology pipeline page explicitly lists
+      MRG003 (EGFR ADC), CMG901 (CLDN18.2 ADC = becotatug vedotin), MRG004A (TF
+      ADC), and MRG002 (HER2 ADC), matching all named assets. "Miracogen" is not
+      mentioned anywhere on lepubiopharma.com and www.miracogen.com does not
+      resolve (ENOTFOUND) — Lepu Biopharma appears to be the current
+      operating/listed entity; "Shanghai Miracogen Inc" is most likely a
+      legacy/predecessor name or an IP-holding affiliate with no independently
+      verifiable current web presence. Use lepubiopharma.com as the authoritative
+      source.
+
+  - company_id: fudan_zhangjiang
+    canonical_name: 'Shanghai Fudan-Zhangjiang Bio-Pharmaceutical Co., Ltd. (上海复旦张江生物医药股份有限公司)'
+    ciks: []
+    aliases: []
+    tickers: ["1349.HK"]
+    active: true
+    official_domain: fdzy.com.cn
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      fdzy.com.cn resolves (DNS succeeds, distinguishing it from a wrong-domain
+      guess) but every WebFetch attempt (https and http) returned "Socket is
+      closed" — consistent with connection blocking rather than a bad domain.
+      Could not verify pipeline mention of FDA-018/F0002-ADC. Reporting domain as
+      nav-extracted/best-guess only, all sub-URLs NONE_FOUND.
+
+  - company_id: sino_biopharmaceutical
+    canonical_name: 'Sino Biopharmaceutical Limited (中国生物制药有限公司)'
+    ciks: []
+    aliases: ['Sino Biopharmaceutical Ltd']
+    tickers: ["1177.HK", "SBMFF"]
+    active: true
+    official_domain: sbpgroup.com
+    pipeline_urls: []
+    investor_relations_url: 'https://www.sbpgroup.com/investor-relations/information-disclosure/'
+    press_release_url: 'https://www.sbpgroup.com/news-center/'
+    presentations_url: 'https://www.sbpgroup.com/investor-relations/Presentation/'
+    notes: >
+      Verified via WebFetch — sinobiopharm.com redirects to sbpgroup.com;
+      presentations page confirmed live with dated conference/earnings decks
+      (2023-2026, incl. JPM Healthcare Conference). Footer "friendly links"
+      section explicitly lists LaNova Medicines (lanovamedicines.com), confirming
+      the licensing/commercialization relationship for LM-302. Dedicated ADC
+      pipeline page not located within budget; the R&D/pipeline nav item exists
+      but sub-page mentioning LM-302 specifically was not found.
+
+  - company_id: henlius_biotech
+    canonical_name: 'Shanghai Henlius Biotech Co., Ltd. (subsidiary of Shanghai Fosun Pharmaceutical (Group) Co., Ltd.)'
+    ciks: []
+    aliases: ['Shanghai Fosun Pharmaceutical', 'Shanghai Fosun Pharmaceutical (Group) Co., Ltd', 'Shanghai Henlius Biotech, Inc']
+    tickers: ["2696.HK"]
+    active: true
+    official_domain: henlius.com
+    pipeline_urls: ['https://www.henlius.com/en/Product.html']
+    investor_relations_url: 'https://www.henlius.com/information-disclosure.html'
+    press_release_url: 'https://www.henlius.com/News.html'
+    presentations_url: 'https://www.henlius.com/Investor-Presentation.html'
+    notes: >
+      Verified via WebFetch on both sites. Fosun's own pipeline page explicitly
+      defers ADC/biologics detail to "the official website of Henlius." However,
+      Henlius's current English and Chinese pipeline pages list only HLX43 (PD-L1
+      ADC) as their active ADC program — FS-1502 (HER2 ADC) is NOT present on
+      either site's current pipeline, suggesting it has been discontinued, quietly
+      dropped, or renamed since its earlier public disclosures. Flag FS-1502 as
+      likely stale/inactive rather than guessing a URL for it.
+
+  - company_id: minghui_pharmaceutical
+    canonical_name: 'Minghui Pharmaceutical (Hangzhou) Co., Ltd. (明慧医药(杭州)有限公司)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: null
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      Tried multiple plausible domain guesses (minghuipharma.com,
+      minghuibiotech.com, minghuipharm.com, mhbiopharma.com,
+      minghuipharmaceutical.com, minghuibiopharma.com, minghui-pharma.com) — all
+      returned DNS resolution failures (ENOTFOUND), not connection blocks,
+      suggesting these guesses are simply wrong rather than the site being
+      inaccessible. WebSearch tool was unavailable (session budget exhausted) so a
+      proper search-driven domain discovery could not be performed this pass.
+      Reporting NONE_FOUND rather than inventing a URL; recommend re-attempting
+      with WebSearch once budget resets.
+
+  - company_id: bliss_bio
+    canonical_name: 'Zhejiang Bliss Biopharmaceutical Co., Ltd. (浙江博锐生物制药有限公司) — commonly "Bliss Bio"'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: blissbio.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      blissbio.com resolves but every WebFetch attempt (https and http) failed
+      with "self signed certificate" — the TLS certificate is not valid/trusted,
+      so the fetch tool refuses the connection before any content can be read.
+      Domain identity is plausible/nav-extracted only, not independently content-
+      verified; could not confirm BB-1701 mention on any page.
+
+  - company_id: antengene
+    canonical_name: 'Antengene Corporation Limited'
+    ciks: []
+    aliases: ['Antengene Corporation Co., Ltd']
+    tickers: ["6996.HK"]
+    active: true
+    official_domain: antengene.com
+    pipeline_urls: ['https://www.antengene.com/research.html']
+    investor_relations_url: 'https://www.antengene.com/investor.html'
+    press_release_url: 'https://www.antengene.com/news.html'
+    presentations_url: 'https://www.antengene.com/activity.html'
+    notes: >
+      Fully verified via WebFetch — homepage/pipeline content explicitly names
+      "ATG-022" as a Claudin 18.2 ADC across gastric/GEJ and other solid-tumor
+      indications; investor.html confirmed HKEX ticker "6996.HK" and references a
+      Corporate Deck plus Event Calendar; activity.html confirmed as a live
+      presentations/events archive (2025 R&D Day, 2025/2026 results conference
+      calls, UCB licensing deck for ATG-201).
+
+  - company_id: heidelberg_pharma
+    canonical_name: 'Heidelberg Pharma AG'
+    ciks: []
+    aliases: ['Heidelberg Pharma Research GmbH']
+    tickers: ["HPHA"]
+    active: true
+    official_domain: heidelberg-pharma.com
+    pipeline_urls: ['https://heidelberg-pharma.com/en/research-development/portfolio-overview']
+    investor_relations_url: 'https://heidelberg-pharma.com/en/press-investors'
+    press_release_url: 'https://heidelberg-pharma.com/en/press-investors/announcements/press-releases-and-ad-hoc-announcements'
+    presentations_url: 'https://heidelberg-pharma.com/en/press-investors/calender-and-presentations/presentations'
+    notes: >
+      All URLs directly verified via WebFetch - pipeline page shows portfolio
+      graphic (lead ADC HDP-101 focus confirmed via multiple press releases);
+      presentations page confirmed live with conference calendar.
+
+  - company_id: kyntra_bio
+    canonical_name: 'Kyntra Bio, Inc. (formerly FibroGen, Inc.)'
+    ciks: ["0000921299"]
+    aliases: []
+    tickers: ["KYNB"]
+    active: true
+    official_domain: kyntrabio.com
+    pipeline_urls: ['https://www.kyntrabio.com/r-d-pipeline/']
+    investor_relations_url: 'https://investor.kyntrabio.com/'
+    press_release_url: 'https://investor.kyntrabio.com/news-releases'
+    presentations_url: 'https://investor.kyntrabio.com/events-and-presentations/events'
+    notes: >
+      kyntrabio.com/our-company/ confirms FG-3246 (in-licensed from Fortis
+      Therapeutics, targeting CD46, Phase 2 mCRPC) plus imaging biomarker FG-3180.
+      investor.kyntrabio.com timed out under WebFetch (bot protection) so
+      IR/press/events URLs are nav-extracted, high confidence not independently
+      content-verified. SEC CIK 921299 confirmed correct via live EDGAR filenames
+      — this is the FibroGen, Inc. entity that rebranded to Kyntra Bio and began
+      trading as KYNB on Jan 8, 2026.
+
+  - company_id: exelixis
+    canonical_name: 'Exelixis, Inc.'
+    ciks: []
+    aliases: []
+    tickers: ["EXEL"]
+    active: true
+    official_domain: exelixis.com
+    pipeline_urls: ['https://www.exelixis.com/pipeline/']
+    investor_relations_url: 'https://ir.exelixis.com/'
+    press_release_url: 'https://ir.exelixis.com/press-releases'
+    notes: >
+      pipeline page verified via WebFetch, explicitly lists XB010 ("5T4-MMAE ADC,"
+      Phase 1) and XB371 ("TF-TOPOi ADC," Phase 1). ir.exelixis.com timed out
+      under direct WebFetch (bot protection), so IR/press URLs are nav-extracted
+      not independently content-verified. No distinct scientific-presentations
+      archive found (only a general Event Calendar).
+
+  - company_id: ideaya_biosciences
+    canonical_name: 'IDEAYA Biosciences, Inc.'
+    ciks: []
+    aliases: []
+    tickers: ["IDYA"]
+    active: true
+    official_domain: ideayabio.com
+    pipeline_urls: ['https://www.ideayabio.com/pipeline']
+    investor_relations_url: 'https://ir.ideayabio.com'
+    press_release_url: 'https://media.ideayabio.com/news-releases'
+    notes: >
+      pipeline page verified via WebFetch, confirms IDE849 (DLL3 TOP1 ADC, Phase
+      1/2) and IDE034 (B7H3/PTK7 bispecific TOP1 ADC, Phase 1).
+      media.ideayabio.com/news-releases directly verified (live Aug 2026
+      releases). ir.ideayabio.com returned HTTP 403 (bot protection) but is linked
+      from the verified pipeline page. No distinct presentations archive found.
+
+  - company_id: immunome
+    canonical_name: 'Immunome, Inc.'
+    ciks: []
+    aliases: []
+    tickers: ["IMNM"]
+    active: true
+    official_domain: immunome.com
+    pipeline_urls: ['https://immunome.com/pipeline/']
+    investor_relations_url: 'https://investors.immunome.com/'
+    press_release_url: 'https://investors.immunome.com/news-releases/'
+    presentations_url: 'https://investors.immunome.com/presentations/'
+    notes: >
+      All URLs directly verified via WebFetch. Pipeline lists IM-1617
+      (preclinical/Phase-1-stage solid-tumor ADC, alongside IM-1340/IM-1335);
+      confirmed first patient dosed June 2026. presentations page loaded, genuine
+      archive of ASCO/EORTC/ESMO/AACR conference presentations plus corporate
+      decks.
+
+  - company_id: kivu_bioscience
+    canonical_name: 'Kivu Bioscience (private company)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: kivubioscience.com
+    pipeline_urls: ['https://kivubioscience.com/']
+    investor_relations_url: null
+    press_release_url: 'https://kivubioscience.com/news/'
+    notes: >
+      Homepage confirms KIVU-107 (PTK7-targeting ADC, IND-enabling/Phase 1);
+      /news/ lists first-patient-dosed announcement (Jan 2026) and a World ADC San
+      Diego 2025 preclinical-data presentation. No distinct IR page or
+      presentations archive, as expected for a small private biotech.
+
+  - company_id: glyconex
+    canonical_name: 'GlycoNex, Inc. (台灣醣聯生技醫藥股份有限公司)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: glyconex.com.tw
+    pipeline_urls: ['https://www.glyconex.com.tw/pipeline/gnx1021']
+    investor_relations_url: 'https://www.glyconex.com.tw/investors/'
+    press_release_url: 'https://www.glyconex.com.tw/news/'
+    notes: >
+      All URLs verified via WebFetch. Pipeline page confirms GNX1021 (glycan-
+      directed ADC, Phase 1, first patient dosed Aug 3 2026). Investor page
+      confirms TPEx:4168 listing; "Presentations & Media" section has law-
+      firm/video material, not a scientific-conference archive, so
+      presentations_url is NONE_FOUND.
+
+  - company_id: adcendo
+    canonical_name: 'Adcendo ApS'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: adcendo.com
+    pipeline_urls: ['https://adcendo.com/adcendo/our-science/pipeline/']
+    investor_relations_url: 'https://adcendo.com/investors/'
+    press_release_url: 'https://adcendo.com/adcendo/investors/press-releases/'
+    presentations_url: 'https://adcendo.com/adcendo/our-science/key-publications/'
+    notes: >
+      All URLs verified via WebFetch. Pipeline confirms ADCE-T02 (Tissue Factor
+      ADC, Phase 1b), ADCE-D01 (uPARAP ADC, Phase 1/2, FDA ODD), ADCE-B05
+      (undisclosed target, Phase 1). "Key publications" page functions as the
+      scientific-presentations/publications archive.
+
+  - company_id: adcytherix
+    canonical_name: 'Adcytherix SAS (Marseille, France)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: adcytherix.com
+    pipeline_urls: ['https://www.adcytherix.com/']
+    investor_relations_url: null
+    press_release_url: 'https://www.adcytherix.com/'
+    notes: >
+      Homepage and specific news post verified via WebFetch. Confirms ADCX-020
+      (exatecan-based Topo1 ADC), Phase 1 first-patient-dosed March 2026. No
+      distinct IR domain or presentations archive, as expected for a ~2-year-old
+      private biotech.
+
+  - company_id: whitehawk_therapeutics
+    canonical_name: 'Whitehawk Therapeutics, Inc. (formerly Aadi Bioscience, Inc.)'
+    ciks: ["0001422142"]
+    aliases: []
+    tickers: ["WHWK"]
+    active: true
+    official_domain: whitehawktx.com
+    pipeline_urls: ['https://www.whitehawktx.com/pipeline/']
+    investor_relations_url: 'https://ir.whitehawktx.com/'
+    press_release_url: 'https://ir.whitehawktx.com/press-releases'
+    notes: >
+      Verified via WebFetch. Pipeline confirms HWK-007 (PTK7 ADC, Phase 1),
+      HWK-016 (MUC16 ADC, Phase 1), both in-licensed from WuXi Biologics; also
+      HWK-206 (SEZ6). Rebranded from Aadi Bioscience after divesting the legacy
+      Aadi commercial asset to Kaken Pharmaceuticals. CIK 1422142 confirmed
+      correct via live EDGAR filenames — genuinely this biotech, NOT the unrelated
+      "WhiteHawk Minerals Corp" (ticker WHK, CIK 1921603). ir.whitehawktx.com
+      timed out under WebFetch (bot protection), nav-extracted not independently
+      content-verified. No distinct presentations archive found.
+
+  - company_id: hummingbird_bioscience
+    canonical_name: 'Hummingbird Bioscience Pte. Ltd.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: hummingbirdbioscience.com
+    pipeline_urls: ['https://hummingbirdbioscience.com/pipeline/']
+    investor_relations_url: null
+    press_release_url: 'https://hummingbirdbioscience.com/news/'
+    notes: >
+      Verified via WebFetch: pipeline page lists HMBD-501 (HER3 ADC, multiple
+      solid tumors); news page confirms a Jan 2026 press release "First Patient
+      Dosed in Phase I Clinical Trial of HMBD-501." Private company (Singapore/US)
+      with no distinct IR page; conference presentations (AACR, ASCO, ESMO, PEGS
+      Boston, WCLC) are listed inline within the News page rather than on a
+      separate archive. Notable: HMBD-002 (anti-VISTA) licensed to Percheron
+      Therapeutics; HMBD-802/803/804 ADC programs licensed to Callio Therapeutics.
+
+  - company_id: macrogenics
+    canonical_name: 'MacroGenics, Inc.'
+    ciks: []
+    aliases: []
+    tickers: ["MGNX"]
+    active: true
+    official_domain: macrogenics.com
+    pipeline_urls: ['https://www.macrogenics.com/pipeline/']
+    investor_relations_url: 'https://ir.macrogenics.com/'
+    press_release_url: 'https://ir.macrogenics.com/press-releases'
+    presentations_url: 'https://ir.macrogenics.com/events-and-presentations/events'
+    notes: >
+      pipeline_url verified via WebFetch — lists both MGC026 (B7-H3/TOP1i ADC) and
+      MGC028 (ADAM9/TOP1i ADC). The three ir.macrogenics.com URLs were nav-
+      extracted from that page's "Key Links" section but could NOT be
+      independently content-verified — repeated WebFetch attempts on the IR
+      subdomain (root, /press-releases, /events-and-presentations/events) all
+      timed out, consistent with bot protection; report as nav-extracted, not
+      independently content-verified. Notable: Gilead holds an option on MGD024
+      and two undisclosed bispecifics; ZYNYZ licensed to Incyte; MARGENZA sold to
+      TerSera; TZIELD sold to Provention Bio (now Sanofi).
+
+  - company_id: mythic_therapeutics
+    canonical_name: 'Mythic Therapeutics, Inc.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: false
+    official_domain: mythictx.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      mythictx.com confirmed as the official domain via a BioSpace-hosted press-
+      release boilerplate, but WebFetch today returns a bare SiteGround "domain
+      not yet pointed" default page — the real site is effectively dead (Wayback
+      Machine shows spam/404 junk from 2023-24). IMPORTANT FINDING: a Nov 2025
+      press release found via biospace.com indicates Mythic executed a General
+      Assignment for the Benefit of Creditors on 2025-11-21 and is liquidating all
+      assets — including MYTX-011 (cMET-targeting ADC), a PTK7 candidate, and its
+      FateControl platform — via DSI Assignments with a bid deadline of
+      2026-01-05. The company appears defunct/in liquidation; recommend flagging
+      this entry for review rather than scheduling active scraping.
+
+  - company_id: torl_biotherapeutics
+    canonical_name: 'TORL BioTherapeutics, LLC'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: torlbio.com
+    pipeline_urls: ['https://torlbio.com/#pipeline']
+    investor_relations_url: null
+    press_release_url: 'https://torlbio.com/#news'
+    notes: >
+      torlbio.com is a single-page site (anchor-based sections, no sub-pages),
+      verified live via WebFetch. The #pipeline section explicitly lists "Ixotatug
+      Vedotin (Ixo-V; TORL-1-23)" (CLDN6 ADC, Phase 2 CATALINA-2, FDA Fast Track)
+      and TORL-4-500 (DLK1 ADC, Phase 1); TORL-3-600 and TORL-2-307-ADC were not
+      found on the current public pipeline page (likely earlier-
+      stage/undisclosed). The #news section serves as the de facto press-release
+      feed (>$400M in financings, ASCO data updates); no separate IR or
+      presentations archive exists. Board includes Goldman Sachs and Crescent
+      Capital reps; academic ties to UCLA.
+
+  - company_id: pheon_therapeutics
+    canonical_name: 'Pheon Therapeutics Ltd'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: pheontx.com
+    pipeline_urls: ['https://pheontx.com/science-technology/']
+    investor_relations_url: null
+    press_release_url: 'https://pheontx.com/news-events/'
+    notes: >
+      WebFetch-verified the site's Science & Technology page (no separate
+      "Pipeline" nav item exists) — describes a "Lead program" ADC in Phase 1
+      (NCT07127874) and additional programs under evaluation, but the specific
+      code "PHN-012" does not appear anywhere on the site, so relevance is
+      inferred from the lead-program description, not confirmed by name match. The
+      "Investors" nav item is only a VC-backer list (Atlas Venture, Brandon
+      Capital, BVF, Forbion, Lightspeed, Perceptive, RCT, TCGX), not a true IR
+      page. No distinct conference-presentations archive exists.
+
+  - company_id: phrontline_biopharma
+    canonical_name: 'Phrontline Biopharma, Inc.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: phrontlinebio.com
+    pipeline_urls: ['https://www.phrontlinebio.com/Our_Pipeline.html']
+    investor_relations_url: null
+    press_release_url: 'https://www.phrontlinebio.com/News.html'
+    notes: >
+      WebFetch-verified the pipeline page explicitly names TJ101 as a bispecific
+      EGFR/B7-H3 ADC in Phase 1 for NSCLC/HNSCC, alongside TJ102, TJ106, TJ108.
+      Notable: an October 2025 global strategic collaboration with Samsung Bioepis
+      to co-develop bispecific, dual-payload ADCs (Samsung Venture Investment Corp
+      also participated in a Nov 2025 $60M financing). Conference presentations
+      are announced only via the News page — no separate presentations archive
+      exists.
+
+  - company_id: adcentrx_therapeutics
+    canonical_name: 'Adcentrx Therapeutics, Inc.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: adcentrx.com
+    pipeline_urls: ['https://www.adcentrx.com/pipeline/']
+    investor_relations_url: null
+    press_release_url: 'https://www.adcentrx.com/news/'
+    notes: >
+      The dedicated /pipeline/ page exists (WebFetch-confirmed, nav-extracted URL)
+      but presents the pipeline only as an image graphic — ADRX-0706 is not
+      machine-readable text there. The /news/ page is WebFetch-verified to
+      extensively cover ADRX-0706 (a Nectin-4 ADC), including Fast Track
+      designation and ASCO 2025 clinical data, confirming the program's active
+      status via press releases. No distinct IR page or standalone conference-
+      presentations archive exists.
+
+  - company_id: primelink_biotherapeutics
+    canonical_name: 'PrimeLink BioTherapeutics'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: null
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      Could not locate any verifiable web presence for this company or asset
+      PLB-002 via WebSearch (DuckDuckGo/Bing) or direct domain guessing
+      (primelinkbio.com returned HTTP 430, likely bot-blocked or nonexistent).
+      Searches for "PLB-002" returned only unrelated hits (Personal Locator
+      Beacons, Xerox PrimeLink printers). May be a very early-stage/stealth
+      company or a name mismatch — recommend re-verifying the exact company
+      name/spelling before re-attempting.
+
+  - company_id: novelty_nobility
+    canonical_name: 'Novelty Nobility Inc.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: noveltynobility.com
+    pipeline_urls: ['https://www.noveltynobility.com/pipeline/pipeline.php']
+    investor_relations_url: null
+    press_release_url: 'https://www.noveltynobility.com/news/media.php'
+    presentations_url: 'https://www.noveltynobility.com/publication/publication.php'
+    notes: >
+      Verified via WebFetch: pipeline page explicitly lists NN3201 as a
+      c-Kit(CD117)-targeting ADC for SCLC/GIST; publications page lists multiple
+      NN3201 papers/AACR posters, functioning as the de facto presentations
+      archive. No distinct IR page (private, South Korean company; news page
+      mentions Hana Securities appointed as lead underwriter for a possible IPO).
+
+  - company_id: byondis
+    canonical_name: 'Byondis B.V.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: byondis.com
+    pipeline_urls: ['https://www.byondis.com/our-science/pipeline']
+    investor_relations_url: 'https://www.byondis.com/investors-and-media'
+    press_release_url: 'https://www.byondis.com/investors-and-media/press-releases'
+    presentations_url: 'https://www.byondis.com/our-science/publications-presentations'
+    notes: >
+      Verified via WebFetch: current pipeline page lists BYON4413 (CD123 ADC) as
+      clinical-stage but does NOT currently list BYON3521; the separate
+      Publications & Presentations archive confirms BYON3521 as a c-MET-targeting
+      ADC via a 2023 AACR poster, suggesting it is an earlier/deprioritized asset
+      relative to the live pipeline page. Byondis is private (formerly Synthon
+      Biopharmaceuticals; known for trastuzumab duocarmazine/TULIP trial), so
+      investor_relations_url is a combined "Investors & Media" hub rather than a
+      public-company IR site; no ticker.
+
+  - company_id: iksuda_therapeutics
+    canonical_name: 'Iksuda Therapeutics Limited'
+    ciks: []
+    aliases: ['Iksuda Therapeutics', 'Iksuda Therapeutics Ltd']
+    tickers: []
+    active: true
+    official_domain: iksuda.com
+    pipeline_urls: ['https://www.iksuda.com/pipeline']
+    investor_relations_url: null
+    press_release_url: 'https://www.iksuda.com/news-views/'
+    notes: >
+      WebFetch-verified; /pipeline page lists IKS03, IKS014 (HER2 ADC, clinical),
+      IKS04, IKS073. Private UK company — no IR portal; "News & Views" serves as
+      the press page. No distinct conference-presentations archive found.
+
+  - company_id: angiex
+    canonical_name: 'Angiex, Inc.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: angiex.com
+    pipeline_urls: ['https://www.angiex.com/pipeline']
+    investor_relations_url: null
+    press_release_url: 'https://www.angiex.com/news'
+    notes: >
+      WebFetch-verified; /pipeline explicitly describes AGX101 (TM4SF1-directed
+      ND-ADC) as lead Phase 1 asset. Private company, no IR page. Site references
+      individual conference posters (e.g., World ADC Meeting, AACR) as direct
+      downloads/homepage items rather than a dedicated presentations-archive page,
+      so presentations_url is NONE_FOUND rather than guessed.
+
+  - company_id: oncomatryx
+    canonical_name: 'Oncomatryx Biopharma, S.L.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: oncomatryx.com
+    pipeline_urls: ['https://www.oncomatryx.com/clinical-trials']
+    investor_relations_url: null
+    press_release_url: 'https://oncomatryx.com/news-publications/'
+    notes: >
+      WebFetch-verified; /clinical-trials confirms OMTX705 is in clinical trials.
+      Private Spanish company — "Shareholders" nav item exists but is not a
+      public-market IR portal, so investor_relations_url is NONE_FOUND.
+      News/Publications page covers conference appearances (e.g., BIO
+      International 2026) but there is no separate presentations archive.
+
+  - company_id: alx_oncology
+    canonical_name: 'ALX Oncology Holdings Inc.'
+    ciks: []
+    aliases: []
+    tickers: ["ALXO"]
+    active: true
+    official_domain: alxoncology.com
+    pipeline_urls: ['https://alxoncology.com/pipeline']
+    investor_relations_url: 'https://ir.alxoncology.com/'
+    press_release_url: 'https://ir.alxoncology.com/news-releases'
+    presentations_url: 'https://ir.alxoncology.com/events-and-presentations'
+    notes: >
+      pipeline_url WebFetch-verified — explicitly lists "ALX2004 Program (EGFR
+      ADC, Phase 1)" and links to ir.alxoncology.com. The ir.alxoncology.com
+      domain itself and its subpages timed out twice on WebFetch (bot/JS-
+      protection likely), so those three URLs are reported as nav-extracted per
+      instructions rather than independently content-verified.
+
+  - company_id: obi_pharma
+    canonical_name: 'OBI Pharma, Inc.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: obipharma.com
+    pipeline_urls: ['https://www.obipharma.com/what-we-do/pipeline-overview/']
+    investor_relations_url: 'https://www.obipharma.com/investor-overview/'
+    press_release_url: 'https://www.obipharma.com/news/'
+    presentations_url: 'https://www.obipharma.com/publication-library/'
+    notes: >
+      pipeline_url WebFetch-verified — explicitly describes both OBI-992 (TROP2
+      ADC, topo-I payload) and OBI-902 (next-gen TROP2 ADC using GlycOBI
+      platform), both Phase 1 with FDA Orphan Drug status. investor_relations_url
+      and press_release_url derived from confirmed homepage nav structure.
+      Publication Library is the closest thing to a presentations archive but
+      wasn't independently fetched/verified for conference-specific content.
+
+  - company_id: callio_therapeutics
+    canonical_name: 'Callio Therapeutics, Inc.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: calliotx.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: 'https://calliotx.com/news/'
+    notes: >
+      WebFetch-verified homepage and news page; site only describes the "lead
+      program" generically as "a dual-payload HER2-targeted ADC" and does NOT
+      mention the specific designation "CLIO-8221" anywhere — reporting this
+      discrepancy rather than guessing. No dedicated pipeline page, IR page, or
+      presentations archive exists; site also has a separate /publications/ page
+      (distinct from /news/).
+
+  - company_id: pyxis_oncology
+    canonical_name: 'Pyxis Oncology, Inc.'
+    ciks: []
+    aliases: []
+    tickers: ["PYXS"]
+    active: true
+    official_domain: pyxisoncology.com
+    pipeline_urls: ['https://pyxisoncology.com/clinical-programs/']
+    investor_relations_url: 'https://ir.pyxisoncology.com'
+    press_release_url: 'https://ir.pyxisoncology.com/news-releases'
+    presentations_url: 'https://ir.pyxisoncology.com/events-and-presentations'
+    notes: >
+      WebFetch-verified; clinical-programs page confirms "micvotabart pelidotin
+      (MICVO, formerly PYX-201)" as lead ADC candidate in Phase 1. IR subpages
+      (news-releases, events-and-presentations) follow the standard IR-platform
+      pattern seen confirmed on other tickers but were nav-derived rather than
+      individually re-fetched given tool-call budget; homepage nav listing itself
+      was confirmed.
+
+  - company_id: cytomx_therapeutics
+    canonical_name: 'CytomX Therapeutics, Inc.'
+    ciks: []
+    aliases: []
+    tickers: ["CTMX"]
+    active: true
+    official_domain: cytomx.com
+    pipeline_urls: ['https://www.cytomx.com/pipeline/']
+    investor_relations_url: 'http://ir.cytomx.com/'
+    press_release_url: 'http://ir.cytomx.com/press-releases'
+    presentations_url: 'http://ir.cytomx.com/events-and-presentations'
+    notes: >
+      WebFetch-verified; /pipeline/ describes CX-2051 (Varseta-M, EpCAM-directed
+      Probody ADC, Phase 1) in detail. CX-2029 (CD71 ADC) was NOT found on the
+      current pipeline page or the Probody Therapeutics overview page — it appears
+      to be a discontinued/deprioritized historical program, kept here only per
+      the disambiguation instruction. Scientific-publications content lives at
+      https://cytomx.com/probody-therapeutics/#scientific-publications (platform
+      page, not a dedicated presentations archive); IR site separately maintains
+      Press Releases and Events & Presentations as distinct pages.
+
+  - company_id: oncusp_therapeutics
+    canonical_name: 'OnCusp Therapeutics, Inc.'
+    ciks: []
+    aliases: ['OnCusp Therapeutics']
+    tickers: []
+    active: true
+    official_domain: oncusptx.com
+    pipeline_urls: ['https://www.oncusptx.com/rd/index.html']
+    investor_relations_url: null
+    press_release_url: 'https://www.oncusptx.com/newsroom/index.html'
+    notes: >
+      WebFetch-verified; R&D page explicitly describes CUSP06 (CDH6-directed ADC,
+      exatecan payload, Phase 1 trial CUSP06-1001 in ovarian cancer). Private
+      company — no IR portal. Newsroom has "Company News," "Coverage," and
+      "Publications" subsections but no distinct conference-presentations archive.
+
+  - company_id: taiho_oncology
+    canonical_name: 'Taiho Oncology, Inc. (US subsidiary of Taiho Pharmaceutical Co., Ltd.)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: taihooncology.com
+    pipeline_urls: ['https://www.taihooncology.com/us/science/product-pipeline/']
+    investor_relations_url: null
+    press_release_url: 'https://www.taihooncology.com/us/news/'
+    notes: >
+      IMPORTANT DISCREPANCY: WebFetch-verified — Taiho Oncology's US /product-
+      pipeline/ page lists only small-molecule programs (ASTX030, TAS0612,
+      TAS2940, TAS3351) and does NOT mention ARC-02 or Araris. ARC-02 instead
+      appears only in Taiho Oncology's News section, confirmed via
+      https://www.taihooncology.com/us/news/, which carries two verified
+      headlines: "Araris Biotech AG and Taiho Oncology Announce Dosing of First
+      Patient in Phase 1 Trial of ARC-02..." (June 23, 2026) and "Taiho Oncology,
+      Taiho Pharmaceutical and Araris Biotech AG Advance ADC ARC-02 into Phase 1
+      Clinical Development" (April 27, 2026). No IR portal exists since Taiho
+      Oncology is a private subsidiary, not separately traded.
+
+  - company_id: araris_biotech
+    canonical_name: 'Araris Biotech AG (subsidiary of Taiho Pharmaceutical since March 2025)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    parent_company_id: taiho_oncology
+    official_domain: ararisbiotech.com
+    pipeline_urls: ['https://ararisbiotech.com/#pipeline']
+    investor_relations_url: null
+    press_release_url: 'https://ararisbiotech.com/#news'
+    notes: >
+      WebFetch-verified — Araris's own site (ararisbiotech.com) is STILL LIVE and
+      actively maintained post-acquisition, self-identifying as "Araris -
+      Subsidiary of Taiho Pharmaceutical." Its #news section (in-page anchor on
+      this single-page site) explicitly reports "ARC-02 ADC advances into Phase 1
+      Clinical Development" (Apr 29, 2026), consistent with the Taiho
+      announcement. Pipeline section lists ARC-02, ARC-401, ARC-201. Caveat: the
+      older domain araris.ch has been repurposed/sold to an unrelated Swiss
+      brewery ("Araris | Brauerei No. 1191") — that domain is NOT the company
+      anymore; ararisbiotech.com is the correct live domain. No separate IR or
+      presentations page exists (single-page site, no distinct archive).
+
+  - company_id: qilu_pharmaceutical
+    canonical_name: 'Qilu Pharmaceutical Co., Ltd. (齐鲁制药)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: qilu-pharma.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      Domain www.qilu-pharma.com and https://www.qilu-pharma.com/en/ both connect
+      but return HTTP 430 (bot-protection/WAF block) with no retrievable body
+      across three attempts. Could not verify any page content, including QLS5132.
+      Web search tools were unavailable (session search budget exhausted, and
+      DuckDuckGo/Bing/Ecosia all returned CAPTCHA/403/irrelevant results when
+      fetched directly). Reporting domain only as a plausible identifier, not
+      verified — all page-level fields are NONE_FOUND per the strict verification
+      rule.
+
+  - company_id: innocare_pharma
+    canonical_name: 'InnoCare Pharma Limited (诺诚健华医药有限公司)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: innocarepharma.com
+    pipeline_urls: ['https://www.innocarepharma.com/development/pipeline']
+    investor_relations_url: 'https://www.innocarepharma.com/investor/home'
+    press_release_url: 'https://www.innocarepharma.com/news/home'
+    presentations_url: 'https://www.innocarepharma.com/investor/demonstrate'
+    notes: >
+      Fully verified via WebFetch — homepage, pipeline page (explicitly lists
+      ICP-B794, a B7-H3-targeted ADC in Phase I for solid tumors, matching the
+      target company), investor home, and news page all loaded with correct
+      content. Dual-listed HKEX/STAR Market confirmed directly on the investor
+      page text.
+
+  - company_id: simcere_zaiming
+    canonical_name: 'Zaiming Pharmaceutical Co., Ltd. (再鸣医药), subsidiary of Simcere Pharmaceutical Group'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: null
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      Every attempted domain for both Zaiming and parent Simcere (simcere.com,
+      www.simcere.com, en.simcere.com, simcerepharma.com, http and https variants)
+      returned "Socket is closed" with no content retrieved — a connection-level
+      block, not a normal HTTP error. All search-engine fallbacks (Bing,
+      DuckDuckGo, Ecosia) were CAPTCHA'd or blocked. Could not verify any field;
+      all reported as NONE_FOUND rather than guessed.
+
+  - company_id: huadong_medicine
+    canonical_name: 'Huadong Medicine Co., Ltd. (华东医药股份有限公司)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: hddyy.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      www.hddyy.com resolved and completed a TLS handshake but presented a self-
+      signed certificate, which WebFetch refuses to trust, so no content could be
+      retrieved (attempted twice). www.hduodm.com did not resolve at all. Ticker
+      (SZSE:000963) is prior knowledge, not verified today. No page-level field
+      could be confirmed; all reported as NONE_FOUND per the strict rule, with the
+      domain noted only as a plausible unverified identifier.
+
+  - company_id: junshi_biosciences
+    canonical_name: 'Shanghai Junshi Biopharmaceutical Co., Ltd. (上海君实生物医药科技股份有限公司)'
+    ciks: []
+    aliases: ['Shanghai Junshi Biosciences Co., Ltd']
+    tickers: []
+    active: true
+    official_domain: junshipharma.com
+    pipeline_urls: ['https://junshipharma.com/pipeline/']
+    investor_relations_url: 'https://www.junshipharma.com/investor/'
+    press_release_url: 'https://www.junshipharma.com/news/'
+    presentations_url: 'https://junshi-bioscience-v2-umb.azurewebsites.net/cn/investors/presentation-materials/'
+    notes: >
+      Fully verified — pipeline page explicitly lists JS107 (a
+      Claudin18.2-targeted MMAE ADC, listed there as Phase III though the task
+      brief cites Phase I) and JS212 (EGFR×HER3 ADC, Phase I/II). Presentations
+      archive is served off an Azure-hosted subdomain reached via the investor
+      page's own link and confirmed to contain real JPMorgan Healthcare Conference
+      and ASCO presentation PDFs 2019-2026.
+
+  - company_id: genescience
+    canonical_name: 'Changchun GeneScience Pharmaceutical Co., Ltd. (长春金赛药业有限责任公司)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: genscigroup.com
+    pipeline_urls: ['https://www.genscigroup.com/science-innovation/pipepage']
+    investor_relations_url: null
+    press_release_url: 'https://www.genscigroup.com/about/news/express'
+    notes: >
+      Homepage content explicitly self-identifies as 长春金赛药业有限责任公司 and references
+      oncology pipeline built on "ADC as core technology," confirming the company;
+      however the pipeline page excerpt retrieved did not explicitly show
+      "GenSci143" by name. No dedicated investor-relations section found on the
+      corporate site (consistent with it being a subsidiary rather than the listed
+      parent entity).
+
+  - company_id: boan_biotech
+    canonical_name: 'Shandong Boan Biotech Co., Ltd. (山东博安生物技术股份有限公司), subsidiary of Luye Pharma Group'
+    ciks: []
+    aliases: ['Shandong Boan Biotechnology Co., Ltd', 'Luye Pharma Group Ltd']
+    tickers: []
+    active: true
+    official_domain: boan-bio.com
+    pipeline_urls: ['https://www.boan-bio.com/social.php#cpx']
+    investor_relations_url: 'https://www.boan-bio.com/investor.php'
+    press_release_url: 'https://www.boan-bio.com/news.php'
+    notes: >
+      Homepage (https://www.boan-bio.com) is directly verified and explicitly
+      mentions "Boan Biotech Announces Successful Completion of Phase Ia Clinical
+      Trial of BA1302 (CD228-Directed ADC) in China" (dated 2026-08-17),
+      confirming both the company and the named ADC asset. Note www.boanbio.com
+      (no hyphen) is a different, non-functional/expired-cert domain — do not
+      confuse with the working www.boan-bio.com.
+
+  - company_id: xadcera_biopharmaceutical
+    canonical_name: 'Xadcera Biopharmaceutical (name/spelling not independently confirmed)'
+    ciks: []
+    aliases: ['Xadcera Biopharmaceutical (Suzhou) Co., Ltd']
+    tickers: []
+    active: true
+    official_domain: null
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      Could not locate any working domain (xadcera.com and www.xadcera.com both
+      fail DNS resolution). All search-engine workarounds (Bing, DuckDuckGo,
+      Ecosia direct WebFetch) were blocked by CAPTCHA/403, and the native
+      WebSearch tool was unavailable (session budget exhausted). A speculative
+      ClinicalTrials.gov lookup for a DM001-related NCT number did not return
+      sponsor details. This company could not be verified at all — every field is
+      NONE_FOUND rather than guessed.
+
+  - company_id: hangzhou_dac_biotech
+    canonical_name: 'Hangzhou DAC Biotech Co., Ltd. (杭州多禧生物科技有限公司)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: dacbiotech.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      dacbiotech.com resolves but presents an expired TLS certificate on every
+      attempt (root domain and /en/ path), which WebFetch refuses to trust, so no
+      content could be retrieved. www.hzdacbiotech.com and www.hangzhoudac.com do
+      not resolve at all. Known from general industry knowledge (not verified
+      today) as the originator/licensor of the "DXC" (Dual-linked Cytotoxin)
+      linker-payload ADC platform, licensed to numerous partner biotechs — but
+      this partnership claim is unverified this session since no page could be
+      loaded.
+
+  - company_id: genequantum
+    canonical_name: 'GeneQuantum (Suzhou) Biotechnology Co., Ltd. / GeneQuantum Healthcare'
+    ciks: []
+    aliases: ['GeneQuantum Healthcare (Suzhou) Co. Ltd', 'Borui Biomedical Technology (Suzhou) Co., Ltd']
+    tickers: []
+    active: true
+    official_domain: genequantum.com
+    pipeline_urls: ['https://www.genequantum.com/pipeline.html']
+    investor_relations_url: null
+    press_release_url: 'https://www.genequantum.com/news_report.html'
+    notes: >
+      Homepage directly verified, including a news item "GeneQuantum Healthcare
+      and Aimed Bio collaborate to develop five innovative ADC drugs" and mention
+      of GQ1005 (HER2 ADC) presented at WCLC 2024, and confirmation the company is
+      a J&J Innovation JLABS @ Shanghai resident. Confirms GeneQuantum's role as
+      an ADC linker-payload/technology licensor partnering with multiple biotechs
+      (Aimed Bio and others), consistent with the platform-licensing note in the
+      task. No dedicated IR section found (private company). BD contact listed:
+      BD@genequantum.com.
+
+  - company_id: bioray
+    canonical_name: 'BioRay Biopharmaceutical Co., Ltd.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: bioraypharm.com
+    pipeline_urls: ['https://www.bioraypharm.com/index.php?m=list&a=index&classid=22']
+    investor_relations_url: null
+    press_release_url: 'https://www.bioraypharm.com/index.php?m=list&a=index&classid=43'
+    notes: >
+      Verified via direct WebFetch of bioraypharm.com/en. The numbered ADC
+      pipeline page (classid=22) lists ADC candidates BR205/BR2060/BR1010 but did
+      not textually show "BRY-812" by that name; the news/press-release listing
+      (classid=43) does directly confirm it via headline "BioRay's BRY812 for
+      Injection Granted FDA Approval for Clinical Trials" (Dec 30, 2024). No
+      investor-relations page found in site nav
+      (about/partnering/contact/pipeline/news only) — appears privately held.
+
+  - company_id: xiling_lab
+    canonical_name: 'Xiling Lab'
+    ciks: []
+    aliases: ['Xiling Lab Pharmaceutical Co., Ltd']
+    tickers: []
+    active: true
+    official_domain: xilinglab.com
+    pipeline_urls: ['https://www.xilinglab.com/en/About/Index.aspx']
+    investor_relations_url: null
+    press_release_url: 'https://www.xilinglab.com/en/News/Detail.aspx?id=1411'
+    notes: >
+      xilinglab.com is bot-protected — every WebFetch attempt (direct HTTPS both
+      with/without "/en/", HTTP, and via an r.jina.ai reader-proxy) failed with
+      connection/socket errors across 6+ attempts. The URLs above are nav-
+      extracted from search-engine (Brave) index snippets, not independently
+      content-verified. One snippet directly quotes: "SMP-656 is currently in
+      Phase 1 clinical trial (CTR20233290)...best-in-class HER2 ADC," consistent
+      with the task's description; treat as unverified pending manual/browser
+      follow-up.
+
+  - company_id: biocity_biopharma
+    canonical_name: 'BioCity Biopharmaceutics Co., Ltd.'
+    ciks: []
+    aliases: ['Wuxi Biocity Biopharmaceutics Co., Ltd']
+    tickers: []
+    active: true
+    official_domain: biocitypharma.com
+    pipeline_urls: ['https://www.biocitypharma.com/development/product']
+    investor_relations_url: null
+    press_release_url: 'https://www.biocitypharma.com/news'
+    notes: >
+      Direct WebFetch to biocitypharma.com failed with "Socket is closed" on every
+      attempt (bot/WAF protection); successfully verified instead via an r.jina.ai
+      reader-proxy fetch, which content-confirmed the homepage, pipeline page, and
+      news page. Pipeline page confirms BC3195 as a CDH3-targeting ADC for solid
+      tumors (listed as "Pre-clinical" stage on-site, vs. task's "Phase 1" —
+      possible site lag); news page confirms a March 2025 BC3195 + KEYTRUDA (MSD)
+      combination-study collaboration. No IR page or dedicated presentations
+      archive found (conference mentions like ESMO 2024/ASCO appear only inside
+      individual news articles); company appears private.
+
+  - company_id: multitude_therapeutics
+    canonical_name: 'Multitude Therapeutics (普众发现医药科技（上海）股份有限公司)'
+    ciks: []
+    aliases: ['Multitude Therapeutics, Inc']
+    tickers: []
+    active: true
+    official_domain: en.multitudetherapeutics.com
+    pipeline_urls: ['https://en.multitudetherapeutics.com/pipelines/']
+    investor_relations_url: null
+    press_release_url: 'https://en.multitudetherapeutics.com/news/'
+    notes: >
+      Verified via direct WebFetch of both the English and Chinese sites; Chinese-
+      site footer confirms Shanghai ICP registration for "普众发现医药科技（上海）股份有限公司,"
+      consistent with a China-headquartered company (despite third-party listings
+      citing a Redwood City, CA presence). Current live pipeline page lists
+      AMT-116, AMT-253, AMT-676, AMT-562, AMT-707, AMT-754 (all ADCs) — AMT-151,
+      the program cited in the task, does NOT appear on the current pipeline page;
+      may be a retired/renamed code worth reconciling. No IR section found;
+      appears private.
+
+  - company_id: chengdu_kanghong_pharmaceutical
+    canonical_name: 'Chengdu Kanghong Pharmaceutical (Group) Co., Ltd. (成都康弘药业集团股份有限公司)'
+    ciks: []
+    aliases: []
+    tickers: ["002773.SZ"]
+    active: true
+    official_domain: kanghong.com
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    notes: >
+      kanghong.com is fully unreachable via WebFetch — direct HTTPS, direct HTTP,
+      a web.archive.org snapshot, and an r.jina.ai reader-proxy all failed (socket
+      closed / 404 / 422) across 7+ attempts, and a follow-up search-engine query
+      for site-specific pages was rate-limited before completion. Domain and
+      ticker (SZSE: 002773) are corroborated only by third-party financial sites
+      (PitchBook, AlphaSpread, PatSnap Synapse), which also associate KH815 with
+      the company, but no first-party page could be loaded to verify any of the
+      requested URLs. Flagging for manual/browser-based follow-up rather than
+      guessing sub-paths.
+
+  - company_id: xuanzhu_biopharmaceutical
+    canonical_name: 'Xuanzhu Biopharmaceutical Co., Ltd. (轩竹生物科技股份有限公司)'
+    ciks: []
+    aliases: []
+    tickers: ["02575.HK"]
+    active: true
+    official_domain: xuanzhubio.com
+    pipeline_urls: ['https://www.xuanzhubio.com/products']
+    investor_relations_url: 'https://www.xuanzhubio.com/investor'
+    press_release_url: 'https://www.xuanzhubio.com/news'
+    notes: >
+      All URLs directly WebFetch-verified. KM501 confirmed on the products page as
+      a Phase I/IND-approved oncology candidate, but the fetched text did not
+      explicitly label KM501's modality as ADC (site references a general
+      "双抗ADC"/bispecific-ADC platform) — recommend cross-checking KM501's modality
+      via a clinical-trial registry before finalizing. News page verified as a
+      real press-release listing but did not show KM501 in currently visible
+      headlines. No dedicated presentations archive found.
+
+  - company_id: evopoint_biosciences
+    canonical_name: 'Evopoint Biosciences Co., Ltd. (formerly Sinovent Pharmaceuticals)'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: evopointbio.com
+    pipeline_urls: ['https://www.evopointbio.com/en/core']
+    investor_relations_url: 'https://www.evopointbio.com/en/about/investors'
+    press_release_url: 'https://www.evopointbio.com/en/news'
+    notes: >
+      Verified via direct WebFetch of evopointbio.com/en (homepage) and separately
+      of /en/core. The core/pipeline page directly confirms XNW27011 as a
+      CLDN18.2-targeting topoisomerase-based ADC in Phase III (task cites Phase
+      1/2 — site now shows a more advanced stage, possibly reflecting progress
+      since the task's data snapshot), and explicitly states an exclusive
+      worldwide (ex-Greater China) license to Astellas Pharma Inc. for its
+      development/commercialization — confirming Evopoint/Sinovent as originator
+      and Astellas as licensee, as expected. /about/investors and /news paths were
+      extracted from the homepage's own first-party navigation but not separately
+      re-fetched.
+
+  - company_id: cstone_pharmaceuticals
+    canonical_name: 'CStone Pharmaceuticals Limited (基石药业)'
+    ciks: []
+    aliases: []
+    tickers: ["2616.HK"]
+    active: true
+    official_domain: cstonepharma.com
+    pipeline_urls: ['https://www.cstonepharma.com/en/develop/p3.html']
+    investor_relations_url: 'https://www.cstonepharma.com/en/relation/notice.html'
+    press_release_url: 'https://www.cstonepharma.com/en/html/news/3766.html'
+    presentations_url: 'https://www.cstonepharma.com/en/relation/materials.html'
+    notes: >
+      All URLs directly WebFetch-verified. The pipeline page itself is
+      image/chart-based and doesn't textually name CS5001, but the specific press
+      release at /en/html/news/3766.html explicitly confirms "CStone Announces
+      First Patient Enrolled in the Global Multicenter Phase 1b Clinical Trial of
+      CS5001 (ROR1 ADC)" (Dec 19, 2024) — an exact match to the task's "CS5001,
+      Phase 1b." The presentations_url is an IR financial-results/conference-call
+      materials archive rather than a pure scientific-conference-presentations
+      page — reported as the closest match with this caveat. No dual-listing
+      beyond HKEX found.
+
+  - company_id: salubris_biotherapeutics
+    canonical_name: 'Salubris Biotherapeutics, Inc.'
+    ciks: []
+    aliases: []
+    tickers: []
+    active: true
+    official_domain: salubrisbio.com
+    pipeline_urls: ['https://salubrisbio.com/jk06/']
+    investor_relations_url: null
+    press_release_url: 'https://salubrisbio.com/news/'
+    notes: >
+      All URLs directly WebFetch-verified. JK06 confirmed as a first-in-class
+      quadrivalent, biparatopic ADC targeting 5T4 with an MMAE payload, currently
+      in an open-label Phase 1 dose-escalation/expansion study (task lists "Phase
+      1/2"). News page confirms multiple JK06 conference data presentations (ASCO
+      2026, AACR 2026, ESMO 2025) but these live only as individual press
+      releases, not a separate presentations archive. No IR page found and no on-
+      site link to parent Shenzhen Salubris Pharmaceutical (信立泰, 002294.SZ) was
+      surfaced — appears to operate as a standalone private subsidiary site.
+
+  - company_id: harbour_biomed
+    canonical_name: 'Harbour BioMed (Cayman) Limited'
+    ciks: []
+    aliases: ['Harbour Biomed Therapeutics Ltd']
+    tickers: ["02142.HK"]
+    active: true
+    official_domain: harbourbiomed.com
+    pipeline_urls: ['https://www.harbourbiomed.com/therapeutics']
+    investor_relations_url: 'https://www.harbourbiomed.com/investor'
+    press_release_url: 'https://www.harbourbiomed.com/news'
+    notes: >
+      All URLs directly WebFetch-verified. HBM9033 confirmed on the pipeline page
+      as an MSLN-targeting ADC for solid tumors, status "Global (Out-Licensed)." A
+      referenced 2025 publication explicitly identifies it as "PF-08052666 (SGN-
+      MesoC2; HBM9033)," confirming the program was originated by Harbour BioMed
+      and out-licensed to Seagen (subsequently absorbed into Pfizer following
+      Pfizer's 2023 Seagen acquisition) — matching the task's flagged licensing
+      relationship. No dual-listing beyond HKEX and no separate scientific-
+      presentations archive found. VERIFICATION CAVEATS: kanghong.com was
+      completely unreachable across every method tried (direct HTTPS/HTTP,
+      web.archive.org, r.jina.ai proxy) — its fields are third-party-sourced only
+      and need manual/browser follow-up. xilinglab.com is bot-protected against
+      automated fetching — its URLs are search-index snippets only, not first-
+      party-verified.
+
+  - company_id: ambrx
+    canonical_name: 'Ambrx Biopharma Inc.'
+    ciks: []
+    aliases: ['Ambrx, Inc']
+    tickers: []
+    active: true
+    official_domain: null
+    pipeline_urls: []
+    investor_relations_url: null
+    press_release_url: null
+    parent_company_id: johnson_and_johnson
+    notes: >
+      Acquired by Johnson & Johnson, completed 2024. Fully absorbed: both
+      ambrx.com and www.ambrx.com return NXDOMAIN (confirmed via nslookup/dig/
+      curl on 2026-08-28 during the source-coverage expansion round -- the
+      domain is fully decommissioned, not merely redirected). Ambrx's ADC
+      platform/programs now appear only in J&J's own Innovative Medicine
+      pipeline page (see johnson_and_johnson's pipeline_urls above). SEC CIK
+      not independently reconfirmed this round -- left empty rather than
+      guessed; Ambrx was Nasdaq-listed (AMAM) pre-acquisition and likely has a
+      historical CIK, but it was not verified live in this session.
+

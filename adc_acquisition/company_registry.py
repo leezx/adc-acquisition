@@ -25,6 +25,19 @@ archive lives on adctmedical.com (a separate medical-affairs microsite),
 not adctherapeutics.com. jobs/company_scientific_presentations/job.py's
 own official-domain check is therefore anchored to `presentations_url`'s
 OWN host, never to `official_domain` -- see that job's module docstring.
+
+EXTENDED for the company-registry expansion (source-coverage expansion,
+2026-08-28): `parent_company_id`. An acquired/absorbed company (e.g.
+Seagen, ImmunoGen, Mersana -- already in this registry with
+`pipeline_urls: []` and a free-text note pointing at the acquirer) now
+gets that relationship recorded STRUCTURALLY too, not only in prose --
+`parent_company_id` names another entry's own `company_id` whose pipeline
+page is where this company's former ADC assets now actually appear.
+`None` (the default) means "not acquired, or acquirer not itself in this
+registry yet." This is read-only annotation for downstream audit tooling
+(`tools/validation/company_registry_gap_analysis.py`'s
+`PHASE1_PLUS_COMPANY_UNIVERSE.tsv` output) -- no acquisition job
+currently branches on it; it does not change any job's own behavior.
 """
 
 from __future__ import annotations
@@ -51,6 +64,7 @@ class Company:
     press_release_template: str | None = None
     presentations_url: str | None = None
     presentations_template: str | None = None
+    parent_company_id: str | None = None
 
 
 _KNOWN_FIELDS = {f.name for f in fields(Company)}
