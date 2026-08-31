@@ -34,6 +34,20 @@ Portal UI to produce a given export file are provenance a human must
 supply (this repo has no other way to know what a person searched for
 before clicking "Export").
 
+PER-EXPORT-FILE QUERY ATTRIBUTION (round-1 fix, 2026-08-31): different
+dated export files can come from genuinely DIFFERENT searches -- the
+2026-08-28 file's exact search terms were never confirmed (an unverified
+legacy export), while a later file may carry a confirmed, precise query.
+A single job-wide query_id/query_text would silently mislabel the older
+file's trials as having come from the newer, different search the moment
+the registry's query_text is updated. `configs/who_ictrp_queries.yaml`
+therefore maps each query to the specific `export_file_dates` it actually
+produced, and every trial is attributed via ITS OWN export_file_date
+(`_load_export_date_query_map`/`_query_for` below) -- never a single
+constant. Dropping in a new dated export file without first adding its
+date to some query's `export_file_dates` list is a hard error, not a
+silent guess.
+
 Multiple accumulated export files are all read (glob `--corpus-dir` for
 `ICTRP-Results-*.xml`, WHO's own default download filename shape, dated
 YYYYMMDD): a trial appearing in more than one dated export keeps the
@@ -80,18 +94,19 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
+import yaml
+
 from adc_acquisition.checkpoint import CheckpointStore
 from adc_acquisition.hashing import sha256_bytes
 from adc_acquisition.job_base import AcquisitionJob, JobRunResult
 from adc_acquisition.logging_utils import setup_job_logging
 from adc_acquisition.manifest import append_only, new_manifest_row, write_manifest
-from adc_acquisition.query_registry import active_queries, load_queries
+from adc_acquisition.query_registry import QuerySpec, active_queries, load_queries
 from jobs.who_ictrp.parser import normalize_registration_date, parse_export_file
 from jobs.who_ictrp.report import build_report
 
 QUERIES_PATH = Path("configs/who_ictrp_queries.yaml")
 DEFAULT_CORPUS_DIR = Path("DATA/raw/WHO_ICTRP")
-QUERY_ID = "WHO_ICTRP_001"
 
 EXTRA_FIELDS = [
     "source_register", "primary_sponsor", "secondary_sponsor", "phase",
@@ -155,6 +170,47 @@ def _load_all_trials(corpus_dir: Path) -> tuple[dict[str, dict], Counter]:
             trial["export_file_date"] = export_date
             trial_by_id[trial_id] = trial  # later (more recent) file wins, files iterated oldest-first
     return trial_by_id, export_file_counts
+
+
+def _load_export_date_query_map(queries_file: Path, queries: list[QuerySpec]) -> dict[str, QuerySpec]:
+    """Reads `export_file_dates` -- a WHO-ICTRP-specific field NOT part of
+    the shared `QuerySpec` shape every other job's queries.yaml uses (see
+    `adc_acquisition.query_registry`) -- directly from the raw YAML, since
+    query_registry.load_queries() silently drops unknown keys per its own
+    "tolerant of new job-specific fields" contract (that contract exists
+    for a DIFFERENT reason: config forward-compatibility, not for hiding
+    fields this exact loader needs).
+
+    Returns {export_date (YYYYMMDD): QuerySpec} -- the query that human
+    actually ran to produce that specific dated export file. This is what
+    lets an old export produced by an unverified/unknown search (e.g. the
+    2026-08-28 file) coexist with a later export whose exact query IS
+    confirmed, without retroactively mislabeling the old file's trials as
+    having come from the new query -- every trial's discovery/attempt/
+    manifest rows are attributed via ITS OWN export_file_date, never a
+    single job-wide constant.
+
+    Raises on: an export_file_dates entry naming a query_id that isn't in
+    the registry at all, or two different queries both claiming the same
+    export_date (an unresolvable provenance conflict a human must fix by
+    hand, not something this job should silently pick a winner for)."""
+    with Path(queries_file).open("r", encoding="utf-8") as f:
+        raw = yaml.safe_load(f) or {}
+    by_id = {q.query_id: q for q in queries}
+    date_to_query: dict[str, QuerySpec] = {}
+    for entry in raw.get("queries", []):
+        query_id = entry["query_id"]
+        if query_id not in by_id:
+            raise ValueError(f"{queries_file}: export_file_dates references unknown query_id={query_id!r}")
+        for export_date in entry.get("export_file_dates", []):
+            if export_date in date_to_query:
+                raise ValueError(
+                    f"{queries_file}: export_file_date={export_date!r} is claimed by both "
+                    f"{date_to_query[export_date].query_id!r} and {query_id!r} -- each dated "
+                    "export file must be attributed to exactly one query."
+                )
+            date_to_query[export_date] = by_id[query_id]
+    return date_to_query
 
 
 def _record_row(
@@ -226,10 +282,9 @@ class WHOICTRPJob(AcquisitionJob):
             )
 
         queries = load_queries(Path(args.queries_file))
-        queries_by_id = {q.query_id: q for q in active_queries(queries)}
-        if QUERY_ID not in queries_by_id:
-            raise RuntimeError(f"{args.queries_file} is missing required active query_id={QUERY_ID}")
-        query_spec = queries_by_id[QUERY_ID]
+        if not active_queries(queries):
+            raise RuntimeError(f"{args.queries_file} has no active queries")
+        export_date_to_query = _load_export_date_query_map(Path(args.queries_file), queries)
 
         result = JobRunResult(job_name=self.name, dry_run=bool(args.dry_run))
         if args.resume:
@@ -247,8 +302,21 @@ class WHOICTRPJob(AcquisitionJob):
             )
 
         all_ids = sorted(trial_by_id.keys())
+        present_export_dates = {trial_by_id[tid]["export_file_date"] for tid in all_ids}
+        unmapped_dates = sorted(present_export_dates - export_date_to_query.keys())
+        if unmapped_dates:
+            raise RuntimeError(
+                f"{args.queries_file} has no query attributed to export_file_date(s) "
+                f"{unmapped_dates} -- add an `export_file_dates` entry under the query a human "
+                "actually ran to produce that dated export file before this job can attribute "
+                "its trials (never guessing which query a file came from)."
+            )
+
+        def _query_for(tid: str) -> QuerySpec:
+            return export_date_to_query[trial_by_id[tid]["export_file_date"]]
+
         source_register_counts = Counter(trial_by_id[tid]["Source_Register"] for tid in all_ids)
-        result.queries_run = 1
+        result.queries_run = len({q.query_id for q in export_date_to_query.values()})
         result.records_discovered = len(all_ids)
 
         discovery_path = output_dir / "manifests" / f"{self.name}_discovery.parquet"
@@ -256,14 +324,14 @@ class WHOICTRPJob(AcquisitionJob):
 
         now = _now_iso()
         run_id = now
-        discovery_rows = [
-            dict(
-                source=self.name, source_record_id=tid, query_id=QUERY_ID,
-                query_version=query_spec.query_version, query_text=query_spec.query_text,
+        discovery_rows = []
+        for tid in all_ids:
+            q = _query_for(tid)
+            discovery_rows.append(dict(
+                source=self.name, source_record_id=tid, query_id=q.query_id,
+                query_version=q.query_version, query_text=q.query_text,
                 discovered_at=run_id, run_id=run_id,
-            )
-            for tid in all_ids
-        ]
+            ))
 
         # Same rationale as conference_abstract_corpus: no network fetch to
         # save by trusting a prior status without rechecking, since the
@@ -274,8 +342,18 @@ class WHOICTRPJob(AcquisitionJob):
         raw_bytes_by_id: dict[str, bytes] = {}
         content_hash_by_id: dict[str, str] = {}
         for tid in all_ids:
-            raw_bytes = json.dumps(trial_by_id[tid], sort_keys=True, ensure_ascii=False, indent=2).encode("utf-8")
-            content_hash = sha256_bytes(raw_bytes)
+            trial = trial_by_id[tid]
+            raw_bytes = json.dumps(trial, sort_keys=True, ensure_ascii=False, indent=2).encode("utf-8")
+            # content_hash deliberately excludes export_file_date: it's
+            # provenance about WHEN a human re-ran the manual export, not
+            # part of the trial's own content -- a human re-exports on a
+            # new date every run even when a given trial hasn't changed at
+            # all, so folding export_file_date into the hash would bump
+            # every unchanged trial's version on every new dated export,
+            # defeating change detection entirely (see
+            # test_unchanged_trial_reexported_under_new_date_stays_skipped_unchanged).
+            hashable = {k: v for k, v in trial.items() if k != "export_file_date"}
+            content_hash = sha256_bytes(json.dumps(hashable, sort_keys=True, ensure_ascii=False).encode("utf-8"))
             raw_bytes_by_id[tid] = raw_bytes
             content_hash_by_id[tid] = content_hash
             raw_prior_state = checkpoint_store.get_record_state(checkpoint, tid, namespace=RAW_NAMESPACE)
@@ -302,9 +380,10 @@ class WHOICTRPJob(AcquisitionJob):
         for tid in unchanged_ids:
             result.records_skipped_unchanged += 1
             outcome_counts["skipped_unchanged"] += 1
+            q = _query_for(tid)
             raw_prior_state = checkpoint_store.get_record_state(checkpoint, tid, namespace=RAW_NAMESPACE)
             attempt_rows.append(_record_row(
-                tid, now, now, "skipped_unchanged", QUERY_ID, query_spec.query_text,
+                tid, now, now, "skipped_unchanged", q.query_id, q.query_text,
                 content_hash=content_hash_by_id[tid],
                 version=raw_prior_state["version"] if raw_prior_state else None,
             ))
@@ -322,8 +401,9 @@ class WHOICTRPJob(AcquisitionJob):
 
             result.records_downloaded += 1
             outcome_counts["success"] += 1
-            attempt_rows.append(_record_row(tid, now, now, "success", QUERY_ID, query_spec.query_text, content_hash=content_hash, version=version))
-            content_rows.append(_content_manifest_row(trial_by_id[tid], tid, QUERY_ID, query_spec.query_text, raw_path, content_hash, version, now))
+            q = _query_for(tid)
+            attempt_rows.append(_record_row(tid, now, now, "success", q.query_id, q.query_text, content_hash=content_hash, version=version))
+            content_rows.append(_content_manifest_row(trial_by_id[tid], tid, q.query_id, q.query_text, raw_path, content_hash, version, now))
 
         manifest_df = write_manifest(content_rows, manifest_path, extra_fields=EXTRA_FIELDS)
         append_only(discovery_rows, discovery_path, DISCOVERY_COLUMNS)
