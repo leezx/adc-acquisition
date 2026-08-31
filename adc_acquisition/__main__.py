@@ -15,6 +15,7 @@ from jobs.company_pipeline.job import CompanyPipelineJob
 from jobs.company_press_release.job import CompanyPressReleaseJob
 from jobs.company_scientific_presentations.job import CompanyScientificPresentationsJob
 from jobs.conference_abstract_corpus.job import ConferenceAbstractCorpusJob
+from jobs.conference_crossref_search.job import ConferenceCrossrefSearchJob
 from jobs.crossref.job import CrossrefJob
 from jobs.ema.job import EMAJob
 from jobs.epo.job import EPOJob
@@ -44,6 +45,7 @@ JOBS = {
     "company_press_release": CompanyPressReleaseJob,
     "company_scientific_presentations": CompanyScientificPresentationsJob,
     "conference_abstract_corpus": ConferenceAbstractCorpusJob,
+    "conference_crossref_search": ConferenceCrossrefSearchJob,
     "patent_bioactivity_corpus": PatentBioactivityCorpusJob,
     "publication_bioactivity_corpus": PublicationBioactivityCorpusJob,
     "known_adc_asset_expansion": KnownADCAssetExpansionJob,
