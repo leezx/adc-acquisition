@@ -25,6 +25,7 @@ from jobs.publication_bioactivity_corpus.job import PublicationBioactivityCorpus
 from jobs.pubmed.job import PubMedJob
 from jobs.sec.job import SECJob
 from jobs.uspto.job import USPTOJob
+from jobs.who_ictrp.job import WHOICTRPJob
 from jobs.wipo.job import WIPOJob
 
 JOBS = {
@@ -45,6 +46,7 @@ JOBS = {
     "patent_bioactivity_corpus": PatentBioactivityCorpusJob,
     "publication_bioactivity_corpus": PublicationBioactivityCorpusJob,
     "known_adc_asset_expansion": KnownADCAssetExpansionJob,
+    "who_ictrp": WHOICTRPJob,
 }
 
 

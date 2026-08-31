@@ -1,0 +1,88 @@
+# WHO ICTRP query registry (source-coverage expansion, PR "WHO ICTRP").
+#
+# Unlike every other *_queries.yaml in this repo, this "query" does NOT
+# describe a live, per-run search this job executes itself (see
+# jobs/who_ictrp/job.py's module docstring for why: real automated access
+# to WHO ICTRP requires WHO-issued crawling credentials this project does
+# not have yet). query_text below must be the FULL, VERBATIM search
+# terms/filters a human actually entered into the Search Portal
+# (https://trialsearch.who.int/) UI before clicking "Export results to
+# XML" -- this job has no way to recover that from the export file itself
+# (WHO's XML export does not embed the search query that produced it), so
+# this registry is the ONLY record inside this repo of why these trials
+# are in the corpus at all.
+#
+# `export_file_dates` (round-1 fix, 2026-08-31) names which specific dated
+# `ICTRP-Results-YYYYMMDD.xml` file(s) this exact query produced --
+# jobs/who_ictrp/job.py attributes every trial to a query via ITS OWN
+# export_file_date, never a single job-wide constant, specifically so an
+# old export from an unverified/unknown search can coexist with a later
+# export whose exact query IS confirmed, without retroactively relabeling
+# the old file's trials as having come from the new search. Every export
+# date actually present under --corpus-dir MUST appear in exactly one
+# query's export_file_dates list, or the job refuses to run (see that
+# module's _load_export_date_query_map/_query_for).
+#
+# WHO ICTRP's underlying database is updated WEEKLY (WHO's own published
+# cadence) -- this project's 14-day acquisition cadence does not need a
+# mid-cycle re-export; one manual Standard Search re-run per cadence is
+# sufficient, reusing the SAME confirmed query_text (WHO_ICTRP_002) with a
+# new export_file_dates entry appended for each new dated file.
+#
+# LICENSING BOUNDARY (reviewer-confirmed, 2026-08-31): WHO ICTRP's terms
+# explicitly prohibit marketing/promotional/commercial use of the raw
+# dataset -- this job stays an acquisition/coverage-diagnostic source
+# (candidate/trial discovery signal, same boundary as every other
+# acquisition job in this repo), never a redistribution of WHO's own raw
+# records as commercial database content.
+
+queries:
+  - query_id: WHO_ICTRP_001
+    query_version: 1
+    query_text: >-
+      UNKNOWN/UNVERIFIED -- this is a LEGACY placeholder, not a confirmed
+      query. The 2026-08-28 export (292 trials) was produced before this
+      project established provenance discipline for WHO ICTRP, and the
+      exact search terms/filters a human actually typed into the Search
+      Portal UI before exporting were never recorded or recoverable after
+      the fact. Retained ONLY as historical observed evidence (the 292
+      trials themselves are real, live-exported WHO ICTRP records) -- do
+      NOT treat this query_text as a real search specification, and do
+      NOT conflate this export's provenance with WHO_ICTRP_002's confirmed
+      query below, even though both cover similar ADC-related trials.
+    purpose: >-
+      Historical placeholder for the unverified 2026-08-28 export --
+      superseded by WHO_ICTRP_002 for all future exports.
+    active: true
+    export_file_dates: ["20260828"]
+
+  - query_id: WHO_ICTRP_002
+    query_version: 1
+    query_text: >-
+      PENDING: reviewer-specified Standard Search query
+      "antibody drug conjugat*" OR "antibody-drug conjugat*" (Boolean OR,
+      quoted phrases, "*" truncation -- all natively supported by the WHO
+      ICTRP Search Portal's Standard Search per its own published Search
+      Tips) against https://trialsearch.who.int/, with every additional
+      filter left at its default/empty state (no children-only, no
+      without-synonyms, no phase restriction, no results-only, no rare-
+      disease/orphan-drug or genome-editing filter, no recruitment-status/
+      country/registration-date restriction), "Export all results to XML".
+      Deliberately does NOT also search the bare acronym "ADC" in this
+      same query -- "ADC" is highly ambiguous in clinical-trial text (e.g.
+      "apparent diffusion coefficient" in radiology trials) and would
+      introduce substantial false positives; a future WHO_ICTRP_003 should
+      handle acronym-only recall separately if a benchmark ever shows a
+      real gap, rather than polluting this query. *** AWAITING THE HUMAN
+      REVIEWER'S VERBATIM POST-EXPORT CONFIRMATION before this query_text
+      is treated as executed *** -- update this entry's export_file_dates
+      once the actual "ICTRP-Results-20260831.xml" file has been dropped
+      into DATA/raw/WHO_ICTRP/ and its provenance confirmed verbatim.
+    purpose: >-
+      Global clinical-trial discovery beyond ClinicalTrials.gov (Job 03) --
+      WHO ICTRP aggregates ClinicalTrials.gov, EU CTIS, ChiCTR, JPRN, CTRI,
+      ANZCTR, ISRCTN, and other national/regional primary registries into
+      one cross-registry search, closing the largest single global-trial
+      blind spot in this repo's acquisition layer.
+    active: true
+    export_file_dates: []
