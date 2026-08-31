@@ -1,17 +1,19 @@
 # Company Registry Gap Analysis
 
-Reproducible audit (`tools/validation/company_registry_gap_analysis.py`) comparing every distinct company name mentioned by a Phase1+ (`highest_stage` in Approved/Phase3/Phase2/Phase1) row in `DATA/catalog/adc_asset_universe.tsv` against `configs/company_registry.yaml`'s own canonical_name/aliases (exact normalized match only, never fuzzy).
+Reproducible audit (`tools/validation/company_registry_gap_analysis.py`) comparing every distinct company name ASSOCIATED WITH a Phase1+ (`highest_stage` in Approved/Phase3/Phase2/Phase1) row in `DATA/catalog/adc_asset_universe.tsv` against `configs/company_registry.yaml`'s own canonical_name/aliases (exact normalized match only, never fuzzy).
+
+**Caveat**: the catalog's `company` field is a broad associated-company field -- it does not check `development_status` and does not distinguish originator / licensee / manufacturer / CMO / historical (terminated-portfolio) company from an active current developer or sponsor. This is a high-recall CANDIDATE list for human registry review, not proof that every listed entity is a current developer/sponsor -- some rows below are manufacturing/CDMO entities or long-terminated programs, not registry-worthy ADC companies.
 
 - Companies currently registered: 101
-- Distinct Phase1+ sponsor/company names in the catalog: 208
+- Distinct company names associated with Phase1+ catalog rows: 208
 - Of those, already registered: 94
 - Of those, NOT registered (the gap): 114
 
-## Top 30 unregistered Phase1+ sponsors, by asset count
+## Top 30 unregistered company names associated with Phase1+ catalog rows, by mention count
 
-Not auto-added -- each still needs the same live research (CIK, official domain, pipeline/press-release/investor-relations URLs) every existing registry entry required.
+Not auto-added -- each still needs the same live research (CIK, official domain, pipeline/press-release/investor-relations URLs) every existing registry entry required, INCLUDING confirming the entity is actually an active developer/sponsor worth registering at all (see caveat above).
 
-| Phase1+ assets | Company name | Example assets |
+| Phase1+ mentions | Company name | Example assets |
 |---|---|---|
 | 5 | BSP Pharmaceuticals SpA | Telisotuzumab vedotin; Patritumab deruxtecan; Sacituzumab govitecan; Brentuximab vedotin; Loncastuximab tesirine |
 | 5 | Baxter Oncology GmbH | Enfortumab vedotin; Patritumab deruxtecan; Trastuzumab deruxtecan; Oportuzumab monatox; Datopotamab deruxtecan |

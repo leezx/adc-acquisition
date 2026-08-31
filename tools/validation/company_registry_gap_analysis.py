@@ -32,14 +32,31 @@ distinct real SEC/EDGAR-relevant legal entities) -- collapsing those
 would be a genuine identity-resolution judgment call belonging to a
 human curating the registry, not something this audit tool should guess.
 
-Ranks distinct companies by Phase1+ asset count (a company backing more
-Phase1+ ADCs is a higher-value registry gap to close first) and reports,
-NOT auto-generates, registry entries -- adding a company to
+Ranks distinct companies by Phase1+ mention count (a company named on more
+Phase1+ catalog rows is a higher-value registry gap to close first) and
+reports, NOT auto-generates, registry entries -- adding a company to
 `configs/company_registry.yaml` still requires the same live research
 (CIK, official domain, pipeline/press-release/investor-relations URLs)
 every existing entry required; this tool's job is to tell a human/reviewer
 WHICH companies are worth that research effort, in priority order, not to
 skip the research.
+
+SEMANTIC CAVEAT (reviewer finding, round-1 fix 2026-08-31): the catalog's
+own `company` field is a broad ASSOCIATED-company field -- it is populated
+without checking `development_status` and without distinguishing
+originator / licensee / manufacturer / CMO / historical (terminated
+portfolio) company from an actual current developer or sponsor. Live
+output surfaced real cases of this: CDMO/manufacturing entities (BSP
+Pharmaceuticals, Baxter Oncology) and companies with long-terminated
+programs (Agensys, Stemcentrx, MedImmune) all appeared indistinguishable
+from a genuine active ADC developer. This tool therefore does NOT assert
+"this is an active ADC company" -- it reports "this company name is
+associated with a Phase1+ catalog row," a high-recall CANDIDATE list for
+human registry review, not proof of current developer/sponsor status.
+Resolving originator/licensee/manufacturer/historical roles is a genuine
+identity-resolution judgment call for a human curating the registry (same
+principle already applied above to Genentech/Roche), deliberately out of
+scope for this tool.
 
 Usage:
     python3 tools/validation/company_registry_gap_analysis.py \
@@ -93,8 +110,13 @@ def load_phase1_plus_company_mentions(catalog_path: Path) -> dict[str, dict]:
     """Returns {company_name: {"count": int, "examples": [canonical_name, ...]}}
     across every DISTINCT company name mentioned in a Phase1+ catalog row's
     own `company` field -- a row naming 2 companies (e.g. an originator +
-    licensing partner) contributes to BOTH company names' counts, since
-    both are genuinely a real Phase1+ sponsor for that asset."""
+    licensing partner, or a developer + a manufacturing/CDMO entity)
+    contributes to BOTH company names' counts. This field is genuinely
+    associated with the asset in the catalog, but is NOT checked against
+    `development_status` and does not distinguish originator / licensee /
+    manufacturer / historical company -- see this module's own docstring
+    caveat before treating a high mention count as proof of an active
+    developer/sponsor role."""
     df = pd.read_csv(catalog_path, sep="\t", dtype=str).fillna("")
     phase1_plus = df[df["highest_stage"].isin(PHASE1_PLUS_STAGES)]
     mentions: dict[str, dict] = {}
@@ -140,24 +162,36 @@ def build_report(rows: list[dict], registered_count: int) -> str:
         "# Company Registry Gap Analysis",
         "",
         "Reproducible audit (`tools/validation/company_registry_gap_analysis.py`) "
-        "comparing every distinct company name mentioned by a Phase1+ "
+        "comparing every distinct company name ASSOCIATED WITH a Phase1+ "
         "(`highest_stage` in Approved/Phase3/Phase2/Phase1) row in "
         "`DATA/catalog/adc_asset_universe.tsv` against "
         "`configs/company_registry.yaml`'s own canonical_name/aliases "
         "(exact normalized match only, never fuzzy).",
         "",
+        "**Caveat**: the catalog's `company` field is a broad "
+        "associated-company field -- it does not check `development_status` "
+        "and does not distinguish originator / licensee / manufacturer / "
+        "CMO / historical (terminated-portfolio) company from an active "
+        "current developer or sponsor. This is a high-recall CANDIDATE list "
+        "for human registry review, not proof that every listed entity is a "
+        "current developer/sponsor -- some rows below are manufacturing/CDMO "
+        "entities or long-terminated programs, not registry-worthy ADC "
+        "companies.",
+        "",
         f"- Companies currently registered: {registered_count}",
-        f"- Distinct Phase1+ sponsor/company names in the catalog: {len(rows)}",
+        f"- Distinct company names associated with Phase1+ catalog rows: {len(rows)}",
         f"- Of those, already registered: {len(covered)}",
         f"- Of those, NOT registered (the gap): {len(gaps)}",
         "",
-        "## Top 30 unregistered Phase1+ sponsors, by asset count",
+        "## Top 30 unregistered company names associated with Phase1+ catalog rows, by mention count",
         "",
         "Not auto-added -- each still needs the same live research (CIK, "
         "official domain, pipeline/press-release/investor-relations URLs) "
-        "every existing registry entry required.",
+        "every existing registry entry required, INCLUDING confirming the "
+        "entity is actually an active developer/sponsor worth registering "
+        "at all (see caveat above).",
         "",
-        "| Phase1+ assets | Company name | Example assets |",
+        "| Phase1+ mentions | Company name | Example assets |",
         "|---|---|---|",
     ]
     for r in top_gaps:
@@ -167,15 +201,15 @@ def build_report(rows: list[dict], registered_count: int) -> str:
 
 UNIVERSE_FIELDS = [
     "company_id", "canonical_name", "aliases", "representative_adc",
-    "highest_active_stage", "active_adc_count", "official_domain",
-    "pipeline_url", "press_release_url", "presentations_url",
+    "highest_phase1_plus_stage_observed", "phase1_plus_asset_mention_count",
+    "official_domain", "pipeline_url", "press_release_url", "presentations_url",
     "parent_company", "registry_status", "evidence_source", "last_verified",
 ]
 
 # NAR_ADCdb-style stage ordering, most-advanced first -- reused only to
-# pick ONE "highest_active_stage" per company from the several Phase1+
-# rows a prolific sponsor backs, never to invent a stage not already on
-# some real catalog row.
+# pick ONE "highest_phase1_plus_stage_observed" per company from the
+# several Phase1+ rows it's named on, never to invent a stage not already
+# on some real catalog row.
 _STAGE_RANK = {"Approved": 0, "Phase3": 1, "Phase2": 2, "Phase1": 3}
 
 
@@ -183,11 +217,10 @@ def build_company_universe_rows(
     mentions: dict[str, dict], companies: list, run_date: str,
 ) -> list[dict]:
     """One row per company known to this project EITHER because it's
-    registered in configs/company_registry.yaml OR because it backs a
-    Phase1+ catalog asset (or both) -- this is the recurring join the
-    reviewer asked for: "active Phase1+ assets -> companies -> compare
-    company_registry -> UNREGISTERED_ACTIVE_ADC_COMPANY", made into a
-    standing, reproducible table rather than a one-off manual list.
+    registered in configs/company_registry.yaml OR because it's named on a
+    Phase1+ catalog row (or both) -- a standing, reproducible table joining
+    Phase1+ catalog mentions against the registry, replacing a one-off
+    manual list.
 
     `registry_status`:
     - REGISTERED: has a company_registry.yaml entry with at least
@@ -196,9 +229,18 @@ def build_company_universe_rows(
       pipeline/press-release URL at all yet (e.g. a just-added company
       still pending live URL research) -- distinct from REGISTERED so a
       reviewer can see incomplete entries without re-deriving it by hand.
-    - UNREGISTERED_ACTIVE_ADC_COMPANY: backs a Phase1+ catalog asset but
-      has no registry entry at all -- the reviewer's own exact term for
-      this state.
+    - UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION: this company name is
+      associated with a Phase1+ catalog row but has no registry entry at
+      all. Deliberately NOT named "...ACTIVE_ADC_COMPANY" (an earlier,
+      reviewer-flagged version of this status) -- the catalog's `company`
+      field does not check `development_status` and does not distinguish
+      originator / licensee / manufacturer / CMO / historical company from
+      an active developer, and live output surfaced real cases of this
+      (CDMO entities BSP Pharmaceuticals/Baxter Oncology; long-terminated
+      programs at Agensys/Stemcentrx/MedImmune all appeared indistinguishable
+      from a genuine active ADC developer). This status is a high-recall
+      CANDIDATE flag for human registry review, never proof of current
+      developer/sponsor status -- see this module's own docstring caveat.
 
     `last_verified` is the date THIS TOOL RUN computed the join, not a
     claim that live URLs were re-checked on that date -- see this
@@ -234,20 +276,21 @@ def build_company_universe_rows(
             matched = mentions_by_normalized.get(norm)
             if matched:
                 matches.append(matched[1])
-        representative_adc, highest_active_stage, active_adc_count = "", "", 0
+        representative_adc, highest_stage_observed, mention_count = "", "", 0
         if matches:
-            active_adc_count = sum(m["count"] for m in matches)
+            mention_count = sum(m["count"] for m in matches)
             examples = [e for m in matches for e in m.get("examples", [])]
             representative_adc = examples[0] if examples else ""
             stages = [s for m in matches for s in m.get("stages", []) if s in _STAGE_RANK]
             if stages:
-                highest_active_stage = min(stages, key=lambda s: _STAGE_RANK[s])
+                highest_stage_observed = min(stages, key=lambda s: _STAGE_RANK[s])
         has_url = bool(c.pipeline_urls) or bool(c.press_release_url)
         registry_status = "REGISTERED" if (c.official_domain and has_url) else "REGISTERED_INCOMPLETE"
         rows.append(dict(
             company_id=c.company_id, canonical_name=c.canonical_name,
             aliases="; ".join(c.aliases), representative_adc=representative_adc,
-            highest_active_stage=highest_active_stage, active_adc_count=active_adc_count,
+            highest_phase1_plus_stage_observed=highest_stage_observed,
+            phase1_plus_asset_mention_count=mention_count,
             official_domain=c.official_domain or "",
             pipeline_url="; ".join(c.pipeline_urls), press_release_url=c.press_release_url or "",
             presentations_url=c.presentations_url or "", parent_company=c.parent_company_id or "",
@@ -259,17 +302,21 @@ def build_company_universe_rows(
         if normalize_name(name) in seen_normalized:
             continue
         stages = [s for s in entry.get("stages", []) if s in _STAGE_RANK]
-        highest_active_stage = min(stages, key=lambda s: _STAGE_RANK[s]) if stages else ""
+        highest_stage_observed = min(stages, key=lambda s: _STAGE_RANK[s]) if stages else ""
         rows.append(dict(
             company_id="", canonical_name=name, aliases="",
             representative_adc=entry["examples"][0] if entry["examples"] else "",
-            highest_active_stage=highest_active_stage, active_adc_count=entry["count"],
+            highest_phase1_plus_stage_observed=highest_stage_observed,
+            phase1_plus_asset_mention_count=entry["count"],
             official_domain="", pipeline_url="", press_release_url="", presentations_url="",
-            parent_company="", registry_status="UNREGISTERED_ACTIVE_ADC_COMPANY",
+            parent_company="", registry_status="UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION",
             evidence_source="master_catalog", last_verified="",
         ))
 
-    rows.sort(key=lambda r: (r["registry_status"] != "UNREGISTERED_ACTIVE_ADC_COMPANY", -r["active_adc_count"], r["canonical_name"]))
+    rows.sort(key=lambda r: (
+        r["registry_status"] != "UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION",
+        -r["phase1_plus_asset_mention_count"], r["canonical_name"],
+    ))
     return rows
 
 
@@ -304,13 +351,15 @@ def main() -> int:
     write_company_universe_tsv(Path(args.company_universe_output), universe_rows)
 
     n_gap = sum(1 for r in rows if not r["in_registry"])
-    n_unregistered_active = sum(1 for r in universe_rows if r["registry_status"] == "UNREGISTERED_ACTIVE_ADC_COMPANY")
+    n_unregistered_mentions = sum(
+        1 for r in universe_rows if r["registry_status"] == "UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION"
+    )
     print(
         f"company_registry_gap_analysis: {len(companies)} companies registered, "
-        f"{len(rows)} distinct Phase1+ sponsor names in catalog, {n_gap} not registered. "
+        f"{len(rows)} distinct company names associated with Phase1+ catalog rows, {n_gap} not registered. "
         f"Written to {args.output} (+ report at {args.report_output}); "
-        f"company universe ({len(universe_rows)} rows, {n_unregistered_active} "
-        f"UNREGISTERED_ACTIVE_ADC_COMPANY) written to {args.company_universe_output}",
+        f"company universe ({len(universe_rows)} rows, {n_unregistered_mentions} "
+        f"UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION) written to {args.company_universe_output}",
         file=sys.stderr,
     )
     return 0

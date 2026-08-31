@@ -1,216 +1,216 @@
-company_id	canonical_name	aliases	representative_adc	highest_active_stage	active_adc_count	official_domain	pipeline_url	press_release_url	presentations_url	parent_company	registry_status	evidence_source	last_verified
-	BSP Pharmaceuticals SpA		Telisotuzumab vedotin	Approved	5						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Baxter Oncology GmbH		Enfortumab vedotin	Approved	5						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Shanghai Miracogen Inc		CMG-901	Approved	5						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Agensys, Inc		AGS-16C3F	Phase2	4						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Bayer AG		Anetumab ravtansine	Phase2	4						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Stemcentrx, Inc		SC-007	Phase1	4						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	KLUS Pharma, Inc		Sacituzumab tirumotecan	Approved	3						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Novartis AG		HKT-288	Phase1	3						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Novartis Pharma AG		HKT-288	Phase1	3						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Suzhou Suncadia Biopharmaceuticals Co., Ltd		Trastuzumab rezetecan	Approved	3						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	ARS Pharmaceuticals, Inc		SBT-6290	Phase2	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Amgen, Inc		AMG-224	Phase1	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	BioAtla, Inc		Ozuriftamab vedotin	Phase2	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	BioIntegrator LLC		CON-4619	Phase1	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Biocytogen Pharmaceuticals (Beijing) Co., Ltd		RC-118	Phase2	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Chugai Pharmaceutical Co., Ltd		Trastuzumab emtansine	Approved	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	EMD Serono Research & Development Institute, Inc		M-1231	Phase2	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Hangzhou Zhongmeihuadong Pharmaceutical Co., Ltd		Mirvetuximab soravtansine	Approved	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Immunomedics, Inc		Sacituzumab govitecan	Approved	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	MedImmune LLC		MEDI-3726	Phase1	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	MorphoSys AG		Anetumab ravtansine	Phase2	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Nanjing Shunxin Pharmaceutical Co., Ltd		TQB2103	Phase2	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Novocodex Biopharmaceuticals Co., Ltd		ARX-305	Phase2	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Overland Pharmaceutical (Shanghai) Co., Ltd		Loncastuximab tesirine	Approved	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Rakuten Medical, Inc		Cetuximab sarotalocan	Approved	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Sichuan Kelun Pharmaceutical Co., Ltd		Sacituzumab tirumotecan	Approved	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Silverback Therapeutics, Inc		SBT-6290	Phase2	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Synthon BV		SYD-1875	Phase3	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Tallac Therapeutics, Inc		TAC-001	Phase2	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Wyeth Pharmaceuticals LLC		Gemtuzumab ozogamicin	Approved	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Zai Lab Ltd		ZL-1310	Approved	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Zhejiang Medicine Co., Ltd		ARX-305	Phase2	2						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	A. Menarini Industrie Farmaceutiche Riunite SRL		MEN-1309	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	ALX Oncology, Inc		ALTA-002	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	AbGenomics International, Inc		AbGn-107	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Actinium Pharmaceuticals, Inc		Lintuzumab Ac-225	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Adimab LLC		XMT-1522	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Asana BioSciences LLC		ASN-004	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Avidity Biosciences, Inc		AOC-1020	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	BeiGene Ltd		Zanidatamab zovodotin	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	BiOneCure Therapeutics, Inc		BIO-106	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	BioNova Pharmaceuticals (Shanghai) Ltd		STRO-001	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Biogen, Inc		BIIB-015	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Biotest AG		Indatuximab ravtansine	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Biotest Pharma GmbH		Indatuximab ravtansine	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Boehringer Ingelheim GmbH		Bivatuzumab mertansine	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Bolt Biotherapeutics, Inc		BDC-1001	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Catalent, Inc		TRPH-222	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Celgene Corp		Ispectamab debotansine	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Celldex Therapeutics, Inc		CDX-014	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Celltech Oy		CMB-401	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	CuraGen Corp		CDX-014	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Debiopharm International SA		Naratuximab emtansine	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Elevation Oncology, Inc		SYSA-1801	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Eucure (Beijing) Biopharma Co., Ltd		RC-118	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Everest Medicines (Singapore) Pte. Ltd		Sacituzumab govitecan	Approved	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Exelis, Inc		XB-002	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Experimental Drug Development Centre, PAREXEL International Corp		EBC-129	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Formation Biologics		AVID-100	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Fortis Therapeutics, Inc		FOR-46	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Fudan University		Trastuzumab botidotin	Approved	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	GlaxoSmithKline (Ireland) Ltd		Belantamab mafodotin	Approved	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Glaxosmithkline Intellectual Property Development Ltd		Belantamab mafodotin	Approved	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	IBC Pharmaceuticals, Inc		Labetuzumab govitecan	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Iconic Therapeutics, Inc		XB-002	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	InxMed (Hong Kong) Limited		OMTX-705	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Inxmed (Nanjing) Co., Ltd		OMTX-705	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Jiangsu Maiweikang New Drug R & D Co., Ltd		9MW-2821	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Kaibos (Shanghai) Biomedical Co., Ltd		Ozuriftamab vedotin	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Keymed Biosciences, Inc		CMG-901	Phase3	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Levena Biopharma US, Inc		Trastuzumab botidotin	Approved	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Ligand Pharmaceuticals, Inc		SGN-CD352A	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Mayo Clinic		AB-160	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Medarex, Inc		MDX-1203	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Memorial Sloan-Kettering Cancer Center		PF-06688992	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Merrimack Pharmaceuticals, Inc		MM-310	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Millennium Pharmaceuticals, Inc		Indusatumab vedotin	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Molecular Templates, Inc		MT-5111	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	NBE-Therapeutics AG		NBE-002	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	National Cancer Institute		LMB-7	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	NewBio Therapeutics		GB-251	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Novartis Pharmaceuticals Corp		JBH-492	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Orum Therapeutics, Inc		ORM-6151	Phase3	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Overland Pharmaceuticals		ADCT-901	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Oxford BioTherapeutics Ltd		MEN-1309	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Oxford Biomedica Plc		PF-06263507	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	PDL BioPharma, Inc		Lintuzumab Ac-225	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Pierre Fabre SA,		Lonigutamab ugodotin	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Piramal Pharma Solutions, Inc		STRO-001	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Regeneron Pharmaceuticals, Inc		REGN5093-M114	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Rps Medical Technology (Beijing) Co., Ltd		Tisotumab vedotin	Approved	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	SCTbio as		SOT-102	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Sesen Bio		Oportuzumab monatox	Phase3	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Shanghai Jiaolian Drug Development Co. Ltd		B-003	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Shanghai Pharmaceuticals Holding Co., Ltd		B-003	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Shanghai Sinovent Biopharmaceutical Co., Ltd		XNW-27011	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Sorrento Therapeutics, Inc		STI-6129	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Suzhou Sinovent Pharmaceuticals Co.,Ltd		XNW-27011	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Syntarga BV		BYON-3521	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Tanabe Research Laboratories U.S.A., Inc		TR1801-ADC	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Tasly Biopharmaceuticals Co., Ltd		Luveltamab tazevibulin	Phase3	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	The University of Texas MD Anderson Cancer Center		M-1231	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Tot Biopharm Co. Ltd		TAA-013	Phase3	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Translational Research In Oncology US, Inc		TORL-3-600	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Triphase Accelerator Corp		TRPH-222	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Triphase Research and Development III Corp		TRPH-222	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Turning Point Therapeutics, Inc		LM-302	Phase3	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	University of California San Diego		FOR-46	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Viventia Bio, Inc		Oportuzumab monatox	Phase3	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Wyeth AB		CMD-193	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Zhejiang ACEA Pharmaceutical Co., Ltd		STI-6129	Phase2	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Zhejiang Hisun Pharmaceutical Co., Ltd		ZV0203	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Zhejiang Teruisi Pharmaceutical Inc		TRS-005	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-	Zhejiang Zova Biotherapeutics Inc		ZV0203	Phase1	1						UNREGISTERED_ACTIVE_ADC_COMPANY	master_catalog	
-abbvie	AbbVie Inc.		ABBV-400	Approved	19	abbvie.com	https://www.abbvie.com/science/pipeline.html	https://news.abbvie.com/			REGISTERED	company_registry.yaml	2026-08-28
-immunogen	ImmunoGen, Inc.		Laprituximab emtansine	Approved	17	immunogen.com				abbvie	REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-seagen	Seagen Inc.	Seattle Genetics; Seattle Genetics Inc	Enfortumab vedotin	Approved	17	seagen.com				pfizer	REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-systimmune	SystImmune, Inc. (US entity); Sichuan Baili Pharmaceutical Co., Ltd. / Sichuan Biokin Pharmaceutical Co., Ltd. (Chinese originator entity)	Systimmune, Inc; Sichuan Baili Pharmaceutical Co., Ltd; Chengdu Bailidote Biological Pharmaceutical Co., Ltd; Baili Sikang Biomedicine (Hangzhou) Co., Ltd; Sichuan Biokin Pharmaceutical Co., Ltd	BL-M07D1	Phase3	16	systimmune.com	https://www.systimmune.com/pipeline	https://www.systimmune.com/news/1			REGISTERED	company_registry.yaml	2026-08-28
-hengrui	Jiangsu Hengrui Pharmaceuticals Co., Ltd.	Shanghai Hengrui Pharmaceutical Co., Ltd	Trastuzumab rezetecan	Approved	12	hengrui.com	https://www.hengrui.com/en/pipeline.html	https://www.hengrui.com/en/media/index.html			REGISTERED	company_registry.yaml	2026-08-28
-roche	F. Hoffmann-La Roche Ltd (Roche Holding AG, Basel, Switzerland)	Roche Holding AG; F. Hoffmann-La Roche Ltd	Iladatuzumab vedotin	Approved	11	roche.com	https://www.roche.com/solutions/pipeline	https://www.roche.com/media/releases			REGISTERED	company_registry.yaml	2026-08-28
-pfizer	Pfizer Inc.		CMD-193	Approved	11	pfizer.com	https://www.pfizer.com/science/oncology-cancer/pipeline	https://www.pfizer.com/newsroom/press-releases			REGISTERED	company_registry.yaml	2026-08-28
-astrazeneca	AstraZeneca PLC		CMG-901	Approved	8	astrazeneca.com	https://www.astrazeneca.com/our-therapy-areas/pipeline.html	https://www.astrazeneca.com/media-centre/press-releases.html	https://medicalinformation.astrazeneca-us.com/home/congress-library.html		REGISTERED	company_registry.yaml	2026-08-28
-bristol_myers_squibb	Bristol-Myers Squibb Company	Bristol Myers Squibb Co	Farletuzumab ecteribulin	Phase2	6	bms.com	https://www.bms.com/research-and-development/pipeline.html	https://news.bms.com/			REGISTERED	company_registry.yaml	2026-08-28
-daiichi_sankyo	Daiichi Sankyo Company, Limited	Daiichi Sankyo Co., Ltd; Daiichi Sankyo Inc	Patritumab deruxtecan	Approved	6	daiichisankyo.com	https://www.daiichisankyo.com/alias/pc/rd/pipeline/	https://www.daiichisankyo.com/media/press_release/			REGISTERED	company_registry.yaml	2026-08-28
-genentech	Genentech, Inc. (a wholly-owned member of the Roche Group)	Genentech, Inc	Trastuzumab emtansine	Approved	6	gene.com	https://www.gene.com/medical-professionals/pipeline	https://www.gene.com/media/press-releases			REGISTERED	company_registry.yaml	2026-08-28
-adc_therapeutics	ADC Therapeutics SA		ADCT-901	Approved	5	adctherapeutics.com	https://www.adctherapeutics.com/our-pipeline1-1/	https://ir.adctherapeutics.com/news	https://www.adctmedical.com/congresses/		REGISTERED	company_registry.yaml	2026-08-28
-cspc	CSPC Pharmaceutical Group Limited (石药集团有限公司)	CSPC Pharmaceutical Group Ltd; CSPC Zhongqi Pharmaceutical Technology Shijiazhuang Co., Ltd	DP-303c	Phase3	5	e-cspc.com		https://en.e-cspc.com/news/			REGISTERED	company_registry.yaml	2026-08-28
-mersana	Mersana Therapeutics, Inc.		XMT-1660	Phase3	5	mersana.com				day_one_biopharmaceuticals	REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-remegen	RemeGen Co., Ltd. (荣昌生物制药)		RC-118	Approved	5	remegen.com	https://www.remegen.com/?v=listing&cid=92	https://www.remegen.com/?v=listing&cid=114			REGISTERED	company_registry.yaml	2026-08-28
-lepu_biopharma	Shanghai LEPU Biopharma Co., Ltd. (上海乐普生物科技股份有限公司)	Lepu Biopharma Co., Ltd	CMG-901	Approved	5	lepubiopharma.com	https://www.lepubiopharma.com/technology	https://www.lepubiopharma.com/news			REGISTERED	company_registry.yaml	2026-08-28
-takeda	Takeda Pharmaceutical Company Limited	Takeda Pharmaceutical Co., Ltd	TAK-500	Approved	5	takeda.com	https://www.takedaoncology.com/science/pipeline/	https://www.takeda.com/newsroom/press-releases/			REGISTERED	company_registry.yaml	2026-08-28
-astellas_pharma	Astellas Pharma Inc.	Astellas Pharma Global Development, Inc	Enfortumab vedotin	Approved	4	astellas.com	https://www.astellas.com/en/science/research-and-development/pipeline	https://newsroom.astellas.com/			REGISTERED	company_registry.yaml	2026-08-28
-byondis	Byondis B.V.		SYD-1875	Phase3	4	byondis.com	https://www.byondis.com/our-science/pipeline	https://www.byondis.com/investors-and-media/press-releases	https://www.byondis.com/our-science/publications-presentations		REGISTERED	company_registry.yaml	2026-08-28
-genequantum	GeneQuantum (Suzhou) Biotechnology Co., Ltd. / GeneQuantum Healthcare	GeneQuantum Healthcare (Suzhou) Co. Ltd; Borui Biomedical Technology (Suzhou) Co., Ltd	GQ-1001	Phase3	4	genequantum.com	https://www.genequantum.com/pipeline.html	https://www.genequantum.com/news_report.html			REGISTERED	company_registry.yaml	2026-08-28
-hangzhou_dac_biotech	Hangzhou DAC Biotech Co., Ltd. (杭州多禧生物科技有限公司)		DXC-004A	Phase2	4	dacbiotech.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-merck_and_co	Merck & Co., Inc.	Merck Sharp & Dohme LLC; Merck Sharp & Dohme Corp	Sacituzumab tirumotecan	Approved	4	merck.com	https://www.merck.com/research/product-pipeline/	https://www.merck.com/media/news/			REGISTERED	company_registry.yaml	2026-08-28
-sanofi	Sanofi		Tusamitamab ravtansine	Phase3	4	sanofi.com	https://www.sanofi.com/en/our-science/our-pipeline	https://www.sanofi.com/en/media-room/press-releases			REGISTERED	company_registry.yaml	2026-08-28
-fudan_zhangjiang	Shanghai Fudan-Zhangjiang Bio-Pharmaceutical Co., Ltd. (上海复旦张江生物医药股份有限公司)		F0002-ADC	Phase3	4	fdzy.com.cn					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-henlius_biotech	Shanghai Henlius Biotech Co., Ltd. (subsidiary of Shanghai Fosun Pharmaceutical (Group) Co., Ltd.)	Shanghai Fosun Pharmaceutical; Shanghai Fosun Pharmaceutical (Group) Co., Ltd; Shanghai Henlius Biotech, Inc	FS-1502	Phase3	4	henlius.com	https://www.henlius.com/en/Product.html	https://www.henlius.com/News.html	https://www.henlius.com/Investor-Presentation.html		REGISTERED	company_registry.yaml	2026-08-28
-sutro_biopharma	Sutro Biopharma, Inc.		M-1231	Phase3	4	sutrobio.com	https://www.sutrobio.com/pipeline/	https://ir.sutrobio.com/news-events/news-releases	https://www.sutrobio.com/news/presentations/		REGISTERED	company_registry.yaml	2026-08-28
-torl_biotherapeutics	TORL BioTherapeutics, LLC		TORL-3-600	Phase1	4	torlbio.com	https://torlbio.com/#pipeline	https://torlbio.com/#news			REGISTERED	company_registry.yaml	2026-08-28
-ambrx	Ambrx Biopharma Inc.	Ambrx, Inc	ARX-305	Phase2	3					johnson_and_johnson	REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-cytomx_therapeutics	CytomX Therapeutics, Inc.		CX-2029	Phase2	3	cytomx.com	https://www.cytomx.com/pipeline/	http://ir.cytomx.com/press-releases	http://ir.cytomx.com/events-and-presentations		REGISTERED	company_registry.yaml	2026-08-28
-duality_biologics	Duality Biotherapeutics Inc (Cayman Islands holding company; Shanghai R&D operations)	Duality Biologics	DB-1305	Phase3	3						REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-heidelberg_pharma	Heidelberg Pharma AG	Heidelberg Pharma Research GmbH	MGTA-117	Phase2	3	heidelberg-pharma.com	https://heidelberg-pharma.com/en/research-development/portfolio-overview	https://heidelberg-pharma.com/en/press-investors/announcements/press-releases-and-ad-hoc-announcements	https://heidelberg-pharma.com/en/press-investors/calender-and-presentations/presentations		REGISTERED	company_registry.yaml	2026-08-28
-iksuda_therapeutics	Iksuda Therapeutics Limited	Iksuda Therapeutics; Iksuda Therapeutics Ltd	FS-1502	Phase3	3	iksuda.com	https://www.iksuda.com/pipeline	https://www.iksuda.com/news-views/			REGISTERED	company_registry.yaml	2026-08-28
-alphamab	Jiangsu Alphamab Biopharmaceutics Co., Ltd. / Alphamab Oncology (HKEX-listed subsidiary)	Alphamab Oncology; Alphamab Australia Co. Pty Ltd; Suzhou Alphamab Co. Ltd	JSKN-003	Phase3	3	alphamab.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-multitude_therapeutics	Multitude Therapeutics (普众发现医药科技（上海）股份有限公司)	Multitude Therapeutics, Inc	AMT-676	Phase1	3	en.multitudetherapeutics.com	https://en.multitudetherapeutics.com/pipelines/	https://en.multitudetherapeutics.com/news/			REGISTERED	company_registry.yaml	2026-08-28
-genmab	Genmab A/S		Enapotamab vedotin	Approved	2	genmab.com	https://www.genmab.com/antibody-science/pipeline	https://ir.genmab.com	https://ir.genmab.com/events-and-presentations		REGISTERED	company_registry.yaml	2026-08-28
-gilead	Gilead Sciences, Inc.		Sacituzumab govitecan	Approved	2	gilead.com	https://www.gilead.com/science/therapeutic-areas/oncology	https://www.gilead.com/news			REGISTERED	company_registry.yaml	2026-08-28
-innovent	Innovent Biologics, Inc.	Innovent Biologics (Suzhou) Co. Ltd	Tusamitamab ravtansine	Phase3	2	innoventbio.com	https://en.innoventbio.com/ScienceAndProducts/Pipeline	https://en.innoventbio.com/InvestorsAndMedia/PressRelease			REGISTERED	company_registry.yaml	2026-08-28
-hansoh	Jiangsu Hansoh Pharmaceutical Group Co., Ltd. (parent: Hansoh Pharmaceutical Group Company Limited)	Shanghai Hansoh Biomedical Co. Ltd	HS-20093	Phase3	2	hansoh.cn		https://www.hansoh.cn/en/news/company-news.jsp			REGISTERED	company_registry.yaml	2026-08-28
-lanova_medicines	LaNova Medicines Limited (礼新医药科技（上海）有限公司)	LaNova Medicines Ltd	LM-302	Phase3	2	lanovamedicines.com	https://www.lanovamedicines.com/en/pipeline	https://www.lanovamedicines.com/en/news-center/press-release			REGISTERED	company_registry.yaml	2026-08-28
-mabwell	Mabwell (Shanghai) Bioscience Co., Ltd.		9MW-2921	Phase2	2	mabwell.com	https://mabwell.com/en/rd.html	https://mabwell.com/en/news.html			REGISTERED	company_registry.yaml	2026-08-28
-macrogenics	MacroGenics, Inc.		Vobramitamab duocarmazine	Phase2	2	macrogenics.com	https://www.macrogenics.com/pipeline/	https://ir.macrogenics.com/press-releases	https://ir.macrogenics.com/events-and-presentations/events		REGISTERED	company_registry.yaml	2026-08-28
-boan_biotech	Shandong Boan Biotech Co., Ltd. (山东博安生物技术股份有限公司), subsidiary of Luye Pharma Group	Shandong Boan Biotechnology Co., Ltd; Luye Pharma Group Ltd	BA-1302	Phase1	2	boan-bio.com	https://www.boan-bio.com/social.php#cpx	https://www.boan-bio.com/news.php			REGISTERED	company_registry.yaml	2026-08-28
-kelun_biotech	Sichuan Kelun-Biotech Biopharmaceutical Co., Ltd.		SKB-315	Phase2	2	kelun-biotech.com	https://en.kelun-biotech.com/product.aspx?mid=165	https://en.kelun-biotech.com/newsCenter.aspx?mid=18			REGISTERED	company_registry.yaml	2026-08-28
-sino_biopharmaceutical	Sino Biopharmaceutical Limited (中国生物制药有限公司)	Sino Biopharmaceutical Ltd	TQB2103	Phase2	2	sbpgroup.com		https://www.sbpgroup.com/news-center/	https://www.sbpgroup.com/investor-relations/Presentation/		REGISTERED	company_registry.yaml	2026-08-28
-adcentrx_therapeutics	Adcentrx Therapeutics, Inc.		ADRX-0706	Phase1	1	adcentrx.com	https://www.adcentrx.com/pipeline/	https://www.adcentrx.com/news/			REGISTERED	company_registry.yaml	2026-08-28
-angiex	Angiex, Inc.		AGX101	Phase1	1	angiex.com	https://www.angiex.com/pipeline	https://www.angiex.com/news			REGISTERED	company_registry.yaml	2026-08-28
-antengene	Antengene Corporation Limited	Antengene Corporation Co., Ltd	ATG-022	Phase1	1	antengene.com	https://www.antengene.com/research.html	https://www.antengene.com/news.html	https://www.antengene.com/activity.html		REGISTERED	company_registry.yaml	2026-08-28
-biocity_biopharma	BioCity Biopharmaceutics Co., Ltd.	Wuxi Biocity Biopharmaceutics Co., Ltd	BC3195	Phase1	1	biocitypharma.com	https://www.biocitypharma.com/development/product	https://www.biocitypharma.com/news			REGISTERED	company_registry.yaml	2026-08-28
-biontech	BioNTech SE		DB-1303	Phase3	1	biontech.com	https://www.biontech.com/us/en/home/pipeline-and-products/pipeline.html	https://www.biontech.com/us/en/home/media.html			REGISTERED	company_registry.yaml	2026-08-28
-bioray	BioRay Biopharmaceutical Co., Ltd.		BRY-812	Phase1	1	bioraypharm.com	https://www.bioraypharm.com/index.php?m=list&a=index&classid=22	https://www.bioraypharm.com/index.php?m=list&a=index&classid=43			REGISTERED	company_registry.yaml	2026-08-28
-eisai	Eisai Co., Ltd.		Farletuzumab ecteribulin	Phase2	1	eisai.com	https://www.eisai.com/innovation/research/pipeline/index.html	https://www.eisai.com/news/index.html			REGISTERED	company_registry.yaml	2026-08-28
-eli_lilly	Eli Lilly and Company	Eli Lilly & Co	LY-3076226	Phase1	1	lilly.com	https://www.lilly.com/science/pipeline	https://investor.lilly.com			REGISTERED	company_registry.yaml	2026-08-28
-escugen_biotechnology	Escugen Biotechnology (无锡宜康生物 / Escugen Biotechnology Co., Ltd.)	Shanghai Escugen Biotechnology	ESG-401	Phase3	1	escugen.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-exelixis	Exelixis, Inc.		XB-002	Phase1	1	exelixis.com	https://www.exelixis.com/pipeline/	https://ir.exelixis.com/press-releases			REGISTERED	company_registry.yaml	2026-08-28
-gsk	GSK plc		Belantamab mafodotin	Approved	1	gsk.com	https://medical.gsk.com/content/cf-pharma/medicalaffairs/master/home/oncology-portal/pipeline.html	https://www.gsk.com/en-gb/media/press-releases/	https://medical.gsk.com/en-pm/oncology/congress-presentations/		REGISTERED	company_registry.yaml	2026-08-28
-harbour_biomed	Harbour BioMed (Cayman) Limited	Harbour Biomed Therapeutics Ltd	HBM9033	Phase1	1	harbourbiomed.com	https://www.harbourbiomed.com/therapeutics	https://www.harbourbiomed.com/news			REGISTERED	company_registry.yaml	2026-08-28
-huadong_medicine	Huadong Medicine Co., Ltd. (华东医药股份有限公司)		HDP-101	Phase2	1	hddyy.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-merck_kgaa	Merck KGaA, Darmstadt, Germany	Merck KGaA	M-9140	Phase2	1	emdgroup.com	https://www.emdgroup.com/en/research/healthcare-pipeline.html	https://www.emdgroup.com/en/news.html	https://www.emdgroup.com/en/investors/events-and-presentations.html		REGISTERED	company_registry.yaml	2026-08-28
-mythic_therapeutics	Mythic Therapeutics, Inc.		MYTX-011	Phase1	1	mythictx.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-novelty_nobility	Novelty Nobility Inc.		NN-3201	Phase1	1	noveltynobility.com	https://www.noveltynobility.com/pipeline/pipeline.php	https://www.noveltynobility.com/news/media.php	https://www.noveltynobility.com/publication/publication.php		REGISTERED	company_registry.yaml	2026-08-28
-obi_pharma	OBI Pharma, Inc.		OBI-999	Phase2	1	obipharma.com	https://www.obipharma.com/what-we-do/pipeline-overview/	https://www.obipharma.com/news/	https://www.obipharma.com/publication-library/		REGISTERED	company_registry.yaml	2026-08-28
-oncusp_therapeutics	OnCusp Therapeutics, Inc.	OnCusp Therapeutics	CUSP06	Phase1	1	oncusptx.com	https://www.oncusptx.com/rd/index.html	https://www.oncusptx.com/newsroom/index.html			REGISTERED	company_registry.yaml	2026-08-28
-oncomatryx	Oncomatryx Biopharma, S.L.		OMTX-705	Phase1	1	oncomatryx.com	https://www.oncomatryx.com/clinical-trials	https://oncomatryx.com/news-publications/			REGISTERED	company_registry.yaml	2026-08-28
-pheon_therapeutics	Pheon Therapeutics Ltd		PHN-010	Phase1	1	pheontx.com	https://pheontx.com/science-technology/	https://pheontx.com/news-events/			REGISTERED	company_registry.yaml	2026-08-28
-profoundbio	ProfoundBio, Inc.	ProfoundBio (Suzhou) Co., Ltd	PRO-1160	Phase2	1					genmab	REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-pyxis_oncology	Pyxis Oncology, Inc.		PYX-201	Phase1	1	pyxisoncology.com	https://pyxisoncology.com/clinical-programs/	https://ir.pyxisoncology.com/news-releases	https://ir.pyxisoncology.com/events-and-presentations		REGISTERED	company_registry.yaml	2026-08-28
-qilu_pharmaceutical	Qilu Pharmaceutical Co., Ltd. (齐鲁制药)		Oportuzumab monatox	Phase3	1	qilu-pharma.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-salubris_biotherapeutics	Salubris Biotherapeutics, Inc.		JK-06	Phase2	1	salubrisbio.com	https://salubrisbio.com/jk06/	https://salubrisbio.com/news/			REGISTERED	company_registry.yaml	2026-08-28
-junshi_biosciences	Shanghai Junshi Biopharmaceutical Co., Ltd. (上海君实生物医药科技股份有限公司)	Shanghai Junshi Biosciences Co., Ltd	JS107	Phase1	1	junshipharma.com	https://junshipharma.com/pipeline/	https://www.junshipharma.com/news/	https://junshi-bioscience-v2-umb.azurewebsites.net/cn/investors/presentation-materials/		REGISTERED	company_registry.yaml	2026-08-28
-tubulis	Tubulis GmbH		TUB-030	Phase2	1	tubulis.com	https://tubulis.com/our-pipeline/	https://tubulis.com/newsevents/			REGISTERED	company_registry.yaml	2026-08-28
-xadcera_biopharmaceutical	Xadcera Biopharmaceutical (name/spelling not independently confirmed)	Xadcera Biopharmaceutical (Suzhou) Co., Ltd	DM001	Phase1	1						REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-xiling_lab	Xiling Lab	Xiling Lab Pharmaceutical Co., Ltd	SMP-656	Phase1	1	xilinglab.com	https://www.xilinglab.com/en/About/Index.aspx	https://www.xilinglab.com/en/News/Detail.aspx?id=1411			REGISTERED	company_registry.yaml	2026-08-28
-xuanzhu_biopharmaceutical	Xuanzhu Biopharmaceutical Co., Ltd. (轩竹生物科技股份有限公司)		KM501	Phase1	1	xuanzhubio.com	https://www.xuanzhubio.com/products	https://www.xuanzhubio.com/news			REGISTERED	company_registry.yaml	2026-08-28
-zymeworks	Zymeworks Inc.	Zymeworks BC, Inc	Zanidatamab zovodotin	Phase1	1	zymeworks.com	https://www.zymeworks.com/pipeline/	https://ir.zymeworks.com/news-releases			REGISTERED	company_registry.yaml	2026-08-28
-alx_oncology	ALX Oncology Holdings Inc.				0	alxoncology.com	https://alxoncology.com/pipeline	https://ir.alxoncology.com/news-releases	https://ir.alxoncology.com/events-and-presentations		REGISTERED	company_registry.yaml	2026-08-28
-adcendo	Adcendo ApS				0	adcendo.com	https://adcendo.com/adcendo/our-science/pipeline/	https://adcendo.com/adcendo/investors/press-releases/	https://adcendo.com/adcendo/our-science/key-publications/		REGISTERED	company_registry.yaml	2026-08-28
-adcytherix	Adcytherix SAS (Marseille, France)				0	adcytherix.com	https://www.adcytherix.com/	https://www.adcytherix.com/			REGISTERED	company_registry.yaml	2026-08-28
-akeso	Akeso, Inc.				0	akesobio.com		https://www.akesobio.com/en/media/akeso-news/	https://www.akesobio.com/en/investor-relations/presentations/		REGISTERED	company_registry.yaml	2026-08-28
-araris_biotech	Araris Biotech AG (subsidiary of Taiho Pharmaceutical since March 2025)				0	ararisbiotech.com	https://ararisbiotech.com/#pipeline	https://ararisbiotech.com/#news		taiho_oncology	REGISTERED	company_registry.yaml	2026-08-28
-cstone_pharmaceuticals	CStone Pharmaceuticals Limited (基石药业)				0	cstonepharma.com	https://www.cstonepharma.com/en/develop/p3.html	https://www.cstonepharma.com/en/html/news/3766.html	https://www.cstonepharma.com/en/relation/materials.html		REGISTERED	company_registry.yaml	2026-08-28
-callio_therapeutics	Callio Therapeutics, Inc.				0	calliotx.com		https://calliotx.com/news/			REGISTERED	company_registry.yaml	2026-08-28
-genescience	Changchun GeneScience Pharmaceutical Co., Ltd. (长春金赛药业有限责任公司)				0	genscigroup.com	https://www.genscigroup.com/science-innovation/pipepage	https://www.genscigroup.com/about/news/express			REGISTERED	company_registry.yaml	2026-08-28
-chengdu_kanghong_pharmaceutical	Chengdu Kanghong Pharmaceutical (Group) Co., Ltd. (成都康弘药业集团股份有限公司)				0	kanghong.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-day_one_biopharmaceuticals	Day One Biopharmaceuticals, Inc.				0	dayonebio.com	https://www.dayonebio.com/our-science/pipeline/	https://ir.dayonebio.com/news-releases/	https://www.dayonebio.com/our-science/publications-posters/		REGISTERED	company_registry.yaml	2026-08-28
-evopoint_biosciences	Evopoint Biosciences Co., Ltd. (formerly Sinovent Pharmaceuticals)				0	evopointbio.com	https://www.evopointbio.com/en/core	https://www.evopointbio.com/en/news			REGISTERED	company_registry.yaml	2026-08-28
-glyconex	GlycoNex, Inc. (台灣醣聯生技醫藥股份有限公司)				0	glyconex.com.tw	https://www.glyconex.com.tw/pipeline/gnx1021	https://www.glyconex.com.tw/news/			REGISTERED	company_registry.yaml	2026-08-28
-hummingbird_bioscience	Hummingbird Bioscience Pte. Ltd.				0	hummingbirdbioscience.com	https://hummingbirdbioscience.com/pipeline/	https://hummingbirdbioscience.com/news/			REGISTERED	company_registry.yaml	2026-08-28
-ideaya_biosciences	IDEAYA Biosciences, Inc.				0	ideayabio.com	https://www.ideayabio.com/pipeline	https://media.ideayabio.com/news-releases			REGISTERED	company_registry.yaml	2026-08-28
-immunome	Immunome, Inc.				0	immunome.com	https://immunome.com/pipeline/	https://investors.immunome.com/news-releases/	https://investors.immunome.com/presentations/		REGISTERED	company_registry.yaml	2026-08-28
-innocare_pharma	InnoCare Pharma Limited (诺诚健华医药有限公司)				0	innocarepharma.com	https://www.innocarepharma.com/development/pipeline	https://www.innocarepharma.com/news/home	https://www.innocarepharma.com/investor/demonstrate		REGISTERED	company_registry.yaml	2026-08-28
-medilink_therapeutics	Jiangsu MediLink Therapeutics Co., Ltd.				0	medilinkthera.com	https://www.medilinkthera.com/pipeline	https://www.medilinkthera.com/news/1			REGISTERED	company_registry.yaml	2026-08-28
-johnson_and_johnson	Johnson & Johnson				0	jnj.com	https://www.jnj.com/innovative-medicine/pipeline	https://www.jnj.com/media-center			REGISTERED	company_registry.yaml	2026-08-28
-kivu_bioscience	Kivu Bioscience (private company)				0	kivubioscience.com	https://kivubioscience.com/	https://kivubioscience.com/news/			REGISTERED	company_registry.yaml	2026-08-28
-kyntra_bio	Kyntra Bio, Inc. (formerly FibroGen, Inc.)				0	kyntrabio.com	https://www.kyntrabio.com/r-d-pipeline/	https://investor.kyntrabio.com/news-releases	https://investor.kyntrabio.com/events-and-presentations/events		REGISTERED	company_registry.yaml	2026-08-28
-minghui_pharmaceutical	Minghui Pharmaceutical (Hangzhou) Co., Ltd. (明慧医药(杭州)有限公司)				0						REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-phrontline_biopharma	Phrontline Biopharma, Inc.				0	phrontlinebio.com	https://www.phrontlinebio.com/Our_Pipeline.html	https://www.phrontlinebio.com/News.html			REGISTERED	company_registry.yaml	2026-08-28
-primelink_biotherapeutics	PrimeLink BioTherapeutics				0						REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-taiho_oncology	Taiho Oncology, Inc. (US subsidiary of Taiho Pharmaceutical Co., Ltd.)				0	taihooncology.com	https://www.taihooncology.com/us/science/product-pipeline/	https://www.taihooncology.com/us/news/			REGISTERED	company_registry.yaml	2026-08-28
-whitehawk_therapeutics	Whitehawk Therapeutics, Inc. (formerly Aadi Bioscience, Inc.)				0	whitehawktx.com	https://www.whitehawktx.com/pipeline/	https://ir.whitehawktx.com/press-releases			REGISTERED	company_registry.yaml	2026-08-28
-simcere_zaiming	Zaiming Pharmaceutical Co., Ltd. (再鸣医药), subsidiary of Simcere Pharmaceutical Group				0						REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
-bliss_bio	"Zhejiang Bliss Biopharmaceutical Co., Ltd. (浙江博锐生物制药有限公司) — commonly ""Bliss Bio"""				0	blissbio.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-28
+company_id	canonical_name	aliases	representative_adc	highest_phase1_plus_stage_observed	phase1_plus_asset_mention_count	official_domain	pipeline_url	press_release_url	presentations_url	parent_company	registry_status	evidence_source	last_verified
+	BSP Pharmaceuticals SpA		Telisotuzumab vedotin	Approved	5						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Baxter Oncology GmbH		Enfortumab vedotin	Approved	5						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Shanghai Miracogen Inc		CMG-901	Approved	5						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Agensys, Inc		AGS-16C3F	Phase2	4						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Bayer AG		Anetumab ravtansine	Phase2	4						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Stemcentrx, Inc		SC-007	Phase1	4						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	KLUS Pharma, Inc		Sacituzumab tirumotecan	Approved	3						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Novartis AG		HKT-288	Phase1	3						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Novartis Pharma AG		HKT-288	Phase1	3						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Suzhou Suncadia Biopharmaceuticals Co., Ltd		Trastuzumab rezetecan	Approved	3						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	ARS Pharmaceuticals, Inc		SBT-6290	Phase2	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Amgen, Inc		AMG-224	Phase1	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	BioAtla, Inc		Ozuriftamab vedotin	Phase2	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	BioIntegrator LLC		CON-4619	Phase1	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Biocytogen Pharmaceuticals (Beijing) Co., Ltd		RC-118	Phase2	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Chugai Pharmaceutical Co., Ltd		Trastuzumab emtansine	Approved	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	EMD Serono Research & Development Institute, Inc		M-1231	Phase2	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Hangzhou Zhongmeihuadong Pharmaceutical Co., Ltd		Mirvetuximab soravtansine	Approved	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Immunomedics, Inc		Sacituzumab govitecan	Approved	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	MedImmune LLC		MEDI-3726	Phase1	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	MorphoSys AG		Anetumab ravtansine	Phase2	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Nanjing Shunxin Pharmaceutical Co., Ltd		TQB2103	Phase2	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Novocodex Biopharmaceuticals Co., Ltd		ARX-305	Phase2	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Overland Pharmaceutical (Shanghai) Co., Ltd		Loncastuximab tesirine	Approved	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Rakuten Medical, Inc		Cetuximab sarotalocan	Approved	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Sichuan Kelun Pharmaceutical Co., Ltd		Sacituzumab tirumotecan	Approved	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Silverback Therapeutics, Inc		SBT-6290	Phase2	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Synthon BV		SYD-1875	Phase3	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Tallac Therapeutics, Inc		TAC-001	Phase2	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Wyeth Pharmaceuticals LLC		Gemtuzumab ozogamicin	Approved	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Zai Lab Ltd		ZL-1310	Approved	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Zhejiang Medicine Co., Ltd		ARX-305	Phase2	2						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	A. Menarini Industrie Farmaceutiche Riunite SRL		MEN-1309	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	ALX Oncology, Inc		ALTA-002	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	AbGenomics International, Inc		AbGn-107	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Actinium Pharmaceuticals, Inc		Lintuzumab Ac-225	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Adimab LLC		XMT-1522	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Asana BioSciences LLC		ASN-004	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Avidity Biosciences, Inc		AOC-1020	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	BeiGene Ltd		Zanidatamab zovodotin	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	BiOneCure Therapeutics, Inc		BIO-106	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	BioNova Pharmaceuticals (Shanghai) Ltd		STRO-001	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Biogen, Inc		BIIB-015	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Biotest AG		Indatuximab ravtansine	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Biotest Pharma GmbH		Indatuximab ravtansine	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Boehringer Ingelheim GmbH		Bivatuzumab mertansine	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Bolt Biotherapeutics, Inc		BDC-1001	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Catalent, Inc		TRPH-222	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Celgene Corp		Ispectamab debotansine	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Celldex Therapeutics, Inc		CDX-014	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Celltech Oy		CMB-401	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	CuraGen Corp		CDX-014	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Debiopharm International SA		Naratuximab emtansine	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Elevation Oncology, Inc		SYSA-1801	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Eucure (Beijing) Biopharma Co., Ltd		RC-118	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Everest Medicines (Singapore) Pte. Ltd		Sacituzumab govitecan	Approved	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Exelis, Inc		XB-002	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Experimental Drug Development Centre, PAREXEL International Corp		EBC-129	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Formation Biologics		AVID-100	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Fortis Therapeutics, Inc		FOR-46	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Fudan University		Trastuzumab botidotin	Approved	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	GlaxoSmithKline (Ireland) Ltd		Belantamab mafodotin	Approved	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Glaxosmithkline Intellectual Property Development Ltd		Belantamab mafodotin	Approved	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	IBC Pharmaceuticals, Inc		Labetuzumab govitecan	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Iconic Therapeutics, Inc		XB-002	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	InxMed (Hong Kong) Limited		OMTX-705	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Inxmed (Nanjing) Co., Ltd		OMTX-705	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Jiangsu Maiweikang New Drug R & D Co., Ltd		9MW-2821	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Kaibos (Shanghai) Biomedical Co., Ltd		Ozuriftamab vedotin	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Keymed Biosciences, Inc		CMG-901	Phase3	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Levena Biopharma US, Inc		Trastuzumab botidotin	Approved	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Ligand Pharmaceuticals, Inc		SGN-CD352A	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Mayo Clinic		AB-160	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Medarex, Inc		MDX-1203	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Memorial Sloan-Kettering Cancer Center		PF-06688992	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Merrimack Pharmaceuticals, Inc		MM-310	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Millennium Pharmaceuticals, Inc		Indusatumab vedotin	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Molecular Templates, Inc		MT-5111	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	NBE-Therapeutics AG		NBE-002	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	National Cancer Institute		LMB-7	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	NewBio Therapeutics		GB-251	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Novartis Pharmaceuticals Corp		JBH-492	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Orum Therapeutics, Inc		ORM-6151	Phase3	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Overland Pharmaceuticals		ADCT-901	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Oxford BioTherapeutics Ltd		MEN-1309	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Oxford Biomedica Plc		PF-06263507	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	PDL BioPharma, Inc		Lintuzumab Ac-225	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Pierre Fabre SA,		Lonigutamab ugodotin	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Piramal Pharma Solutions, Inc		STRO-001	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Regeneron Pharmaceuticals, Inc		REGN5093-M114	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Rps Medical Technology (Beijing) Co., Ltd		Tisotumab vedotin	Approved	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	SCTbio as		SOT-102	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Sesen Bio		Oportuzumab monatox	Phase3	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Shanghai Jiaolian Drug Development Co. Ltd		B-003	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Shanghai Pharmaceuticals Holding Co., Ltd		B-003	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Shanghai Sinovent Biopharmaceutical Co., Ltd		XNW-27011	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Sorrento Therapeutics, Inc		STI-6129	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Suzhou Sinovent Pharmaceuticals Co.,Ltd		XNW-27011	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Syntarga BV		BYON-3521	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Tanabe Research Laboratories U.S.A., Inc		TR1801-ADC	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Tasly Biopharmaceuticals Co., Ltd		Luveltamab tazevibulin	Phase3	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	The University of Texas MD Anderson Cancer Center		M-1231	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Tot Biopharm Co. Ltd		TAA-013	Phase3	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Translational Research In Oncology US, Inc		TORL-3-600	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Triphase Accelerator Corp		TRPH-222	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Triphase Research and Development III Corp		TRPH-222	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Turning Point Therapeutics, Inc		LM-302	Phase3	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	University of California San Diego		FOR-46	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Viventia Bio, Inc		Oportuzumab monatox	Phase3	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Wyeth AB		CMD-193	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Zhejiang ACEA Pharmaceutical Co., Ltd		STI-6129	Phase2	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Zhejiang Hisun Pharmaceutical Co., Ltd		ZV0203	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Zhejiang Teruisi Pharmaceutical Inc		TRS-005	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+	Zhejiang Zova Biotherapeutics Inc		ZV0203	Phase1	1						UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION	master_catalog	
+abbvie	AbbVie Inc.		ABBV-400	Approved	19	abbvie.com	https://www.abbvie.com/science/pipeline.html	https://news.abbvie.com/			REGISTERED	company_registry.yaml	2026-08-31
+immunogen	ImmunoGen, Inc.		Laprituximab emtansine	Approved	17	immunogen.com				abbvie	REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+seagen	Seagen Inc.	Seattle Genetics; Seattle Genetics Inc	Enfortumab vedotin	Approved	17	seagen.com				pfizer	REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+systimmune	SystImmune, Inc. (US entity); Sichuan Baili Pharmaceutical Co., Ltd. / Sichuan Biokin Pharmaceutical Co., Ltd. (Chinese originator entity)	Systimmune, Inc; Sichuan Baili Pharmaceutical Co., Ltd; Chengdu Bailidote Biological Pharmaceutical Co., Ltd; Baili Sikang Biomedicine (Hangzhou) Co., Ltd; Sichuan Biokin Pharmaceutical Co., Ltd	BL-M07D1	Phase3	16	systimmune.com	https://www.systimmune.com/pipeline	https://www.systimmune.com/news/1			REGISTERED	company_registry.yaml	2026-08-31
+hengrui	Jiangsu Hengrui Pharmaceuticals Co., Ltd.	Shanghai Hengrui Pharmaceutical Co., Ltd	Trastuzumab rezetecan	Approved	12	hengrui.com	https://www.hengrui.com/en/pipeline.html	https://www.hengrui.com/en/media/index.html			REGISTERED	company_registry.yaml	2026-08-31
+roche	F. Hoffmann-La Roche Ltd (Roche Holding AG, Basel, Switzerland)	Roche Holding AG; F. Hoffmann-La Roche Ltd	Iladatuzumab vedotin	Approved	11	roche.com	https://www.roche.com/solutions/pipeline	https://www.roche.com/media/releases			REGISTERED	company_registry.yaml	2026-08-31
+pfizer	Pfizer Inc.		CMD-193	Approved	11	pfizer.com	https://www.pfizer.com/science/oncology-cancer/pipeline	https://www.pfizer.com/newsroom/press-releases			REGISTERED	company_registry.yaml	2026-08-31
+astrazeneca	AstraZeneca PLC		CMG-901	Approved	8	astrazeneca.com	https://www.astrazeneca.com/our-therapy-areas/pipeline.html	https://www.astrazeneca.com/media-centre/press-releases.html	https://medicalinformation.astrazeneca-us.com/home/congress-library.html		REGISTERED	company_registry.yaml	2026-08-31
+bristol_myers_squibb	Bristol-Myers Squibb Company	Bristol Myers Squibb Co	Farletuzumab ecteribulin	Phase2	6	bms.com	https://www.bms.com/research-and-development/pipeline.html	https://news.bms.com/			REGISTERED	company_registry.yaml	2026-08-31
+daiichi_sankyo	Daiichi Sankyo Company, Limited	Daiichi Sankyo Co., Ltd; Daiichi Sankyo Inc	Patritumab deruxtecan	Approved	6	daiichisankyo.com	https://www.daiichisankyo.com/alias/pc/rd/pipeline/	https://www.daiichisankyo.com/media/press_release/			REGISTERED	company_registry.yaml	2026-08-31
+genentech	Genentech, Inc. (a wholly-owned member of the Roche Group)	Genentech, Inc	Trastuzumab emtansine	Approved	6	gene.com	https://www.gene.com/medical-professionals/pipeline	https://www.gene.com/media/press-releases			REGISTERED	company_registry.yaml	2026-08-31
+adc_therapeutics	ADC Therapeutics SA		ADCT-901	Approved	5	adctherapeutics.com	https://www.adctherapeutics.com/our-pipeline1-1/	https://ir.adctherapeutics.com/news	https://www.adctmedical.com/congresses/		REGISTERED	company_registry.yaml	2026-08-31
+cspc	CSPC Pharmaceutical Group Limited (石药集团有限公司)	CSPC Pharmaceutical Group Ltd; CSPC Zhongqi Pharmaceutical Technology Shijiazhuang Co., Ltd	DP-303c	Phase3	5	e-cspc.com		https://en.e-cspc.com/news/			REGISTERED	company_registry.yaml	2026-08-31
+mersana	Mersana Therapeutics, Inc.		XMT-1660	Phase3	5	mersana.com				day_one_biopharmaceuticals	REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+remegen	RemeGen Co., Ltd. (荣昌生物制药)		RC-118	Approved	5	remegen.com	https://www.remegen.com/?v=listing&cid=92	https://www.remegen.com/?v=listing&cid=114			REGISTERED	company_registry.yaml	2026-08-31
+lepu_biopharma	Shanghai LEPU Biopharma Co., Ltd. (上海乐普生物科技股份有限公司)	Lepu Biopharma Co., Ltd	CMG-901	Approved	5	lepubiopharma.com	https://www.lepubiopharma.com/technology	https://www.lepubiopharma.com/news			REGISTERED	company_registry.yaml	2026-08-31
+takeda	Takeda Pharmaceutical Company Limited	Takeda Pharmaceutical Co., Ltd	TAK-500	Approved	5	takeda.com	https://www.takedaoncology.com/science/pipeline/	https://www.takeda.com/newsroom/press-releases/			REGISTERED	company_registry.yaml	2026-08-31
+astellas_pharma	Astellas Pharma Inc.	Astellas Pharma Global Development, Inc	Enfortumab vedotin	Approved	4	astellas.com	https://www.astellas.com/en/science/research-and-development/pipeline	https://newsroom.astellas.com/			REGISTERED	company_registry.yaml	2026-08-31
+byondis	Byondis B.V.		SYD-1875	Phase3	4	byondis.com	https://www.byondis.com/our-science/pipeline	https://www.byondis.com/investors-and-media/press-releases	https://www.byondis.com/our-science/publications-presentations		REGISTERED	company_registry.yaml	2026-08-31
+genequantum	GeneQuantum (Suzhou) Biotechnology Co., Ltd. / GeneQuantum Healthcare	GeneQuantum Healthcare (Suzhou) Co. Ltd; Borui Biomedical Technology (Suzhou) Co., Ltd	GQ-1001	Phase3	4	genequantum.com	https://www.genequantum.com/pipeline.html	https://www.genequantum.com/news_report.html			REGISTERED	company_registry.yaml	2026-08-31
+hangzhou_dac_biotech	Hangzhou DAC Biotech Co., Ltd. (杭州多禧生物科技有限公司)		DXC-004A	Phase2	4	dacbiotech.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+merck_and_co	Merck & Co., Inc.	Merck Sharp & Dohme LLC; Merck Sharp & Dohme Corp	Sacituzumab tirumotecan	Approved	4	merck.com	https://www.merck.com/research/product-pipeline/	https://www.merck.com/media/news/			REGISTERED	company_registry.yaml	2026-08-31
+sanofi	Sanofi		Tusamitamab ravtansine	Phase3	4	sanofi.com	https://www.sanofi.com/en/our-science/our-pipeline	https://www.sanofi.com/en/media-room/press-releases			REGISTERED	company_registry.yaml	2026-08-31
+fudan_zhangjiang	Shanghai Fudan-Zhangjiang Bio-Pharmaceutical Co., Ltd. (上海复旦张江生物医药股份有限公司)		F0002-ADC	Phase3	4	fdzy.com.cn					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+henlius_biotech	Shanghai Henlius Biotech Co., Ltd. (subsidiary of Shanghai Fosun Pharmaceutical (Group) Co., Ltd.)	Shanghai Fosun Pharmaceutical; Shanghai Fosun Pharmaceutical (Group) Co., Ltd; Shanghai Henlius Biotech, Inc	FS-1502	Phase3	4	henlius.com	https://www.henlius.com/en/Product.html	https://www.henlius.com/News.html	https://www.henlius.com/Investor-Presentation.html		REGISTERED	company_registry.yaml	2026-08-31
+sutro_biopharma	Sutro Biopharma, Inc.		M-1231	Phase3	4	sutrobio.com	https://www.sutrobio.com/pipeline/	https://ir.sutrobio.com/news-events/news-releases	https://www.sutrobio.com/news/presentations/		REGISTERED	company_registry.yaml	2026-08-31
+torl_biotherapeutics	TORL BioTherapeutics, LLC		TORL-3-600	Phase1	4	torlbio.com	https://torlbio.com/#pipeline	https://torlbio.com/#news			REGISTERED	company_registry.yaml	2026-08-31
+ambrx	Ambrx Biopharma Inc.	Ambrx, Inc	ARX-305	Phase2	3					johnson_and_johnson	REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+cytomx_therapeutics	CytomX Therapeutics, Inc.		CX-2029	Phase2	3	cytomx.com	https://www.cytomx.com/pipeline/	http://ir.cytomx.com/press-releases	http://ir.cytomx.com/events-and-presentations		REGISTERED	company_registry.yaml	2026-08-31
+duality_biologics	Duality Biotherapeutics Inc (Cayman Islands holding company; Shanghai R&D operations)	Duality Biologics	DB-1305	Phase3	3						REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+heidelberg_pharma	Heidelberg Pharma AG	Heidelberg Pharma Research GmbH	MGTA-117	Phase2	3	heidelberg-pharma.com	https://heidelberg-pharma.com/en/research-development/portfolio-overview	https://heidelberg-pharma.com/en/press-investors/announcements/press-releases-and-ad-hoc-announcements	https://heidelberg-pharma.com/en/press-investors/calender-and-presentations/presentations		REGISTERED	company_registry.yaml	2026-08-31
+iksuda_therapeutics	Iksuda Therapeutics Limited	Iksuda Therapeutics; Iksuda Therapeutics Ltd	FS-1502	Phase3	3	iksuda.com	https://www.iksuda.com/pipeline	https://www.iksuda.com/news-views/			REGISTERED	company_registry.yaml	2026-08-31
+alphamab	Jiangsu Alphamab Biopharmaceutics Co., Ltd. / Alphamab Oncology (HKEX-listed subsidiary)	Alphamab Oncology; Alphamab Australia Co. Pty Ltd; Suzhou Alphamab Co. Ltd	JSKN-003	Phase3	3	alphamab.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+multitude_therapeutics	Multitude Therapeutics (普众发现医药科技（上海）股份有限公司)	Multitude Therapeutics, Inc	AMT-676	Phase1	3	en.multitudetherapeutics.com	https://en.multitudetherapeutics.com/pipelines/	https://en.multitudetherapeutics.com/news/			REGISTERED	company_registry.yaml	2026-08-31
+genmab	Genmab A/S		Enapotamab vedotin	Approved	2	genmab.com	https://www.genmab.com/antibody-science/pipeline	https://ir.genmab.com	https://ir.genmab.com/events-and-presentations		REGISTERED	company_registry.yaml	2026-08-31
+gilead	Gilead Sciences, Inc.		Sacituzumab govitecan	Approved	2	gilead.com	https://www.gilead.com/science/therapeutic-areas/oncology	https://www.gilead.com/news			REGISTERED	company_registry.yaml	2026-08-31
+innovent	Innovent Biologics, Inc.	Innovent Biologics (Suzhou) Co. Ltd	Tusamitamab ravtansine	Phase3	2	innoventbio.com	https://en.innoventbio.com/ScienceAndProducts/Pipeline	https://en.innoventbio.com/InvestorsAndMedia/PressRelease			REGISTERED	company_registry.yaml	2026-08-31
+hansoh	Jiangsu Hansoh Pharmaceutical Group Co., Ltd. (parent: Hansoh Pharmaceutical Group Company Limited)	Shanghai Hansoh Biomedical Co. Ltd	HS-20093	Phase3	2	hansoh.cn		https://www.hansoh.cn/en/news/company-news.jsp			REGISTERED	company_registry.yaml	2026-08-31
+lanova_medicines	LaNova Medicines Limited (礼新医药科技（上海）有限公司)	LaNova Medicines Ltd	LM-302	Phase3	2	lanovamedicines.com	https://www.lanovamedicines.com/en/pipeline	https://www.lanovamedicines.com/en/news-center/press-release			REGISTERED	company_registry.yaml	2026-08-31
+mabwell	Mabwell (Shanghai) Bioscience Co., Ltd.		9MW-2921	Phase2	2	mabwell.com	https://mabwell.com/en/rd.html	https://mabwell.com/en/news.html			REGISTERED	company_registry.yaml	2026-08-31
+macrogenics	MacroGenics, Inc.		Vobramitamab duocarmazine	Phase2	2	macrogenics.com	https://www.macrogenics.com/pipeline/	https://ir.macrogenics.com/press-releases	https://ir.macrogenics.com/events-and-presentations/events		REGISTERED	company_registry.yaml	2026-08-31
+boan_biotech	Shandong Boan Biotech Co., Ltd. (山东博安生物技术股份有限公司), subsidiary of Luye Pharma Group	Shandong Boan Biotechnology Co., Ltd; Luye Pharma Group Ltd	BA-1302	Phase1	2	boan-bio.com	https://www.boan-bio.com/social.php#cpx	https://www.boan-bio.com/news.php			REGISTERED	company_registry.yaml	2026-08-31
+kelun_biotech	Sichuan Kelun-Biotech Biopharmaceutical Co., Ltd.		SKB-315	Phase2	2	kelun-biotech.com	https://en.kelun-biotech.com/product.aspx?mid=165	https://en.kelun-biotech.com/newsCenter.aspx?mid=18			REGISTERED	company_registry.yaml	2026-08-31
+sino_biopharmaceutical	Sino Biopharmaceutical Limited (中国生物制药有限公司)	Sino Biopharmaceutical Ltd	TQB2103	Phase2	2	sbpgroup.com		https://www.sbpgroup.com/news-center/	https://www.sbpgroup.com/investor-relations/Presentation/		REGISTERED	company_registry.yaml	2026-08-31
+adcentrx_therapeutics	Adcentrx Therapeutics, Inc.		ADRX-0706	Phase1	1	adcentrx.com	https://www.adcentrx.com/pipeline/	https://www.adcentrx.com/news/			REGISTERED	company_registry.yaml	2026-08-31
+angiex	Angiex, Inc.		AGX101	Phase1	1	angiex.com	https://www.angiex.com/pipeline	https://www.angiex.com/news			REGISTERED	company_registry.yaml	2026-08-31
+antengene	Antengene Corporation Limited	Antengene Corporation Co., Ltd	ATG-022	Phase1	1	antengene.com	https://www.antengene.com/research.html	https://www.antengene.com/news.html	https://www.antengene.com/activity.html		REGISTERED	company_registry.yaml	2026-08-31
+biocity_biopharma	BioCity Biopharmaceutics Co., Ltd.	Wuxi Biocity Biopharmaceutics Co., Ltd	BC3195	Phase1	1	biocitypharma.com	https://www.biocitypharma.com/development/product	https://www.biocitypharma.com/news			REGISTERED	company_registry.yaml	2026-08-31
+biontech	BioNTech SE		DB-1303	Phase3	1	biontech.com	https://www.biontech.com/us/en/home/pipeline-and-products/pipeline.html	https://www.biontech.com/us/en/home/media.html			REGISTERED	company_registry.yaml	2026-08-31
+bioray	BioRay Biopharmaceutical Co., Ltd.		BRY-812	Phase1	1	bioraypharm.com	https://www.bioraypharm.com/index.php?m=list&a=index&classid=22	https://www.bioraypharm.com/index.php?m=list&a=index&classid=43			REGISTERED	company_registry.yaml	2026-08-31
+eisai	Eisai Co., Ltd.		Farletuzumab ecteribulin	Phase2	1	eisai.com	https://www.eisai.com/innovation/research/pipeline/index.html	https://www.eisai.com/news/index.html			REGISTERED	company_registry.yaml	2026-08-31
+eli_lilly	Eli Lilly and Company	Eli Lilly & Co	LY-3076226	Phase1	1	lilly.com	https://www.lilly.com/science/pipeline	https://investor.lilly.com			REGISTERED	company_registry.yaml	2026-08-31
+escugen_biotechnology	Escugen Biotechnology (无锡宜康生物 / Escugen Biotechnology Co., Ltd.)	Shanghai Escugen Biotechnology	ESG-401	Phase3	1	escugen.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+exelixis	Exelixis, Inc.		XB-002	Phase1	1	exelixis.com	https://www.exelixis.com/pipeline/	https://ir.exelixis.com/press-releases			REGISTERED	company_registry.yaml	2026-08-31
+gsk	GSK plc		Belantamab mafodotin	Approved	1	gsk.com	https://medical.gsk.com/content/cf-pharma/medicalaffairs/master/home/oncology-portal/pipeline.html	https://www.gsk.com/en-gb/media/press-releases/	https://medical.gsk.com/en-pm/oncology/congress-presentations/		REGISTERED	company_registry.yaml	2026-08-31
+harbour_biomed	Harbour BioMed (Cayman) Limited	Harbour Biomed Therapeutics Ltd	HBM9033	Phase1	1	harbourbiomed.com	https://www.harbourbiomed.com/therapeutics	https://www.harbourbiomed.com/news			REGISTERED	company_registry.yaml	2026-08-31
+huadong_medicine	Huadong Medicine Co., Ltd. (华东医药股份有限公司)		HDP-101	Phase2	1	hddyy.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+merck_kgaa	Merck KGaA, Darmstadt, Germany	Merck KGaA	M-9140	Phase2	1	emdgroup.com	https://www.emdgroup.com/en/research/healthcare-pipeline.html	https://www.emdgroup.com/en/news.html	https://www.emdgroup.com/en/investors/events-and-presentations.html		REGISTERED	company_registry.yaml	2026-08-31
+mythic_therapeutics	Mythic Therapeutics, Inc.		MYTX-011	Phase1	1	mythictx.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+novelty_nobility	Novelty Nobility Inc.		NN-3201	Phase1	1	noveltynobility.com	https://www.noveltynobility.com/pipeline/pipeline.php	https://www.noveltynobility.com/news/media.php	https://www.noveltynobility.com/publication/publication.php		REGISTERED	company_registry.yaml	2026-08-31
+obi_pharma	OBI Pharma, Inc.		OBI-999	Phase2	1	obipharma.com	https://www.obipharma.com/what-we-do/pipeline-overview/	https://www.obipharma.com/news/	https://www.obipharma.com/publication-library/		REGISTERED	company_registry.yaml	2026-08-31
+oncusp_therapeutics	OnCusp Therapeutics, Inc.	OnCusp Therapeutics	CUSP06	Phase1	1	oncusptx.com	https://www.oncusptx.com/rd/index.html	https://www.oncusptx.com/newsroom/index.html			REGISTERED	company_registry.yaml	2026-08-31
+oncomatryx	Oncomatryx Biopharma, S.L.		OMTX-705	Phase1	1	oncomatryx.com	https://www.oncomatryx.com/clinical-trials	https://oncomatryx.com/news-publications/			REGISTERED	company_registry.yaml	2026-08-31
+pheon_therapeutics	Pheon Therapeutics Ltd		PHN-010	Phase1	1	pheontx.com	https://pheontx.com/science-technology/	https://pheontx.com/news-events/			REGISTERED	company_registry.yaml	2026-08-31
+profoundbio	ProfoundBio, Inc.	ProfoundBio (Suzhou) Co., Ltd	PRO-1160	Phase2	1					genmab	REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+pyxis_oncology	Pyxis Oncology, Inc.		PYX-201	Phase1	1	pyxisoncology.com	https://pyxisoncology.com/clinical-programs/	https://ir.pyxisoncology.com/news-releases	https://ir.pyxisoncology.com/events-and-presentations		REGISTERED	company_registry.yaml	2026-08-31
+qilu_pharmaceutical	Qilu Pharmaceutical Co., Ltd. (齐鲁制药)		Oportuzumab monatox	Phase3	1	qilu-pharma.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+salubris_biotherapeutics	Salubris Biotherapeutics, Inc.		JK-06	Phase2	1	salubrisbio.com	https://salubrisbio.com/jk06/	https://salubrisbio.com/news/			REGISTERED	company_registry.yaml	2026-08-31
+junshi_biosciences	Shanghai Junshi Biopharmaceutical Co., Ltd. (上海君实生物医药科技股份有限公司)	Shanghai Junshi Biosciences Co., Ltd	JS107	Phase1	1	junshipharma.com	https://junshipharma.com/pipeline/	https://www.junshipharma.com/news/	https://junshi-bioscience-v2-umb.azurewebsites.net/cn/investors/presentation-materials/		REGISTERED	company_registry.yaml	2026-08-31
+tubulis	Tubulis GmbH		TUB-030	Phase2	1	tubulis.com	https://tubulis.com/our-pipeline/	https://tubulis.com/newsevents/			REGISTERED	company_registry.yaml	2026-08-31
+xadcera_biopharmaceutical	Xadcera Biopharmaceutical (name/spelling not independently confirmed)	Xadcera Biopharmaceutical (Suzhou) Co., Ltd	DM001	Phase1	1						REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+xiling_lab	Xiling Lab	Xiling Lab Pharmaceutical Co., Ltd	SMP-656	Phase1	1	xilinglab.com	https://www.xilinglab.com/en/About/Index.aspx	https://www.xilinglab.com/en/News/Detail.aspx?id=1411			REGISTERED	company_registry.yaml	2026-08-31
+xuanzhu_biopharmaceutical	Xuanzhu Biopharmaceutical Co., Ltd. (轩竹生物科技股份有限公司)		KM501	Phase1	1	xuanzhubio.com	https://www.xuanzhubio.com/products	https://www.xuanzhubio.com/news			REGISTERED	company_registry.yaml	2026-08-31
+zymeworks	Zymeworks Inc.	Zymeworks BC, Inc	Zanidatamab zovodotin	Phase1	1	zymeworks.com	https://www.zymeworks.com/pipeline/	https://ir.zymeworks.com/news-releases			REGISTERED	company_registry.yaml	2026-08-31
+alx_oncology	ALX Oncology Holdings Inc.				0	alxoncology.com	https://alxoncology.com/pipeline	https://ir.alxoncology.com/news-releases	https://ir.alxoncology.com/events-and-presentations		REGISTERED	company_registry.yaml	2026-08-31
+adcendo	Adcendo ApS				0	adcendo.com	https://adcendo.com/adcendo/our-science/pipeline/	https://adcendo.com/adcendo/investors/press-releases/	https://adcendo.com/adcendo/our-science/key-publications/		REGISTERED	company_registry.yaml	2026-08-31
+adcytherix	Adcytherix SAS (Marseille, France)				0	adcytherix.com	https://www.adcytherix.com/	https://www.adcytherix.com/			REGISTERED	company_registry.yaml	2026-08-31
+akeso	Akeso, Inc.				0	akesobio.com		https://www.akesobio.com/en/media/akeso-news/	https://www.akesobio.com/en/investor-relations/presentations/		REGISTERED	company_registry.yaml	2026-08-31
+araris_biotech	Araris Biotech AG (subsidiary of Taiho Pharmaceutical since March 2025)				0	ararisbiotech.com	https://ararisbiotech.com/#pipeline	https://ararisbiotech.com/#news		taiho_oncology	REGISTERED	company_registry.yaml	2026-08-31
+cstone_pharmaceuticals	CStone Pharmaceuticals Limited (基石药业)				0	cstonepharma.com	https://www.cstonepharma.com/en/develop/p3.html	https://www.cstonepharma.com/en/html/news/3766.html	https://www.cstonepharma.com/en/relation/materials.html		REGISTERED	company_registry.yaml	2026-08-31
+callio_therapeutics	Callio Therapeutics, Inc.				0	calliotx.com		https://calliotx.com/news/			REGISTERED	company_registry.yaml	2026-08-31
+genescience	Changchun GeneScience Pharmaceutical Co., Ltd. (长春金赛药业有限责任公司)				0	genscigroup.com	https://www.genscigroup.com/science-innovation/pipepage	https://www.genscigroup.com/about/news/express			REGISTERED	company_registry.yaml	2026-08-31
+chengdu_kanghong_pharmaceutical	Chengdu Kanghong Pharmaceutical (Group) Co., Ltd. (成都康弘药业集团股份有限公司)				0	kanghong.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+day_one_biopharmaceuticals	Day One Biopharmaceuticals, Inc.				0	dayonebio.com	https://www.dayonebio.com/our-science/pipeline/	https://ir.dayonebio.com/news-releases/	https://www.dayonebio.com/our-science/publications-posters/		REGISTERED	company_registry.yaml	2026-08-31
+evopoint_biosciences	Evopoint Biosciences Co., Ltd. (formerly Sinovent Pharmaceuticals)				0	evopointbio.com	https://www.evopointbio.com/en/core	https://www.evopointbio.com/en/news			REGISTERED	company_registry.yaml	2026-08-31
+glyconex	GlycoNex, Inc. (台灣醣聯生技醫藥股份有限公司)				0	glyconex.com.tw	https://www.glyconex.com.tw/pipeline/gnx1021	https://www.glyconex.com.tw/news/			REGISTERED	company_registry.yaml	2026-08-31
+hummingbird_bioscience	Hummingbird Bioscience Pte. Ltd.				0	hummingbirdbioscience.com	https://hummingbirdbioscience.com/pipeline/	https://hummingbirdbioscience.com/news/			REGISTERED	company_registry.yaml	2026-08-31
+ideaya_biosciences	IDEAYA Biosciences, Inc.				0	ideayabio.com	https://www.ideayabio.com/pipeline	https://media.ideayabio.com/news-releases			REGISTERED	company_registry.yaml	2026-08-31
+immunome	Immunome, Inc.				0	immunome.com	https://immunome.com/pipeline/	https://investors.immunome.com/news-releases/	https://investors.immunome.com/presentations/		REGISTERED	company_registry.yaml	2026-08-31
+innocare_pharma	InnoCare Pharma Limited (诺诚健华医药有限公司)				0	innocarepharma.com	https://www.innocarepharma.com/development/pipeline	https://www.innocarepharma.com/news/home	https://www.innocarepharma.com/investor/demonstrate		REGISTERED	company_registry.yaml	2026-08-31
+medilink_therapeutics	Jiangsu MediLink Therapeutics Co., Ltd.				0	medilinkthera.com	https://www.medilinkthera.com/pipeline	https://www.medilinkthera.com/news/1			REGISTERED	company_registry.yaml	2026-08-31
+johnson_and_johnson	Johnson & Johnson				0	jnj.com	https://www.jnj.com/innovative-medicine/pipeline	https://www.jnj.com/media-center			REGISTERED	company_registry.yaml	2026-08-31
+kivu_bioscience	Kivu Bioscience (private company)				0	kivubioscience.com	https://kivubioscience.com/	https://kivubioscience.com/news/			REGISTERED	company_registry.yaml	2026-08-31
+kyntra_bio	Kyntra Bio, Inc. (formerly FibroGen, Inc.)				0	kyntrabio.com	https://www.kyntrabio.com/r-d-pipeline/	https://investor.kyntrabio.com/news-releases	https://investor.kyntrabio.com/events-and-presentations/events		REGISTERED	company_registry.yaml	2026-08-31
+minghui_pharmaceutical	Minghui Pharmaceutical (Hangzhou) Co., Ltd. (明慧医药(杭州)有限公司)				0						REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+phrontline_biopharma	Phrontline Biopharma, Inc.				0	phrontlinebio.com	https://www.phrontlinebio.com/Our_Pipeline.html	https://www.phrontlinebio.com/News.html			REGISTERED	company_registry.yaml	2026-08-31
+primelink_biotherapeutics	PrimeLink BioTherapeutics				0						REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+taiho_oncology	Taiho Oncology, Inc. (US subsidiary of Taiho Pharmaceutical Co., Ltd.)				0	taihooncology.com	https://www.taihooncology.com/us/science/product-pipeline/	https://www.taihooncology.com/us/news/			REGISTERED	company_registry.yaml	2026-08-31
+whitehawk_therapeutics	Whitehawk Therapeutics, Inc. (formerly Aadi Bioscience, Inc.)				0	whitehawktx.com	https://www.whitehawktx.com/pipeline/	https://ir.whitehawktx.com/press-releases			REGISTERED	company_registry.yaml	2026-08-31
+simcere_zaiming	Zaiming Pharmaceutical Co., Ltd. (再鸣医药), subsidiary of Simcere Pharmaceutical Group				0						REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31
+bliss_bio	"Zhejiang Bliss Biopharmaceutical Co., Ltd. (浙江博锐生物制药有限公司) — commonly ""Bliss Bio"""				0	blissbio.com					REGISTERED_INCOMPLETE	company_registry.yaml	2026-08-31

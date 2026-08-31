@@ -71,8 +71,8 @@ def test_build_company_universe_rows_registered_with_urls():
     assert len(rows) == 1
     row = rows[0]
     assert row["registry_status"] == "REGISTERED"
-    assert row["active_adc_count"] == 2
-    assert row["highest_active_stage"] == "Phase2"  # more advanced than Phase1
+    assert row["phase1_plus_asset_mention_count"] == 2
+    assert row["highest_phase1_plus_stage_observed"] == "Phase2"  # more advanced than Phase1
     assert row["last_verified"] == "2026-08-28"
 
 
@@ -82,10 +82,10 @@ def test_build_company_universe_rows_registered_incomplete_without_urls():
     assert rows[0]["registry_status"] == "REGISTERED_INCOMPLETE"
 
 
-def test_build_company_universe_rows_unregistered_active_company():
+def test_build_company_universe_rows_unregistered_phase1_plus_mention():
     mentions = {"Beta Bio": {"count": 1, "examples": ["Bar ADC"], "stages": ["Phase3"]}}
     rows = build_company_universe_rows(mentions, companies=[], run_date="2026-08-28")
-    assert rows[0]["registry_status"] == "UNREGISTERED_ACTIVE_ADC_COMPANY"
+    assert rows[0]["registry_status"] == "UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION"
     assert rows[0]["company_id"] == ""
     assert rows[0]["last_verified"] == ""  # never verified, honestly blank not fabricated
     assert rows[0]["evidence_source"] == "master_catalog"
@@ -106,7 +106,7 @@ def test_build_company_universe_rows_sorts_unregistered_first_by_asset_count():
     }
     rows = build_company_universe_rows(mentions, companies, run_date="2026-08-28")
     assert rows[0]["canonical_name"] == "Beta Bio"  # unregistered, highest count -- surfaced first
-    assert rows[0]["registry_status"] == "UNREGISTERED_ACTIVE_ADC_COMPANY"
+    assert rows[0]["registry_status"] == "UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION"
 
 
 def test_build_company_universe_rows_matches_via_alias_not_only_canonical_name():
@@ -120,7 +120,7 @@ def test_build_company_universe_rows_matches_via_alias_not_only_canonical_name()
     rows = build_company_universe_rows(mentions, companies, run_date="2026-08-28")
     assert len(rows) == 1  # the alias-form mention must NOT also surface as a separate unregistered row
     assert rows[0]["registry_status"] == "REGISTERED"
-    assert rows[0]["active_adc_count"] == 3
+    assert rows[0]["phase1_plus_asset_mention_count"] == 3
 
 
 def test_build_company_universe_rows_aggregates_counts_across_multiple_alias_mentions():
@@ -133,5 +133,5 @@ def test_build_company_universe_rows_aggregates_counts_across_multiple_alias_men
     }
     rows = build_company_universe_rows(mentions, companies, run_date="2026-08-28")
     assert len(rows) == 1
-    assert rows[0]["active_adc_count"] == 5  # summed across both mention-name variants
-    assert rows[0]["highest_active_stage"] == "Phase3"  # more advanced of the two variants' stages
+    assert rows[0]["phase1_plus_asset_mention_count"] == 5  # summed across both mention-name variants
+    assert rows[0]["highest_phase1_plus_stage_observed"] == "Phase3"  # more advanced of the two variants' stages

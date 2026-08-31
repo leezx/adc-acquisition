@@ -55,20 +55,49 @@ company-universe report until this was fixed). Now matches via every
 identifier a company owns and aggregates counts/examples/stages across
 any mention-name variant. Two new regression tests added.
 
+## Round-1 fix: audit tool was overclaiming "active ADC company"
+
+The reviewer flagged that `build_company_universe_rows()`'s
+`UNREGISTERED_ACTIVE_ADC_COMPANY` status (and its `highest_active_stage`/
+`active_adc_count` fields) asserted more than the underlying data
+supports: the master catalog's `company` field is a broad
+associated-company field, not checked against `development_status` and
+not distinguishing originator / licensee / manufacturer / CMO / historical
+company from an active current developer. Live output proved this wasn't
+theoretical -- CDMO/manufacturing entities (BSP Pharmaceuticals SpA,
+Baxter Oncology GmbH) and long-terminated-portfolio companies (Agensys,
+Stemcentrx, MedImmune) all appeared indistinguishable from a genuine
+active ADC developer, which would produce a false "new active company,
+add to registry" signal in a future cadence run.
+
+Fixed by renaming (no corporate-role resolution attempted, no re-research
+of the 114 remaining gaps, no registry entries removed):
+- `UNREGISTERED_ACTIVE_ADC_COMPANY` -> `UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION`
+- `highest_active_stage` -> `highest_phase1_plus_stage_observed`
+- `active_adc_count` -> `phase1_plus_asset_mention_count`
+
+and updating `COMPANY_REGISTRY_GAP.md`'s own language + adding an explicit
+caveat paragraph to both the report and the module docstring: this audit
+is a high-recall candidate list for human registry review, not proof that
+every listed entity is a current developer/sponsor.
+
 ## Result (measured by genuinely-new-assets-found, not raw record counts)
 
 Re-running `tools/validation/company_registry_gap_analysis.py
---run-date 2026-08-28`:
+--run-date 2026-08-31`:
 
 | | Before | After |
 |---|---|---|
 | Companies registered | 8 | 101 |
-| Distinct Phase1+ sponsor names matched | 7 | 94 |
-| `UNREGISTERED_ACTIVE_ADC_COMPANY` | 201 | 114 |
+| Distinct company names associated with Phase1+ catalog rows, matched | 7 | 94 |
+| `UNREGISTERED_PHASE1_PLUS_COMPANY_MENTION` | 201 | 114 |
 
-87 previously-unregistered, catalog-confirmed Phase1+ ADC sponsor
-companies are now in scope for the company-pipeline/press-release/
-scientific-presentations acquisition jobs.
+87 previously-unregistered, catalog-associated company names are now
+matched against the registry and in scope for the company-pipeline/
+press-release/scientific-presentations acquisition jobs -- some fraction
+of the remaining 114 are expected to be manufacturers/historical
+companies rather than registry-worthy developers, per the caveat above;
+this PR does not attempt to sort that out.
 
 ## Known gaps (disclosed, not silently dropped)
 
@@ -114,5 +143,4 @@ both correctly no-op with a logged `UNKNOWN_TEMPLATE` discovery failure
 (expected, since no template was identified this round) rather than
 erroring.
 
-Full test suite: 606 passed (604 pre-existing + 2 new regression tests
-for the alias-matching bug fix).
+Full test suite: 622 passed.
