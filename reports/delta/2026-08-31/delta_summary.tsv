@@ -1,0 +1,12 @@
+table	tier	key	canonical_label
+adc_asset_universe.tsv	B	OURS_ADC_SUFFIX_3e72481fc177	HDM2005
+adc_asset_universe.tsv	B	OURS_ADC_SUFFIX_94011ef8d5f9	F0002
+adc_asset_universe.tsv	B	OURS_ADC_SUFFIX_e7c6a5051026	Enfotulumab vedotin
+candidate_queue.tsv	B	ADC_SUFFIX_0604cbb2ec5a	
+candidate_queue.tsv	B	ADC_SUFFIX_1a60791abbaa	
+candidate_queue.tsv	B	ADC_SUFFIX_3e72481fc177	
+candidate_queue.tsv	B	ADC_SUFFIX_47d65d1305e1	
+candidate_queue.tsv	B	ADC_SUFFIX_5bc42bb0173b	
+candidate_queue.tsv	B	ADC_SUFFIX_94011ef8d5f9	
+candidate_queue.tsv	B	ADC_SUFFIX_9a99fca9696d	
+candidate_queue.tsv	B	ADC_SUFFIX_e7c6a5051026	

@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""Phase 3 (reports/validation/BREADTH_PLAN.md Part 9), extended in Phase 5:
-a high-recall DISCOVERY CANDIDATE queue, built entirely from evidence
-already in this repo (`configs/known_adc_assets.yaml` +
-`DATA/manifests/clinicaltrials.parquet` + `DATA/manifests/
-conference_abstract_corpus.parquet`, the last added by Phase 4 and wired in
-here in Phase 5) -- still no NEW acquisition source added by this script
-itself.
+"""Phase 3 (reports/validation/BREADTH_PLAN.md Part 9), extended in Phase 5
+and PR #38 (V1.1 integration): a high-recall DISCOVERY CANDIDATE queue,
+built entirely from evidence already in this repo
+(`configs/known_adc_assets.yaml` + `DATA/manifests/clinicaltrials.parquet`
++ `DATA/manifests/conference_abstract_corpus.parquet` (Phase 4/5) +
+`DATA/manifests/conference_crossref_search.parquet` +
+`DATA/manifests/china_drug_trials.parquet` (both PR #38)) -- still no NEW
+acquisition source added by this script itself.
+
+`DATA/manifests/who_ictrp.parquet` is INTENTIONALLY NOT read here (PR #38)
+-- see main()'s own comment at the point sources are loaded for why.
 
 Two-stage design, per Part 9: DISCOVERY CANDIDATE -> VALIDATED FEASIBILITY
 ENTITY. This script builds the candidate queue only (`candidate_queue.tsv`);
@@ -817,18 +821,28 @@ def build_ctgov_suffix_candidates(ct_manifest: pd.DataFrame, known_ids: set[str]
     return candidates
 
 
-def build_conference_suffix_candidates(conf_manifest: pd.DataFrame, known_ids: set[str]) -> dict[str, dict]:
-    """Same idea as build_ctgov_suffix_candidates(), but scanning
-    conference_abstract_corpus's title+abstract free text instead of
-    CT.gov's structured intervention_names field. Uses
-    _iter_adc_generic_name_matches() directly (every OCCURRENCE, not the
-    deduplicated list extract_all_adc_generic_names_from_text() returns)
-    since one abstract can genuinely discuss more than one ADC, and the
-    same candidate can be mentioned more than once with modality evidence
-    near only one occurrence. Returns the SAME dict shape (merged with
-    CT.gov's candidates by tools/breadth/candidate_queue.py's main(),
+def build_conference_suffix_candidates(
+    conf_manifest: pd.DataFrame, known_ids: set[str], source_name: str = "conference_abstract_corpus",
+) -> dict[str, dict]:
+    """Same idea as build_ctgov_suffix_candidates(), but scanning free-text
+    title+abstract instead of CT.gov's structured intervention_names field.
+    Uses _iter_adc_generic_name_matches() directly (every OCCURRENCE, not
+    the deduplicated list extract_all_adc_generic_names_from_text()
+    returns) since one abstract can genuinely discuss more than one ADC,
+    and the same candidate can be mentioned more than once with modality
+    evidence near only one occurrence. Returns the SAME dict shape (merged
+    with CT.gov's candidates by tools/breadth/candidate_queue.py's main(),
     keyed by normalized extracted name) so a name found by BOTH sources
     becomes one entity with combined evidence, not two.
+
+    `source_name` (PR #38): originally hardcoded to
+    "conference_abstract_corpus" -- generalized so this same,
+    already-hardened text-scanning logic can be reused for ANY manifest
+    shaped like `{title, [abstract]}` (this function already tolerates a
+    missing `abstract` column via `.get()`), rather than duplicating it
+    per source. Reused for `conference_crossref_search.parquet` (title-only,
+    no `abstract` column at all) and, via a concatenated title+drug_name+
+    indication text view, for `china_drug_trials.parquet` -- see main().
 
     round-1 fix: modality evidence is attributed via
     local_context_for_span() -- the sentence/window AROUND this specific
@@ -851,7 +865,7 @@ def build_conference_suffix_candidates(conf_manifest: pd.DataFrame, known_ids: s
             key = normalize_name(extracted)
             entry = candidates.setdefault(key, dict(
                 label=extracted, suffix=suffix, nct_ids=set(), conference_ids=set(), phases=set(),
-                first_seen=None, contexts=set(), sources={"conference_abstract_corpus"}, adjacent_modalities=set(),
+                first_seen=None, contexts=set(), sources={source_name}, adjacent_modalities=set(),
             ))
             entry["conference_ids"].add(row["source_record_id"])
             entry["contexts"].add(str(title)[:150])
@@ -948,23 +962,68 @@ def main() -> int:
             modality_detail="",
         ))
 
+    # WHO ICTRP (jobs/who_ictrp) is INTENTIONALLY not loaded here (PR #38).
+    # It stays a global-registry-coverage / primary-registry-discovery
+    # DIAGNOSTIC only -- WHO ICTRP's own data-use terms are non-commercial
+    # research use (established when its acquisition job was built, PR
+    # #34), and this candidate queue feeds Stelligen's commercial master
+    # catalog (DATA/catalog/adc_asset_universe.tsv). Do not wire
+    # who_ictrp.parquet into candidate discovery without first resolving
+    # that licensing question.
     ct_path = Path(args.data_dir) / "manifests" / "clinicaltrials.parquet"
     conf_path = Path(args.data_dir) / "manifests" / "conference_abstract_corpus.parquet"
     pubmed_path = Path(args.data_dir) / "manifests" / "pubmed.parquet"
     epmc_path = Path(args.data_dir) / "manifests" / "europe_pmc.parquet"
+    # PR #38: V1.1 integration -- China CDE and conference_crossref_search
+    # (both acquisition-only as of PR #36/#37) wired into candidate
+    # discovery via the SAME generic signals every other source already
+    # uses, not a bespoke per-source extractor.
+    china_cde_path = Path(args.data_dir) / "manifests" / "china_drug_trials.parquet"
+    ccs_path = Path(args.data_dir) / "manifests" / "conference_crossref_search.parquet"
     ct_df = pd.read_parquet(ct_path) if ct_path.exists() else pd.DataFrame()
     conf_df = pd.read_parquet(conf_path) if conf_path.exists() else pd.DataFrame()
     pubmed_df = pd.read_parquet(pubmed_path) if pubmed_path.exists() else pd.DataFrame()
     epmc_df = pd.read_parquet(epmc_path) if epmc_path.exists() else pd.DataFrame()
+    china_cde_df = pd.read_parquet(china_cde_path) if china_cde_path.exists() else pd.DataFrame()
+    ccs_df = pd.read_parquet(ccs_path) if ccs_path.exists() else pd.DataFrame()
+    # China CDE has NO free-text title+abstract shape -- its ADC-relevant
+    # signal, if any, is split across `title` (public_title), `drug_name`,
+    # and `indication` (see jobs/china_drug_trials/parser.py). Concatenated
+    # into a single synthetic `title` column so the EXISTING, already-
+    # hardened text-scanning functions below can be reused unmodified,
+    # rather than writing a bespoke CDE-only extractor. DISCLOSED
+    # LIMITATION (expected going in, confirmed by this PR's real run --
+    # see PR body): china_drug_trials' own text is predominantly Chinese-
+    # language, while every signal below is built for English USAN/INN
+    # nomenclature and English ADC-context grammar, so real yield from
+    # this source is expected to be near zero -- a genuine structural gap
+    # in this repo's candidate-discovery signals, not a wiring bug.
+    china_cde_text_df = pd.DataFrame()
+    if not china_cde_df.empty:
+        china_cde_text_df = china_cde_df.copy()
+        china_cde_text_df["title"] = (
+            china_cde_text_df.get("title", "").fillna("")
+            + " " + china_cde_text_df.get("drug_name", "").fillna("")
+            + " " + china_cde_text_df.get("indication", "").fillna("")
+        )
 
     ct_candidates = build_ctgov_suffix_candidates(ct_df, known_ids) if not ct_df.empty else {}
     conf_candidates = build_conference_suffix_candidates(conf_df, known_ids) if not conf_df.empty else {}
-    suffix_candidates = merge_suffix_candidates(ct_candidates, conf_candidates)
+    ccs_candidates = (
+        build_conference_suffix_candidates(ccs_df, known_ids, source_name="conference_crossref_search")
+        if not ccs_df.empty else {}
+    )
+    china_cde_candidates = (
+        build_conference_suffix_candidates(china_cde_text_df, known_ids, source_name="china_drug_trials")
+        if not china_cde_text_df.empty else {}
+    )
+    suffix_candidates = merge_suffix_candidates(ct_candidates, conf_candidates, ccs_candidates, china_cde_candidates)
     overlap = len(set(ct_candidates) & set(conf_candidates))
     print(
         f"Found {len(suffix_candidates)} distinct new candidate names via ADC USAN/INN suffix match "
         f"({len(ct_candidates)} from clinicaltrials, {len(conf_candidates)} from conference_abstract_corpus, "
-        f"{overlap} found by both)",
+        f"{len(ccs_candidates)} from conference_crossref_search, {len(china_cde_candidates)} from "
+        f"china_drug_trials, {overlap} found by both clinicaltrials and conference_abstract_corpus)",
         file=sys.stderr,
     )
 
@@ -978,7 +1037,14 @@ def main() -> int:
     epmc_dev = build_dev_code_candidates(epmc_df, "europe_pmc", known_ids) if not epmc_df.empty else {}
     conf_dev = build_dev_code_candidates(conf_df, "conference_abstract_corpus", known_ids) if not conf_df.empty else {}
     ctgov_dev = build_ctgov_dev_code_candidates(ct_df, known_ids) if not ct_df.empty else {}
-    dev_code_candidates = merge_dev_code_candidates(pubmed_dev, epmc_dev, conf_dev, ctgov_dev)
+    ccs_dev = build_dev_code_candidates(ccs_df, "conference_crossref_search", known_ids) if not ccs_df.empty else {}
+    china_cde_dev = (
+        build_dev_code_candidates(china_cde_text_df, "china_drug_trials", known_ids)
+        if not china_cde_text_df.empty else {}
+    )
+    dev_code_candidates = merge_dev_code_candidates(
+        pubmed_dev, epmc_dev, conf_dev, ctgov_dev, ccs_dev, china_cde_dev,
+    )
     # Safety net: never double-list a name the suffix signal already
     # found under the same normalized key (not expected to collide in
     # practice -- the two signals operate on structurally different label
@@ -992,7 +1058,10 @@ def main() -> int:
     # discovered suffix candidate into that candidate's own evidence,
     # instead of emitting it as a separate, duplicate row.
     alias_crosswalk = parenthetical_alias_crosswalk(
-        [(pubmed_df, ["title", "abstract"]), (epmc_df, ["title", "abstract"]), (conf_df, ["title", "abstract"])],
+        [
+            (pubmed_df, ["title", "abstract"]), (epmc_df, ["title", "abstract"]), (conf_df, ["title", "abstract"]),
+            (ccs_df, ["title"]), (china_cde_df, ["title", "drug_name", "indication"]),
+        ],
         [c["label"] for c in suffix_candidates.values()],
     )
     suffix_candidates, dev_code_candidates = apply_alias_crosswalk(suffix_candidates, dev_code_candidates, alias_crosswalk)
@@ -1001,7 +1070,8 @@ def main() -> int:
         f"Found {len(dev_code_candidates)} distinct new candidate development codes via explicit "
         f"'<code> is/was a(n) ADC' / 'ADC <code>' / appositive grammatical co-occurrence or CT.gov "
         f"structured provenance ({len(pubmed_dev)} pubmed, {len(epmc_dev)} europe_pmc, "
-        f"{len(conf_dev)} conference_abstract_corpus, {len(ctgov_dev)} clinicaltrials, before merge; "
+        f"{len(conf_dev)} conference_abstract_corpus, {len(ctgov_dev)} clinicaltrials, "
+        f"{len(ccs_dev)} conference_crossref_search, {len(china_cde_dev)} china_drug_trials, before merge; "
         f"{n_aliases_merged} merged into an existing suffix candidate as a deterministic alias, not "
         "double-listed)",
         file=sys.stderr,

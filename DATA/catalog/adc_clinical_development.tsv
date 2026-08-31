@@ -2,7 +2,7 @@ canonical_name	aliases	development_codes	target	company	highest_stage	developmen
 ETX-22	ETx22; Etx 22		Nectin-4 (NECTIN4)	Emergence Therapeutics AG	Investigative	Investigative		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
 AbGn-108	AbGn 108; AbGn108		Undisclosed	AbGenomics International, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 MTX-13					Phase1	Phase 1	NCT06752681	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
-BAT-8008					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
+BAT-8008					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search
 Raludotatug deruxtecan	Raludotatug deruxtecan		Cadherin-6 (CDH6)		Investigative	Investigative Drug-to-Antibody Ratio 8 3D		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
 NKTR-288	NKTR 288; NKTR288		Interferon alpha-1/13 (IFNA1; IFNA13)	Nektar Therapeutics	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 DN-028	DN028; DN 028		Undisclosed	Piistech; Shanghai Gopherwood Biotech Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -23,7 +23,7 @@ BIL-03n	BOL03n; BIL 03n		P2X purinoceptor 7 (P2RX7)	Biosceptre International Ltd
 BIO-112	BIO 112 (BiOneCure Therapeutics); BIO 112; BIO112		Undisclosed		Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 PF-08046037					Phase1	Phase 1	NCT06974734	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Iladatuzumab vedotin	DCDS 0780A; DCDS-0780A; DCDS0780A; Iladatuzumab vedotin; RG 7986; RG7986; RO-7032005		B-cell antigen receptor complex-associated protein beta chain (CD79B)	F. Hoffmann-La Roche Ltd; Roche Holding AG	Phase1	Phase 1 (Terminated)	NCT02453087	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
-ZV-0203					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
+ZV-0203					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search
 DXC-004A	DXC 004A; DXC-004A; DXC004A		Epidermal growth factor receptor (EGFR)	Hangzhou DAC Biotech Co., Ltd	Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Enfortumab vedotin	AGS-22C3; AGS-22CE; AGS-22M6E; AGS-22ME; AGS-M6; ASG-22CE; ASG-22M6E; ASG-22ME; ASP7465; DLE8519RWM; Enfortumab Vedotin-ejfv		Nectin-4 (NECTIN4)	Astellas Pharma, Inc; Seagen Inc; Baxter Oncology GmbH	Approved	Approved (FDA): Dec, 2019	NCT02091999; NCT03070990; NCT03219333; NCT03474107; NCT04223856	STRICT_ADC	MULTISOURCE_CONFIRMED	nar_reference; configs/known_adc_assets.yaml; clinicaltrials
 SYS6023					Phase1	Phase 1	NCT07110883	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -37,26 +37,26 @@ AZD-5335					Phase2	Phase 2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; c
 LMB-12	LMB 12; SS1-dsFv-LRggs		Mesothelin (MSLN)		Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 SLV-324					Phase1	Phase 1	NCT07108114	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 ALT-Q5	ALT-Q5 ADC; ALT Q5 ADC; Q5-drug conjugate (Alteogen); ALT Q5; ALT-05; ALTQ5		Folate receptor alpha (FOLR1)	Alteogen, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-7MW-3711	7MW 3711; 7MW3711		CD276 antigen (CD276)	Mabwell (Shanghai) Bioscience Co., Ltd	Investigative	Investigative		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
+7MW-3711	7MW 3711; 7MW3711		CD276 antigen (CD276)	Mabwell (Shanghai) Bioscience Co., Ltd	Investigative	Investigative		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search
 KM254-ADC	KM254 ADC; KM254ADC		Receptor tyrosine-protein kinase erbB-2 (HER2)	Xuanzhu Biopharmaceutical Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Sacituzumab tirumotecan	A-264; KL-A264; MK-2870; MK2870; SKB 264; SKB-264; SKB264; TROP-2-targeted antibody-drug conjugate; sacituzumab tirumotecan(MK-2870)		Tumor-associated calcium signal transducer 2 (TROP2)	Sichuan Kelun Pharmaceutical Co., Ltd; KLUS Pharma, Inc; Merck & Co., Inc	Approved	Approved (FDA): Nov, 2024	NCT05347134; NCT05351788; NCT05445908; NCT05631262; NCT05642780	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
 QLS5316					Phase1	Phase 1	NCT07358884	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-ARX-305	ARX 305; ARX-305; ARX305; NCB-002		CD70 antigen (CD70)	Ambrx, Inc; Zhejiang Medicine Co., Ltd; Novocodex Biopharmaceuticals Co., Ltd	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
+ARX-305	ARX 305; ARX-305; ARX305; NCB-002		CD70 antigen (CD70)	Ambrx, Inc; Zhejiang Medicine Co., Ltd; Novocodex Biopharmaceuticals Co., Ltd	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search
 BL-M15D1					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Veltuzumab-SN-38	Vmab-SN-38		B-lymphocyte antigen CD20 (MS4A1)		Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 DAC-002					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 JAB-BX400	JAB BX400; JABBX400		Receptor tyrosine-protein kinase erbB-2 (HER2)	Jacobio Pharmaceuticals Group Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-RC-118	RC-118; RC118; RC118-ADC,YH005; Recombinant humanized IgG1 anti-Claudin18.2 monoclonal antibody conjugated to MMAE; YH-005; YH005; YH005-ADC		Claudin-18.2 (CLDN18.2)	RemeGen Co., Ltd; Biocytogen Pharmaceuticals (Beijing) Co., Ltd; Eucure (Beijing) Biopharma Co., Ltd	Phase2	Phase 1/2	NCT03895112; NCT04914117; NCT05205850	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
+RC-118	RC-118; RC118; RC118-ADC,YH005; Recombinant humanized IgG1 anti-Claudin18.2 monoclonal antibody conjugated to MMAE; YH-005; YH005; YH005-ADC		Claudin-18.2 (CLDN18.2)	RemeGen Co., Ltd; Biocytogen Pharmaceuticals (Beijing) Co., Ltd; Eucure (Beijing) Biopharma Co., Ltd	Phase2	Phase 1/2	NCT03895112; NCT04914117; NCT05205850	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_crossref_search
 MG1901					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 BGB-C354					Phase1	Phase 1	NCT06422520	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
-ABBV-400	ABBV-400; ABBV 400; ABBV400		Hepatocyte growth factor receptor (MET)	AbbVie, Inc	Phase3	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
+ABBV-400	ABBV-400; ABBV 400; ABBV400		Hepatocyte growth factor receptor (MET)	AbbVie, Inc	Phase3	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search
 MM-310	MM 310; MM-310; MM310		Ephrin type-A receptor 2 (EPHA2)	Merrimack Pharmaceuticals, Inc	Phase1	Phase 1 (Terminated)	NCT03076372	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-MYTX-011	MYTX 011; MYTX-011; MYTX011		Hepatocyte growth factor receptor (MET)	Mythic Therapeutics, Inc	Phase1	Phase 1	NCT05652868	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
-Trastuzumab rezetecan	SHR A1811; SHR-A1811; SHRA1811		Receptor tyrosine-protein kinase erbB-2 (HER2)	Jiangsu Hengrui Pharmaceuticals Co., Ltd; Suzhou Suncadia Biopharmaceuticals Co., Ltd	Approved	Approved (FDA): May, 2025	NCT04446260; NCT04513223; NCT04818333; NCT05349409; NCT05353361; NCT05424835; NCT05482568; NCT05582499; NCT05594095; NCT05635487; NCT05671822; NCT05749588; NCT05769010	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed
+MYTX-011	MYTX 011; MYTX-011; MYTX011		Hepatocyte growth factor receptor (MET)	Mythic Therapeutics, Inc	Phase1	Phase 1	NCT05652868	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search
+Trastuzumab rezetecan	SHR A1811; SHR-A1811; SHRA1811		Receptor tyrosine-protein kinase erbB-2 (HER2)	Jiangsu Hengrui Pharmaceuticals Co., Ltd; Suzhou Suncadia Biopharmaceuticals Co., Ltd	Approved	Approved (FDA): May, 2025	NCT04446260; NCT04513223; NCT04818333; NCT05349409; NCT05353361; NCT05424835; NCT05482568; NCT05582499; NCT05594095; NCT05635487; NCT05671822; NCT05749588; NCT05769010	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc; pubmed
 DB-1317					Phase1	Phase 1	NCT07141706	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 Recombinant humanized anti-Trop2 antibody					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 NEP1-40	1D9; 1H2; 2E10; 7E11; NEP1 40		Tumor necrosis factor receptor superfamily member 16 (NGFR)	Biogen, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-AMT-676	AMT 676; AMT-676; AMT676		Cadherin-17 (CDH17)	Multitude Therapeutics, Inc	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
+AMT-676	AMT 676; AMT-676; AMT676		Cadherin-17 (CDH17)	Multitude Therapeutics, Inc	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search
 CMG-901	CMG 901; CMG-901; CMG901; MRG005; Sonesitatug vedotin; AZD0901		Claudin-18.2 (CLDN18.2)	Keymed Biosciences, Inc; Shanghai Miracogen Inc; Lepu Biopharma Co., Ltd; AstraZeneca PLC	Phase3	Phase 3	NCT04805307	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
 BA-3181	BA 3181; BA3181; CAB-EpCAM-ADC		Epithelial cell adhesion molecule (EPCAM)	BioAtla, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 NNAS-Mc-Val-Cit-PABC-MMAE	NNAS-vcMMAE		Receptor tyrosine-protein kinase erbB-2 (HER2)	Genzyme Corp	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -75,13 +75,13 @@ JSKN022					Phase1	Phase 1	NCT07292402	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_re
 SIBP-A19					Phase1	Phase 1	NCT06990464	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 OGD-204	OGD 204; OGD204		O-acetyl derivative of GD2 ganglioside (OAcGD2)	OGD2 Pharma SAS	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Trastuzumab emtansine	PRO-132365; ADO-Trastuzumab Emtansine; R-3502; R3502; RG 3502; RG-3502; RO 5304020; RO-5304020; T-DM1; DM1-trastuzumab immunoconjugate; Herceptin-DM1; Trastuzu; Trastuzumab-DM1; Trastuzumab-DM1 immunoconjugate; Trastuzumab-MCC-DM1; Trastuzumab-MCC-DM1 antibody-drug conjugate		Receptor tyrosine-protein kinase erbB-2 (HER2)	Genentech, Inc; Roche Holding AG; Chugai Pharmaceutical Co., Ltd; F. Hoffmann-La Roche Ltd	Approved	Approved (FDA): Feb 22, 2013	NCT01702571; NCT01966471; NCT02465060; NCT02924883; NCT02999672; NCT03032107	STRICT_ADC	MULTISOURCE_CONFIRMED	nar_reference; configs/known_adc_assets.yaml; clinicaltrials
-Patritumab deruxtecan	HER3-DXd; Patritumab deruxtecan; Patritumab-DX-8951 conjugate; U3-1402; U3-1402a		Receptor tyrosine-protein kinase erbB-3 (HER3)	Daiichi Sankyo Co., Ltd; AstraZeneca PLC; Baxter Oncology GmbH; BSP Pharmaceuticals SpA	Phase3	Phase 3	NCT03260491	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
+Patritumab deruxtecan	HER3-DXd; Patritumab deruxtecan; Patritumab-DX-8951 conjugate; U3-1402; U3-1402a		Receptor tyrosine-protein kinase erbB-3 (HER3)	Daiichi Sankyo Co., Ltd; AstraZeneca PLC; Baxter Oncology GmbH; BSP Pharmaceuticals SpA	Phase3	Phase 3	NCT03260491	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc
 SHR-7631					Phase1	Phase 1	NCT06381050	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 A-410	A 410; A410		Nectin-4 (NECTIN4)	Sichuan Kelun Pharmaceutical Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 XYD-9668-198	XYD 9668-198; XYD9668-198		Undisclosed	Kunshan Xinyunda Biotechnology Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 HLX-43	HLX 43; HLX-43; HLX43; YL222		Programmed cell death 1 ligand 1 (CD274)	Shanghai Henlius Biotech, Inc; Shanghai Fosun Pharmaceutical (Group) Co., Ltd	Phase2	Phase 2		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 CPO-301	CPO301; CPO 301		Epidermal growth factor receptorn (EGFR C797S) (EGFR C797S)	CSPC Pharmaceutical Group Ltd	Investigative	Investigative		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials
-Vobramitamab duocarmazine	AEX4089DC1; Anti-B7-H3 antibody drug conjugate; MGC 018; MGC-018; MGC018; Vobramitamab duocarmazine		CD276 antigen (CD276)	MacroGenics, Inc	Phase2	Phase 2	NCT03729596; NCT05293496; NCT05551117	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
+Vobramitamab duocarmazine	AEX4089DC1; Anti-B7-H3 antibody drug conjugate; MGC 018; MGC-018; MGC018; Vobramitamab duocarmazine		CD276 antigen (CD276)	MacroGenics, Inc	Phase2	Phase 2	NCT03729596; NCT05293496; NCT05551117	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc
 Cantuzumab mertansine	C-242 DM1; C-242 May; C242 maytansinoid conjugate; Cantuzumab mertansine; Monoclonal antibody C-242 DM1 conjugate; Monoclonal antibody C-242 May conjugate; Monoclonal antibody huC242-May conjugate; SB-408075; huC242 maytansinoid conjugate; huC242-DM1		Mucin-1 (MUC1)	ImmunoGen, Inc	Phase1	Phase 1 (Terminated)		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 IMAB362-Val-Cit-MMAE	IMAB362 vcMMAE; IMAB362-vc-MMAE; IMAB362 vc MMAE		Claudin-18.2 (CLDN18.2)	Ganymed Pharmaceuticals AG; Astellas Pharma, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 DB-1305	BNT325; DB 1305; DB-1305; DB1305		Tumor-associated calcium signal transducer 2 (TROP2)	Duality Biologics	Phase2	Phase 1/2	NCT05438329	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -125,9 +125,9 @@ RG-7986					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_refer
 ICAM1-DM1 ADC	ICAM1-DM1 ADC (Boston Children's Hospital); anti-ICAM1-SMCC-DM1 (Boston Children's Hospital)		Intercellular adhesion molecule 1 (ICAM1)	Boston Children's Hospital	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 MBC-301	MBC 301; MBC301		Undisclosed	Medigen Biotechnology Corp	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 HLX-41	HLX41; HLX 41		Zinc transporter ZIP6 (SLC39A6)	Shanghai Henlius Biotech, Inc; Shanghai Fosun Pharmaceutical (Group) Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-Ozuriftamab vedotin	BA3021; Ba-3021; CAB Ror2-ADC; CAB-ADC; CAB-ROR2; CAB-ROR2-ADC; HTBA3021; Ozuriftamab vedotin		Tyrosine-protein kinase transmembrane receptor ROR2 (ROR2)	BioAtla, Inc; Kaibos (Shanghai) Biomedical Co., Ltd	Phase2	Phase 2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
+Ozuriftamab vedotin	BA3021; Ba-3021; CAB Ror2-ADC; CAB-ADC; CAB-ROR2; CAB-ROR2-ADC; HTBA3021; Ozuriftamab vedotin		Tyrosine-protein kinase transmembrane receptor ROR2 (ROR2)	BioAtla, Inc; Kaibos (Shanghai) Biomedical Co., Ltd	Phase2	Phase 2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search
 ADCE-B05					Phase1	Phase 1	NCT07362888	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials
-BYON-4413	BYON 4413; BYON-4413; BYON4413		Interleukin-3 receptor subunit alpha (IL3RA)	Byondis BV	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
+BYON-4413	BYON 4413; BYON-4413; BYON4413		Interleukin-3 receptor subunit alpha (IL3RA)	Byondis BV	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search
 JAB-X1800	JABX1800; JAB X1800		5'-nucleotidase (NT5E)	Jacobio Pharmaceuticals Group Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 AVP10	AVP 10; AVP-10; PV10-MMAF		Tumor necrosis factor receptor superfamily member 8 (TNFRSF8)	Avipep Pty Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 ABBV-3373	ABBV 3373; ABBV-3373; ABBV3773; anti-TNF-GRM-antibody-drug-conjugate; glucocorticoid receptor modulator (GRM) linked to adalimumab		Tumor necrosis factor receptor superfamily member 1A (TNFRSF1A)	AbbVie, Inc	Phase2	Phase 2 (Terminated)	NCT03823391	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
@@ -135,14 +135,14 @@ TGW-101	TGW101; TGW 101		Tumor-associated glycoprotein 72 (TAG-72)	Tagworks Phar
 BMT-125961	BMT125961; BMT 125961		Undisclosed	Bristol Myers Squibb Co	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 RC-168	RC168; RC 168		Undisclosed	RemeGen Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 P38B-DM1	P38B DM1; P38B DBCO-HSA-DM-1		Podoplanin (PDPN)		Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-ATG-022	ATG 022; ATG-022; ATG-022 ADC; ATG022		Claudin-18.2 (CLDN18.2)	Antengene Corporation Co., Ltd	Phase1	Phase 1	NCT05718895	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
+ATG-022	ATG 022; ATG-022; ATG-022 ADC; ATG022		Claudin-18.2 (CLDN18.2)	Antengene Corporation Co., Ltd	Phase1	Phase 1	NCT05718895	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search
 NBT-568	NBT 568; NBT568		Undisclosed	NewBio Therapeutics	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 MP-EV-20	MP-EV20; MP EV 20		Receptor tyrosine-protein kinase erbB-3 (HER3)	MediaPharma Srl	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 MP-ENDOS-ADC					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 LM-001	LM-001 (LaNova Medicines); LM001; LM 001		Undisclosed	LaNova Medicines Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 XNW-27011	XNW 27011; XNW-27011; XNW27011		Claudin-18.2 (CLDN18.2)	Suzhou Sinovent Pharmaceuticals Co.,Ltd; Shanghai Sinovent Biopharmaceutical Co., Ltd	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 Omalizumab-amanitin 3	Omalizumab Amanitin3		High affinity immunoglobulin epsilon receptor subunit alpha (FCER1A)	Heidelberg Pharma AG	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-JSKN-003	JSKN 003; JSKN-003; JSKN003		Receptor tyrosine-protein kinase erbB-2 (HER2 ECD2); Receptor tyrosine-protein kinase erbB-2 (HER2 ECD4)	Alphamab Oncology; Alphamab Australia Co. Pty Ltd	Phase3	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
+JSKN-003	JSKN 003; JSKN-003; JSKN003		Receptor tyrosine-protein kinase erbB-2 (HER2 ECD2); Receptor tyrosine-protein kinase erbB-2 (HER2 ECD4)	Alphamab Oncology; Alphamab Australia Co. Pty Ltd	Phase3	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search; europe_pmc
 LCB-71					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 XMT-1660	XMT 1660; XMT-1660; XMT1660		V-set domain-containing T-cell activation inhibitor 1 (VTCN1)	Mersana Therapeutics, Inc	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
 JSKN027					Phase1	Phase 1	NCT07391644	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -177,7 +177,7 @@ MRX-23	MRX 23; MRX23		Undisclosed	Shanghai MicuRx Pharmaceutical Co., Ltd	Invest
 M7437					Phase1	Phase 1	NCT07311603; NCT07360314	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
 Obexelimab-amanitin	Obexelimab amanitin		B-lymphocyte antigen CD19 (CD19)	LegoChem Biosciences, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 GenSci139					Phase1	Phase 1	NCT07230977	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-XB-002	ICON-2; XB 002; XB- 002; XB-002; XB002; XB002 Tissue Factor ADC		Tissue factor (F3)	Iconic Therapeutics, Inc; Exelixis, Inc; Exelis, Inc	Phase1	Phase 1 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
+XB-002	ICON-2; XB 002; XB- 002; XB-002; XB002; XB002 Tissue Factor ADC		Tissue factor (F3)	Iconic Therapeutics, Inc; Exelixis, Inc; Exelis, Inc	Phase1	Phase 1 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_crossref_search; europe_pmc
 FDA022-BB05					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
 ESG406					Phase1	Phase 1	NCT06979674	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 XMT-1522	TAK 522; TAK-522; TAK522; XMT 1522; XMT-1522; XMT-1522, TAK-522; XMT1522		Receptor tyrosine-protein kinase erbB-2 (HER2)	Mersana Therapeutics, Inc; Adimab LLC; Takeda Pharmaceutical Co., Ltd	Phase1	Phase 1 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed
@@ -192,7 +192,7 @@ MHB088C					Phase2	Phase 2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; co
 AR081	AR 081; AR081		Undisclosed	YBiologics, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 ANT-045	ANT045; ANT 045		Insulin-like growth factor 1 receptor (IGF1R)	Antikor Biopharma Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 KTN0182A	KTN-0182A; KTN 0182A		Mast/stem cell growth factor receptor Kit (KIT)	Kolltan Pharmaceuticals, Inc; Celldex Therapeutics, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-OMTX-705	MTX5-CYT; OMTX 705; OMTX-705; OMTX705		Prolyl endopeptidase FAP (FAP)	Oncomatryx Biopharma SL; Inxmed (Nanjing) Co., Ltd; InxMed (Hong Kong) Limited	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
+OMTX-705	MTX5-CYT; OMTX 705; OMTX-705; OMTX705		Prolyl endopeptidase FAP (FAP)	Oncomatryx Biopharma SL; Inxmed (Nanjing) Co., Ltd; InxMed (Hong Kong) Limited	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc
 BL-B029A1	BL-B029; BLB029; BL B029		Undisclosed	Systimmune, Inc; Sichuan Baili Pharmaceutical Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Farletuzumab ecteribulin	ER-001159569; Eribulin/farletuzumab antibody drug conjugate; Farletuzumab ecteribulin; Farletuzumab/eribulin ADC; MORAb 202; MORAb-202; VCP-Eribulin		Folate receptor alpha (FOLR1)	Eisai Co., Ltd; Bristol Myers Squibb Co	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
 TORL-3-600	TORL-3-600; TORL-3-600 ADC; TORL-3-600-ADC		Cadherin-17 (CDH17)	TORL Biotherapeutics LLC; Translational Research In Oncology US, Inc	Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -225,7 +225,7 @@ HD-101	Amanitin-CD269 antibody drug conjugate; CD269-ATAC; anti-CD269-30.1699; a
 ABBV-324					Phase1	Phase 1	NCT06858813	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 TQB2102	TQB 2102; TQB-2102; TQB2102		Receptor tyrosine-protein kinase erbB-2 (HER2 ECD2); Receptor tyrosine-protein kinase erbB-2 (HER2 ECD4)	Nanjing Shunxin Pharmaceutical Co., Ltd; Sino Biopharmaceutical Ltd	Phase2	Phase 2	NCT05735496	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
 DXC-014					Phase1	Phase 1	NCT07177937	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
-ADCT-602	ADCT-602; Epratuzumab-cys-SG3249; Epratuzumab-cys-tesirine; hLL2-cys-PBD; hLL2-cys-SG3249		B-cell receptor CD22 (CD22)	ADC Therapeutics SA	Phase2	Phase 1/2	NCT03698552	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
+ADCT-602	ADCT-602; Epratuzumab-cys-SG3249; Epratuzumab-cys-tesirine; hLL2-cys-PBD; hLL2-cys-SG3249		B-cell receptor CD22 (CD22)	ADC Therapeutics SA	Phase2	Phase 1/2	NCT03698552	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_crossref_search; europe_pmc
 Labetuzumab govitecan	Anti-CEA monoclonal antibody; Anti-carcinoembryonic antigen monoclonal antibody; HMN-14-SN38; IMMU-130; IMMU-130, hMN14-SN38; Labetuzumab govitecan; Labetuzumab-SN38 conjugate; SN38-labetuzumab conjugate; anti-CEACAM5-SN38; hMN-14-SN38 antibody-drug conjugate		Carcinoembryonic antigen-related cell adhesion molecule 5 (CEACAM5)	Immunomedics, Inc; IBC Pharmaceuticals, Inc; Gilead Sciences, Inc	Phase2	Phase 2 (Terminated)	NCT01605318	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
 ABBV-291					Phase1	Phase 1	NCT06667687	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 TRPH-222	CAT-02-106; CD22 ADC; CD22 antibody drug conjugate; CD22-4AP; TRPH 222; TRPH-222; TRPH222		B-cell receptor CD22 (CD22)	Catalent, Inc; Triphase Accelerator Corp; Triphase Research and Development III Corp	Phase1	Phase 1 (Terminated)	NCT03682796	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
@@ -249,11 +249,11 @@ PCA-062	NOV-10; PCA 062; PCA-062; PCA-pCAD; PCA06 2, NOV-10; PCA062		Cadherin-3 
 Gemtuzumab ozogamicin	CDP-771; CL-555201; CMA-676; WAY-CMA-676; Anti-CD33-monoclonal-antibody-calicheamicin; Anti-CD33-monoclonal-antibody-p67-6-calicheamicin-conjugate; HP67-6-N-acetyl-gamma-dimethyl-acbut; hP67.6-calicheamicin; Human-anti-CD33-monoclonal-antibody-P67-6-calicheamicin-conjugate		Myeloid cell surface antigen CD33 (CD33)	Pfizer Inc; Wyeth Pharmaceuticals LLC	Approved	Approved (FDA): Mar, 2000	NCT00893399; NCT00909168	STRICT_ADC	MULTISOURCE_CONFIRMED	nar_reference; configs/known_adc_assets.yaml; clinicaltrials
 NC18					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 RN927C	RN-927C; RN 927C		Tumor-associated calcium signal transducer 2 (TROP2)	Rinat Neuroscience Corp	Investigative	Investigative		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
-MGTA-117	Anti-CD117 amanitin ADC; Anti-CD117 amanitin antibody drug conjugate; CD117-amanitin antibody drug conjugate; MGTA 117; MGTA-117; anti-CD117 (c-KIT)-amanitin antibody-drug conjugate; CD117-ADC		Mast/stem cell growth factor receptor Kit (KIT)	Heidelberg Pharma AG	Phase1	Phase 1 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
+MGTA-117	Anti-CD117 amanitin ADC; Anti-CD117 amanitin antibody drug conjugate; CD117-amanitin antibody drug conjugate; MGTA 117; MGTA-117; anti-CD117 (c-KIT)-amanitin antibody-drug conjugate; CD117-ADC		Mast/stem cell growth factor receptor Kit (KIT)	Heidelberg Pharma AG	Phase1	Phase 1 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search
 AGX101	AGX 101; AGX-101; AGX101; Anti-TM4SF1 ADC (Angiex)		Transmembrane 4 L6 family member 1 (TM4SF1)	Angiex, Inc	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials
 BG-C137					Phase1	Phase 1	NCT06625593	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
 ZL-1310	YL 212; YL-212; YL212; ZL-1310; ZL 1310; ZL1310		Delta-like protein 3 (DLL3)	Zai Lab Ltd	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
-FS-1502	FS-1502; Herceptin-LC-LBG-MMAF; IKS 014; IKS-014; IKS014; LCB14; LCB14-0110; Trastuzumab-LC-LBG-MMAF		Receptor tyrosine-protein kinase erbB-2 (HER2)	Iksuda Therapeutics; Shanghai Fosun Pharmaceutical	Phase1	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc; clinicaltrials; conference_abstract_corpus
+FS-1502	FS-1502; Herceptin-LC-LBG-MMAF; IKS 014; IKS-014; IKS014; LCB14; LCB14-0110; Trastuzumab-LC-LBG-MMAF		Receptor tyrosine-protein kinase erbB-2 (HER2)	Iksuda Therapeutics; Shanghai Fosun Pharmaceutical	Phase1	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc; conference_crossref_search; clinicaltrials; conference_abstract_corpus
 MHB036C					Phase2	Phase 2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 MDX-1203	BMS 936561; BMS-936561; BMS-936561, MDX-1203; BMS936561; MDX 1203; MDX-1203; MDX1203		CD70 antigen (CD70)	Medarex, Inc; Bristol Myers Squibb Co	Phase1	Phase 1 (Terminated)	NCT00944905	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
 Rosopatamab tetraxetan	DOTA-HUJ-591-GS; DOTA-HUJ-591; HuJ591-DOTA; Rosopatamab Y-90 conjugation		Glutamate carboxypeptidase 2 (FOLH1)	Weill Cornell Medical Center	Investigative	Investigative	NCT00052000; NCT00070837; NCT02576548	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -271,7 +271,7 @@ Zt/g4-Maytansinoid					Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFER
 BAT-8007					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 PF-06263507	A1-mafodotin; A1-mcMMAF; MMAF ADC; PF 6263507; PF-06263507; PF-06263507, A1mc MMAF; PF06263507		Trophoblast glycoprotein (TPBG)	Oxford Biomedica Plc; Pfizer Inc	Phase1	Phase 1 (Terminated)		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 IMGN-779	IMGN 779; IMGN-779; IMGN7 79; IMGN779		Myeloid cell surface antigen CD33 (CD33)	ImmunoGen, Inc	Phase1	Phase 1 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc; pubmed
-SHR-A2102	SHR A2102; SHR-A2102; SHRA2102		Nectin-4 (NECTIN4)	Shanghai Hengrui Pharmaceutical Co., Ltd	Phase3	Phase 3	NCT05701709; NCT05735275	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
+SHR-A2102	SHR A2102; SHR-A2102; SHRA2102		Nectin-4 (NECTIN4)	Shanghai Hengrui Pharmaceutical Co., Ltd	Phase3	Phase 3	NCT05701709; NCT05735275	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc
 BBT-001	BBT 001; BBT001; long-acting GCSF-IgG-Fc immunofusion protein		Granulocyte colony-stimulating factor receptor (CSF3R)	Bolder BioTechnology, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 SRB19	SRB-19; SRB 19		Epidermal growth factor receptor (EGFR); Receptor tyrosine-protein kinase erbB-3 (HER3)	Sunrock Biopharma SL	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 TRS-005	TRS-005; TRS005		B-lymphocyte antigen CD20 (MS4A1)	Zhejiang Teruisi Pharmaceutical Inc	Phase1	Phase 1	NCT05395533	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -292,7 +292,7 @@ MRG-004A	MRG 004A; MRG-004A; MRG004A		Tissue factor (F3)	Shanghai Miracogen Inc;
 ITC-6146RO					Phase1	Phase 1	NCT07423117	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 ALK202					Phase1	Phase 1	NCT06707610	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 HTI-1511	HTI 1511; HTI1511		Epidermal growth factor receptor (EGFR)	Halozyme Therapeutics, Inc	Investigative	Investigative		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
-ABBV-319	ABBV 319; ABBV-319; ABBV319		B-lymphocyte antigen CD19 (CD19)	AbbVie, Inc	Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
+ABBV-319	ABBV 319; ABBV-319; ABBV319		B-lymphocyte antigen CD19 (CD19)	AbbVie, Inc	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_crossref_search
 Ispectamab tazide	Ispectamab tazide		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)		Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 LR-DM1	LR DM1		Epidermal growth factor receptor (EGFR)	Chinese Academy of Medical Science and Peking Union Medical College	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 ASN-004	ASN 004; ASN-004; ASN004		Trophoblast glycoprotein (TPBG)	Asana BioSciences LLC	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
@@ -303,7 +303,7 @@ CS-5002	CS5002; CS 5002		Undisclosed	CStone Pharmaceuticals Co. Ltd	Investigativ
 9MW-2921	9MW 2921; 9MW-2921; 9MW2921		Tumor-associated calcium signal transducer 2 (TROP2)	Mabwell (Shanghai) Bioscience Co., Ltd	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 MEDI-0641	MEDI0641; MEDI 0641; 5T4-PBD		Trophoblast glycoprotein (TPBG)	MedImmune LLC; AstraZeneca PLC	Investigative	Investigative		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
 PHN-012					Phase1	Phase 1	NCT07127874	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials
-ARX-788	ARX 788; ARX-788; ARX788		Receptor tyrosine-protein kinase erbB-2 (HER2)	Ambrx, Inc; Zhejiang Medicine Co., Ltd; Novocodex Biopharmaceuticals Co., Ltd	Phase2	Phase 2	NCT01042379; NCT02512237; NCT03255070; NCT04829604; NCT04983121; NCT05018676; NCT05018702; NCT05041972; NCT05426486	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed
+ARX-788	ARX 788; ARX-788; ARX788		Receptor tyrosine-protein kinase erbB-2 (HER2)	Ambrx, Inc; Zhejiang Medicine Co., Ltd; Novocodex Biopharmaceuticals Co., Ltd	Phase2	Phase 2	NCT01042379; NCT02512237; NCT03255070; NCT04829604; NCT04983121; NCT05018676; NCT05018702; NCT05041972; NCT05426486	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc; pubmed
 Naratuximab emtansine	DEBIO 1562; Debio 1562, K7153 A, IMGN5 29; IMGN 529; IMGN-529; IMGN529; K7153A-SMCC-DM1; Naratuximab emtansine		Leukocyte antigen CD37 (CD37)	ImmunoGen, Inc; Debiopharm International SA	Phase2	Phase 2 (Terminated)	NCT01534715	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
 HS630					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 PF-06888667	PF 06888667; PF06888667		Receptor tyrosine-protein kinase erbB-2 (HER2)		Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -333,7 +333,7 @@ ABBV-154	ABBV 154; ABBV-154; ABBV154		Tumor necrosis factor (TNF)	AbbVie, Inc	Ph
 Trastuzumab-amanitin 1	Trastuzumab Amanitin1		Receptor tyrosine-protein kinase erbB-2 (HER2)	Heidelberg Pharma AG	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 REGN5093-M114	METxMET ADC - Regeneron Pharmaceuticals; REGN 5093 M114; REGN5093- M114; REGN5093-M114; REGN5093M114		Hepatocyte growth factor receptor (MET)	Regeneron Pharmaceuticals, Inc	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
 IKS-04	IKS 04; IKS04		Undisclosed	Iksuda Therapeutics Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-KH815					Phase1	Phase 1	NCT06885645	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
+KH815					Phase1	Phase 1	NCT06885645	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search
 BB-1709	BB 1709; BB-1709; BB1709		5'-nucleotidase (NT5E)	Baili Sikang Biomedicine (Hangzhou) Co., Ltd	Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 SHR-3792					Phase1	Phase 1	NCT06907628	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 M-1231	M 1231; M-1231; M1231		Epidermal growth factor receptor (EGFR); Mucin-1 (MUC1)	EMD Serono Research & Development Institute, Inc; The University of Texas MD Anderson Cancer Center; Sutro Biopharma, Inc	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials
@@ -367,7 +367,7 @@ WTX-212					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_refer
 CX-2051	CX 2051; CX2051		Epithelial cell adhesion molecule (EPCAM)	CytomX Therapeutics, Inc	Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 SHR-A1403	HTI 1066; HTI-1066; SHR A1403; SHR-A1403; SHR-A1403, HTI-1066; SHRA1403		Hepatocyte growth factor receptor (MET)	Jiangsu Hengrui Pharmaceuticals Co., Ltd; Shanghai Hengrui Pharmaceutical Co., Ltd	Phase1	Phase 1 (Terminated)	NCT03856541	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
 EGFR-EDV-RRM1					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-Mirzotamab clezutoclax	ABBV-155; ABBV 155; ABBV155		CD276 antigen (CD276)	AbbVie, Inc	Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
+Mirzotamab clezutoclax	ABBV-155; ABBV 155; ABBV155		CD276 antigen (CD276)	AbbVie, Inc	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_crossref_search
 AVID-100	AVID 100; AVID-100; AVID100		Epidermal growth factor receptor (EGFR)	Bristol Myers Squibb Co; Formation Biologics	Phase2	Phase 1/2 (Terminated)	NCT03094169	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 BA1301					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 FZ-AD004	FZ AD004; FZ-AD004; FZAD004		Tumor-associated calcium signal transducer 2 (TROP2)	Shanghai Fudan Zhangjiang Bio Pharmaceutical Co., Ltd	Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -403,7 +403,7 @@ GENA-111-AF	GENA-111 AF; GENA-111AF; GENA-111-ADC; GENA-111 ADC		Tumor necrosis 
 MEDI-2228	MEDI 2228; MEDI-2228; MEDI2 228; MEDI2228		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	MedImmune LLC; AstraZeneca PLC	Phase1	Phase 1 (Terminated)	NCT03489525	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
 VL-DAB31-SN38	VL DAB31 SN38		Undisclosed		Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 SIBP-A18					Phase1	Phase 1	NCT06985368	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-YL201					Phase3	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
+YL201					Phase3	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_crossref_search; europe_pmc
 SGN-CD228A	Anti-CD228-MMAE; SGN CD228A; SGN-CD228A; anti-CD228 antibody-drug conjugate		Melanotransferrin (MELTF)	Seagen Inc	Phase1	Phase 1 (Terminated)	NCT04042480	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 RC68-PY-Val-Cit-PABC-MMAE	RC68 PY VC PAB MMAE		Epidermal growth factor receptor (EGFR)	RemeGen Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Depatuxizumab mafodotin	ABT-414; ABT-414/806; Depatux-M; Depatuxizumab mafodotin		Epidermal growth factor receptor (EGFR)	AbbVie, Inc	Phase2	Phase 1/2 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
@@ -440,14 +440,14 @@ SKB-315	A315; SKB 315; SKB-315; SKB315		Claudin-18.2 (CLDN18.2)	KLUS Pharma, Inc
 SAB-Y27	SAB Y27; SABY27		Phosphatidylserine synthase 1 (PTDSS1)	Syntab Therapeutics GmbH	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 ADRX-0706	ADRX 0706; ADRX-0706; ADRX0706		Nectin-4 (NECTIN4)	Adcentrx Therapeutics, Inc	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 Ladiratuzumab vedotin	Ladiratuzumab vedotin; MK-6440; SGN-LIV1A; SGN-LIV1A, MK-6440		Zinc transporter ZIP6 (SLC39A6)	Seagen Inc; F. Hoffmann-La Roche Ltd; Merck Sharp & Dohme Corp	Phase2	Phase 2	NCT01969643; NCT03310957; NCT04032704	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
-Becotatug vedotin	MRG 003; MRG-003; MRG003		Epidermal growth factor receptor (EGFR)	Shanghai Miracogen Inc; Lepu Biopharma Co., Ltd	Approved	Approved (FDA): Oct, 2025	NCT04868344	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed
+Becotatug vedotin	MRG 003; MRG-003; MRG003		Epidermal growth factor receptor (EGFR)	Shanghai Miracogen Inc; Lepu Biopharma Co., Ltd	Approved	Approved (FDA): Oct, 2025	NCT04868344	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc; pubmed
 STRO-001	BN301; SP-7219; SP-7675; SP-7676; STRO 001; STRO- 001; STRO-001		HLA class II histocompatibility antigen gamma chain (CD74)	Sutro Biopharma, Inc; BioNova Pharmaceuticals (Shanghai) Ltd; Piramal Pharma Solutions, Inc	Phase2	Phase 1/2 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
 IBI343					Phase3	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
 IMGC-936	AEX6003 (S442C)-DGN549; IMGC 936; IMGC-936; IMGC936		Disintegrin and metalloproteinase domain-containing protein 9 (ADAM9)	ImmunoGen, Inc; MacroGenics, Inc	Phase2	Phase 1/2	NCT04622774	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
 SOT-102	SO- N102; SO-N102; SOT 102; SOT-102; SOT102; SOT102, SO- N102		Claudin-18.2 (CLDN18.2)	SCTbio as	Phase2	Phase 1/2 (Terminated)	NCT05525286	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; europe_pmc
 BIO104	BIO 104; BIO-104		Undisclosed	Boostimmune, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 SIM0609					Phase1	Phase 1	NCT07265921	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-Luveltamab tazevibulin	DBCO-Alexa647-conjugated SP7219; Luveltamab Tazevibulin; Luveltamab tazevibulin; STRO 002; STRO-002; anti-FolRa ADC STRO-002; luvelta		Folate receptor alpha (FOLR1)	Sutro Biopharma, Inc; Tasly Biopharmaceuticals Co., Ltd	Phase3	Phase 2/3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
+Luveltamab tazevibulin	DBCO-Alexa647-conjugated SP7219; Luveltamab Tazevibulin; Luveltamab tazevibulin; STRO 002; STRO-002; anti-FolRa ADC STRO-002; luvelta		Folate receptor alpha (FOLR1)	Sutro Biopharma, Inc; Tasly Biopharmaceuticals Co., Ltd	Phase3	Phase 2/3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc
 AK138D1					Phase1	Phase 1	NCT06730386; NCT07281326	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Sofituzumab vedotin	Anti-MUC16 ADC MMAE; Anti-MUC16 MMAE ADC; Anti-MUC16 mAb MMAE; Anti-MUC16 monoclonal antibody MMAE; Anti-MUC16 monoclonal antibody monomethyl auristatin E conjugate; Anti-MUC16 monoclonal antibody vedotin; DMUC-5754A; DMUC5754A; MMAE anti-MUC16; MMAE anti-MUC16 mAb; RG-7458; RG7458, DMUC 5754A; Sofituzumab vedotin		Mucin-16 (MUC16)	Genentech, Inc; Roche Holding AG	Phase1	Phase 1 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
 DS001					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; europe_pmc
@@ -473,7 +473,7 @@ Ispectamab debotansine	Anti-BCMA antibody drug conjugate; BMS-986352; BMS-986352
 huHEA125-amanitin4	huHEA125 Amanitin4		Epithelial cell adhesion molecule (EPCAM)	Heidelberg Pharma AG	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 PF-06647263	Anti-EFNA4-ADC; Anti-EFNA4-monoclonal-antibody-calicheamicin-conjugate; PF 6647263; PF-06647263; PF06647263; PF-0667263; PF 0667263; PF0667263		Ephrin-A4 (EFNA4)	Pfizer Inc	Phase1	Phase 1 (Terminated)	NCT02078752	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 BCG034					Phase1	Phase 1	NCT07503808	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-ESG-401	ESG 401; ESG-401; Humanized anti-Trop2-SN38 antibody conjugate; Humanized mAb anti-TROP-2 program; STI- 3258; STI-3258		Tumor-associated calcium signal transducer 2 (TROP2)	Shanghai Escugen Biotechnology	Phase3	Phase 3	NCT04892342	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc; clinicaltrials
+ESG-401	ESG 401; ESG-401; Humanized anti-Trop2-SN38 antibody conjugate; Humanized mAb anti-TROP-2 program; STI- 3258; STI-3258		Tumor-associated calcium signal transducer 2 (TROP2)	Shanghai Escugen Biotechnology	Phase3	Phase 3	NCT04892342	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search; europe_pmc; clinicaltrials
 CPO-204	CPO 204; CPO-204; CPO204		Undisclosed	CSPC Pharmaceutical Group Ltd	Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 <sup>111</sup>In-DTPA-D2B-DAR2-MMAE					Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 BCG022	BCG 022; BCG-022		Receptor tyrosine-protein kinase erbB-3 (ERBB3); Hepatocyte growth factor receptor (MET)	Biocytogen Pharmaceuticals (Beijing) Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -516,8 +516,8 @@ PHN-010	PHN 010; PHN-010; PHN010		Undisclosed	Pheon Therapeutics Ltd	Phase1	Phas
 DXC1002					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 GB7008-01-Val-Cit-MMAE	Anti-CLDN6 antibody drug conjugate (cancer); GB-7008-01 vcMMAE		Claudin-6 (CLDN6)	Shanghai Genechem Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 9MW-2821	9MW 2821; 9MW-2821; 9MW2821		Nectin-4 (NECTIN4)	Jiangsu Maiweikang New Drug R & D Co., Ltd; Mabwell (Shanghai) Bioscience Co., Ltd	Phase2	Phase 1/2		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-SHR-A1921	SHR A1921; SHR-A1921; SHRA1921; SHR-1921; SHR 1921; SHR1921		Tumor-associated calcium signal transducer 2 (TROP2)	Suzhou Suncadia Biopharmaceuticals Co., Ltd; Shanghai Hengrui Pharmaceutical Co., Ltd	Phase2	Phase 2	NCT05154604; NCT05594875; NCT05765032	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
-SHR-A2009	SHR A2009; SHR-A2009; SHRA2009		Receptor tyrosine-protein kinase erbB-3 (HER3)	Suzhou Suncadia Biopharmaceuticals Co., Ltd	Phase3	Phase 3	NCT05114759; NCT05394818	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials
+SHR-A1921	SHR A1921; SHR-A1921; SHRA1921; SHR-1921; SHR 1921; SHR1921		Tumor-associated calcium signal transducer 2 (TROP2)	Suzhou Suncadia Biopharmaceuticals Co., Ltd; Shanghai Hengrui Pharmaceutical Co., Ltd	Phase2	Phase 2	NCT05154604; NCT05594875; NCT05765032	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc
+SHR-A2009	SHR A2009; SHR-A2009; SHRA2009		Receptor tyrosine-protein kinase erbB-3 (HER3)	Suzhou Suncadia Biopharmaceuticals Co., Ltd	Phase3	Phase 3	NCT05114759; NCT05394818	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_crossref_search
 PRO-1184					Phase3	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 SBT-6290	SBT 6290; SBT-6290; SBT6290		Nectin-4 (NECTIN4)	Silverback Therapeutics, Inc; ARS Pharmaceuticals, Inc	Phase2	Phase 1/2 (Terminated)		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 SYS6040					Phase1	Phase 1	NCT06970795	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -529,7 +529,7 @@ TGW101					Phase1	Phase 1	NCT06959706	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED
 SBE303					Phase1	Phase 1	NCT07524348	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 NBE-001	NBE 001; NBE001		Undisclosed	NBE-Therapeutics AG	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Enlimomab pegol					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-HS-20089	HS 20089; HS-20089; HS20089		V-set domain-containing T-cell activation inhibitor 1 (VTCN1)	Shanghai Hansoh Biomedical Co. Ltd	Phase3	Phase 3	NCT05263479	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
+HS-20089	HS 20089; HS-20089; HS20089		V-set domain-containing T-cell activation inhibitor 1 (VTCN1)	Shanghai Hansoh Biomedical Co. Ltd	Phase3	Phase 3	NCT05263479	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_crossref_search
 IBI-354	IBI 354; IBI-354; IBI354		Receptor tyrosine-protein kinase erbB-2 (HER2)	Innovent Biologics (Suzhou) Co. Ltd	Phase3	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 SYS6041					Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 NJH-395	Immune stimulator antibody conjugate; NJH 395; NJH-395; NJH395		Receptor tyrosine-protein kinase erbB-2 (HER2)	Novartis Pharma AG	Phase1	Phase 1 (Terminated)	NCT03696771	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -563,9 +563,9 @@ RC-88	RC 88; RC-88; RC-88 ADC; RC88		Mesothelin (MSLN)	RemeGen Co., Ltd	Phase2	P
 TUB-030	TUB 030; TUB-030; TUB030		Trophoblast glycoprotein (TPBG)	Tubulis GmbH	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
 GQ-1005	GQ 1005; GQ-1005; GQ1005		Receptor tyrosine-protein kinase erbB-2 (HER2)	GeneQuantum Healthcare (Suzhou) Co. Ltd	Phase3	Phase 3		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 ALX2004					Phase1	Phase 1	NCT07085091	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials
-M-9140	M 9140; M-9140; M9140		Carcinoembryonic antigen-related cell adhesion molecule 5 (CEACAM5)	Merck KGaA; EMD Serono Research & Development Institute, Inc	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
+M-9140	M 9140; M-9140; M9140		Carcinoembryonic antigen-related cell adhesion molecule 5 (CEACAM5)	Merck KGaA; EMD Serono Research & Development Institute, Inc	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search
 Moxetumomab pasudotox	HA22; CAT- 8015; GCR-8015; R490A		B-cell receptor CD22 (CD22)	AstraZeneca PLC	Approved	Approved (FDA): Sep, 2018	NCT00462189; NCT00586924; NCT00659425; NCT01829711; NCT01891981; NCT02227108	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-SGN-B6A	PF-08046047; SGN-B6A; SGNB6A; Sigvotatug Vedotin; humanized IgG1 beta-6 monoclonal antibody conjugated to monomethyl auristatin E		Integrin beta-6 (ITGB6)	Seagen Inc	Phase3	Phase 3	NCT04389632	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
+SGN-B6A	PF-08046047; SGN-B6A; SGNB6A; Sigvotatug Vedotin; humanized IgG1 beta-6 monoclonal antibody conjugated to monomethyl auristatin E		Integrin beta-6 (ITGB6)	Seagen Inc	Phase3	Phase 3	NCT04389632	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search
 BL-M005	BLM005; BL M005		Undisclosed	Sichuan Biokin Pharmaceutical Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 PF-06688992	GD3 ADC; PF 06688992; PF-06688992; PF06688992		Ganglioside GD3	Pfizer Inc; Memorial Sloan-Kettering Cancer Center	Phase1	Phase 1 (Terminated)	NCT03159117	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 BSI-709	BSI 709; BSI709		Cadherin-6 (CDH6)	Biosion, Inc; ImmunoGen, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -579,16 +579,16 @@ Anetumab corixetan	BAY 2287409; BAY-2287409; BAY2287409		Mesothelin (MSLN)	Bayer
 BIO105	BIO-105; BIO 105		Undisclosed	Boostimmune, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Araris ADC	Anti-Nectin-4 ADC(Araris Biotech); ArarisADC; Araris-ADC		Nectin-4 (NECTIN4)	Araris Biotech AG	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 BMS-986148	BMS 986148; BMS-986148; Mesothelin-ADC		Mesothelin (MSLN)	Bristol Myers Squibb Co	Phase2	Phase 1/2 (Terminated)	NCT02341625; NCT02884726	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; europe_pmc
-LM-305	LM 305; LM-305; LM305; AZD-0305; AZD 0305; AZD0305		G-protein coupled receptor family C group 5 member D (GPRC5D)	LaNova Medicines Ltd; AstraZeneca PLC	Phase2	Phase 1/2		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
+LM-305	LM 305; LM-305; LM305; AZD-0305; AZD 0305; AZD0305		G-protein coupled receptor family C group 5 member D (GPRC5D)	LaNova Medicines Ltd; AstraZeneca PLC	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_crossref_search
 Vas-201	Vas 201; Vas201		Undisclosed	VasGene Therapeutics, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 Cirmtuzumab vedotin	UC-961ADC3		Inactive tyrosine-protein kinase transmembrane receptor ROR1 (ROR1)	University of California; Oncternal Therapeutics, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-Pivekimab sunirine	IMGN 632; IMGN-632; IMGN632; Pivekimab sunirine		Interleukin-3 receptor subunit alpha (IL3RA)	ImmunoGen, Inc	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
+Pivekimab sunirine	IMGN 632; IMGN-632; IMGN632; Pivekimab sunirine		Interleukin-3 receptor subunit alpha (IL3RA)	ImmunoGen, Inc	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search; europe_pmc
 Lupartumab amadotin	Anti-C4.4a antibody-drug conjugates; Anti-LY6-PLAUR domain containing 3 antibody-drug conjugates; Anti-LYPD3 antibody-drug conjugates; BAY 1129980; BAY-1129980; BAY1129980; LYPD3 protein-directed antibody-drug conjugates; Lupartumab amadotin		Ly6/PLAUR domain-containing protein 3 (LYPD3)	Bayer AG	Phase1	Phase 1 (Terminated)		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 AT-03					Phase1	Phase 1	NCT06809114	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 MGTA-C100	MGTAC100; MGTA C100; Anti-CD45 antibody-drug conjugate (Magenta Therapeutics); anti-CD45 antibody-drug conjugate (Magenta Therapeutics)		Receptor-type tyrosine-protein phosphatase C (PTPRC)	Magenta Therapeutics, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 BAT-8009					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 FS-1502	FS-1502; Herceptin-LC-LBG-MMAF; IKS 014; IKS-014; IKS014; LCB14; LCB14-0110; Trastuzumab-LC-LBG-MMAF		Receptor tyrosine-protein kinase erbB-2 (HER2)	Iksuda Therapeutics; Shanghai Fosun Pharmaceutical	Phase3	Phase 3		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-HDP-101	HDP 101; HDP-101; HDP101		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	Heidelberg Pharma AG; Huadong Medicine Co., Ltd; Hangzhou Zhongmeihuadong Pharmaceutical Co., Ltd; Heidelberg Pharma Research GmbH	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc; pubmed
+HDP-101	HDP 101; HDP-101; HDP101		Tumor necrosis factor receptor superfamily member 17 (TNFRSF17)	Heidelberg Pharma AG; Huadong Medicine Co., Ltd; Hangzhou Zhongmeihuadong Pharmaceutical Co., Ltd; Heidelberg Pharma Research GmbH	Phase2	Phase 1/2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search; europe_pmc; pubmed
 SYD1035	WO2015177360A1_ADC-HC120; SYD 1035; SYD-1035		Glutamate carboxypeptidase 2 (FOLH1)	Byodes Private Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 DS-6157a	DS 6157a; DS-6157; DS-6157a; DS6157a		G-protein coupled receptor 20 (GPR20)	Daiichi Sankyo Inc	Phase1	Phase 1 (Terminated)	NCT04276415	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
 AGS-67E	AGS 67E; AGS-67E; AGS67E		Leukocyte antigen CD37 (CD37)	Agensys, Inc	Phase1	Phase 1 (Terminated)	NCT02175433; NCT02610062	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -597,12 +597,12 @@ MLN2704					Phase2	Phase 2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; eu
 IMB-213I	IMB 213I; IMB213I		Undisclosed	ImmunoBiochem Corp	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 ICP-B794					Phase1	Phase 1	NCT07136558	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 DS-3939					Phase2	Phase 2		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-BB-1701	BB 1701; BB-1701; BB1701		Receptor tyrosine-protein kinase erbB-2 (HER2 exon 20)	Baili Sikang Biomedicine (Hangzhou) Co., Ltd	Phase2	Phase 2	NCT04257110	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; europe_pmc
+BB-1701	BB 1701; BB-1701; BB1701		Receptor tyrosine-protein kinase erbB-2 (HER2 exon 20)	Baili Sikang Biomedicine (Hangzhou) Co., Ltd	Phase2	Phase 2	NCT04257110	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc
 RG-7841					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 BSI-04702					Phase2	Phase 2		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 PF-06650808	PF 6650808; PF-06650808; PF-6650808		Neurogenic locus notch homolog protein 3 (NOTCH3)	Pfizer Inc	Phase1	Phase 1 (Terminated)	NCT02129205	REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 DK-410	DK410; DK 410		Mucosal vascular addressin cell adhesion molecule 1 (MADCAM1)	Deka Biosciences, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
-BC3195	BC-3195; BC 3195; BC3195		Cadherin-3 (CDH3)	Wuxi Biocity Biopharmaceutics Co., Ltd	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
+BC3195	BC-3195; BC 3195; BC3195		Cadherin-3 (CDH3)	Wuxi Biocity Biopharmaceutics Co., Ltd	Phase1	Phase 1		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search; europe_pmc
 SYS6010	SYS 6010; SYS-6010; SYS6010; CPO 301; CPO-301; CPO301		Epidermal growth factor receptor (EGFR)	CSPC Pharmaceutical Group Ltd	Phase3	Phase 3		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
 JBH-492	Anti-CCR7 antibody-drug conjugate - Novartis Pharmaceuticals; JBH 492; JBH-492; JBH492		C-C chemokine receptor type 7 (CCR7)	Novartis Pharmaceuticals Corp	Phase1	Phase 1 (Terminated)		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus
 Vadastuximab talirine	33-A; 33A; Anti-CD33A targeted ADC; SGN CD33A; SGN-CD33A; Vadastuximab talirine		Myeloid cell surface antigen CD33 (CD33)	Seagen Inc	Phase3	Phase 3 (Terminated)	NCT01902329; NCT02326584; NCT02614560; NCT02785900	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
@@ -648,7 +648,7 @@ ST1	ST-1; ST 1		Onco-foetal sialyl-Tn	Siamab Therapeutics, Inc	Investigative	Inv
 CPO-102					Phase1	Phase 1		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 N501-SN38	N501 SN38		Trophoblast glycoprotein (TPBG)		Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 RC-108	RC 108; RC-108; RC108		Hepatocyte growth factor receptor (MET)	RemeGen Co., Ltd	Phase2	Phase 2		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; clinicaltrials; conference_abstract_corpus
-RGX-019	RGX019; RGX 019		Tyrosine-protein kinase Mer (MERTK)	The Rockefeller University; Inspirna, Inc	Investigative	Investigative		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
+RGX-019	RGX019; RGX 019		Tyrosine-protein kinase Mer (MERTK)	The Rockefeller University; Inspirna, Inc	Investigative	Investigative		PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; conference_crossref_search; europe_pmc
 BP-A102	BPA102; BP A102		Undisclosed	Tinfa Biopharmaceuticals Co., Ltd	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
 AbGn-107	AbGn 107; AbGn-107; AbGn-107, Ab1-18Hr1; AbGn107		AG7	AbGenomics International, Inc	Phase1	Phase 1 (Terminated)	NCT02908451	PRESUMED_ADC	MULTISOURCE_CONFIRMED	nar_reference; conference_abstract_corpus; europe_pmc
 OXS-1750	Antibody-drug conjugate containing OXS-4235; OXS 1750; OXS1750		Sequestosome-1 (SQSTM1)	OXIS Biotech, Inc; GT Biopharma, Inc; MultiCell Technologies, Inc	Investigative	Investigative		REFERENCE_UNCLASSIFIED	REFERENCE_CONFIRMED	nar_reference
@@ -706,7 +706,7 @@ T emtansine					PHASE2			PRESUMED_ADC	SINGLE_STRONG_SOURCE	clinicaltrials
 Trastuzmab deruxtecan					PHASE2			PRESUMED_ADC	SINGLE_STRONG_SOURCE	clinicaltrials
 Disitamb Vedotin					PHASE2			PRESUMED_ADC	SINGLE_STRONG_SOURCE	clinicaltrials
 Distitamab Vedotin					PHASE2			PRESUMED_ADC	SINGLE_STRONG_SOURCE	clinicaltrials
-bulumtatug fuvedotin					PHASE3			PRESUMED_ADC	MULTISOURCE_CONFIRMED	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed
+bulumtatug fuvedotin					PHASE3			PRESUMED_ADC	MULTISOURCE_CONFIRMED	clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc; pubmed
 Trastzumab Deruxtecan					PHASE2			PRESUMED_ADC	SINGLE_STRONG_SOURCE	clinicaltrials
 dimer Talirine								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 sacitizumab govitecan								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
@@ -721,15 +721,16 @@ trastuzuamb deruxtecan								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corp
 tecotabart vedotin								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 Tratuzumab deruxtecan								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 distamab vedotin								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
-zelenectide pevedotin								ADJACENT_CONJUGATE_MODALITY	EXCLUDED_ADJACENT_MODALITY	conference_abstract_corpus
+zelenectide pevedotin								ADJACENT_CONJUGATE_MODALITY	EXCLUDED_ADJACENT_MODALITY	conference_abstract_corpus; conference_crossref_search
 trastruzumab deruxtecan								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 sacituzmab govitecan								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 Trastuzumab vedotin								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 datopotumab deruxtecan								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 M100B vedotin								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
+Enfotulumab vedotin								PRESUMED_ADC	NEEDS_REVIEW	conference_crossref_search
 MEDI4276								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc; pubmed
 ABBV-011								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc; pubmed
-DHES0815A								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc; pubmed
+DHES0815A								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; conference_crossref_search; europe_pmc; pubmed
 STI-8811								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc; pubmed
 Tras-16b								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc; pubmed
 OBI-992								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc; pubmed
@@ -738,7 +739,7 @@ JSKN033								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc; pubmed
 PL119								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc; pubmed
 YL205								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc; pubmed
 BR112								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc; pubmed
-ABBV-706								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc; pubmed
+ABBV-706								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; conference_crossref_search; europe_pmc; pubmed
 DYP688								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc; pubmed
 NRBM-25								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc; pubmed
 CRB-701								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus; europe_pmc; pubmed
@@ -773,7 +774,7 @@ NAV-001								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
 AMT-562								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 MEDI7247								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
 ITC-6102RO								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
-AMT-253								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
+AMT-253								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; conference_crossref_search; europe_pmc
 SN-38								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 AGCM-22								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 TE-1146								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
@@ -786,8 +787,8 @@ DX8951								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 7MW4911								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
 DS-3939a								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
 MBRC-101								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; europe_pmc
-TUB-040								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus; europe_pmc
-BVX001								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
+TUB-040								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus; conference_crossref_search; europe_pmc
+BVX001								PRESUMED_ADC	NEEDS_REVIEW	conference_crossref_search; europe_pmc
 HRA00129-C004								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 FK002								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
 NRTL-24								PRESUMED_ADC	NEEDS_REVIEW	europe_pmc
@@ -897,14 +898,14 @@ SOT109								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 HLX91-048								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 ADCT-241								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 QLS5132								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
-GSK5733584								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
+GSK5733584								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; conference_crossref_search
 GSK5764227								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus
 DAY301								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus
 EO-1022								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 IBI3010								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 ALK201								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 SDP01873								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
-ACR246								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
+ACR246								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; conference_crossref_search
 IPN60300								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 VBC101								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus
 JS212								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
@@ -920,15 +921,15 @@ BCG047								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 MK-3120								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 CD205								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 SYD988								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
-CS5001								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus
+CS5001								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus; conference_crossref_search
 BNT326								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
-AMT-116								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
+AMT-116								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; conference_crossref_search
 SHR-1826								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
-LY4170156								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus
+LY4170156								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus; conference_crossref_search
 BG-C9074								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials; conference_abstract_corpus
 BNT324								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 DM005								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
-ABBV-969								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
+ABBV-969								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus; conference_crossref_search
 SYS6043								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 TQB6411								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
 DM002								PRESUMED_ADC	NEEDS_REVIEW	conference_abstract_corpus
@@ -1025,3 +1026,5 @@ VBC106								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials
 VBC108								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials
 FG-M131								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials
 VBC117								PRESUMED_ADC	NEEDS_REVIEW	clinicaltrials
+F0002								PRESUMED_ADC	NEEDS_REVIEW	conference_crossref_search
+HDM2005								PRESUMED_ADC	NEEDS_REVIEW	conference_crossref_search

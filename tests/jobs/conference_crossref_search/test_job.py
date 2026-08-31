@@ -39,6 +39,8 @@ adc_query_terms:
 
 CONFIG_YAML_ONE_TERM = CONFIG_YAML.replace('  - "term2"\n', "")
 
+CONFIG_YAML_ONE_TERM_WITH_DEFAULT_SINCE = "default_since: \"2022-01-01\"\n" + CONFIG_YAML_ONE_TERM
+
 CONFIG_YAML_INACTIVE = CONFIG_YAML.replace("active: true", "active: false")
 
 CONFIG_YAML_NO_TERMS = """
@@ -315,6 +317,63 @@ def test_different_since_windows_produce_distinguishable_query_provenance(tmp_pa
         & (discovery2["query_text"].str.contains("from-pub-date=2022-01-01"))
     ]["query_id"].unique()
     assert len(a1_2022_ids) == 1
+
+
+@responses.activate
+def test_no_since_falls_back_to_config_default_since_matching_explicit_since(tmp_path):
+    """Reviewer-flagged (round-1, PR #38): update_breadth's ordinary
+    maintenance cadence calls this job with NO --since at all. Without a
+    source-level default, that would silently become an undeclared
+    full-history backfill instead of an incremental maintenance run. A
+    plain run (no --since) against a config declaring default_since must
+    produce the IDENTICAL effective date filter, query_text, and
+    deterministic query_id as an explicit --since equal to that default."""
+    fixtures = {
+        ("issn:1111-1111,from-pub-date:2022-01-01", "term1", "*"): [A1],
+        ("issn:2222-2222,from-pub-date:2022-01-01", "term1", "*"): [],
+    }
+
+    _register_search(fixtures)
+    args_no_since = _base_args(tmp_path, config_text=CONFIG_YAML_ONE_TERM_WITH_DEFAULT_SINCE)
+    ConferenceCrossrefSearchJob().run(args_no_since)
+    manifest_no_since = _manifest_df(tmp_path)
+    discovery_no_since = _discovery_df(tmp_path)
+
+    responses.reset()
+    _register_search(fixtures)
+    args_explicit_since = _base_args(
+        tmp_path, config_text=CONFIG_YAML_ONE_TERM_WITH_DEFAULT_SINCE, since="2022-01-01",
+    )
+    ConferenceCrossrefSearchJob().run(args_explicit_since)
+    manifest_explicit = _manifest_df(tmp_path)
+    discovery_explicit = _discovery_df(tmp_path)
+
+    # Second run is a no-op re-materialization of the SAME effective query
+    # (content-hash unchanged) -- both runs' discovery rows for a1 share
+    # exactly one query_id/query_text, proving the two invocations are
+    # identical, not merely both successful.
+    a1_no_since = discovery_no_since[discovery_no_since["source_record_id"] == "10.9/a1"]
+    a1_explicit = discovery_explicit[discovery_explicit["source_record_id"] == "10.9/a1"]
+    assert set(a1_no_since["query_id"]) == set(a1_explicit["query_id"])
+    assert set(a1_no_since["query_text"]) == set(a1_explicit["query_text"])
+    assert all("from-pub-date=2022-01-01" in t for t in a1_explicit["query_text"])
+    assert list(manifest_explicit[manifest_explicit["source_record_id"] == "10.9/a1"]["version"]) == [1]
+    assert len(manifest_no_since) == len(manifest_explicit) == 1
+
+
+@responses.activate
+def test_since_explicitly_overrides_config_default_since(tmp_path):
+    fixtures = {
+        ("issn:1111-1111,from-pub-date:2016-01-01", "term1", "*"): [A1],
+        ("issn:2222-2222,from-pub-date:2016-01-01", "term1", "*"): [],
+    }
+    _register_search(fixtures)
+    result = ConferenceCrossrefSearchJob().run(
+        _base_args(tmp_path, config_text=CONFIG_YAML_ONE_TERM_WITH_DEFAULT_SINCE, since="2016-01-01")
+    )
+    assert result.records_downloaded == 1
+    discovery = _discovery_df(tmp_path)
+    assert all("from-pub-date=2016-01-01" in t for t in discovery["query_text"])
 
 
 @responses.activate

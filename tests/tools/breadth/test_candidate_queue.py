@@ -116,6 +116,68 @@ def test_build_conference_suffix_candidates_surfaces_genuinely_new_name():
     assert entry["conference_ids"] == {"10.1/1"}
 
 
+def test_build_conference_suffix_candidates_accepts_a_custom_source_name():
+    """PR #38: source_name was hardcoded to "conference_abstract_corpus";
+    generalized so this same function can be reused for
+    conference_crossref_search.parquet (and, via a concatenated text view,
+    china_drug_trials.parquet) without mislabeling their evidence."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="10.1/1", title="A study of Mecbotamab vedotin in AXL-positive tumors",
+             abstract=None, publication_or_release_date="2020-01-01"),
+    ])
+    candidates = build_conference_suffix_candidates(manifest, known, source_name="conference_crossref_search")
+    entry = next(iter(candidates.values()))
+    assert entry["sources"] == {"conference_crossref_search"}
+
+
+def test_build_conference_suffix_candidates_default_source_name_unchanged():
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="10.1/1", title="A study of Mecbotamab vedotin in AXL-positive tumors",
+             abstract=None, publication_or_release_date="2020-01-01"),
+    ])
+    candidates = build_conference_suffix_candidates(manifest, known)
+    entry = next(iter(candidates.values()))
+    assert entry["sources"] == {"conference_abstract_corpus"}
+
+
+def test_build_conference_suffix_candidates_works_without_an_abstract_column():
+    """conference_crossref_search.parquet has no `abstract` column at all
+    (title-only manifest, PR #37) -- confirms the existing `.get()`-based
+    lookup tolerates a genuinely missing column, not just a null value."""
+    known = known_identifier_set([])
+    manifest = pd.DataFrame([
+        dict(source_record_id="10.1/1", title="Mecbotamab vedotin in AXL-positive tumors",
+             publication_or_release_date="2020-01-01"),
+    ])
+    assert "abstract" not in manifest.columns
+    candidates = build_conference_suffix_candidates(manifest, known, source_name="conference_crossref_search")
+    assert len(candidates) == 1
+
+
+def test_build_conference_suffix_candidates_reused_for_china_cde_via_concatenated_title():
+    """China CDE has no title+abstract shape -- candidate_queue.py's main()
+    concatenates title/drug_name/indication into a synthetic `title`
+    column before calling this function. This test exercises that same
+    concatenation pattern directly (an English generic name, to isolate
+    testing the wiring/reuse itself from the separately-disclosed
+    Chinese-language recall limitation)."""
+    known = known_identifier_set([])
+    cde_manifest = pd.DataFrame([
+        dict(source_record_id="CTR001", title="", drug_name="Mecbotamab vedotin", indication="breast cancer",
+             publication_or_release_date=None),
+    ])
+    text_df = cde_manifest.copy()
+    text_df["title"] = text_df["title"].fillna("") + " " + text_df["drug_name"].fillna("") + " " + text_df["indication"].fillna("")
+    candidates = build_conference_suffix_candidates(text_df, known, source_name="china_drug_trials")
+    assert len(candidates) == 1
+    entry = next(iter(candidates.values()))
+    assert entry["label"] == "Mecbotamab vedotin"
+    assert entry["sources"] == {"china_drug_trials"}
+    assert entry["conference_ids"] == {"CTR001"}
+
+
 def test_merge_suffix_candidates_combines_sources_for_same_name():
     ct = {"mecbotamabvedotin": dict(label="Mecbotamab vedotin", suffix="vedotin", nct_ids={"NCT1"},
                                      conference_ids=set(), phases=set(), first_seen="2021-01-01",
@@ -148,6 +210,19 @@ def test_status_and_confidence_for_sources():
     assert status_and_confidence_for_sources({"clinicaltrials"}) == ("AUTO_HIGH_CONFIDENCE", "high")
     assert status_and_confidence_for_sources({"clinicaltrials", "conference_abstract_corpus"}) == ("AUTO_HIGH_CONFIDENCE", "high")
     assert status_and_confidence_for_sources({"conference_abstract_corpus"}) == ("NEEDS_REVIEW", "medium")
+
+
+def test_status_and_confidence_for_sources_china_cde_alone_stays_needs_review():
+    """PR #38: China CDE's own search terms are proven imprecise (see
+    jobs/china_drug_trials's PR write-up) and cannot establish ADC modality
+    on their own -- a candidate found ONLY via china_drug_trials must never
+    auto-promote, regardless of how many china_drug_trials records mention
+    it. This holds automatically (no special-casing needed) because
+    status_and_confidence_for_sources() only upgrades on "clinicaltrials"
+    membership -- this test locks that in as an explicit regression."""
+    assert status_and_confidence_for_sources({"china_drug_trials"}) == ("NEEDS_REVIEW", "medium")
+    assert status_and_confidence_for_sources({"china_drug_trials", "conference_crossref_search"}) == ("NEEDS_REVIEW", "medium")
+    assert status_and_confidence_for_sources({"china_drug_trials", "clinicaltrials"}) == ("AUTO_HIGH_CONFIDENCE", "high")
 
 
 def test_candidate_id_for_name_is_source_independent_and_stable_across_upgrade():
