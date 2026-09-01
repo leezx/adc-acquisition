@@ -4,6 +4,8 @@ import pandas as pd
 
 from tools.catalog.build_adc_drug_overview import (
     OVERVIEW_FIELDS,
+    ROW_STATUS_ACTIVE,
+    ROW_STATUS_STALE_HISTORICAL,
     build_overview_rows,
     load_existing_overview,
     load_tsv,
@@ -47,8 +49,25 @@ def test_build_overview_rows_enriches_payload_linker_indication_from_candidates(
     assert row["linker"] == "vc linker"
     assert row["indication"] == "breast cancer"
     assert row["target"] == "HER2"
-    assert row["clinical_phase"] == "Phase 1"
+    assert row["clinical_phase"] == "Phase1"
+    assert row["development_status"] == "Phase 1"
+    assert row["row_status"] == ROW_STATUS_ACTIVE
     assert row["date_added_to_table"] == "2026-09-01"
+
+
+def test_clinical_phase_uses_standardized_highest_stage_not_messy_development_status():
+    """Reviewer-flagged (round-1): clinical_phase must read the base
+    catalog's standardized `highest_stage` code, not the much messier
+    free-text `development_status` field (which can carry things like
+    "Investigative Drug-to-Antibody Ratio 8 3D" -- not a clinical phase at
+    all). Both are preserved as separate columns."""
+    catalog = [_catalog_row(
+        asset_id="NAR_A1", evidence_ids="A1",
+        highest_stage="Phase1", development_status="Phase 1 (Terminated)",
+    )]
+    rows = build_overview_rows(catalog, [], [], today="2026-09-01")
+    assert rows[0]["clinical_phase"] == "Phase1"
+    assert rows[0]["development_status"] == "Phase 1 (Terminated)"
 
 
 def test_build_overview_rows_leaves_payload_blank_when_no_candidate_match():
@@ -106,6 +125,7 @@ def test_asset_removed_from_catalog_is_kept_as_stale_historical_row_not_dropped(
     assert len(rows) == 1
     assert rows[0]["asset_id"] == "NAR_OLD"
     assert rows[0]["date_added_to_table"] == "2026-01-01"
+    assert rows[0]["row_status"] == ROW_STATUS_STALE_HISTORICAL
 
 
 def test_multiple_new_assets_appended_in_sorted_order_for_determinism():

@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 """Comprehensive, human-readable ADC drug overview table (user request,
-2026-09-01): one row per ADC asset, wide format, covering target/payload/
-linker/indication/company/clinical-phase/evidence-strength.
+2026-09-01): one row per MASTER-CATALOG ASSET, wide format, covering
+target/payload/linker/indication/company/clinical-phase/evidence-strength.
+
+WORDING CORRECTION (reviewer-flagged, round-1): this is NOT "1,029
+confirmed classical ADC drugs" -- `adc_asset_universe.tsv` is a
+high-recall superset (its own `adc_scope` column includes
+`REFERENCE_UNCLASSIFIED` and `ADJACENT_CONJUGATE_MODALITY` rows, never
+assumed to be a classical ADC without independent evidence) and its
+`catalog_status` column separately tracks evidence strength
+(`REFERENCE_CONFIRMED`/`MULTISOURCE_CONFIRMED`/`SINGLE_STRONG_SOURCE`/
+`NEEDS_REVIEW`). Both columns are carried through unchanged here so this
+overview never hides that uncertainty.
 
 Base identity + target/company/clinical-phase/evidence-strength come from
 `DATA/catalog/adc_asset_universe.tsv` (the full ~1,000-row master catalog,
@@ -12,6 +22,19 @@ wherever this asset's own `evidence_ids` include that table's `entity_id`.
 For the large majority of rows (no `adc_candidates.tsv` match), payload/
 linker/indication are left BLANK -- honestly disclosing "not
 independently known to this system" rather than guessed or defaulted.
+
+Columns: `asset_id, row_status, canonical_name, aliases,
+development_codes, target, payload, linker, indication, company,
+clinical_phase, development_status, adc_scope, catalog_status,
+source_count, sources, nct_ids, date_added_to_table`. `clinical_phase`
+is the STANDARDIZED stage code (the base catalog's own `highest_stage` --
+Phase1/Phase2/Phase3/Approved/Investigative); `development_status` is
+the messier free-text field (approval dates, termination status, e.g.
+"Phase 1 (Terminated)") kept as its own separate column so no information
+is lost (reviewer-flagged, round-1 fix: `clinical_phase` previously read
+`development_status` directly, which is NOT a clean clinical-phase value
+for every row -- e.g. one real row's `development_status` reads
+"Investigative Drug-to-Antibody Ratio 8 3D").
 
 STABLE, APPEND-ONLY ROW ORDER (explicit user request): re-running this
 script against a growing `adc_asset_universe.tsv` must never reorder or
@@ -31,7 +54,16 @@ merge; see `build_adc_asset_universe.py`'s own `IDENTITY_MERGE` handling
 and `reports/delta/*/identity_merges.tsv`) is KEPT as its last-known
 historical row, not silently dropped -- this tool makes no attempt to
 re-resolve the merge target itself, that is out of scope for an overview
-table.
+table. REVIEWER-FLAGGED, ROUND-1 FIX: keeping it unmarked would let a
+merged-away/stale row silently masquerade as a current active asset,
+breaking this table's "one row per CURRENT master-catalog entity"
+semantics. Every row now carries `row_status`: `ACTIVE` (asset_id exists
+in the base catalog right now) or `STALE_HISTORICAL` (asset_id only
+exists in a prior overview run) -- filter to `row_status == "ACTIVE"` for
+a true current snapshot. Deliberately NOT labeled `MERGED`: this script
+cannot itself prove every disappearance was a genuine identity merge (vs.
+e.g. a manual catalog edit), so `STALE_HISTORICAL` is the honest,
+unassuming label.
 
 Usage:
     python3 tools/catalog/build_adc_drug_overview.py \
@@ -51,11 +83,23 @@ from pathlib import Path
 import pandas as pd
 
 OVERVIEW_FIELDS = [
-    "asset_id", "canonical_name", "aliases", "development_codes",
+    "asset_id", "row_status", "canonical_name", "aliases", "development_codes",
     "target", "payload", "linker", "indication", "company",
-    "clinical_phase", "adc_scope", "catalog_status", "source_count",
+    "clinical_phase", "development_status", "adc_scope", "catalog_status", "source_count",
     "sources", "nct_ids", "date_added_to_table",
 ]
+
+# ACTIVE: asset_id currently exists in adc_asset_universe.tsv -- this row
+# is a current master-catalog entity. STALE_HISTORICAL: asset_id no longer
+# appears there (reviewer-flagged, round-1 fix -- only happens via a
+# genuine identity merge; see build_adc_asset_universe.py's own
+# IDENTITY_MERGE handling) -- kept for the append-only history guarantee,
+# but explicitly marked so a reader never mistakes it for a current entry.
+# Deliberately NOT called "MERGED": this script cannot itself prove every
+# disappearance was a real identity merge (vs. e.g. a manual catalog
+# edit), so STALE_HISTORICAL is the honest, unassuming label.
+ROW_STATUS_ACTIVE = "ACTIVE"
+ROW_STATUS_STALE_HISTORICAL = "STALE_HISTORICAL"
 
 
 def load_tsv(path: Path) -> list[dict]:
@@ -105,6 +149,7 @@ def build_overview_rows(
         enrich = _find_candidate_match(catalog_row.get("evidence_ids"), candidate_index) or {}
         return dict(
             asset_id=asset_id,
+            row_status=ROW_STATUS_ACTIVE,
             canonical_name=catalog_row.get("canonical_name"),
             aliases=catalog_row.get("aliases"),
             development_codes=catalog_row.get("development_codes"),
@@ -113,7 +158,16 @@ def build_overview_rows(
             linker=enrich.get("linker_if_known"),
             indication=enrich.get("indications"),
             company=catalog_row.get("company"),
-            clinical_phase=catalog_row.get("development_status"),
+            # `highest_stage` is the STANDARDIZED clinical-stage code
+            # (Phase1/Phase2/Phase3/Approved/Investigative) -- reviewer-
+            # flagged, round-1 fix: `development_status` is a much
+            # messier free-text field (e.g. "Investigative Drug-to-
+            # Antibody Ratio 8 3D", "Phase 1 (Terminated)", approval
+            # dates) that is NOT itself a clean clinical-phase value, kept
+            # here as its own separate column instead so no information
+            # is lost.
+            clinical_phase=catalog_row.get("highest_stage"),
+            development_status=catalog_row.get("development_status"),
             adc_scope=catalog_row.get("adc_scope"),
             catalog_status=catalog_row.get("catalog_status"),
             source_count=catalog_row.get("source_count"),
@@ -129,7 +183,12 @@ def build_overview_rows(
         if asset_id in catalog_by_id:
             rows.append(_build_row(asset_id, catalog_by_id[asset_id]))
         else:
-            rows.append(stale_row_by_id[asset_id])  # kept as last-known historical record
+            # No longer in the base catalog -- kept for append-only history,
+            # but explicitly relabeled so it's never mistaken for a current
+            # active entity (reviewer-flagged, round-1 fix).
+            stale_row = dict(stale_row_by_id[asset_id])
+            stale_row["row_status"] = ROW_STATUS_STALE_HISTORICAL
+            rows.append(stale_row)
         seen.add(asset_id)
 
     # Genuinely new asset_ids -- appended at the tail, sorted for determinism.
