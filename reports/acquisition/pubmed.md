@@ -21,35 +21,35 @@ since=(no lower bound), until=(no upper bound)
 
 ## Records discovered
 
-1179 query-hits across 4 active queries; 839 unique PMIDs.
+22728 query-hits across 4 active queries; 10295 unique PMIDs.
 
 ## Records downloaded
 
-576 downloaded, 23 skipped as unchanged (matched checkpoint content hash).
+6690 downloaded, 3597 skipped as unchanged (matched checkpoint content hash).
 
 ## Duplicates
 
-293 PMIDs were discovered by more than one query. The content manifest (`pubmed.parquet`) attributes each record to a single "primary" query per Prompt.md section 3's single-valued contract, but every discovering query is preserved as a separate row in `pubmed_discovery.parquet` (append-only, one row per (PMID, query, run)) — that ledger, not this report, is the authoritative answer to "why is this document in our corpus."
+9999 PMIDs were discovered by more than one query. The content manifest (`pubmed.parquet`) attributes each record to a single "primary" query per Prompt.md section 3's single-valued contract, but every discovering query is preserved as a separate row in `pubmed_discovery.parquet` (append-only, one row per (PMID, query, run)) — that ledger, not this report, is the authoritative answer to "why is this document in our corpus."
 
 ### Records per query
 
-- PUBMED_ADC_001: 600
-- PUBMED_ADC_002: 200
-- PUBMED_ADC_003: 200
+- PUBMED_ADC_001: 9999
+- PUBMED_ADC_002: 9999
+- PUBMED_ADC_003: 2551
 - PUBMED_ADC_004: 179
 
 ## Missing fields
 
-- abstract missing in 13/599 records
-- doi missing in 38/599 records
+- abstract missing in 307/10477 records
+- doi missing in 130/10477 records
 
-- records with abstract: 586
-- records without abstract: 13
-- records with DOI: 561
+- records with abstract: 10170
+- records without abstract: 307
+- records with DOI: 10347
 
 ## Failed downloads
 
-1 (see DATA/logs/pubmed_failures.log and pubmed_attempts.parquet (status=failed)). Failed attempts never occupy a content-manifest version slot — they live only in the attempts ledger, so they can never overwrite or be overwritten by a real evidence snapshot.
+8 (see DATA/logs/pubmed_failures.log and pubmed_attempts.parquet (status=failed)). Failed attempts never occupy a content-manifest version slot — they live only in the attempts ledger, so they can never overwrite or be overwritten by a real evidence snapshot.
 
 ## Rate/access limitations
 
@@ -65,13 +65,15 @@ since=(no lower bound), until=(no upper bound)
 
 - Query family covers phrase/abbreviation/immunoconjugate forms only (configs/pubmed_queries.yaml); it will miss papers that describe an ADC without using any of those terms.
 - No full text is retrieved here — see Job 02 (Europe PMC / PMC) for legally accessible full text.
+- PUBMED_ADC_001: NCBI ESearch retstart ceiling (9,999 records) reached -- this query has 10691 true hits, only records up to retstart=9998 were discovered this run, NOT a full query result. See NCBI's own EDirect/history-based batching docs (https://www.ncbi.nlm.nih.gov/books/NBK25499/) for a future fix if this query's uncovered tail matters.
+- PUBMED_ADC_002: NCBI ESearch retstart ceiling (9,999 records) reached -- this query has 10691 true hits, only records up to retstart=9998 were discovered this run, NOT a full query result. See NCBI's own EDirect/history-based batching docs (https://www.ncbi.nlm.nih.gov/books/NBK25499/) for a future fix if this query's uncovered tail matters.
 
 ## Date distribution
 
-1983: 1, 1984: 1, 1987: 2, 1988: 4, 1989: 4, 1990: 6, 1991: 7, 1992: 3, 1993: 7, 1994: 6, 1995: 2, 1996: 4, 1997: 8, 1998: 4, 1999: 6, 2000: 4, 2001: 5, 2002: 7, 2003: 3, 2004: 12, 2005: 8, 2006: 3, 2007: 6, 2008: 5, 2009: 4, 2010: 2, 2011: 7, 2012: 4, 2013: 1, 2014: 3, 2015: 5, 2016: 4, 2017: 1, 2018: 4, 2019: 2, 2020: 3, 2021: 2, 2022: 2, 2023: 5, 2024: 3, 2025: 4, 2026: 425
+1983: 1, 1984: 1, 1987: 2, 1988: 4, 1989: 4, 1990: 6, 1991: 7, 1992: 4, 1993: 8, 1994: 6, 1995: 2, 1996: 4, 1997: 8, 1998: 5, 1999: 7, 2000: 4, 2001: 5, 2002: 7, 2003: 4, 2004: 14, 2005: 8, 2006: 5, 2007: 8, 2008: 10, 2009: 8, 2010: 6, 2011: 18, 2012: 23, 2013: 33, 2014: 41, 2015: 242, 2016: 337, 2017: 344, 2018: 437, 2019: 515, 2020: 615, 2021: 774, 2022: 821, 2023: 1038, 2024: 1294, 2025: 1840, 2026: 1957
 
 ## Reproduction command
 
 ```bash
-python -m adc_acquisition pubmed --since 1900-01-01 --until 3000-01-01 --limit 839 --output DATA
+python -m adc_acquisition pubmed --since 1900-01-01 --until 3000-01-01 --limit 10295 --output DATA
 ```

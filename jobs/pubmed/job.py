@@ -24,6 +24,17 @@ Together with DATA/checkpoints/pubmed.json (source_record_id -> content_hash/
 version), these are the index that makes a monthly `--resume` run cheap: look
 up each newly-discovered PMID in the checkpoint to know instantly whether it's
 new, unchanged, or changed, without re-deriving that from the ledgers.
+
+BUG FIX (2026-09-01): two active queries' true hit counts grew past NCBI
+ESearch's own hard 9,999-record pagination ceiling ("'retstart' cannot be
+larger than 9998"). A query past that ceiling returns HTTP 200 with a
+MALFORMED JSON error body (a literal, unescaped newline inside the ERROR
+string), which crashed `response.json()` uncaught and aborted the ENTIRE
+job -- since discovery is purely in-memory until after all queries finish
+(see run()), this lost 100% of that run's PubMed acquisition, not just the
+oversized queries. See NCBI_ESEARCH_MAX_RETSTART in run() -- pagination now
+stops at the ceiling and discloses the truncation (job.py's result.notes +
+report.py's "Known coverage gaps") instead of crashing.
 """
 
 from __future__ import annotations
@@ -50,6 +61,11 @@ from jobs.pubmed.report import build_report
 QUERIES_PATH = Path("configs/pubmed_queries.yaml")
 EXTRA_FIELDS = ["pmid", "pmcid", "doi", "abstract", "authors", "journal", "publication_types", "mesh_terms"]
 DEFAULT_ESEARCH_PAGE_SIZE = 200
+# NCBI's own documented ESearch ceiling (live-verified 2026-09-01, see this
+# module's run() for the full incident): "'retstart' cannot be larger than
+# 9998. For PubMed, ESearch can only retrieve the first 9,999 records
+# matching the query." Never request a retstart beyond this.
+NCBI_ESEARCH_MAX_RETSTART = 9998
 LICENSE_NOTE = "NCBI PubMed metadata, public domain indexing record."
 
 DISCOVERY_COLUMNS = ["source", "source_record_id", "query_id", "query_version", "query_text", "discovered_at", "run_id"]
@@ -124,6 +140,7 @@ class PubMedJob(AcquisitionJob):
         pmid_first_query: dict[str, tuple[str, str]] = {}
         pmid_query_hits: dict[str, set[str]] = defaultdict(set)
         query_id_counts: Counter = Counter()
+        truncated_queries: list[tuple[str, int]] = []  # (query_id, true total count)
         for query in queries:
             retstart = 0
             hits_for_query = 0
@@ -147,6 +164,23 @@ class PubMedJob(AcquisitionJob):
                 # dozens of API calls for a 20-record smoke test. Without
                 # --limit (a real full/incremental run) we page to exhaustion.
                 enough_for_limit = args.limit and len(pmid_first_query) >= args.limit
+                # NCBI's ESearch API hard-caps retstart at
+                # NCBI_ESEARCH_MAX_RETSTART -- live-verified 2026-09-01:
+                # "'retstart' cannot be larger than 9998. For PubMed, ESearch
+                # can only retrieve the first 9,999 records matching the
+                # query." A query whose real hit count exceeds this returns
+                # HTTP 200 with a MALFORMED JSON error body (a literal,
+                # unescaped newline byte inside the ERROR string), which
+                # crashed response.json() uncaught and aborted the entire
+                # job -- not a transient network issue, 100% reproducible
+                # for any query whose count exceeds the ceiling. Never
+                # request a retstart past it; disclose the truncation
+                # instead (NCBI's own docs point to EDirect/history-based
+                # batching as the real fix for >9,999-hit queries -- out of
+                # scope for this job's simple esearch pagination).
+                if retstart > NCBI_ESEARCH_MAX_RETSTART and retstart < page.count:
+                    truncated_queries.append((query.query_id, page.count))
+                    break
                 if retstart >= page.count or not page.idlist or enough_for_limit:
                     break
             query_id_counts[query.query_id] = hits_for_query
@@ -157,6 +191,20 @@ class PubMedJob(AcquisitionJob):
 
         result = JobRunResult(job_name=self.name, dry_run=bool(args.dry_run))
         result.queries_run = len(queries)
+        for query_id, true_count in truncated_queries:
+            logger.warning(
+                "query %s: NCBI ESearch retstart ceiling reached, %d of %d true hits discovered "
+                "(records beyond retstart=%d are structurally unreachable via this endpoint)",
+                query_id, min(true_count, NCBI_ESEARCH_MAX_RETSTART + DEFAULT_ESEARCH_PAGE_SIZE), true_count,
+                NCBI_ESEARCH_MAX_RETSTART,
+            )
+            result.notes.append(
+                f"{query_id}: NCBI ESearch retstart ceiling (9,999 records) reached -- this query has "
+                f"{true_count} true hits, only records up to retstart={NCBI_ESEARCH_MAX_RETSTART} were "
+                "discovered this run, NOT a full query result. See NCBI's own EDirect/history-based "
+                "batching docs (https://www.ncbi.nlm.nih.gov/books/NBK25499/) for a future fix if this "
+                "query's uncovered tail matters."
+            )
         result.records_discovered = len(all_pmids)
         result.notes.append(
             "used NCBI api_key (rate limit 9 req/s)" if api_key else "no NCBI api_key configured (rate limit 2.8 req/s)"

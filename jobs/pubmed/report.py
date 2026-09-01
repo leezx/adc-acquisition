@@ -47,6 +47,7 @@ def build_report(
 
     queries_used = "\n".join(f"- `{q.query_id}` (v{q.query_version}): `{q.query_text}` — {q.purpose}" for q in queries)
     records_per_query = "\n".join(f"- {qid}: {count}" for qid, count in sorted(query_id_counts.items()))
+    retstart_ceiling_notes = [n for n in result.notes if "retstart ceiling" in n]
 
     return f"""# PubMed (Job 01)
 
@@ -108,6 +109,7 @@ since={since or "(no lower bound)"}, until={until or "(no upper bound)"}
 
 - Query family covers phrase/abbreviation/immunoconjugate forms only (configs/pubmed_queries.yaml); it will miss papers that describe an ADC without using any of those terms.
 - No full text is retrieved here — see Job 02 (Europe PMC / PMC) for legally accessible full text.
+{chr(10).join(f"- {n}" for n in retstart_ceiling_notes)}
 
 ## Date distribution
 

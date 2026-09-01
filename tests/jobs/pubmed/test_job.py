@@ -326,6 +326,94 @@ def test_malformed_efetch_response_fails_whole_batch_without_crashing(tmp_path, 
     assert (attempts_df["status"] == "failed").all()
 
 
+def _esearch_callback_huge_count(request):
+    """Simulates a query whose TRUE hit count (10,100) exceeds NCBI's own
+    hard 9,999-record ESearch retstart ceiling -- live-verified 2026-09-01:
+    a real request at retstart=10000 returns HTTP 200 with a malformed
+    JSON error body ("'retstart' cannot be larger than 9998..."). This
+    callback returns a well-formed page for any retstart actually
+    requested (job.py must never request retstart > 9998 at all)."""
+    import json
+
+    qs = parse_qs(request.url.split("?", 1)[1])
+    retstart = int(qs["retstart"][0])
+    retmax = int(qs["retmax"][0])
+    true_count = 10100
+    ids = [str(i) for i in range(retstart, min(retstart + retmax, true_count))]
+    body = {"esearchresult": {"count": str(true_count), "retmax": str(retmax), "retstart": str(retstart), "idlist": ids}}
+    return (200, {}, json.dumps(body))
+
+
+@responses.activate
+def test_esearch_never_requests_retstart_past_ncbi_ceiling(tmp_path, monkeypatch):
+    _setup(tmp_path, monkeypatch)
+    (tmp_path / "queries.yaml").write_text(
+        """
+queries:
+  - query_id: Q_HUGE
+    query_version: 1
+    query_text: "huge-query"
+    purpose: test
+    active: true
+"""
+    )
+    responses.add_callback(
+        responses.GET, f"{EUTILS_BASE}/esearch.fcgi", callback=_esearch_callback_huge_count, content_type="application/json",
+    )
+    responses.add_callback(responses.POST, f"{EUTILS_BASE}/efetch.fcgi", callback=_make_efetch_callback())
+
+    result = PubMedJob().run(_base_args(tmp_path, dry_run=True))
+
+    esearch_calls = [c for c in responses.calls if "esearch.fcgi" in c.request.url]
+    max_retstart_requested = max(int(parse_qs(c.request.url.split("?", 1)[1])["retstart"][0]) for c in esearch_calls)
+    assert max_retstart_requested <= 9998
+
+    assert any("retstart ceiling" in n for n in result.notes)
+    assert any("Q_HUGE" in n and "10100" in n for n in result.notes)
+    # Truncated, but never crashed -- some records were still discovered.
+    assert result.records_discovered > 0
+
+
+@responses.activate
+def test_report_surfaces_retstart_ceiling_truncation(tmp_path, monkeypatch):
+    _setup(tmp_path, monkeypatch)
+    (tmp_path / "queries.yaml").write_text(
+        """
+queries:
+  - query_id: Q_HUGE
+    query_version: 1
+    query_text: "huge-query"
+    purpose: test
+    active: true
+"""
+    )
+    responses.add_callback(
+        responses.GET, f"{EUTILS_BASE}/esearch.fcgi", callback=_esearch_callback_huge_count, content_type="application/json",
+    )
+    responses.add_callback(responses.POST, f"{EUTILS_BASE}/efetch.fcgi", callback=_make_efetch_callback())
+
+    PubMedJob().run(_base_args(tmp_path))
+
+    report_text = (tmp_path / "reports" / "acquisition" / "pubmed.md").read_text()
+    assert "retstart ceiling" in report_text
+    assert "Q_HUGE" in report_text
+
+
+@responses.activate
+def test_normal_sized_query_under_ceiling_is_unaffected(tmp_path, monkeypatch):
+    """Regression guard: the ceiling check must never trigger for a query
+    whose count never approaches it -- confirms no behavior change for
+    every normal-sized query in this repo's real config."""
+    _setup(tmp_path, monkeypatch)
+    responses.add_callback(responses.GET, f"{EUTILS_BASE}/esearch.fcgi", callback=_esearch_callback, content_type="application/json")
+    responses.add_callback(responses.POST, f"{EUTILS_BASE}/efetch.fcgi", callback=_make_efetch_callback())
+
+    result = PubMedJob().run(_base_args(tmp_path))
+
+    assert not any("retstart ceiling" in n for n in result.notes)
+    assert result.records_discovered == 3
+
+
 @responses.activate
 def test_empty_result_set_produces_empty_manifest_without_error(tmp_path, monkeypatch):
     _setup(tmp_path, monkeypatch)
