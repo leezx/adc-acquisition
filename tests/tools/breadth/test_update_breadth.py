@@ -347,6 +347,8 @@ def test_run_derivation_stage_skips_downstream_steps_after_a_failure(tmp_path, m
     assert by_name["component_coverage_audit"].ok is False
     assert by_name["build_adc_asset_universe"].skipped is True
     assert by_name["build_adc_asset_universe"].ok is False
+    assert by_name["build_adc_drug_overview"].skipped is True
+    assert by_name["build_adc_drug_overview"].ok is False
 
 
 def test_run_derivation_stage_all_steps_run_when_none_fail(tmp_path, monkeypatch):
@@ -361,16 +363,23 @@ def test_run_derivation_stage_all_steps_run_when_none_fail(tmp_path, monkeypatch
     monkeypatch.setattr(subprocess, "run", fake_run)
     outcomes = run_derivation_stage(tmp_path, tmp_path, tmp_path)
 
-    assert len(calls) == 4
+    assert len(calls) == 5
     assert all(o.ok and not o.skipped for o in outcomes)
     assert [o.name for o in outcomes] == [
-        "candidate_queue", "feasibility_entities", "component_coverage_audit", "build_adc_asset_universe",
+        "candidate_queue", "feasibility_entities", "component_coverage_audit",
+        "build_adc_asset_universe", "build_adc_drug_overview",
     ]
     catalog_cmd = calls[3]
     assert "build_adc_asset_universe.py" in catalog_cmd[1]
     assert "--nar-dir" in catalog_cmd
     assert str(tmp_path / "adc_asset_universe.tsv") in catalog_cmd
     assert str(tmp_path / "adc_clinical_development.tsv") in catalog_cmd
+
+    overview_cmd = calls[4]
+    assert "build_adc_drug_overview.py" in overview_cmd[1]
+    assert str(tmp_path / "adc_asset_universe.tsv") in overview_cmd
+    assert str(tmp_path / "adc_candidates.tsv") in overview_cmd
+    assert str(tmp_path / "adc_drug_overview.csv") in overview_cmd
 
 
 def test_main_incomplete_derivation_returns_nonzero_and_skips_entity_diff(tmp_path, monkeypatch):

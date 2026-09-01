@@ -21,14 +21,19 @@ doesn't already have and independently pass its own tests through:
    requirement.
 2. **Breadth-derivation stage** -- `tools/breadth/candidate_queue.py` ->
    `feasibility_entities.py` -> `component_coverage_audit.py` ->
-   `tools/catalog/build_adc_asset_universe.py` (PR #33 addition), in that
-   fixed dependency order (each reads an earlier step's own output
-   files), re-deriving the feasibility-entity universe AND the reference-
-   seeded master catalog from whatever the acquisition stage just added.
-   `build_adc_asset_universe.py` itself does not read
-   `component_coverage_audit.tsv` -- it is appended as the chain's LAST
-   step (after, not interleaved with, component_coverage_audit) purely to
-   keep the existing three-step order and its existing tests untouched;
+   `tools/catalog/build_adc_asset_universe.py` (PR #33 addition) ->
+   `tools/catalog/build_adc_drug_overview.py` (user-requested addition,
+   2026-09-01: a single wide, human-readable one-row-per-ADC CSV joining
+   the master catalog with payload/linker/indication enrichment, with a
+   stable append-only row order across runs -- see that script's own
+   module docstring), in that fixed dependency order (each reads an
+   earlier step's own output files), re-deriving the feasibility-entity
+   universe AND the reference-seeded master catalog from whatever the
+   acquisition stage just added. `build_adc_asset_universe.py` itself does
+   not read `component_coverage_audit.tsv` -- it is appended as the
+   chain's LAST-but-one step (after, not interleaved with,
+   component_coverage_audit) purely to keep the existing three-step order
+   and its existing tests untouched;
    ordering it relative to component_coverage_audit has no correctness
    effect since neither reads the other's output.
 
@@ -181,6 +186,7 @@ DERIVATION_STEPS = [
     ("feasibility_entities", REPO_ROOT / "tools" / "breadth" / "feasibility_entities.py"),
     ("component_coverage_audit", REPO_ROOT / "tools" / "breadth" / "component_coverage_audit.py"),
     ("build_adc_asset_universe", REPO_ROOT / "tools" / "catalog" / "build_adc_asset_universe.py"),
+    ("build_adc_drug_overview", REPO_ROOT / "tools" / "catalog" / "build_adc_drug_overview.py"),
 ]
 
 # (filename, key_columns, count_column_for_evidence-deepened_detection)
@@ -515,8 +521,9 @@ def run_acquisition_stage(job_names: list[str], output_dir: Path) -> list[JobRun
 def run_derivation_stage(data_dir: Path, feasibility_output: Path, catalog_output: Path) -> list[JobRunOutcome]:
     """Fixed DEPENDENCY order, not independent siblings -- candidate_queue
     -> feasibility_entities -> component_coverage_audit ->
-    build_adc_asset_universe (PR #33), each reading an earlier step's own
-    output files. Unlike the acquisition stage (whose jobs are genuinely
+    build_adc_asset_universe (PR #33) -> build_adc_drug_overview
+    (2026-09-01), each reading an earlier step's own output files. Unlike
+    the acquisition stage (whose jobs are genuinely
     independent and must all be attempted regardless of a sibling's
     failure), a derivation step failure must fail the REST OF THE CHAIN
     closed: running feasibility_entities against a stale
@@ -550,6 +557,13 @@ def run_derivation_stage(data_dir: Path, feasibility_output: Path, catalog_outpu
                 "--output", str(catalog_output / "adc_asset_universe.tsv"),
                 "--report-output", str(REPO_ROOT / "reports" / "validation" / "breadth" / "ADC_ASSET_UNIVERSE_COVERAGE.md"),
                 "--clinical-development-output", str(catalog_output / "adc_clinical_development.tsv"),
+            ]
+        elif label == "build_adc_drug_overview":
+            cmd = [
+                sys.executable, str(script_path),
+                "--catalog-file", str(catalog_output / "adc_asset_universe.tsv"),
+                "--candidates-file", str(feasibility_output / "adc_candidates.tsv"),
+                "--output", str(catalog_output / "adc_drug_overview.csv"),
             ]
         outcome = _run_subprocess(label, cmd)
         outcomes.append(outcome)
