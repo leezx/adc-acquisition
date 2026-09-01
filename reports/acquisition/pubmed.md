@@ -21,11 +21,11 @@ since=(no lower bound), until=(no upper bound)
 
 ## Records discovered
 
-22728 query-hits across 4 active queries; 10295 unique PMIDs.
+22728 query-hits across 4 active queries; 10294 unique PMIDs.
 
 ## Records downloaded
 
-6690 downloaded, 3597 skipped as unchanged (matched checkpoint content hash).
+310 downloaded, 9976 skipped as unchanged (matched checkpoint content hash).
 
 ## Duplicates
 
@@ -40,12 +40,12 @@ since=(no lower bound), until=(no upper bound)
 
 ## Missing fields
 
-- abstract missing in 307/10477 records
-- doi missing in 130/10477 records
+- abstract missing in 310/10778 records
+- doi missing in 129/10778 records
 
-- records with abstract: 10170
-- records without abstract: 307
-- records with DOI: 10347
+- records with abstract: 10468
+- records without abstract: 310
+- records with DOI: 10649
 
 ## Failed downloads
 
@@ -65,15 +65,15 @@ since=(no lower bound), until=(no upper bound)
 
 - Query family covers phrase/abbreviation/immunoconjugate forms only (configs/pubmed_queries.yaml); it will miss papers that describe an ADC without using any of those terms.
 - No full text is retrieved here — see Job 02 (Europe PMC / PMC) for legally accessible full text.
-- PUBMED_ADC_001: NCBI ESearch retstart ceiling (9,999 records) reached -- this query has 10691 true hits, only records up to retstart=9998 were discovered this run, NOT a full query result. See NCBI's own EDirect/history-based batching docs (https://www.ncbi.nlm.nih.gov/books/NBK25499/) for a future fix if this query's uncovered tail matters.
-- PUBMED_ADC_002: NCBI ESearch retstart ceiling (9,999 records) reached -- this query has 10691 true hits, only records up to retstart=9998 were discovered this run, NOT a full query result. See NCBI's own EDirect/history-based batching docs (https://www.ncbi.nlm.nih.gov/books/NBK25499/) for a future fix if this query's uncovered tail matters.
+- PUBMED_ADC_001: NCBI ESearch retstart ceiling (9,999 records) reached -- this query has 10691 true hits, only 9999 records (up to retstart=9998) were discovered this run, NOT a full query result. Retrieval is explicitly sorted publication-date descending (sort=pub_date), so the truncated tail represents the OLDEST portion of this oversized query, not an arbitrary/relevance-ranked subset -- rolling 14-day maintenance still reliably captures newly published papers. See NCBI's own EDirect/history-based batching docs (https://www.ncbi.nlm.nih.gov/books/NBK25499/) for a future fix if this query's uncovered historical tail matters.
+- PUBMED_ADC_002: NCBI ESearch retstart ceiling (9,999 records) reached -- this query has 10691 true hits, only 9999 records (up to retstart=9998) were discovered this run, NOT a full query result. Retrieval is explicitly sorted publication-date descending (sort=pub_date), so the truncated tail represents the OLDEST portion of this oversized query, not an arbitrary/relevance-ranked subset -- rolling 14-day maintenance still reliably captures newly published papers. See NCBI's own EDirect/history-based batching docs (https://www.ncbi.nlm.nih.gov/books/NBK25499/) for a future fix if this query's uncovered historical tail matters.
 
 ## Date distribution
 
-1983: 1, 1984: 1, 1987: 2, 1988: 4, 1989: 4, 1990: 6, 1991: 7, 1992: 4, 1993: 8, 1994: 6, 1995: 2, 1996: 4, 1997: 8, 1998: 5, 1999: 7, 2000: 4, 2001: 5, 2002: 7, 2003: 4, 2004: 14, 2005: 8, 2006: 5, 2007: 8, 2008: 10, 2009: 8, 2010: 6, 2011: 18, 2012: 23, 2013: 33, 2014: 41, 2015: 242, 2016: 337, 2017: 344, 2018: 437, 2019: 515, 2020: 615, 2021: 774, 2022: 821, 2023: 1038, 2024: 1294, 2025: 1840, 2026: 1957
+1983: 1, 1984: 1, 1987: 2, 1988: 4, 1989: 4, 1990: 6, 1991: 7, 1992: 4, 1993: 8, 1994: 6, 1995: 2, 1996: 4, 1997: 8, 1998: 5, 1999: 7, 2000: 4, 2001: 5, 2002: 7, 2003: 4, 2004: 14, 2005: 8, 2006: 5, 2007: 8, 2008: 10, 2009: 8, 2010: 6, 2011: 18, 2012: 23, 2013: 33, 2014: 35, 2015: 255, 2016: 347, 2017: 354, 2018: 449, 2019: 533, 2020: 632, 2021: 800, 2022: 841, 2023: 1070, 2024: 1336, 2025: 1892, 2026: 2012
 
 ## Reproduction command
 
 ```bash
-python -m adc_acquisition pubmed --since 1900-01-01 --until 3000-01-01 --limit 10295 --output DATA
+python -m adc_acquisition pubmed --since 1900-01-01 --until 3000-01-01 --limit 10294 --output DATA
 ```

@@ -367,9 +367,14 @@ queries:
     esearch_calls = [c for c in responses.calls if "esearch.fcgi" in c.request.url]
     max_retstart_requested = max(int(parse_qs(c.request.url.split("?", 1)[1])["retstart"][0]) for c in esearch_calls)
     assert max_retstart_requested <= 9998
+    # Reviewer-flagged (round-1): every request for an oversized query must
+    # be explicitly sorted newest-first, so the truncated tail is always
+    # the OLDEST portion, never an arbitrary relevance-ranked subset.
+    assert all(parse_qs(c.request.url.split("?", 1)[1])["sort"][0] == "pub_date" for c in esearch_calls)
 
     assert any("retstart ceiling" in n for n in result.notes)
     assert any("Q_HUGE" in n and "10100" in n for n in result.notes)
+    assert any("OLDEST portion" in n and "pub_date" in n for n in result.notes)
     # Truncated, but never crashed -- some records were still discovered.
     assert result.records_discovered > 0
 

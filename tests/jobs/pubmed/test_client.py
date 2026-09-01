@@ -32,6 +32,24 @@ def test_esearch_sends_expected_params_and_parses_result(client):
 
 
 @responses.activate
+def test_esearch_always_sorts_by_publication_date_descending(client):
+    """Reviewer-flagged (round-1): NCBI ESearch defaults to relevance
+    ordering, not date -- for a query truncated at the 9,999-record
+    retstart ceiling (see jobs/pubmed/job.py), the retained records must
+    be deterministically the NEWEST ones, or a just-published paper could
+    land permanently in the unreachable tail."""
+    responses.add(
+        responses.GET,
+        f"{EUTILS_BASE}/esearch.fcgi",
+        json={"esearchresult": {"count": "0", "retmax": "200", "retstart": "0", "idlist": []}},
+        status=200,
+    )
+    client.esearch(term="x")
+    request = responses.calls[0].request
+    assert "sort=pub_date" in request.url
+
+
+@responses.activate
 def test_esearch_adds_date_range_params(client):
     responses.add(
         responses.GET,

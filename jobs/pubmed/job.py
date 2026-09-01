@@ -35,6 +35,16 @@ job -- since discovery is purely in-memory until after all queries finish
 oversized queries. See NCBI_ESEARCH_MAX_RETSTART in run() -- pagination now
 stops at the ceiling and discloses the truncation (job.py's result.notes +
 report.py's "Known coverage gaps") instead of crashing.
+
+ROUND-1 FIX (reviewer-flagged): truncating at the ceiling is only
+correctness-safe for 14-day rolling maintenance if the RETAINED first
+~10,000 records are guaranteed to be the NEWEST ones -- NCBI ESearch's
+default order is relevance, not date, so a newly published, lower-
+relevance-scored paper could otherwise land in the permanently
+unreachable tail forever. `PubMedClient.esearch()` now always sends
+`sort="pub_date"` (descending), so the truncated tail is deterministically
+the OLDEST portion of an oversized query, not an arbitrary/relevance-
+ranked subset.
 """
 
 from __future__ import annotations
@@ -140,7 +150,7 @@ class PubMedJob(AcquisitionJob):
         pmid_first_query: dict[str, tuple[str, str]] = {}
         pmid_query_hits: dict[str, set[str]] = defaultdict(set)
         query_id_counts: Counter = Counter()
-        truncated_queries: list[tuple[str, int]] = []  # (query_id, true total count)
+        truncated_queries: list[tuple[str, int, int]] = []  # (query_id, true total count, hits actually discovered)
         for query in queries:
             retstart = 0
             hits_for_query = 0
@@ -179,7 +189,7 @@ class PubMedJob(AcquisitionJob):
                 # batching as the real fix for >9,999-hit queries -- out of
                 # scope for this job's simple esearch pagination).
                 if retstart > NCBI_ESEARCH_MAX_RETSTART and retstart < page.count:
-                    truncated_queries.append((query.query_id, page.count))
+                    truncated_queries.append((query.query_id, page.count, hits_for_query))
                     break
                 if retstart >= page.count or not page.idlist or enough_for_limit:
                     break
@@ -191,19 +201,22 @@ class PubMedJob(AcquisitionJob):
 
         result = JobRunResult(job_name=self.name, dry_run=bool(args.dry_run))
         result.queries_run = len(queries)
-        for query_id, true_count in truncated_queries:
+        for query_id, true_count, hits_discovered in truncated_queries:
             logger.warning(
                 "query %s: NCBI ESearch retstart ceiling reached, %d of %d true hits discovered "
                 "(records beyond retstart=%d are structurally unreachable via this endpoint)",
-                query_id, min(true_count, NCBI_ESEARCH_MAX_RETSTART + DEFAULT_ESEARCH_PAGE_SIZE), true_count,
-                NCBI_ESEARCH_MAX_RETSTART,
+                query_id, hits_discovered, true_count, NCBI_ESEARCH_MAX_RETSTART,
             )
             result.notes.append(
                 f"{query_id}: NCBI ESearch retstart ceiling (9,999 records) reached -- this query has "
-                f"{true_count} true hits, only records up to retstart={NCBI_ESEARCH_MAX_RETSTART} were "
-                "discovered this run, NOT a full query result. See NCBI's own EDirect/history-based "
-                "batching docs (https://www.ncbi.nlm.nih.gov/books/NBK25499/) for a future fix if this "
-                "query's uncovered tail matters."
+                f"{true_count} true hits, only {hits_discovered} records (up to retstart="
+                f"{NCBI_ESEARCH_MAX_RETSTART}) were discovered this run, NOT a full query result. "
+                "Retrieval is explicitly sorted publication-date descending (sort=pub_date), so the "
+                "truncated tail represents the OLDEST portion of this oversized query, not an "
+                "arbitrary/relevance-ranked subset -- rolling 14-day maintenance still reliably "
+                "captures newly published papers. See NCBI's own EDirect/history-based batching docs "
+                "(https://www.ncbi.nlm.nih.gov/books/NBK25499/) for a future fix if this query's "
+                "uncovered historical tail matters."
             )
         result.records_discovered = len(all_pmids)
         result.notes.append(
