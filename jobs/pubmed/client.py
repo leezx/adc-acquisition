@@ -58,7 +58,18 @@ class PubMedClient:
         retmax: int = 200,
         mindate: str | None = None,
         maxdate: str | None = None,
+        sort: str = "pub_date",
     ) -> EsearchResult:
+        """`sort="pub_date"` (reviewer-flagged, round-1 fix): NCBI ESearch's
+        default ordering is relevance, not publication date -- for a query
+        whose true hit count exceeds the 9,999-record retstart ceiling (see
+        job.py's NCBI_ESEARCH_MAX_RETSTART), an unreachable tail under
+        relevance ranking could silently include a just-published paper
+        forever, defeating incremental maintenance. Explicit descending
+        publication-date sort makes the truncated tail deterministically
+        the OLDEST portion of the query, so the reachable first ~10,000
+        records are always the newest -- the property this repo's 14-day
+        maintenance cadence actually needs."""
         params = {
             **self._common_params(),
             "db": "pubmed",
@@ -66,6 +77,7 @@ class PubMedClient:
             "retmode": "json",
             "retstart": str(retstart),
             "retmax": str(retmax),
+            "sort": sort,
         }
         if mindate or maxdate:
             params["datetype"] = "pdat"
